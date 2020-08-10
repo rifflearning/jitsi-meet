@@ -14,6 +14,7 @@ import {
 import { openURLInBrowser } from '../base/util';
 import { executeDialOutRequest, executeDialOutStatusRequest, getDialInfoPageURL } from '../invite/functions';
 import { showErrorNotification } from '../notifications';
+import { setTileViewByDefault, attachSibilant } from '../riff-metrics/redux/actions';
 
 import {
     PREJOIN_START_CONFERENCE,
@@ -204,8 +205,13 @@ export function initPrejoin(tracks: Object[], errors: Object) {
  * @returns {Function}
  */
 export function joinConference() {
-    return {
-        type: PREJOIN_START_CONFERENCE
+    return dispatch => {
+        dispatch(setTileViewByDefault());
+        dispatch(attachSibilant());
+
+        dispatch({
+            type: PREJOIN_START_CONFERENCE
+        });
     };
 }
 

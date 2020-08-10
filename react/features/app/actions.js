@@ -25,6 +25,7 @@ import {
 } from '../base/util';
 import { clearNotifications, showNotification } from '../notifications';
 import { setFatalError } from '../overlay';
+import { redirectToRiffMetrics } from '../riff-metrics/redux/actions';
 
 import {
     getDefaultURL,
@@ -309,6 +310,12 @@ export function maybeRedirectToWelcomePage(options: Object = {}) {
                 titleArguments: { appName: getName() },
                 titleKey: 'dialog.thankYou'
             }));
+        }
+
+        const shouldRedirectToRiffMetricsPage = true; // maybe externalize this flag to interface_config.js
+
+        if (shouldRedirectToRiffMetricsPage) {
+            return dispatch(redirectToRiffMetrics());
         }
 
         // if Welcome page is enabled redirect to welcome page after 3 sec, if
