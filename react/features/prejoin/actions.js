@@ -14,7 +14,7 @@ import {
 import { openURLInBrowser } from '../base/util';
 import { executeDialOutRequest, executeDialOutStatusRequest, getDialInfoPageURL } from '../invite/functions';
 import { showErrorNotification } from '../notifications';
-import { setTileViewByDefault, attachSibilant } from '../riff-metrics/redux/actions';
+import { setTileViewByDefault, attachSibilant } from '../riff-metrics/actions';
 
 import {
     PREJOIN_START_CONFERENCE,

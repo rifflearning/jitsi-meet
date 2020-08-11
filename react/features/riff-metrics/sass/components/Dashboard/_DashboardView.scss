@@ -1,0 +1,81 @@
+/* ******************************************************************************
+ * _DashboardView.scss                                                          *
+ * *************************************************************************/ /**
+ *
+ * @fileoverview Styles used by the dashboard component
+ *
+ * Created on       April 22, 2020
+ * @author          Brec Hanson
+ *
+ * @copyright (c) 2020-present Riff Learning Inc.,
+ *            MIT License (see https://opensource.org/licenses/MIT)
+ *
+ * ******************************************************************************/
+
+ .dashboard-view-component {
+    background-image: linear-gradient(to bottom, $color-white, $color-selago);
+    padding-bottom: 60px;
+
+    .inner {
+        max-width: 1440px;
+        margin: 0 auto;
+        display: flex;
+        align-items: flex-start;
+
+        .dashboard-content-container {
+            display: flex;
+            flex-direction: column;
+            padding: 0 48px;
+            width: 100%;
+
+            .dashboard-header-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                height: 105px;
+                border-bottom: 1px solid $color-selago;
+
+                .feedback-btn {
+                    height: 44px;
+                    cursor: pointer;
+                    border-radius: 4px;
+                    text-transform: uppercase;
+                    color: inherit;
+                    padding: 0 16px;
+                    display: block;
+                    font-size: 16px;
+                    line-height: 44px;
+                    font-weight: 600;
+                    letter-spacing: 1px;
+                    text-align: center;
+                    border: none;
+                    color: $color-white;
+                    background-image: linear-gradient(to bottom, $color-riffViolet, $color-riffVioletDark);
+                }
+            }
+
+            .metrics-container {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+
+                .metric-row {
+                    display: flex;
+
+                    &:not(:last-of-type) {
+                        margin-bottom: 24px;
+                    }
+
+                    .metric-container {
+                        height: 100%;
+                        flex: 1;
+
+                        &:not(:first-of-type) {
+                            margin-left: 24px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

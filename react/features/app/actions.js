@@ -25,7 +25,7 @@ import {
 } from '../base/util';
 import { clearNotifications, showNotification } from '../notifications';
 import { setFatalError } from '../overlay';
-import { redirectToRiffMetrics } from '../riff-metrics/redux/actions';
+import { redirectToRiffMetrics } from '../riff-metrics/actions';
 
 import {
     getDefaultURL,
@@ -312,7 +312,7 @@ export function maybeRedirectToWelcomePage(options: Object = {}) {
             }));
         }
 
-        const shouldRedirectToRiffMetricsPage = true; // maybe externalize this flag to interface_config.js
+        const shouldRedirectToRiffMetricsPage = true; // maybe externalize this flag
 
         if (shouldRedirectToRiffMetricsPage) {
             return dispatch(redirectToRiffMetrics());
