@@ -14,7 +14,7 @@ import {
     cmpObjectProp,
     getDurationInSeconds,
     groupByPropertyValue
-} from './utils';
+} from './libraries/utils';
 
 export function setRiffServerRoomId(roomId) {
     return {
