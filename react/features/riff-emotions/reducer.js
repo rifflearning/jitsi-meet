@@ -5,7 +5,7 @@ import * as actionTypes from './actionTypes';
 
 // maybe delete?
 PersistenceRegistry.register('features/riff-emotions', true, {
-    emotionsData: {}
+    // emotionsData: {}
 });
 
 const defaultState = {

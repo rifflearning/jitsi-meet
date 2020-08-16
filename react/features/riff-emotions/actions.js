@@ -12,8 +12,7 @@ export function setEmotionsData(dataObj) {
 
 export function subscribeToEmotionsData() {
     return dispatch => {
-        const socket = io('https://sg0xm.sse.codesandbox.io/');
-        // const socket = io();
+        const socket = io('https://riff-poc.riffplatform.com/');
 
         socket.on('emotions data', data => dispatch(setEmotionsData(data)));
     };

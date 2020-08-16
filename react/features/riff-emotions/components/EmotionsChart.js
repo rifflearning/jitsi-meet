@@ -47,7 +47,7 @@ const EmotionsChart = ({ id, data: rawDataFromProps }) => {
     }}>
       <div style={{ textAlign: 'right', margin: `3px 5px`, fontSize: '12px', fontWeight: 'bold', color: 'white' }}>
         <span style={{backgroundColor:'#000000bf', padding:'0 2px'}}>
-        {id}: {compound}
+        {compound}
         </span>
       </div>
       <ResponsiveContainer width="100%" height="50%">
