@@ -58,7 +58,7 @@ export function redirectToRiffMetrics() {
 
 export function setTileViewByDefault() {
     return (dispatch, getState) => {
-        if (!getState()['features/video-layout']._tileViewEnabled) {
+        if (!getState()['features/video-layout'].tileViewEnabled) {
             dispatch(setTileView(true));
         }
     };
