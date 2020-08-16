@@ -2,6 +2,8 @@
 
 import React, { Component } from 'react';
 
+import EmotionsChart from '../../../../riff-emotions/components/EmotionsChart';
+
 /**
  * The type of the React {@code Component} props of {@link Video}.
  */
@@ -143,12 +145,15 @@ class Video extends Component<Props> {
      */
     render() {
         return (
-            <video
-                autoPlay = { this.props.autoPlay }
-                className = { this.props.className }
-                id = { this.props.id }
-                playsInline = { this.props.playsinline }
-                ref = { this._setVideoElement } />
+            <div>
+                <EmotionsChart id = 'local' />
+                <video
+                    autoPlay = { this.props.autoPlay }
+                    className = { this.props.className }
+                    id = { this.props.id }
+                    playsInline = { this.props.playsinline }
+                    ref = { this._setVideoElement } />
+            </div>
         );
     }
 

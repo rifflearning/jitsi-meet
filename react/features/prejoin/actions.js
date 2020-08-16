@@ -35,6 +35,7 @@ import {
     isJoinByPhoneDialogVisible
 } from './functions';
 import logger from './logger';
+import { subscribeToEmotionsData } from '../riff-emotions/actions';
 
 const dialOutStatusToKeyMap = {
     INITIATED: 'presenceStatus.calling',
@@ -208,6 +209,7 @@ export function joinConference() {
     return (dispatch: Function) => {
         dispatch(setTileViewByDefault());
         dispatch(attachSibilant());
+        dispatch(subscribeToEmotionsData());
 
         dispatch({
             type: PREJOIN_START_CONFERENCE

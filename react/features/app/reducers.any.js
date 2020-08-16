@@ -48,3 +48,4 @@ import '../video-layout/reducer';
 import '../videosipgw/reducer';
 import '../welcome/reducer';
 import '../riff-metrics/reducer';
+import '../riff-emotions/reducer';

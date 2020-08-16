@@ -23,6 +23,7 @@ import {
     RaisedHandIndicator,
     StatusIndicators
 } from '../../../react/features/filmstrip';
+import EmotionsChart from '../../../react/features/riff-emotions/components/EmotionsChart';
 import {
     LAYOUTS,
     getCurrentLayout,
@@ -270,6 +271,28 @@ export default class SmallVideo {
                 </I18nextProvider>
             </Provider>,
             statusBarContainer);
+    }
+
+    /**
+     * Create or updates the ReactElement for displaying status indicators about
+     * audio mute, video mute, and moderator status.
+     *
+     * @returns {void}
+     */
+    addEmotionsChart() {
+        const videocontainer = this.container.querySelector('.videocontainer__background');
+
+        if (!videocontainer) {
+            return;
+        }
+
+        ReactDOM.render(
+            <Provider store = { APP.store }>
+                <I18nextProvider i18n = { i18next }>
+                    <EmotionsChart id={this.id} />
+                </I18nextProvider>
+            </Provider>,
+        videocontainer);
     }
 
     /**
@@ -715,7 +738,7 @@ export default class SmallVideo {
             <Provider store = { APP.store }>
                 <I18nextProvider i18n = { i18next }>
                     <div>
-                        <AtlasKitThemeProvider mode = 'dark'>
+                        <AtlasKitThemeProvider mode='dark'>
                             { this._showConnectionIndicator
                                 ? <ConnectionIndicator
                                     alwaysVisible = { showConnectionIndicator }
