@@ -205,7 +205,7 @@ export function initPrejoin(tracks: Object[], errors: Object) {
  * @returns {Function}
  */
 export function joinConference() {
-    return dispatch => {
+    return (dispatch: Function) => {
         dispatch(setTileViewByDefault());
         dispatch(attachSibilant());
 
