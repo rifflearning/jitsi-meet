@@ -10,6 +10,7 @@ import UI from './modules/UI/UI';
 import keyboardshortcut from './modules/keyboardshortcut/keyboardshortcut';
 import remoteControl from './modules/remotecontrol/RemoteControl';
 import translation from './modules/translation/translation';
+import capturer from './modules/recorder/capturer/index';
 
 window.APP = {
     API,
@@ -34,7 +35,8 @@ window.APP = {
     keyboardshortcut,
     remoteControl,
     translation,
-    UI
+    UI,
+    capturer
 };
 
 // TODO The execution of the mobile app starts from react/index.native.js.
