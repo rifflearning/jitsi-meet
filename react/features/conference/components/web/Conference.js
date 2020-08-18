@@ -14,6 +14,8 @@ import { CalleeInfoContainer } from '../../../invite';
 import { LargeVideo } from '../../../large-video';
 import { KnockingParticipantList, LobbyScreen } from '../../../lobby';
 import { Prejoin, isPrejoinPageVisible } from '../../../prejoin';
+import { subscribeToEmotionsData } from '../../../riff-emotions/actions';
+import { setTileViewByDefault, attachSibilant } from '../../../riff-metrics/actions';
 import {
     Toolbox,
     fullScreenChanged,
@@ -267,6 +269,10 @@ class Conference extends AbstractConference<Props, *> {
 
         interfaceConfig.filmStripOnly
             && dispatch(setToolboxAlwaysVisible(true));
+
+        dispatch(setTileViewByDefault());
+        dispatch(attachSibilant());
+        dispatch(subscribeToEmotionsData());
     }
 }
 

@@ -78,8 +78,8 @@ export function attachSibilant() {
             speakingEvents.bind('stoppedSpeaking', data => sendUtteranceToServer(data, accessToken));
 
         } else {
-            console.error('Error while attaching Sibilant. The track is not ready, will try again in 1 sec...');
-            setTimeout(() => dispatch(attachSibilant()), 1000);
+            console.error('Error while attaching Sibilant. The track is not ready, will try again in 3 sec...');
+            setTimeout(() => dispatch(attachSibilant()), 3000);
         }
     };
 }
