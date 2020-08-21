@@ -25,7 +25,7 @@ let dataserverPath = window.client_config?.dataServer?.path || '';
 
 dataserverPath += '/socket.io';
 
-const socketUrl = `http://${location.host.split(':')[0]}:3000`;
+const socketUrl = `https://riff-poc.riffplatform.com`;
 
 const socket = io(window.client_config?.dataServer?.url || socketUrl, {
     timeout: 20000,

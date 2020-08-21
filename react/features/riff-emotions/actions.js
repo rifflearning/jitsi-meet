@@ -12,7 +12,7 @@ export function setEmotionsData(dataObj) {
 
 export function subscribeToEmotionsData() {
     return dispatch => {
-        const socket = io('https://riff-poc.riffplatform.com/');
+        const socket = io('https://riff-poc.riffplatform.com', { path: '/emotions-server' });
 
         socket.on('emotions data', data => dispatch(setEmotionsData(data)));
     };
