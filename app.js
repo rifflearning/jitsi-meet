@@ -8,9 +8,9 @@ import conference from './conference';
 import API from './modules/API';
 import UI from './modules/UI/UI';
 import keyboardshortcut from './modules/keyboardshortcut/keyboardshortcut';
+import capturer from './modules/recorder/capturer/index';
 import remoteControl from './modules/remotecontrol/RemoteControl';
 import translation from './modules/translation/translation';
-import capturer from './modules/recorder/capturer/index';
 
 window.APP = {
     API,

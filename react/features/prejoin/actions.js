@@ -14,8 +14,11 @@ import {
 import { openURLInBrowser } from '../base/util';
 import { executeDialOutRequest, executeDialOutStatusRequest, getDialInfoPageURL } from '../invite/functions';
 import { showErrorNotification } from '../notifications';
+<<<<<<< HEAD
 import { subscribeToEmotionsData } from '../riff-emotions/actions';
 import { setTileViewByDefault, attachSibilant } from '../riff-metrics/actions';
+=======
+>>>>>>> eslint fixes
 
 import {
     PREJOIN_START_CONFERENCE,
