@@ -36,7 +36,6 @@ import {
     isJoinByPhoneDialogVisible
 } from './functions';
 import logger from './logger';
-import { subscribeToEmotionsData } from '../riff-emotions/actions';
 
 const dialOutStatusToKeyMap = {
     INITIATED: 'presenceStatus.calling',
