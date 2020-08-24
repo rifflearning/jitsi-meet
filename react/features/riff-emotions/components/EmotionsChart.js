@@ -5,48 +5,32 @@ import { connect } from '../../base/redux';
 import { pickEmotionsDataById } from '../selectors';
 import { getEmotionColor } from '../functions';
 
-const EmotionsChart = ({ id, data: rawDataFromProps }) => {
+const EmotionsChart = ({ rawData, tileViewEnabled }) => {
   const refWrapper = useRef(null)
   const [data, setData] = useState([]);
   const [compound, setCompound] = useState('');
 
   useEffect(() => {
-    if (!rawDataFromProps || !rawDataFromProps['face:0']) return;
-    const mappedData = Object.keys(rawDataFromProps['face:0'].avg_scores).map(
+    if (!rawData || !rawData['face:0']) return;
+    const mappedData = Object.keys(rawData['face:0'].avg_scores).map(
       emotion => ({
         name: emotion,
-        value: Math.round(rawDataFromProps['face:0'].avg_scores[emotion] * 1000),
+        value: Math.round(rawData['face:0'].avg_scores[emotion] * 1000),
         color: getEmotionColor(emotion)
       })
     );
 
     setData(mappedData);
-    setCompound(rawDataFromProps['face:0'].compound);
-  }, [rawDataFromProps]);
+    setCompound(rawData['face:0'].compound);
+  }, [rawData]);
 
   const clientWidth = refWrapper?.current?.clientWidth || 400;
-  const sizeW = clientWidth;
-  const sizeH = sizeW/2;
-  const sizeM = Math.round(sizeW / 40);
-  const isBig = sizeW > 399;
+  const isLabelsEnabled = tileViewEnabled && clientWidth > 399;
 
   return (
-    <div ref={refWrapper} style={{
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width:'100%',
-      height: '100%',
-      zIndex: 1000,
-      display:'flex',
-      
-      flexDirection:'column',
-      justifyContent: 'space-between',
-      opacity: '0.8',
-      pointerEvents: 'none'
-    }}>
-      <div style={{ textAlign: 'right', margin: `3px 5px`, fontSize: '12px', fontWeight: 'bold', color: 'white' }}>
-        <span style={{backgroundColor:'#000000bf', padding:'0 2px'}}>
+    <div ref={refWrapper} style={styles.wrapper}>
+      <div style={styles.textWrapper}>
+        <span style={styles.text}>
         {compound}
         </span>
       </div>
@@ -62,7 +46,7 @@ const EmotionsChart = ({ id, data: rawDataFromProps }) => {
                   <Cell key={index} fill={entry.color} />
                 ))
             }
-          {isBig && <LabelList dataKey="name" position="insideBottom" fill='white' />}
+          {isLabelsEnabled && <LabelList dataKey="name" position="insideBottom" fill='white' />}
         </Bar>
         </BarChart>
       </ResponsiveContainer>
@@ -71,9 +55,38 @@ const EmotionsChart = ({ id, data: rawDataFromProps }) => {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  data: pickEmotionsDataById(state, ownProps.id)
+  rawData: pickEmotionsDataById(state, ownProps.id),
+  tileViewEnabled: state['features/video-layout'].tileViewEnabled
 });
 
 const mapDispatchToProps = () => ({ });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EmotionsChart);
+
+const styles = {
+  wrapper: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width:'100%',
+    height: '100%',
+    zIndex: 1000,
+    display:'flex',
+    
+    flexDirection:'column',
+    justifyContent: 'space-between',
+    opacity: '0.8',
+    pointerEvents: 'none'
+  },
+  textWrapper: {
+    textAlign: 'right',
+    margin: `3px 5px`,
+    fontSize: '12px',
+    fontWeight: 'bold',
+    color: 'white'
+  },
+  text: {
+    backgroundColor: '#000000bf',
+    padding: '0 2px'
+  }
+}
