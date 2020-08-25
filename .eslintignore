@@ -12,3 +12,4 @@ libs/*
 !.eslintrc.js
 
 react/features/riff-metrics/*
+modules/recorder/capturer/*
