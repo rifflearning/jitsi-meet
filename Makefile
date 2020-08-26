@@ -80,6 +80,10 @@ deploy-css:
 deploy-local:
 	([ ! -x deploy-local.sh ] || ./deploy-local.sh)
 
+# run "make deploy-aws PEM=/path-to-key.pem AWS=instance-name@0.0.0.0"
+deploy-aws: all
+	sh ./deploy-aws.sh ${PEM} ${AWS}
+
 .NOTPARALLEL:
 dev: deploy-init deploy-css deploy-rnnoise-binary deploy-lib-jitsi-meet deploy-libflac
 	$(WEBPACK_DEV_SERVER) --host 0.0.0.0
