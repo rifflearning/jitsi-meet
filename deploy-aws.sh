@@ -1,12 +1,12 @@
 #!/bin/bash
 # In order to build and deploy to aws instance with jitsi-meet client
-# run "make deploy-aws PEM=/path-to-key.pem AWS=instance-name@0.0.0.0".
-# Or for only deployment: "sh ./deploy-aws.sh /path-to-key.pem instance-name@0.0.0.0".
+# run "make deploy-aws PEM=/path-to-key.pem AWS=username@0.0.0.0".
+# Or for only deployment: "sh ./deploy-aws.sh /path-to-key.pem username@0.0.0.0".
 
 PEM_PATH=$1
 AWS_PATH=$2
-EXAMPLE_TEXT="\n E.g.:\nmake deploy-aws PEM=/path-to-key.pem AWS=instance-name@0.0.0.0 \n
-Or:\nsh ./deploy-aws.sh /path-to-key.pem instance-name@0.0.0.0"
+EXAMPLE_TEXT="\n E.g.:\nmake deploy-aws PEM=/path-to-key.pem AWS=username@0.0.0.0 \n
+Or:\nsh ./deploy-aws.sh /path-to-key.pem username@0.0.0.0"
 
 if [ -z "$PEM_PATH" ]
   then
@@ -17,7 +17,7 @@ fi
 
 if [ -z "$AWS_PATH" ]
   then
-    echo "No aws instance name provided"
+    echo "No aws instance provided"
     echo $EXAMPLE_TEXT
     exit 1
 fi
