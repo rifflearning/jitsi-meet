@@ -12,7 +12,8 @@ export function setEmotionsData(dataObj) {
 
 export function subscribeToEmotionsData() {
     return dispatch => {
-        const socket = io('https://riff-poc.riffplatform.com', { path: '/emotions-server' });
+        const link = location.hostname === 'localhost' ? 'https://riff-poc.riffplatform.com/' : '';
+        const socket = io(link, { path: '/emotions-server' });
 
         socket.on('emotions data', data => dispatch(setEmotionsData(data)));
     };
