@@ -99,6 +99,14 @@ export default {
     },
 
     start(serverUrl, fps) {
+        const tracks = getAllActiveVideoTracks() || [];
+        
+        if (!tracks.length) {
+            console.error('Error while start capturer. Participants are not ready, will try again in 2 sec...');
+            setTimeout(() => this.start(serverUrl, fps), 2000);
+            return;
+        }
+
         this._init(serverUrl, fps);
 
         this._interval = setInterval(async () => {
