@@ -9,7 +9,9 @@ NPM = npm
 OUTPUT_DIR = .
 STYLES_BUNDLE = css/all.bundle.css
 STYLES_DESTINATION = css/all.css
+STYLES_DESTINATION_DASHBOARD = css/dashboard.css
 STYLES_MAIN = css/main.scss
+STYLES_MAIN_DASHBOARD = react/features/riff-dashboard-page/src/sass/main.scss
 WEBPACK = ./node_modules/.bin/webpack
 WEBPACK_DEV_SERVER = ./node_modules/.bin/webpack-dev-server
 
@@ -75,6 +77,11 @@ deploy-rnnoise-binary:
 deploy-css:
 	$(NODE_SASS) $(STYLES_MAIN) $(STYLES_BUNDLE) && \
 	$(CLEANCSS) --skip-rebase $(STYLES_BUNDLE) > $(STYLES_DESTINATION) ; \
+	rm $(STYLES_BUNDLE)
+
+	# bundle css for riff-dashboard
+	$(NODE_SASS) $(STYLES_MAIN_DASHBOARD) $(STYLES_BUNDLE) && \
+	$(CLEANCSS) --skip-rebase $(STYLES_BUNDLE) > $(STYLES_DESTINATION_DASHBOARD) ; \
 	rm $(STYLES_BUNDLE)
 
 deploy-local:
