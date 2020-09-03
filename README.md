@@ -78,3 +78,45 @@ For information on reporting security vulnerabilities in Jitsi Meet, see [SECURI
 ## Acknowledgements
 
 Jitsi Meet started out as a sample conferencing application using Jitsi Videobridge. It was originally developed by ESTOS' developer Philipp Hancke who then contributed it to the community where development continues with joint forces!
+
+## Customization and deployment to AWS
+For running dev server run ```make dev```.
+
+In order to customize jitsi with riff theme, all features and set up a new enviroment please follow next steps.
+
+1. Install Jitsi to aws with [official guide](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-quickstart).
+
+2. Install nodejs-emotions socket.io server to the same instance. (It's temprorary solution, will move this logic to riff-server)
+    * open port 4455 for connecting facial recognition server to nodejs-emotions server over the ```http```
+    * install unzip and nodejs to the aws instance
+    * move nodejs-emotions server on the instance and run it in background with ```node index.js &```
+    * configure nginx ```/etc/nginx/sites-available/[domain].conf``` and restart it with ```sudo systemctl restart nginx```:
+    ```
+    ...
+    #ensure all static content can always be found first
+    location ~ ^/(libs|css|static|images|fonts|lang|sounds|connection_optimization|.well-known)/(.*)$
+    {
+    ...
+    }
+
+    Then paste this config:
+
+    # config for socket.io for nodejs-emotions server
+    location ~* emotions-server {
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-NginX-Proxy false;
+
+        proxy_pass http://localhost:4455;
+        proxy_redirect off;
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+    ```
+
+3. Deploy develop branch to the instance using commands:
+* ```npm install```
+* ```make deploy-aws PEM=~/path-to-key.pem AWS=ubuntu@0.0.0.0```
