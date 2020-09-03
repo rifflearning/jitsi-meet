@@ -1,0 +1,81 @@
+/* ******************************************************************************
+ * _variables.scss                                                              *
+ * *************************************************************************/ /**
+ *
+ * @fileoverview SCSS partial for site-wide variables
+ *
+ * [More detail about the file's contents]
+ *
+ * Created on       May 27, 2019
+ * @author          Brec Hanson
+ *
+ * @copyright (c) 2019-present Riff Learning Inc.,
+ *            MIT License (see https://opensource.org/licenses/MIT)
+ *
+ * ******************************************************************************/
+
+// Named Colors (matching Colors enum defined in libs/utils/color.js)
+$color-black:           #000000;
+$color-denim:           #0f4ebd;
+$color-turkoise:        #128ead;
+$color-aquamarine:      #1b998b;
+$color-eggplant:        #321325;
+$color-mineShaft:       #333333;
+$color-darkFern:        #3c493f;
+$color-tundora:         #4a4a4a;
+$color-lightAnchor:     #576066;
+$color-lightAnchor2:    #607071;
+$color-sage:            #7caf5f;
+$color-riffVioletDark:  #775e80;
+$color-mauve:           #85638c;
+$color-lightRoyal:      #8a6a94;
+$color-africanLollipop: #923a92;
+$color-riffViolet:      #93759e;
+$color-deepRed:         #ab0000;
+$color-brightPlum:      #ab45ab;
+$color-lightLava:       #bdc3c7;
+$color-mischka:         #e0d8e3;
+$color-deepBlush:       #e380a1;
+$color-lighterGrey:     #ededed;
+$color-linen:           #fbeae5;
+$color-apricot:         #f2a466;
+$color-brightRed:       #f44336;
+$color-reddishPeach:    #f56b6b;
+$color-purpleWhite:     #f6f0fb;
+$color-selago:          #f8effc;
+$color-purplishWhite:   #f9f6fc;
+$color-redPunch:        #ff6384;
+$color-white:           #ffffff;
+
+// BRAND COLORS (I've commented out the unused variables for now -mjl)
+// some of these would override bulma color variables, but redefining these base
+// colors seems wrong, I'd rather be using the color variables above more directly.
+//$gray: #57606f;
+//$purple: rgb(133, 99, 140); // #85 63 8c
+//$pink: rgb(243, 108, 110);  //#f3 6c 6e
+//$pinkHover: rgb(242, 136, 137); // #f2 88 89
+//$purpleHover: rgba(133, 99, 140, 0.7);
+//$blue: rgb(19, 129, 161); // #13 81 a1
+
+
+//
+// Overridden Bulma variables
+//   https://bulma.io/documentation/customize/variables/
+//
+
+// Widths
+//
+// In Bulma, this makes the hamburger only appear in small screens.
+// Without it, it appears by default even in med-big screens
+$gap: 32px;
+$tablet: 568px;
+$desktop: 896px + (2 * $gap);
+//$widescreen: 1152px + (2 * $gap);
+//$fullhd: 1344px + (2 * $gap);
+
+// Colors
+$primary: $color-mauve;
+$link: $color-mauve;
+
+// Fonts
+$family-sans-serif: "Nunito", sans-serif;
