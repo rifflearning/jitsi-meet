@@ -16,9 +16,9 @@
 
 import { connect } from 'react-redux';
 
-import { dashboardGraphLoaded } from 'redux/actions/dashboard';
-import { getDatasetForGraph, getSelectedMeeting } from 'redux/selectors/dashboard';
-import { getUserId } from 'redux/selectors/user';
+import { dashboardGraphLoaded } from 'Redux/actions/dashboard';
+import { getDatasetForGraph, getSelectedMeeting } from 'Redux/selectors/dashboard';
+import { getUserId } from 'Redux/selectors/user';
 
 import { ParticipantScore } from './ParticipantScore';
 import { TimelineChart } from './TimelineChart';

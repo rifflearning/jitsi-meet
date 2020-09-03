@@ -19,9 +19,9 @@ import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 
 import { firebaseCreateUser, setWindowScrolling } from 'libs/utils';
-import { riffCreateParticipant, riffGetRoomFromUser } from 'redux/actions/riff';
-import { Routes } from 'redux/constants';
-import { getIsPersonalMode } from 'redux/selectors/config';
+import { riffCreateParticipant, riffGetRoomFromUser } from 'Redux/actions/riff';
+import { Routes } from 'Redux/constants';
+import { getIsPersonalMode } from 'Redux/selectors/config';
 
 import promoImage from 'Images/signup-promo-img.svg';
 

@@ -11,8 +11,8 @@
  *            MIT License (see https://opensource.org/licenses/MIT)
  *
  * ******************************************************************************/
-import { getUserId } from 'redux/selectors/user';
-import { getIsPersonalMode, getMeetingSettings } from 'redux/selectors/config';
+import { getUserId } from 'Redux/selectors/user';
+import { getIsPersonalMode, getMeetingSettings } from 'Redux/selectors/config';
 import { convertYoutubeToEmbedLink } from 'libs/utils/url_utils';
 
 /* ******************************************************************************

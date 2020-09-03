@@ -17,7 +17,7 @@ import { connect } from 'react-redux';
 import {
     changeDisplayName,
     changeRoomName,
-} from 'redux/actions/chat';
+} from 'Redux/actions/chat';
 
 import { Lobby } from './Lobby';
 

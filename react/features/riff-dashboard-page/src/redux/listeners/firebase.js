@@ -14,17 +14,17 @@
 
 import { firebaseApp, isNewUser } from 'libs/utils/firebase_utils';
 import { logger } from 'libs/utils';
-import { firebaseLoginSuccess } from 'redux/actions/user';
+import { firebaseLoginSuccess } from 'Redux/actions/user';
 import {
     getIsUserLoggedIn,
     getUserAuthType,
     getUserEmail,
     getUserId,
-} from 'redux/selectors/user';
-import { changeRoomId, changeRoomName } from 'redux/actions/chat';
-import { getIsPersonalMode } from 'redux/selectors/config';
-import { riffCreatePersonalRoom, riffGetRoomFromUser } from 'redux/actions/riff';
-import { AuthTypes } from 'redux/constants';
+} from 'Redux/selectors/user';
+import { changeRoomId, changeRoomName } from 'Redux/actions/chat';
+import { getIsPersonalMode } from 'Redux/selectors/config';
+import { riffCreatePersonalRoom, riffGetRoomFromUser } from 'Redux/actions/riff';
+import { AuthTypes } from 'Redux/constants';
 
 
 function startFirebaseLoginListener(dispatch, getState) {

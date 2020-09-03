@@ -37,8 +37,8 @@ import {
     REMOVE_SHARED_SCREEN,
     SHARE_SCREEN,
     UNMUTE_AUDIO,
-} from 'redux/constants/ActionTypes';
-import { ActionTypes } from 'redux/constants';
+} from 'Redux/constants/ActionTypes';
+import { ActionTypes } from 'Redux/constants';
 import { addA11yBrowserAlert, logger } from 'libs/utils';
 
 const addPeer = (peer) => {

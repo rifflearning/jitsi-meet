@@ -17,9 +17,9 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import { firebaseLogin } from 'libs/utils';
-import { riffGetRoomFromUser } from 'redux/actions/riff';
-import { Routes } from 'redux/constants';
-import { getIsPersonalMode } from 'redux/selectors/config';
+import { riffGetRoomFromUser } from 'Redux/actions/riff';
+import { Routes } from 'Redux/constants';
+import { getIsPersonalMode } from 'Redux/selectors/config';
 
 import { LargeHeading } from 'Components/styled';
 

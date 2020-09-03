@@ -16,12 +16,12 @@
 
 import { connect } from 'react-redux';
 
-import { loadRecentMeetings } from 'redux/actions/dashboard';
-import { dismissPostMeetingSurvey } from 'redux/actions/chat';
-import { getGraphDataset, getSelectedMeeting } from 'redux/selectors/dashboard';
-import { getIsRiffConnected } from 'redux/selectors/riff';
-import { getUserId } from 'redux/selectors/user';
-import { getIsPostMeetingSurveyRequested } from 'redux/selectors/chat';
+import { loadRecentMeetings } from 'Redux/actions/dashboard';
+import { dismissPostMeetingSurvey } from 'Redux/actions/chat';
+import { getGraphDataset, getSelectedMeeting } from 'Redux/selectors/dashboard';
+import { getIsRiffConnected } from 'Redux/selectors/riff';
+import { getUserId } from 'Redux/selectors/user';
+import { getIsPostMeetingSurveyRequested } from 'Redux/selectors/chat';
 
 import { GraphDatasetTypes } from 'libs/utils/constants';
 

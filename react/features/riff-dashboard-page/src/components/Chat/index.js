@@ -22,14 +22,14 @@ import {
     muteAudio,
     showMeetingDoc,
     unMuteAudio,
-} from 'redux/actions/chat';
+} from 'Redux/actions/chat';
 import {
     riffAddUserToMeeting,
-} from 'redux/actions/riff';
-import { getMeetingSettings } from 'redux/selectors/config';
-import { getRiffAuthToken } from 'redux/selectors/riff';
-import { getUserEmail, getUserId } from 'redux/selectors/user';
-import { getRoomId, getRoomName } from 'redux/selectors/chat';
+} from 'Redux/actions/riff';
+import { getMeetingSettings } from 'Redux/selectors/config';
+import { getRiffAuthToken } from 'Redux/selectors/riff';
+import { getUserEmail, getUserId } from 'Redux/selectors/user';
+import { getRoomId, getRoomName } from 'Redux/selectors/chat';
 import {
     WebRtcNick,
     addA11yBrowserAlert,

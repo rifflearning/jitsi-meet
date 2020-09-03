@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 
 import {
     showMeetingDoc,
-} from 'redux/actions/chat';
+} from 'Redux/actions/chat';
 
 import { ToggleDocButton } from './ToggleDocButton';
 

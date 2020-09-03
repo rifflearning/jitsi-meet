@@ -18,8 +18,8 @@ import { connect } from 'react-redux';
 import {
     loadMeetingData,
     selectMeeting,
-} from 'redux/actions/dashboard';
-import { getUserId } from 'redux/selectors/user';
+} from 'Redux/actions/dashboard';
+import { getUserId } from 'Redux/selectors/user';
 import { logger } from 'libs/utils';
 
 import { EStatus, GraphDatasetTypes, GraphTypes } from 'libs/utils/constants';

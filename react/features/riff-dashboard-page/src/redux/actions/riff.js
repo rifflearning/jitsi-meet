@@ -22,7 +22,7 @@ import {
     RIFF_MEETING_ID_UPDATE,
     RIFF_PARTICIPANTS_CHANGED,
     RIFF_TURN_UPDATE,
-} from 'redux/constants/ActionTypes';
+} from 'Redux/constants/ActionTypes';
 
 
 const riffAuthSuccess = (token) => {

@@ -14,7 +14,7 @@
 
 import { connect } from 'react-redux';
 
-import { getSharedUrl } from 'redux/selectors/chat';
+import { getSharedUrl } from 'Redux/selectors/chat';
 
 import { MeetingRoom } from './MeetingRoom';
 

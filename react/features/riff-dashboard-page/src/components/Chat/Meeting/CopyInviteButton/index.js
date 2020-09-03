@@ -13,7 +13,7 @@
  * ******************************************************************************/
 import { connect } from 'react-redux';
 
-import { getRoomId, getRoomName } from 'redux/selectors/chat';
+import { getRoomId, getRoomName } from 'Redux/selectors/chat';
 
 import { CopyInviteButton } from './CopyInviteButton';
 

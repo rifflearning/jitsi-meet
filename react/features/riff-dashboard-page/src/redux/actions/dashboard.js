@@ -14,7 +14,7 @@
  *
  * ******************************************************************************/
 
-import { ActionTypes } from 'redux/constants';
+import { ActionTypes } from 'Redux/constants';
 
 import {
     cmpObjectProp,
@@ -25,8 +25,8 @@ import {
     reverseCmp,
 } from 'libs/utils';
 import { app } from 'libs/riffdata-client';
-import { getIsPersonalMode } from 'redux/selectors/config';
-import { riffGetRoomFromId } from 'redux/actions/riff';
+import { getIsPersonalMode } from 'Redux/selectors/config';
+import { riffGetRoomFromId } from 'Redux/actions/riff';
 
 
 // Error messages thrown (and checked in catch)

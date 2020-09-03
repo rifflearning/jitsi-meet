@@ -19,10 +19,10 @@ import {
     updateMeetingParticipants,
     updateRiffMeetingId,
     updateTurnData,
-} from 'redux/actions/riff';
-import { updateTextChat } from 'redux/actions/textchat';
-import { getUserId } from 'redux/selectors/user';
-import { getRiffMeetingId } from 'redux/selectors/riff';
+} from 'Redux/actions/riff';
+import { updateTextChat } from 'Redux/actions/textchat';
+import { getUserId } from 'Redux/selectors/user';
+import { getRiffMeetingId } from 'Redux/selectors/riff';
 
 
 function transformTurns(participants, turns) {

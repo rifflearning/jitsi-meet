@@ -24,15 +24,15 @@ import { Helmet } from 'react-helmet';
 import { ScaleLoader } from 'react-spinners';
 import { v4 as uuidv4 } from 'uuid';
 
-import { store } from 'redux/store';
-import { getDummyEmailDomain, getIsPersonalMode, getUseSurveyLogin } from 'redux/selectors/config';
+import { store } from 'Redux/store';
+import { getDummyEmailDomain, getIsPersonalMode, getUseSurveyLogin } from 'Redux/selectors/config';
 import {
     getCanUserBeInvited,
     getIsUserLoggedIn,
     getUserId,
     getUserRoomId,
-} from 'redux/selectors/user';
-import { Routes } from 'redux/constants';
+} from 'Redux/selectors/user';
+import { Routes } from 'Redux/constants';
 import { Colors, isCSSAnimationsSupported, logger, surveys } from 'libs/utils';
 
 import { Chat } from 'components/Chat';

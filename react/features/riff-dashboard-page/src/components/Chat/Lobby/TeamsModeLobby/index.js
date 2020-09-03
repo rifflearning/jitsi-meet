@@ -16,14 +16,14 @@ import { connect } from 'react-redux';
 import {
     changeDisplayName,
     changeRoomName,
-} from 'redux/actions/chat';
-import { getUserEmail } from 'redux/selectors/user';
+} from 'Redux/actions/chat';
+import { getUserEmail } from 'Redux/selectors/user';
 import {
     getDisplayName,
     getIsDisplayNameUserSettable,
     getIsRoomNameUserSettable,
     getRoomName,
-} from 'redux/selectors/chat';
+} from 'Redux/selectors/chat';
 
 import { TeamsModeLobby } from './TeamsModeLobby';
 

@@ -24,7 +24,7 @@ import { Link } from 'react-router-dom';
 import AvatarIcon from '@material-ui/icons/AccountCircle';
 import ArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
-import { AuthTypes, Routes } from 'redux/constants';
+import { AuthTypes, Routes } from 'Redux/constants';
 
 import riffLogo from 'Images/rifflogo.svg';
 

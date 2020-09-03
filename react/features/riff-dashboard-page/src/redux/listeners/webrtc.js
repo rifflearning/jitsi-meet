@@ -32,13 +32,13 @@ import {
     urlShareStart,
     urlShareStop,
     volumeChanged,
-} from 'redux/actions/chat';
+} from 'Redux/actions/chat';
 import {
     participantLeaveRoom,
     updateRiffMeetingId,
-} from 'redux/actions/riff';
-import { getUserId } from 'redux/selectors/user';
-import { getRiffAuthToken } from 'redux/selectors/riff';
+} from 'Redux/actions/riff';
+import { getUserId } from 'Redux/selectors/user';
+import { getRiffAuthToken } from 'Redux/selectors/riff';
 
 
 function addWebRtcListeners(nick, localVideoId, dispatch, getState) {

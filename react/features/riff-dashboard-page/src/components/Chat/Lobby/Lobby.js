@@ -19,7 +19,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 
-import { getIsPersonalMode } from 'redux/selectors/config';
+import { getIsPersonalMode } from 'Redux/selectors/config';
 
 import { LobbyContainer } from './styled';
 import { LobbySidebar } from './LobbySidebar';

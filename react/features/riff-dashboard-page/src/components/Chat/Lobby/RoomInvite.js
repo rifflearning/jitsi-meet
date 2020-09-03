@@ -20,8 +20,8 @@ import PropTypes from 'prop-types';
 import copyToClipboard from 'copy-to-clipboard';
 import LinkIcon from '@material-ui/icons/Link';
 
-import { Routes } from 'redux/constants';
-import { getIsPersonalMode } from 'redux/selectors/config';
+import { Routes } from 'Redux/constants';
+import { getIsPersonalMode } from 'Redux/selectors/config';
 
 import {
     ActionBtn,

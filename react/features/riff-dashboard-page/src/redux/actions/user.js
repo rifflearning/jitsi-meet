@@ -14,7 +14,7 @@
 
 import { firebaseLogout, logger } from 'libs/utils';
 
-import { getUserAuthType, getUserEmail } from 'redux/selectors/user';
+import { getUserAuthType, getUserEmail } from 'Redux/selectors/user';
 
 import { ActionTypes, AuthTypes } from '../constants';
 

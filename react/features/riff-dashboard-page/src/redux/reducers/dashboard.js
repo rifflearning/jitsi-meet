@@ -14,7 +14,7 @@
  *
  * ******************************************************************************/
 
-import { ActionTypes } from 'redux/constants';
+import { ActionTypes } from 'Redux/constants';
 import { logger } from 'libs/utils';
 
 import { EStatus, GraphDatasetTypes, GraphTypes } from 'libs/utils/constants';

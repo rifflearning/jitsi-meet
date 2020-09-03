@@ -17,7 +17,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 
-import { riffChangeRoomName } from 'redux/actions/riff';
+import { riffChangeRoomName } from 'Redux/actions/riff';
 import { firebaseSendResetLink, firebaseSetCurUserDisplayName } from 'libs/utils';
 import { Notification } from 'components/Notification';
 

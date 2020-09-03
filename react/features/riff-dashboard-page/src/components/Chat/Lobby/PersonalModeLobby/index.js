@@ -16,8 +16,8 @@ import { connect } from 'react-redux';
 import {
     changeDisplayName,
     changeRoomName,
-} from 'redux/actions/chat';
-import { riffGetRoomFromId } from 'redux/actions/riff';
+} from 'Redux/actions/chat';
+import { riffGetRoomFromId } from 'Redux/actions/riff';
 import {
     getDisplayName,
     getIsDisplayNameUserSettable,
@@ -25,7 +25,7 @@ import {
     getIsRoomNameUserSettable,
     getRoomId,
     getRoomName,
-} from 'redux/selectors/chat';
+} from 'Redux/selectors/chat';
 
 import { PersonalModeLobby } from './PersonalModeLobby';
 

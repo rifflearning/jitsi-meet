@@ -17,11 +17,11 @@
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 
-import { changeDisplayName } from 'redux/actions/chat';
-import { getInviteId } from 'redux/selectors/chat';
-import { getIsPersonalMode } from 'redux/selectors/config';
-import { firebaseLoginSuccess } from 'redux/actions/user';
-import { Routes } from 'redux/constants';
+import { changeDisplayName } from 'Redux/actions/chat';
+import { getInviteId } from 'Redux/selectors/chat';
+import { getIsPersonalMode } from 'Redux/selectors/config';
+import { firebaseLoginSuccess } from 'Redux/actions/user';
+import { Routes } from 'Redux/constants';
 
 import { LogInView } from './LogInView';
 import { LogInForm } from './LogInForm';

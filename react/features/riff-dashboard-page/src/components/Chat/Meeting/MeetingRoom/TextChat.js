@@ -40,10 +40,10 @@ import {
 import 'react-chat-widget/lib/styles.css';
 
 import { logger } from 'libs/utils';
-import { sendTextChatMsg, setTextChatBadge } from 'redux/actions/textchat';
-import { getUserId } from 'redux/selectors/user';
-import { getRiffMeetingId } from 'redux/selectors/riff';
-import { getRoomName } from 'redux/selectors/chat';
+import { sendTextChatMsg, setTextChatBadge } from 'Redux/actions/textchat';
+import { getUserId } from 'Redux/selectors/user';
+import { getRiffMeetingId } from 'Redux/selectors/riff';
+import { getRoomName } from 'Redux/selectors/chat';
 
 const RiffChat = styled.div`
     .rcw-conversation-container > .rcw-header {

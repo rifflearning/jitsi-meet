@@ -13,8 +13,8 @@
  * ******************************************************************************/
 import { connect } from 'react-redux';
 
-import { getUserEmail } from 'redux/selectors/user';
-import { getDisplayName } from 'redux/selectors/chat';
+import { getUserEmail } from 'Redux/selectors/user';
+import { getDisplayName } from 'Redux/selectors/chat';
 
 import { LobbySidebar } from './LobbySidebar';
 

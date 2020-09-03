@@ -15,8 +15,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import copyToClipboard from 'copy-to-clipboard';
 
-import { Routes } from 'redux/constants';
-import { getIsPersonalMode } from 'redux/selectors/config';
+import { Routes } from 'Redux/constants';
+import { getIsPersonalMode } from 'Redux/selectors/config';
 
 import { CopyInviteBtn } from './styled';
 

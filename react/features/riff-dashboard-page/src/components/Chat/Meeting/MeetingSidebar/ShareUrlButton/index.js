@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import {
     urlShareStart,
     urlShareStop,
-} from 'redux/actions/chat';
+} from 'Redux/actions/chat';
 
 import { logger } from 'libs/utils';
 

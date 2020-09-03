@@ -29,7 +29,7 @@ import {
     VideoActionContainer,
 } from 'components/Chat/Common/styled';
 
-import { getMeetingSettings, getShowMeetingMediator } from 'redux/selectors/config';
+import { getMeetingSettings, getShowMeetingMediator } from 'Redux/selectors/config';
 
 import { MeetingMediator } from './MeetingMediator';
 import { ScreenShareButton } from './ScreenShareButton';

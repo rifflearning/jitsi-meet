@@ -41,8 +41,8 @@ import {
     TEXT_CHAT_MSG_UPDATE,
     TEXT_CHAT_SET_BADGE,
     UNMUTE_AUDIO,
-} from 'redux/constants/ActionTypes';
-import { ActionTypes } from 'redux/constants';
+} from 'Redux/constants/ActionTypes';
+import { ActionTypes } from 'Redux/constants';
 import {
     WebRtcNick,
     logger,

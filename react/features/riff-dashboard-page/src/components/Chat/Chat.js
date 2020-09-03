@@ -20,9 +20,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { unMuteAudio } from 'redux/actions/chat';
-import { store } from 'redux/store';
-import { addWebRtcListeners } from 'redux/listeners/webrtc';
+import { unMuteAudio } from 'Redux/actions/chat';
+import { store } from 'Redux/store';
+import { addWebRtcListeners } from 'Redux/listeners/webrtc';
 import { logger } from 'libs/utils';
 
 import { ChatContainer } from './styled';

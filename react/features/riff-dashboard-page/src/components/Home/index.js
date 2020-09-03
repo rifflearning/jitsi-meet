@@ -17,7 +17,7 @@
 
 import { connect } from 'react-redux';
 
-import { getIsUserLoggedIn } from 'redux/selectors/user';
+import { getIsUserLoggedIn } from 'Redux/selectors/user';
 
 import { Home } from './Home';
 

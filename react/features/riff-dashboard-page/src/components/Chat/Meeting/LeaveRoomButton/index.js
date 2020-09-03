@@ -15,12 +15,12 @@
 import { push } from 'connected-react-router';
 import { connect } from 'react-redux';
 
-import { participantLeaveRoom } from 'redux/actions/riff';
-import { givePostMeetingSurvey, leaveRoom, urlShareStop } from 'redux/actions/chat';
-import { getMeetingSettings } from 'redux/selectors/config';
-import { getRiffMeetingId } from 'redux/selectors/riff';
-import { getUserId } from 'redux/selectors/user';
-import { Routes } from 'redux/constants';
+import { participantLeaveRoom } from 'Redux/actions/riff';
+import { givePostMeetingSurvey, leaveRoom, urlShareStop } from 'Redux/actions/chat';
+import { getMeetingSettings } from 'Redux/selectors/config';
+import { getRiffMeetingId } from 'Redux/selectors/riff';
+import { getUserId } from 'Redux/selectors/user';
+import { Routes } from 'Redux/constants';
 
 import { LeaveRoomButton } from './LeaveRoomButton';
 

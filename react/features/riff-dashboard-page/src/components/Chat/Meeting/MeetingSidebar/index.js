@@ -13,7 +13,7 @@
 
 import { connect } from 'react-redux';
 
-import { getDisplayName, getRoomName } from 'redux/selectors/chat';
+import { getDisplayName, getRoomName } from 'Redux/selectors/chat';
 
 import { MeetingSidebar } from './MeetingSidebar';
 
