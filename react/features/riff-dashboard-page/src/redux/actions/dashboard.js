@@ -142,6 +142,18 @@ function loadMeetingData(uid, meetingId) {
     return thunk;
 }
 
+async function loginToServerForSibilent() {
+    try {
+        await app.authenticate({
+            strategy: 'local',
+            email: 'default-user-email',
+            password: 'default-user-password'
+        });
+    } catch (err) {
+        console.error('Error while loginToServerForSibilent', err);
+    }
+}
+
 /* ******************************************************************************
  * loadRecentMeetings (async action)                                       */ /**
  *
@@ -155,6 +167,7 @@ function loadMeetingData(uid, meetingId) {
  */
 function loadRecentMeetings(uid) {
     async function thunk(dispatch/*, getState*/) {
+        await loginToServerForSibilent()
         // Synchronously change the fetch meetings status to 'loading'
         dispatch({ type: ActionTypes.DASHBOARD_FETCH_MEETINGS, status: 'loading' });
 

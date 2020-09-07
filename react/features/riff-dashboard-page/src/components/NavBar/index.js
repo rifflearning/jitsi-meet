@@ -32,15 +32,16 @@ import { NavBarView } from './NavBarView';
 
 const navBarMapProps = {
     mapStateToProps: state => ({
-        isUserLoggedIn: getIsUserLoggedIn(state),
-        isRiffConnected: getIsRiffConnected(state),
-        isPersonalMode: getIsPersonalMode(),
-        authType: getUserAuthType(state),
-        wasInvited: getWasInvited(state),
-        inviteId: getInviteId(state),
+        isUserLoggedIn: true, // getIsUserLoggedIn(state),
+        isRiffConnected: true, // getIsRiffConnected(state),
+        isPersonalMode: false, // getIsPersonalMode(),
+        authType: 'firebase', // getUserAuthType(state),
+        wasInvited: false, // getWasInvited(state),
+        inviteId: '', // getInviteId(state),
         userName: getUserName(state),
         menuOpen: state.menu.menuOpen,
         inRoom: state.chat.inRoom,
+        selectedMeeting: state.dashboard.selectedMeeting,
     }),
 
     mapDispatchToProps: dispatch => ({

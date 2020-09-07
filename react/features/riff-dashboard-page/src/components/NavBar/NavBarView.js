@@ -26,7 +26,6 @@ import ArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
 import { AuthTypes, Routes } from 'Redux/constants';
 
-import riffLogo from 'Images/rifflogo.svg';
 
 import {
     DesktopMenu,
@@ -127,8 +126,14 @@ class NavBarView extends React.Component {
         return (
             <NavBar aria-label='main navigation'>
                 <div className='riff-logo'>
-                    <Link to={Routes.Home}>
-                        <img alt={'Riff homepage'} src={riffLogo}/>
+                    <Link
+                        // to={Routes.Home}
+                        to={''}
+                        onClick={() => {
+                            window.location.pathname = '/';
+                        }}
+                    >
+                        <img alt={'Riff homepage'} src={'/images/riffLogo.svg'}/>
                     </Link>
                 </div>
                 <button
@@ -242,8 +247,12 @@ class NavBarView extends React.Component {
         else {
             chatRoute = (
                 <Link
-                    to={Routes.Chat}
+                    // to={Routes.Chat}
+                    to={''}
                     className={`nav-link ${activeRoute === Routes.Chat ? 'is-active' : ''}`}
+                    onClick={() => {
+                        window.location.pathname = `/${this.props.selectedMeeting.room}`;
+                    }}
                 >
                     {'Riff Video'}
                 </Link>
@@ -257,7 +266,8 @@ class NavBarView extends React.Component {
                     {joinRoute}
                     {chatRoute}
                     <Link
-                        to={Routes.Metrics}
+                        // to={Routes.Metrics}
+                        to={''}
                         className={`nav-link ${activeRoute === Routes.Metrics ? 'is-active' : ''}`}
                     >
                         {'Riff Metrics'}
@@ -284,7 +294,10 @@ class NavBarView extends React.Component {
             // The profile page is only relevant for firebase users
             if (this.props.authType === AuthTypes.Firebase) {
                 userLinks.push(
-                    <Link to={Routes.UserProfile} key={Routes.UserProfile}>
+                    <Link
+                        // to={Routes.UserProfile}
+                        to={''}
+                        key={Routes.UserProfile}>
                         {'Profile'}
                     </Link>
                 );
@@ -294,9 +307,10 @@ class NavBarView extends React.Component {
             if (this.props.authType !== AuthTypes.Lti) {
                 userLinks.push(
                     <Link
-                        to={Routes.Home}
+                        // to={Routes.Home}
+                        to={''}
                         key='logout'
-                        onClick={this.props.handleLogOut}
+                        // onClick={this.props.handleLogOut}
                     >
                         {'Sign Out'}
                     </Link>

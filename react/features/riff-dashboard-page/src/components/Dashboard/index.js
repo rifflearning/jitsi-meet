@@ -19,7 +19,7 @@ import { connect } from 'react-redux';
 import { loadRecentMeetings } from 'Redux/actions/dashboard';
 import { dismissPostMeetingSurvey } from 'Redux/actions/chat';
 import { getGraphDataset, getSelectedMeeting } from 'Redux/selectors/dashboard';
-import { getIsRiffConnected } from 'Redux/selectors/riff';
+// import { getIsRiffConnected } from 'Redux/selectors/riff';
 import { getUserId } from 'Redux/selectors/user';
 import { getIsPostMeetingSurveyRequested } from 'Redux/selectors/chat';
 
@@ -30,7 +30,7 @@ import { DashboardView } from './DashboardView';
 const dashboardMapProps = {
     mapStateToProps: state => ({
         uid:                          getUserId(state),
-        isRiffConnected:              getIsRiffConnected(state),
+        isRiffConnected:              true, // getIsRiffConnected(state),
         fetchMeetingsStatus:          getGraphDataset(state, GraphDatasetTypes.MEETINGS).status,
         fetchMeetingsMessage:         getGraphDataset(state, GraphDatasetTypes.MEETINGS).message,
         lastFetched:                  getGraphDataset(state, GraphDatasetTypes.MEETINGS).lastFetched,
