@@ -1,7 +1,7 @@
 /* global __dirname */
 
 const CircularDependencyPlugin = require('circular-dependency-plugin');
-const path = require('path');
+const p = require('path');
 const process = require('process');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
@@ -170,13 +170,13 @@ const config = {
     resolve: {
         alias: {
             jquery: `jquery/dist/jquery${minimize ? '.min' : ''}.js`,
-            Images: path.resolve(__dirname, 'react/features/riff-dashboard-page', 'assets'),
-            Components: path.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'components'),
-            Redux: path.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'redux'),
-            Actions: path.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'redux', 'actions'),
-            Selectors: path.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'redux', 'selectors'),
-            RiffUtils: path.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'libs', 'utils'),
-            libs: path.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'libs')
+            Images: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'assets'),
+            Components: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'components'),
+            Redux: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'redux'),
+            Actions: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'redux', 'actions'),
+            Selectors: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'redux', 'selectors'),
+            RiffUtils: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'libs', 'utils'),
+            libs: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'libs')
         },
         aliasFields: [
             'browser'
