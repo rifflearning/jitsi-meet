@@ -8,7 +8,7 @@ import { getLocalJitsiAudioTrack } from '../base/tracks';
 import { setTileView } from '../video-layout';
 
 import * as actionTypes from './actionTypes';
-import DashboardPage from './components/DashboardPage';
+// import DashboardPage from './components/DashboardPage';
 import { app, socket } from './libraries/riffdata-client';
 import {
     cmpObjectProp,
@@ -51,7 +51,8 @@ export function redirectToRiffMetrics() {
         await participantLeaveRoom();
 
         getState()['features/base/app'].app._navigate({
-            component: DashboardPage
+            // component: DashboardPage,
+            href: '/static/dashboard.html'
         });
     };
 }
