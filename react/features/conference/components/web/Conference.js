@@ -14,8 +14,8 @@ import { CalleeInfoContainer } from '../../../invite';
 import { LargeVideo } from '../../../large-video';
 import { KnockingParticipantList, LobbyScreen } from '../../../lobby';
 import { Prejoin, isPrejoinPageVisible } from '../../../prejoin';
+import { setTileViewByDefault, attachSibilant } from '../../../riff-dashboard-page/actions';
 import { subscribeToEmotionsData } from '../../../riff-emotions/actions';
-import { setTileViewByDefault, attachSibilant } from '../../../riff-metrics/actions';
 import {
     Toolbox,
     fullScreenChanged,

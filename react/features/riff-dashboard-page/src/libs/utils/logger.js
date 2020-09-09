@@ -30,7 +30,7 @@ const errorLog = console.error.bind(window.console);
 /* eslint-enable no-console, no-empty-function */
 
 // TODO: change the config from just debug true/false to specifying a level.
-const configLogLevel = window.client_config.react_app_debug ? 'debug' : 'info';
+const configLogLevel = window.client_config?.react_app_debug ? 'debug' : 'info';
 
 /**
  * logger is a poor man's cheap logger for client code.

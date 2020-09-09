@@ -14,8 +14,8 @@ import {
 import { openURLInBrowser } from '../base/util';
 import { executeDialOutRequest, executeDialOutStatusRequest, getDialInfoPageURL } from '../invite/functions';
 import { showErrorNotification } from '../notifications';
+import { setTileViewByDefault, attachSibilant } from '../riff-dashboard-page/actions';
 import { subscribeToEmotionsData } from '../riff-emotions/actions';
-import { setTileViewByDefault, attachSibilant } from '../riff-metrics/actions';
 
 import {
     PREJOIN_START_CONFERENCE,

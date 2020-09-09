@@ -47,5 +47,5 @@ import '../transcribing/reducer';
 import '../video-layout/reducer';
 import '../videosipgw/reducer';
 import '../welcome/reducer';
-import '../riff-metrics/reducer';
+import '../riff-dashboard-page/reducer';
 import '../riff-emotions/reducer';

@@ -25,7 +25,7 @@
  * The configuration settings that were initialized when the app was loaded
  * They should NOT be modfied.
  */
-const configSettings = window.client_config;
+const configSettings = window.client_config || {};
 
 /**
  * Type of the configuration settings for meetings
