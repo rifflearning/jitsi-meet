@@ -1,8 +1,9 @@
 *.swp
 .*.tmp
 deploy-local.sh
-libs/
+/libs/
 all.css
+dashboard.css
 *css.map
 .remote-sync.json
 .sync-config.cson

@@ -34,6 +34,10 @@ cp body.html temp-deploy-aws/
 cp head.html temp-deploy-aws/
 cp title.html temp-deploy-aws/
 
+# copy root files: js. icons
+cp favicon.ico temp-deploy-aws/
+cp interface_config.js temp-deploy-aws/
+
 # copy all static
 mkdir temp-deploy-aws/static
 cp -a static/* temp-deploy-aws/static
@@ -41,6 +45,7 @@ cp -a static/* temp-deploy-aws/static
 # copy css
 mkdir temp-deploy-aws/css
 cp css/all.css temp-deploy-aws/css/
+cp css/dashboard.css temp-deploy-aws/css/
 
 # copy all libs
 mkdir temp-deploy-aws/libs
@@ -67,6 +72,7 @@ rm -rf /home/ubuntu/temp-deploy-aws; \
 unzip /home/ubuntu/temp-deploy-aws.zip; \
 rm /home/ubuntu/temp-deploy-aws.zip; \
 sudo mv /home/ubuntu/temp-deploy-aws/css/all.css /usr/share/jitsi-meet/css/;  \
+sudo mv /home/ubuntu/temp-deploy-aws/css/dashboard.css /usr/share/jitsi-meet/css/;  \
 rm -fr /home/ubuntu/temp-deploy-aws/css; \
 sudo rm -fr /usr/share/jitsi-meet/images; \
 sudo rm -fr /usr/share/jitsi-meet/libs; \

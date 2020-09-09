@@ -1,6 +1,7 @@
 /* global __dirname */
 
 const CircularDependencyPlugin = require('circular-dependency-plugin');
+const p = require('path');
 const process = require('process');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
@@ -168,7 +169,14 @@ const config = {
     ].filter(Boolean),
     resolve: {
         alias: {
-            jquery: `jquery/dist/jquery${minimize ? '.min' : ''}.js`
+            jquery: `jquery/dist/jquery${minimize ? '.min' : ''}.js`,
+            Images: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'assets'),
+            Components: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'components'),
+            Redux: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'redux'),
+            Actions: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'redux', 'actions'),
+            Selectors: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'redux', 'selectors'),
+            RiffUtils: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'libs', 'utils'),
+            libs: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'libs')
         },
         aliasFields: [
             'browser'
@@ -187,6 +195,12 @@ module.exports = [
     Object.assign({}, config, {
         entry: {
             'app.bundle': './app.js'
+        },
+        performance: getPerformanceHints(4 * 1024 * 1024)
+    }),
+    Object.assign({}, config, {
+        entry: {
+            'dashboard.bundle': './react/features/riff-dashboard-page/src/dashboard-page.js'
         },
         performance: getPerformanceHints(4 * 1024 * 1024)
     }),

@@ -25,7 +25,7 @@ import {
 } from '../base/util';
 import { clearNotifications, showNotification } from '../notifications';
 import { setFatalError } from '../overlay';
-import { redirectToRiffMetrics } from '../riff-metrics/actions';
+import { redirectToRiffMetrics } from '../riff-dashboard-page/actions';
 
 import {
     getDefaultURL,
