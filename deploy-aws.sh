@@ -34,6 +34,10 @@ cp body.html temp-deploy-aws/
 cp head.html temp-deploy-aws/
 cp title.html temp-deploy-aws/
 
+# copy root files: js. icons
+cp favicon.ico temp-deploy-aws/
+cp interface_config.js temp-deploy-aws/
+
 # copy all static
 mkdir temp-deploy-aws/static
 cp -a static/* temp-deploy-aws/static
