@@ -133,7 +133,7 @@ class NavBarView extends React.Component {
                             window.location.pathname = '/';
                         }}
                     >
-                        <img alt={'Riff homepage'} src={'/images/riffLogo.svg'}/>
+                        <img alt={'Riff homepage'} src={'/images/watermark.png'}/>
                     </Link>
                 </div>
                 <button
