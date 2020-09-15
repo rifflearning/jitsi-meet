@@ -37,6 +37,10 @@ const mapDispatchToProps = dispatch => ({
         // the metrics page.
         dispatch(firebaseLoginSuccess(user));
         dispatch(changeDisplayName({ displayName: user.displayName }));
+        
+        window.location.href = '/';
+        return;
+        
         if (!getIsPersonalMode()) {
             dispatch(push(Routes.Chat));
             return;
