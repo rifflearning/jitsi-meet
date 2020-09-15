@@ -20,7 +20,7 @@ import { Colors } from 'libs/utils';
 
 const FooterContainer = styled.div`
     height: 80px;
-    background-image: linear-gradient(to bottom, #faeefd, ${Colors.white});
+    background-image: linear-gradient(-90deg,#282725 0,#282725 50%,#282725 100%);
 
     .footer-inner {
         display: flex;

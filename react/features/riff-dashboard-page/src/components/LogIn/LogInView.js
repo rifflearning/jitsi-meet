@@ -16,8 +16,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 
-import promoImage from 'Images/signin-promo-img.svg';
-
 import { Footer } from 'components/Footer/Footer';
 
 import { LogInViewContainer } from './styled';
@@ -72,7 +70,7 @@ class LogInView extends React.Component {
                 <LogInViewContainer>
                     <div className='inner'>
                         <img
-                            src={promoImage}
+                            src={"/images/signin-promo-img.svg"}
                             alt='Riff - Sign in'
                             className='promo-image'
                         />

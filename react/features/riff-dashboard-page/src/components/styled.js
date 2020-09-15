@@ -68,7 +68,7 @@ const LargeHeading = styled.h1`
     font-size: 34pt!important;
     font-weight: bold;
     line-height: 1.2!important;
-    color: ${Colors.mineShaft};
+    color: ${Colors.white};
 
     @media (max-width: 768px) {
         font-size: 28pt!important;
