@@ -1,9 +1,21 @@
 /* global __dirname */
 
 const CircularDependencyPlugin = require('circular-dependency-plugin');
+const dotenv = require('dotenv');
 const p = require('path');
 const process = require('process');
+const webpack = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+
+// get .env variables
+const env = dotenv.config().parsed;
+
+// reduce it to a nice object, the same as before
+const envKeys = Object.keys(env).reduce((prev, next) => {
+    prev[`process.env.${next}`] = JSON.stringify(env[next]);
+
+    return prev;
+}, {});
 
 /**
  * The URL of the Jitsi Meet deployment to be proxy to in the context of
@@ -165,7 +177,8 @@ const config = {
                 allowAsyncCycles: false,
                 exclude: /node_modules/,
                 failOnError: false
-            })
+            }),
+        new webpack.DefinePlugin(envKeys)
     ].filter(Boolean),
     resolve: {
         alias: {

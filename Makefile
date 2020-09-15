@@ -36,6 +36,8 @@ deploy-appbundle:
 		$(BUILD_DIR)/app.bundle.min.map \
 		$(BUILD_DIR)/dashboard.bundle.min.js \
 		$(BUILD_DIR)/dashboard.bundle.min.map \
+		$(BUILD_DIR)/login.bundle.min.js \
+		$(BUILD_DIR)/login.bundle.min.map \
 		$(BUILD_DIR)/do_external_connect.min.js \
 		$(BUILD_DIR)/do_external_connect.min.map \
 		$(BUILD_DIR)/external_api.min.js \

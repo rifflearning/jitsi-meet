@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import { persistor, store } from 'Redux/store';
-import { browserHistory } from 'components/../history';
+import { browserHistory } from './history';
 
 // import { LogIn } from './LogIn';
 import { LogIn } from 'Components/LogIn';
@@ -31,10 +31,10 @@ const LoginPage = () => {
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-        <ConnectedRouter history={browserHistory}>
-          <LoginPage />
-        </ConnectedRouter>
-     </PersistGate>
+      <ConnectedRouter history={browserHistory}>
+        <LoginPage />
+      </ConnectedRouter>
+    </PersistGate>
   </Provider>
   ,
   document.getElementById('root')
