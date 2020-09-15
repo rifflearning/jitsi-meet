@@ -310,7 +310,7 @@ class NavBarView extends React.Component {
                         // to={Routes.Home}
                         to={''}
                         key='logout'
-                        // onClick={this.props.handleLogOut}
+                        onClick={this.props.handleLogOut}
                     >
                         {'Sign Out'}
                     </Link>

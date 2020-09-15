@@ -31,14 +31,14 @@ import { Routes } from 'Redux/constants';
 import { NavBarView } from './NavBarView';
 
 const navBarMapProps = {
-    mapStateToProps: state => ({
-        isUserLoggedIn: true, // getIsUserLoggedIn(state),
+    mapStateToProps: (state, {isUserLoggedIn = true}) => ({
+        isUserLoggedIn: isUserLoggedIn, // getIsUserLoggedIn(state),
         isRiffConnected: true, // getIsRiffConnected(state),
         isPersonalMode: false, // getIsPersonalMode(),
         authType: 'firebase', // getUserAuthType(state),
         wasInvited: false, // getWasInvited(state),
         inviteId: '', // getInviteId(state),
-        userName: getUserName(state),
+        userName: !isUserLoggedIn || getUserName(state),
         menuOpen: state.menu.menuOpen,
         inRoom: state.chat.inRoom,
         selectedMeeting: state.dashboard.selectedMeeting,
@@ -47,7 +47,7 @@ const navBarMapProps = {
     mapDispatchToProps: dispatch => ({
         handleLogOut: (/* event */) => {
             dispatch(userLogout());
-            dispatch(replace(Routes.Home));
+            // dispatch(replace(Routes.Home));
         },
 
         toggleMenu: (/* event */) => {
