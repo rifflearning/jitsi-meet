@@ -13,4 +13,5 @@ libs/*
 
 react/features/riff-metrics/*
 react/features/riff-dashboard-page/*
+react/features/riff-login-page/*
 modules/recorder/capturer/*

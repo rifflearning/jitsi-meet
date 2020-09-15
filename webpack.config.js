@@ -209,6 +209,12 @@ module.exports = [
     }),
     Object.assign({}, config, {
         entry: {
+            'login.bundle': './react/features/riff-dashboard-page/src/login-page.js'
+        },
+        performance: getPerformanceHints(4 * 1024 * 1024)
+    }),
+    Object.assign({}, config, {
+        entry: {
             'device_selection_popup_bundle': './react/features/settings/popup.js'
         },
         performance: getPerformanceHints(750 * 1024)
