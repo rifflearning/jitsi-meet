@@ -22,7 +22,7 @@
 
 // import 'sass/main.scss';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { ConnectedRouter } from 'connected-react-router';
 import { Provider } from 'react-redux';
@@ -37,22 +37,35 @@ import { Helmet } from 'react-helmet';
 
 import { NavBar } from 'Components/NavBar';
 import { Dashboard } from 'Components/Dashboard';
+import { firebaseApp } from './libs/utils/firebase_utils';
 
 logger.info(`Running riff-rtc server version ${getRtcServerVer()}\n\n`);
 
-const DashboardPage = () => (
-  <div>
-      <Helmet defaultTitle='Riff' titleTemplate='%s - Riff'/>
-          <div>
-              <NavBar
-                  activeRoute={'/riffs'}
-              />
-              <div id='main-content-container'>
-                  <Dashboard />
-              </div>
-          </div>
-  </div>
-)
+const DashboardPage = () => {
+    useEffect(() => {
+        const unsubscribe = firebaseApp.auth().onAuthStateChanged(user => {
+            if (user === null) {
+                window.location.href = '/static/login.html';
+            }
+        });
+
+        return () => {
+            unsubscribe();
+        }
+    }, []);
+
+    return <div>
+        <Helmet defaultTitle='Riff' titleTemplate='%s - Riff' />
+        <div>
+            <NavBar
+                activeRoute={'/riffs'}
+            />
+            <div id='main-content-container'>
+                <Dashboard />
+            </div>
+        </div>
+    </div>
+}
 
 ReactDOM.render(
     <Provider store={store}>
