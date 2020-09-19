@@ -59,7 +59,7 @@ const DashboardPage = () => {
         };
     }, []);
 
-    if (!isAuth) return null;
+    if (!isAuth) return <div />;
 
     return <div>
         <Helmet defaultTitle='Riff' titleTemplate='%s - Riff' />
