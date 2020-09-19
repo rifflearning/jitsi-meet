@@ -1,5 +1,6 @@
 /* global interfaceConfig */
 
+import { firebaseApp } from 'libs/utils/firebase_utils';
 import React from 'react';
 
 import { isMobileBrowser } from '../../base/environment/utils';
@@ -55,7 +56,8 @@ class WelcomePage extends AbstractWelcomePage {
 
             generateRoomnames:
                 interfaceConfig.GENERATE_ROOMNAMES_ON_WELCOME_PAGE,
-            selectedTab: 0
+            selectedTab: 0,
+            isAuth: false
         };
 
         /**
@@ -137,6 +139,14 @@ class WelcomePage extends AbstractWelcomePage {
                 this._additionalToolbarContentTemplate.content.cloneNode(true)
             );
         }
+
+        firebaseApp.auth().onAuthStateChanged(user => {
+            if (user === null) {
+                window.location.href = '/static/login.html';
+            } else {
+                this.setState({ isAuth: true });
+            }
+        });
     }
 
     /**
@@ -163,6 +173,10 @@ class WelcomePage extends AbstractWelcomePage {
         const showAdditionalContent = this._shouldShowAdditionalContent();
         const showAdditionalToolbarContent = this._shouldShowAdditionalToolbarContent();
         const showResponsiveText = this._shouldShowResponsiveText();
+
+        if (!this.state.isAuth) {
+            return <div />;
+        }
 
         return (
             <div

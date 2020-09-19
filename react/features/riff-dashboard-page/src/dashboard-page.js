@@ -22,7 +22,7 @@
 
 // import 'sass/main.scss';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { ConnectedRouter } from 'connected-react-router';
 import { Provider } from 'react-redux';
@@ -42,17 +42,24 @@ import { firebaseApp } from './libs/utils/firebase_utils';
 logger.info(`Running riff-rtc server version ${getRtcServerVer()}\n\n`);
 
 const DashboardPage = () => {
+    const [isAuth, setIsAuth] = useState(false);
+
     useEffect(() => {
         const unsubscribe = firebaseApp.auth().onAuthStateChanged(user => {
             if (user === null) {
+                localStorage.setItem('prevPathname', window.location.pathname);
                 window.location.href = '/static/login.html';
+            } else {
+                setIsAuth(true);
             }
         });
 
         return () => {
             unsubscribe();
-        }
+        };
     }, []);
+
+    if (!isAuth) return null;
 
     return <div>
         <Helmet defaultTitle='Riff' titleTemplate='%s - Riff' />

@@ -37,8 +37,8 @@ const mapDispatchToProps = dispatch => ({
         // the metrics page.
         dispatch(firebaseLoginSuccess(user));
         dispatch(changeDisplayName({ displayName: user.displayName }));
-        
-        window.location.href = '/';
+
+        window.location.href = localStorage.getItem('prevPathname') || '/';
         return;
         
         if (!getIsPersonalMode()) {

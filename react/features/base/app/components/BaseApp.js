@@ -1,7 +1,7 @@
 // @flow
+/* global config */
 
 import { jitsiLocalStorage } from '@jitsi/js-utils';
-import { firebaseApp } from 'libs/utils/firebase_utils';
 import _ from 'lodash';
 import React, { Component, Fragment } from 'react';
 import { I18nextProvider } from 'react-i18next';
@@ -90,12 +90,6 @@ export default class BaseApp extends Component<*, State> {
                 /* BaseApp should always initialize! */
                 logger.error(err);
             });
-
-        firebaseApp.auth().onAuthStateChanged(user => {
-            if (user === null) {
-                window.location.href = '/static/login.html';
-            }
-        });
     }
 
     /**

@@ -105,7 +105,12 @@ class LogInForm extends React.Component {
                         value={this.state.password}
                     />
                     <p className='forgot-password'>
-                        <a href='#' onClick={this._forgotPassword}>{'Forgot your password?'}</a>
+                        <a
+                            href="https://staging.riffplatform.com/signup"
+                            target="_blank"
+                        >
+                            {'Forgot your password?'}
+                        </a>
                     </p>
                     <SubmitButton
                         disabled={!this._validateForm()}
@@ -114,9 +119,12 @@ class LogInForm extends React.Component {
                 </form>
                 <div className='sign-up-prompt'>
                     {'New to Riff Analytics? '}
-                    <Link to={Routes.SignUp}>
+                    <a
+                        href="https://staging.riffplatform.com/signup"
+                        target="_blank"
+                    >
                         {'Sign up today'}
-                    </Link>
+                    </a>
                 </div>
             </LogInFormContainer>
         );

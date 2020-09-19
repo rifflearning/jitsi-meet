@@ -334,18 +334,20 @@ class NavBarView extends React.Component {
         if (!this.props.isUserLoggedIn) {
             return (
                 <>
-                    <Link
-                        to={Routes.SignIn}
+                    {/* <Link
+                        // to={Routes.SignIn}
+                        to={""}
                         className='sign-in-btn'
                     >
                         {'Sign In'}
-                    </Link>
-                    <Link
-                        to={Routes.SignUp}
+                    </Link> */}
+                    <a
+                        href="https://staging.riffplatform.com/signup"
+                        target="_blank"
                         className='sign-up-btn'
                     >
                         {this.props.isPersonalMode ? 'Sign Up For Free' : 'Sign Up'}
-                    </Link>
+                    </a>
                 </>
             );
         }

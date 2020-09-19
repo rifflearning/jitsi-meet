@@ -1,5 +1,6 @@
 // @flow
 
+import { firebaseApp } from 'libs/utils/firebase_utils';
 import _ from 'lodash';
 import React from 'react';
 import Draggable from 'react-draggable';
@@ -153,6 +154,15 @@ class Conference extends AbstractConference<Props, *> {
     componentDidMount() {
         document.title = `${this.props._roomName} | ${interfaceConfig.APP_NAME}`;
         this._start();
+
+        if (!config.iAmRecorder) {
+            firebaseApp.auth().onAuthStateChanged(user => {
+                if (user === null) {
+                    localStorage.setItem('prevPathname', window.location.pathname);
+                    window.location.href = '/static/login.html';
+                }
+            });
+        }
     }
 
     /**
