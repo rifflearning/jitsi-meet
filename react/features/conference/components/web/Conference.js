@@ -1,6 +1,5 @@
 // @flow
 
-import { firebaseApp } from 'libs/utils/firebase_utils';
 import _ from 'lodash';
 import React from 'react';
 import Draggable from 'react-draggable';
@@ -19,6 +18,7 @@ import { Prejoin, isPrejoinPageVisible } from '../../../prejoin';
 import { setTileViewByDefault, attachSibilant } from '../../../riff-dashboard-page/actions';
 // eslint-disable-next-line max-len
 import { MeetingMediator } from '../../../riff-dashboard-page/src/components/Chat/Meeting/MeetingSidebar/MeetingMediator';
+import { firebaseApp } from '../../../riff-dashboard-page/src/libs/utils/firebase_utils';
 import { subscribeToEmotionsData } from '../../../riff-emotions/actions';
 import {
     Toolbox,

@@ -1,6 +1,5 @@
 /* global interfaceConfig */
 
-import { firebaseApp } from 'libs/utils/firebase_utils';
 import React from 'react';
 
 import { isMobileBrowser } from '../../base/environment/utils';
@@ -10,6 +9,7 @@ import { Watermarks } from '../../base/react';
 import { connect } from '../../base/redux';
 import { CalendarList } from '../../calendar-sync';
 import { RecentList } from '../../recent-list';
+import { firebaseApp } from '../../riff-dashboard-page/src/libs/utils/firebase_utils';
 import { SettingsButton, SETTINGS_TABS } from '../../settings';
 
 import { AbstractWelcomePage, _mapStateToProps } from './AbstractWelcomePage';
