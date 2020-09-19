@@ -1,5 +1,4 @@
 // @flow
-/* global config */
 
 import { jitsiLocalStorage } from '@jitsi/js-utils';
 import _ from 'lodash';
