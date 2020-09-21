@@ -15,6 +15,8 @@ import { LargeVideo } from '../../../large-video';
 import { KnockingParticipantList, LobbyScreen } from '../../../lobby';
 import { Prejoin, isPrejoinPageVisible } from '../../../prejoin';
 import { setTileViewByDefault, attachSibilant } from '../../../riff-dashboard-page/actions';
+// eslint-disable-next-line max-len
+import { MeetingMediator } from '../../../riff-dashboard-page/src/components/Chat/Meeting/MeetingSidebar/MeetingMediator';
 import { subscribeToEmotionsData } from '../../../riff-emotions/actions';
 import {
     Toolbox,
@@ -192,7 +194,9 @@ class Conference extends AbstractConference<Props, *> {
             _iAmRecorder,
             _isLobbyScreenVisible,
             _layoutClassName,
-            _showPrejoin
+            _showPrejoin,
+            displayName,
+            webRtcPeers
         } = this.props;
         const hideLabels = filmstripOnly || _iAmRecorder;
 
@@ -201,6 +205,13 @@ class Conference extends AbstractConference<Props, *> {
                 className = { _layoutClassName }
                 id = 'videoconference_page'
                 onMouseMove = { this._onShowToolbar }>
+
+                <div id = 'meeting-mediator-wrapper'>
+                    <MeetingMediator
+                        displayName = { displayName }
+                        isEnabled = { true }
+                        webRtcPeers = { webRtcPeers } />
+                </div>
 
                 <Notice />
                 <Subject />
@@ -293,7 +304,11 @@ function _mapStateToProps(state) {
         _isLobbyScreenVisible: state['features/base/dialog']?.component === LobbyScreen,
         _layoutClassName: LAYOUT_CLASSNAMES[getCurrentLayout(state)],
         _roomName: getConferenceNameForTitle(state),
-        _showPrejoin: isPrejoinPageVisible(state)
+        _showPrejoin: isPrejoinPageVisible(state),
+        displayName: state['features/base/participants'][0].name,
+        webRtcPeers: state['features/base/participants'].map(p => {
+            return { nick: `${p.id}|${p.name}` };
+        })
     };
 }
 

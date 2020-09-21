@@ -158,8 +158,8 @@ class MeetingMediator extends React.Component {
 
 const mapStateToProps = state => ({
     uid: getUserId(state),
-    riffParticipants: state.riff.participants,
-    webRtcRoom: state.chat.webRtcRoom,
+    riffParticipants: state['features/base/participants'].map(el=>el.id), //state.riff.participants,
+    webRtcRoom: state['features/base/conference'].room //state['features/riff-metrics'].roomId
 });
 
 const ConnectedMeetingMediator = connect(mapStateToProps)(MeetingMediator);
