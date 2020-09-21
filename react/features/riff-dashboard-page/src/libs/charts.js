@@ -22,7 +22,7 @@
 
 import { logger } from 'libs/utils';
 
-import mediator from './mm.coffee';
+import mediator from './mm';
 
 const MM = mediator.MeetingMediator;
 

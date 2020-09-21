@@ -103,3 +103,17 @@ $flagsImagePath: "../images/";
 
 /* Modules END */
 @import 'riff-overrides';
+
+#meeting-mediator-wrapper {
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+
+  @import '../react/features/riff-dashboard-page/src/sass/main.scss';
+}
+
+/* tooltip for meeting-mediator */
+body > .tooltip {
+  z-index: 100;
+}
