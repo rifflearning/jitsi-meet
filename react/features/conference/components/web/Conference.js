@@ -98,6 +98,16 @@ type Props = AbstractProps & {
      */
     _showPrejoin: boolean,
 
+    /**
+     * displayName for MeetingMediator.
+     */
+    displayName: boolean,
+
+    /**
+     * webRtcPeers for MeetingMediator.
+     */
+    webRtcPeers: boolean,
+
     dispatch: Function,
     t: Function
 }
