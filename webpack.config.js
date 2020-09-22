@@ -8,7 +8,7 @@ const webpack = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 // get .env variables
-const env = dotenv.config().parsed;
+const env = dotenv.config().parsed || {};
 
 // reduce it to a nice object, the same as before
 const envKeys = Object.keys(env).reduce((prev, next) => {
