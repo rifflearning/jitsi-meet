@@ -16,7 +16,7 @@ import {
  * @returns {Function}
  */
 export function setParticipantsWithScreenShare(participantIds: Array<string>) {
-    return dispatch => {
+    return (dispatch: Dispatch<any>) => {
 
         // back to tile view after opponent stop screen sharing
         if (participantIds.length === 0) {
