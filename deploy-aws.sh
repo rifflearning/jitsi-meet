@@ -1,23 +1,23 @@
 #!/bin/bash
 # In order to build and deploy to aws instance with jitsi-meet client
-# run "make deploy-aws PEM=/path-to-key.pem AWS=username@0.0.0.0".
-# Or for only deployment: "sh ./deploy-aws.sh /path-to-key.pem username@0.0.0.0".
+# you need to provide enviroment variables to /.env file
+# and run "make deploy-aws" or only deploy with "sh deploy-aws.sh".
 
-PEM_PATH=$1
-AWS_PATH=$2
-EXAMPLE_TEXT="\n E.g.:\nmake deploy-aws PEM=/path-to-key.pem AWS=username@0.0.0.0 \n
-Or:\nsh ./deploy-aws.sh /path-to-key.pem username@0.0.0.0"
+# Set all vars from .env file, we need for PEM_PATH, AWS_PATH
+set -o allexport; source .env; set +o allexport
+
+EXAMPLE_TEXT="Add to /.env file variables:\nPEM_PATH=/path-to-key.pem\nAWS_PATH=username@0.0.0.0\n\nand run 'make deploy-aws'."
 
 if [ -z "$PEM_PATH" ]
   then
-    echo "No pem path provided"
+    echo "No PEM_PATH provided.\n"
     echo $EXAMPLE_TEXT
     exit 1
 fi
 
 if [ -z "$AWS_PATH" ]
   then
-    echo "No aws instance provided"
+    echo "No AWS_PATH provided.\n"
     echo $EXAMPLE_TEXT
     exit 1
 fi
