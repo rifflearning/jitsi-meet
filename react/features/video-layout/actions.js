@@ -13,15 +13,20 @@ import {
  *
  * @param {string} participantIds - The participants which currently have active
  * screen share streams.
- * @returns {{
- *     type: SCREEN_SHARE_PARTICIPANTS_UPDATED,
- *     participantId: string
- * }}
+ * @returns {Function}
  */
 export function setParticipantsWithScreenShare(participantIds: Array<string>) {
-    return {
-        type: SCREEN_SHARE_PARTICIPANTS_UPDATED,
-        participantIds
+    return dispatch => {
+
+        // back to tile view after opponent stop screen sharing
+        if (participantIds.length === 0) {
+            dispatch(setTileView(true));
+        }
+
+        return dispatch({
+            type: SCREEN_SHARE_PARTICIPANTS_UPDATED,
+            participantIds
+        });
     };
 }
 
