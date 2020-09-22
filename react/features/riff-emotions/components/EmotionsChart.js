@@ -30,9 +30,11 @@ const EmotionsChart = ({ rawData, tileViewEnabled }) => {
   return (
     <div ref={refWrapper} style={styles.wrapper}>
       <div style={styles.textWrapper}>
-        <span style={styles.text}>
-        {compound}
-        </span>
+        {compound &&
+          <span style={styles.text}>
+            {compound}
+          </span>
+        }
       </div>
       <ResponsiveContainer width="100%" height="50%">
         <BarChart
