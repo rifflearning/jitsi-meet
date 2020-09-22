@@ -119,4 +119,5 @@ In order to customize jitsi with riff theme, all features and set up a new envir
 
 3. Deploy develop branch to the instance using commands:
 * ```npm install```
-* ```make deploy-aws PEM=~/path-to-key.pem AWS=ubuntu@0.0.0.0```
+* add enviroment variables ```/.env``` file (ask colleagues for the config file)
+* build and deploy with ```make deploy-aws```
