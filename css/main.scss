@@ -109,6 +109,7 @@ $flagsImagePath: "../images/";
   z-index: 100;
   left: 0;
   top: 0;
+  cursor: move;
 
   @import '../react/features/riff-dashboard-page/src/sass/main.scss';
 }

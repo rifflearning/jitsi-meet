@@ -2,6 +2,7 @@
 
 import _ from 'lodash';
 import React from 'react';
+import Draggable from 'react-draggable';
 
 import VideoLayout from '../../../../../modules/UI/videolayout/VideoLayout';
 import { getConferenceNameForTitle } from '../../../base/conference';
@@ -216,12 +217,14 @@ class Conference extends AbstractConference<Props, *> {
                 id = 'videoconference_page'
                 onMouseMove = { this._onShowToolbar }>
 
-                <div id = 'meeting-mediator-wrapper'>
-                    <MeetingMediator
-                        displayName = { displayName }
-                        isEnabled = { true }
-                        webRtcPeers = { webRtcPeers } />
-                </div>
+                <Draggable bounds = { 'parent' }>
+                    <div id = 'meeting-mediator-wrapper'>
+                        <MeetingMediator
+                            displayName = { displayName }
+                            isEnabled = { true }
+                            webRtcPeers = { webRtcPeers } />
+                    </div>
+                </Draggable>
 
                 <Notice />
                 <Subject />
