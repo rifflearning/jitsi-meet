@@ -8,6 +8,7 @@ import { isSupportedBrowser } from '../base/environment';
 import { toState } from '../base/redux';
 import { Conference } from '../conference';
 import { getDeepLinkingPage } from '../deep-linking';
+import { maybeRedirectToLoginPage } from '../riff-dashboard-page/actions';
 import { UnsupportedDesktopBrowser } from '../unsupported-browser';
 import {
     BlankPage,
@@ -40,11 +41,13 @@ export type Route = {
 export function _getRouteToRender(stateful: Function | Object): Promise<Route> {
     const state = toState(stateful);
 
-    if (navigator.product === 'ReactNative') {
-        return _getMobileRoute(state);
-    }
+    return maybeRedirectToLoginPage().then(() => {
+        if (navigator.product === 'ReactNative') {
+            return _getMobileRoute(state);
+        }
 
-    return _getWebConferenceRoute(state) || _getWebWelcomePageRoute(state);
+        return _getWebConferenceRoute(state) || _getWebWelcomePageRoute(state);
+    });
 }
 
 /**

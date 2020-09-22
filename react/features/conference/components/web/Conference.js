@@ -18,7 +18,6 @@ import { Prejoin, isPrejoinPageVisible } from '../../../prejoin';
 import { setTileViewByDefault, attachSibilant } from '../../../riff-dashboard-page/actions';
 // eslint-disable-next-line max-len
 import { MeetingMediator } from '../../../riff-dashboard-page/src/components/Chat/Meeting/MeetingSidebar/MeetingMediator';
-import { firebaseApp } from '../../../riff-dashboard-page/src/libs/utils/firebase_utils';
 import { subscribeToEmotionsData } from '../../../riff-emotions/actions';
 import {
     Toolbox,
@@ -154,15 +153,6 @@ class Conference extends AbstractConference<Props, *> {
     componentDidMount() {
         document.title = `${this.props._roomName} | ${interfaceConfig.APP_NAME}`;
         this._start();
-
-        if (!config.iAmRecorder) {
-            firebaseApp.auth().onAuthStateChanged(user => {
-                if (user === null) {
-                    localStorage.setItem('prevPathname', window.location.pathname);
-                    window.location.href = '/static/login.html';
-                }
-            });
-        }
     }
 
     /**
