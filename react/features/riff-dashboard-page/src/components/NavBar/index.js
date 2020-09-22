@@ -41,7 +41,7 @@ const navBarMapProps = {
         userName: !isUserLoggedIn || getUserName(state),
         menuOpen: state.menu.menuOpen,
         inRoom: state.chat.inRoom,
-        selectedMeeting: state.dashboard.selectedMeeting,
+        roomName: state.dashboard.selectedMeeting?.room || '',
     }),
 
     mapDispatchToProps: dispatch => ({

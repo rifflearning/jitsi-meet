@@ -251,7 +251,7 @@ class NavBarView extends React.Component {
                     to={''}
                     className={`nav-link ${activeRoute === Routes.Chat ? 'is-active' : ''}`}
                     onClick={() => {
-                        window.location.pathname = `/${this.props.selectedMeeting.room}`;
+                        window.location.pathname = `/${this.props.roomName}`;
                     }}
                 >
                     {'Riff Video'}
