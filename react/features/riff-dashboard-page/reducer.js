@@ -7,7 +7,8 @@ import * as actionTypes from './actionTypes';
 PersistenceRegistry.register('features/riff-metrics', true, {
     roomId: '',
     uid: '',
-    selectedMeeting: null
+    selectedMeeting: null,
+    userData: {}
 });
 
 const defaultState = {
@@ -18,7 +19,8 @@ const defaultState = {
             status: 'loading',
             data: []
         }
-    }
+    },
+    userData: {}
 };
 
 ReducerRegistry.register('features/riff-metrics', (state = defaultState, action) => {
@@ -57,6 +59,12 @@ ReducerRegistry.register('features/riff-metrics', (state = defaultState, action)
                     data: action.meetingStats || []
                 }
             }
+        };
+    }
+    case actionTypes.SET_RIFF_FIREBASE_CREDENTIALS: {
+        return {
+            ...state,
+            userData: action.payload
         };
     }
     }

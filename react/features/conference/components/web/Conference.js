@@ -15,10 +15,12 @@ import { CalleeInfoContainer } from '../../../invite';
 import { LargeVideo } from '../../../large-video';
 import { KnockingParticipantList, LobbyScreen } from '../../../lobby';
 import { Prejoin, isPrejoinPageVisible } from '../../../prejoin';
-import { setTileViewByDefault, attachSibilant } from '../../../riff-dashboard-page/actions';
+// eslint-disable-next-line import/order, max-len
+import { startRiffServices, setRiffFirebaseCredentials, setTileViewByDefault } from '../../../riff-dashboard-page/actions';
+
 // eslint-disable-next-line max-len
 import { MeetingMediator } from '../../../riff-dashboard-page/src/components/Chat/Meeting/MeetingSidebar/MeetingMediator';
-import { subscribeToEmotionsData } from '../../../riff-emotions/actions';
+import { firebaseApp } from '../../../riff-dashboard-page/src/libs/utils/firebase_utils';
 import {
     Toolbox,
     fullScreenChanged,
@@ -109,11 +111,6 @@ type Props = AbstractProps & {
      */
     webRtcPeers: boolean,
 
-    /**
-     * uid for MeetingMediator.
-     */
-    uid: string,
-
     dispatch: Function,
     t: Function
 }
@@ -125,6 +122,7 @@ class Conference extends AbstractConference<Props, *> {
     _onFullScreenChange: Function;
     _onShowToolbar: Function;
     _originalOnShowToolbar: Function;
+    firebaseUnsubscribe: Function;
 
     /**
      * Initializes a new Conference instance.
@@ -156,8 +154,28 @@ class Conference extends AbstractConference<Props, *> {
      * @inheritdoc
      */
     componentDidMount() {
-        document.title = `${this.props._roomName} | ${interfaceConfig.APP_NAME}`;
+        const { _roomName, _showPrejoin, dispatch } = this.props;
+
+        document.title = `${_roomName} | ${interfaceConfig.APP_NAME}`;
         this._start();
+
+        // auth with firebase for riff-services
+        this.firebaseUnsubscribe = firebaseApp.auth().onAuthStateChanged(user => {
+            if (user === null) {
+                return;
+            }
+            const { displayName, email, uid } = user;
+
+            dispatch(setRiffFirebaseCredentials({
+                displayName,
+                email,
+                uid
+            }));
+
+            if (!_showPrejoin) {
+                dispatch(startRiffServices());
+            }
+        });
     }
 
     /**
@@ -192,6 +210,8 @@ class Conference extends AbstractConference<Props, *> {
             document.removeEventListener(name, this._onFullScreenChange));
 
         APP.conference.isJoined() && this.props.dispatch(disconnect());
+
+        this.firebaseUnsubscribe();
     }
 
     /**
@@ -212,8 +232,7 @@ class Conference extends AbstractConference<Props, *> {
             _layoutClassName,
             _showPrejoin,
             displayName,
-            webRtcPeers,
-            uid
+            webRtcPeers
         } = this.props;
         const hideLabels = filmstripOnly || _iAmRecorder;
 
@@ -223,7 +242,7 @@ class Conference extends AbstractConference<Props, *> {
                 id = 'videoconference_page'
                 onMouseMove = { this._onShowToolbar }>
 
-                {!_showPrejoin && uid !== 'local'
+                {!_showPrejoin
                     && <Draggable bounds = { 'parent' }>
                         <div id = 'meeting-mediator-wrapper'>
                             <MeetingMediator
@@ -302,11 +321,8 @@ class Conference extends AbstractConference<Props, *> {
         interfaceConfig.filmStripOnly
             && dispatch(setToolboxAlwaysVisible(true));
 
-        if (!this.props._showPrejoin) {
-            dispatch(setTileViewByDefault());
-            dispatch(attachSibilant());
-            dispatch(subscribeToEmotionsData());
-        }
+        // riff features
+        dispatch(setTileViewByDefault());
     }
 }
 
@@ -326,9 +342,14 @@ function _mapStateToProps(state) {
         _layoutClassName: LAYOUT_CLASSNAMES[getCurrentLayout(state)],
         _roomName: getConferenceNameForTitle(state),
         _showPrejoin: isPrejoinPageVisible(state),
-        displayName: state['features/base/participants'][0].name,
-        uid: state['features/base/participants'][0].id,
-        webRtcPeers: state['features/base/participants'].map(p => {
+        displayName: state['features/riff-metrics'].userData.displayName || '',
+        webRtcPeers: state['features/base/participants'].map((p, i) => {
+            if (i === 0) {
+                const { uid, displayName } = state['features/riff-metrics'].userData;
+
+                return { nick: `${uid}|${displayName}` };
+            }
+
             return { nick: `${p.id}|${p.name}` };
         })
     };

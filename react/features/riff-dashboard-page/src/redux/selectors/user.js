@@ -23,7 +23,7 @@ import { AuthTypes } from '../constants';
  * @returns {?string}
  */
 function getUserId(state) {
-    return JSON.parse(localStorage.getItem("features/riff-metrics"))?.uid || '';
+    return JSON.parse(localStorage.getItem("features/riff-metrics"))?.userData?.uid || '';
     return state.user.uid;
 }
 
@@ -36,6 +36,7 @@ function getUserId(state) {
  * @returns {string}
  */
 function getUserEmail(state) {
+    return JSON.parse(localStorage.getItem("features/riff-metrics"))?.userData?.email || '';
     return state.user.email;
 }
 
@@ -48,7 +49,7 @@ function getUserEmail(state) {
  * @returns {string}
  */
 function getUserName(state) {
-    return JSON.parse(localStorage.getItem("features/riff-metrics"))?.userName || '';
+    return JSON.parse(localStorage.getItem("features/riff-metrics"))?.userData?.displayName || '';
     return state.user.name;
 }
 

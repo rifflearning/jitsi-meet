@@ -15,6 +15,7 @@ import {
     getDurationInSeconds,
     groupByPropertyValue
 } from 'libs/utils';
+import { subscribeToEmotionsData } from '../riff-emotions/actions';
 
 export function setRiffServerRoomId(roomId) {
     return {
@@ -73,9 +74,13 @@ export function attachSibilant() {
 
             const { accessToken } = await loginToServerForSibilent();
 
-            await riffAddUserToMeeting(accessToken);
+            const userData = getState()['features/riff-metrics'].userData;
+            const meetingUrl = getState()['features/recent-list'].pop()?.conference;
+            const room = getState()['features/base/conference'].room;
+    
+            await riffAddUserToMeeting(userData, meetingUrl, room, accessToken);
 
-            speakingEvents.bind('stoppedSpeaking', data => sendUtteranceToServer(data, accessToken));
+            speakingEvents.bind('stoppedSpeaking', data => dispatch(sendUtteranceToServer(data, userData, room, accessToken)));
 
         } else {
             console.error('Error while attaching Sibilant. The track is not ready, will try again in 3 sec...');
@@ -84,24 +89,12 @@ export function attachSibilant() {
     };
 }
 
-export async function riffAddUserToMeeting(token) {
+export async function riffAddUserToMeeting({ uid, displayName, email }, meetingUrl, room, token) {
     try {
-
-        const state = APP.store.getState();
-        const { id: uid, name = uid, email } = state['features/base/participants'][0];
-
-        APP.store.dispatch(setJitsiUidForRiffServer(uid));
-        APP.store.dispatch(setJitsiUserNameForRiffServer(name));
-
-        // APP.store.dispatch(setJitsiEmailForRiffServer(email));
-
-        const meetingUrl = state['features/recent-list'][state['features/recent-list'].length - 1].conference;
-        const room = window.location.pathname.slice(1);
-
-        const { id: roomId } = await socket.emit('meetingJoined', {
+        await socket.emit('meetingJoined', {
             participant: uid,
             email,
-            name,
+            name: displayName || uid,
             room,
             description: 'default meeting description',
             meetingUrl,
@@ -109,8 +102,6 @@ export async function riffAddUserToMeeting(token) {
             consentDate: new Date().toISOString(),
             token
         });
-
-        return roomId;
     } catch (error) {
         console.error('Error while riffAddUserToMeeting action');
     }
@@ -189,27 +180,26 @@ export function getMeetingData() {
     };
 }
 
-async function sendUtteranceToServer(data, token) {
-    try {
-        const participant = APP.store.getState()['features/base/participants'][0].id;
-        const room = window.location.pathname.slice(1);
+function sendUtteranceToServer(data, {uid: participant}, room, token ) {
+    return async (dispatch) => {
+        try {
+            const res = await app.service('utterances').create({
+                participant,
+                room,
+                startTime: data.start.toISOString(),
+                endTime: data.end.toISOString(),
+                token
+            });
 
-        const res = await app.service('utterances').create({
-            participant,
-            room,
-            startTime: data.start.toISOString(),
-            endTime: data.end.toISOString(),
-            token
-        });
+            console.log({ createdUtter: res });
 
-        console.log({ createdUtter: res });
+            dispatch(setRiffServerRoomId(res.meeting));
 
-        APP.store.dispatch(setRiffServerRoomId(res.meeting));
+            return undefined;
 
-        return undefined;
-
-    } catch (err) {
-        console.error('Listener.WebRtc: ERROR', err);
+        } catch (err) {
+            console.error('Listener.WebRtc: ERROR', err);
+        }
     }
 }
 
@@ -319,4 +309,18 @@ export function maybeRedirectToLoginPage() {
             res();
         }
     });
+};
+
+export function setRiffFirebaseCredentials(userData) {
+    return {
+        type: actionTypes.SET_RIFF_FIREBASE_CREDENTIALS,
+        payload: userData
+    }
+};
+
+export function startRiffServices() {
+    return dispatch => {
+        dispatch(attachSibilant());
+        dispatch(subscribeToEmotionsData());
+    }
 };

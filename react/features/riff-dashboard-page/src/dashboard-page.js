@@ -41,6 +41,13 @@ import { firebaseApp } from './libs/utils/firebase_utils';
 
 logger.info(`Running riff-rtc server version ${getRtcServerVer()}\n\n`);
 
+// We don't have access to jitsi's store here, so paste data manually
+const setRiffFirebaseCredentials = (userData) => {
+    const riffMetrics = JSON.parse(localStorage.getItem('features/riff-metrics')) || {};
+    riffMetrics.userData = userData;
+    localStorage.setItem('features/riff-metrics',JSON.stringify(riffMetrics));
+}
+
 const DashboardPage = () => {
     const [isAuth, setIsAuth] = useState(false);
 
@@ -50,6 +57,8 @@ const DashboardPage = () => {
                 localStorage.setItem('prevPathname', window.location.pathname);
                 window.location.href = '/static/login.html';
             } else {
+                const { displayName, email, uid } = user;
+                setRiffFirebaseCredentials({ displayName, email, uid })
                 setIsAuth(true);
             }
         });
