@@ -6,20 +6,11 @@ import * as actionTypes from './actionTypes';
 // maybe delete?
 PersistenceRegistry.register('features/riff-metrics', true, {
     roomId: '',
-    uid: '',
-    selectedMeeting: null,
     userData: {}
 });
 
 const defaultState = {
-    uid: '',
-    selectedMeeting: { _id: '' },
-    graphDatasets: {
-        meeting_stats: {
-            status: 'loading',
-            data: []
-        }
-    },
+    roomId: '',
     userData: {}
 };
 
@@ -29,36 +20,6 @@ ReducerRegistry.register('features/riff-metrics', (state = defaultState, action)
         return {
             ...state,
             roomId: action.payload
-        };
-    }
-    case actionTypes.SET_JITSI_UID_FOR_RIFF_SERVER: {
-        return {
-            ...state,
-            uid: action.payload
-        };
-    }
-    case actionTypes.SET_JITSI_USERNAME_FOR_RIFF_SERVER: {
-        return {
-            ...state,
-            userName: action.payload
-        };
-    }
-    case actionTypes.SET_SELECTED_MEETING: {
-        return {
-            ...state,
-            selectedMeeting: action.payload
-        };
-    }
-    case actionTypes.DASHBOARD_FETCH_MEETING_STATS: {
-        return {
-            ...state,
-            graphDatasets: {
-                ...state.graphDatasets,
-                meeting_stats: {
-                    status: action.status,
-                    data: action.meetingStats || []
-                }
-            }
         };
     }
     case actionTypes.SET_RIFF_FIREBASE_CREDENTIALS: {

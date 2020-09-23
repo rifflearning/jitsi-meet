@@ -1,6 +1,4 @@
-/* eslint-disable require-jsdoc */
-/* eslint-disable no-empty-function */
-/* global APP */
+/* global APP, config */
 
 import Sibilant from 'sibilant-webaudio';
 import { firebaseApp } from 'libs/utils/firebase_utils';
@@ -10,11 +8,6 @@ import { setTileView } from '../video-layout';
 
 import * as actionTypes from './actionTypes';
 import { app, socket } from 'libs/riffdata-client';
-import {
-    cmpObjectProp,
-    getDurationInSeconds,
-    groupByPropertyValue
-} from 'libs/utils';
 import { subscribeToEmotionsData } from '../riff-emotions/actions';
 
 export function setRiffServerRoomId(roomId) {
@@ -24,32 +17,11 @@ export function setRiffServerRoomId(roomId) {
     };
 }
 
-
-export function setSelectedMeeting(meetingObj) {
-    return {
-        type: actionTypes.SET_SELECTED_MEETING,
-        payload: meetingObj
-    };
-
-}
-
-export function setJitsiUidForRiffServer(uid) {
-    return {
-        type: actionTypes.SET_JITSI_UID_FOR_RIFF_SERVER,
-        payload: uid
-    };
-}
-
-export function setJitsiUserNameForRiffServer(userName) {
-    return {
-        type: actionTypes.SET_JITSI_USERNAME_FOR_RIFF_SERVER,
-        payload: userName
-    };
-}
-
 export function redirectToRiffMetrics() {
     return async (dispatch, getState) => {
-        await participantLeaveRoom();
+        const { roomId, userData: { uid } } = getState()['features/riff-metrics'];
+
+        await participantLeaveRoom(roomId, uid);
 
         getState()['features/base/app'].app._navigate({
             href: '/static/dashboard.html'
@@ -77,7 +49,7 @@ export function attachSibilant() {
             const userData = getState()['features/riff-metrics'].userData;
             const meetingUrl = getState()['features/recent-list'].pop()?.conference;
             const room = getState()['features/base/conference'].room;
-    
+
             await riffAddUserToMeeting(userData, meetingUrl, room, accessToken);
 
             speakingEvents.bind('stoppedSpeaking', data => dispatch(sendUtteranceToServer(data, userData, room, accessToken)));
@@ -107,15 +79,12 @@ export async function riffAddUserToMeeting({ uid, displayName, email }, meetingU
     }
 }
 
-export function participantLeaveRoom(participantId = APP.store.getState()['features/base/participants'][0].id) {
-    const { roomId } = APP.store.getState()['features/riff-metrics'];
-
-    return app.service('meetings').patch(roomId, {
-        // eslint-disable-next-line camelcase
+export function participantLeaveRoom(meetingId, participantId) {
+    return app.service('meetings').patch(meetingId, {
         remove_participants: [ participantId ]
     })
         .then(res => {
-            console.log(`Action.Riff: removed participant: ${participantId} from meeting ${roomId}`, res);
+            console.log(`Action.Riff: removed participant: ${participantId} from meeting ${meetingId}`, res);
 
             return true;
         })
@@ -144,42 +113,6 @@ export async function loginToServerForSibilent() {
     }
 }
 
-export async function getMeetingId(uid) {
-
-    const participants = await app.service('participants').get(uid);
-
-    console.log({ participants });
-
-    const allParticipantsMeetings = await app.service('meetings')
-            .find({
-                query: {
-                    _id: participants.meetings[participants.meetings.length - 1]
-                }
-            });
-
-    APP.store.dispatch(setSelectedMeeting(allParticipantsMeetings[0]));
-    console.log({ allParticipantsMeetings });
-
-    return { meetingId: allParticipantsMeetings[0]._id,
-        selectedMeeting: allParticipantsMeetings[0] };
-}
-
-export function getMeetingData() {
-    return async dispatch => {
-        try {
-            await loginToServerForSibilent();
-            const uid = APP.store.getState()['features/riff-metrics'].uid;
-
-            const { selectedMeeting } = await getMeetingId(uid);
-
-            await dispatch(loadMeetingData(uid, selectedMeeting._id));
-
-        } catch (error) {
-            console.error('Error while getting meeting data', error);
-        }
-    };
-}
-
 function sendUtteranceToServer(data, {uid: participant}, room, token ) {
     return async (dispatch) => {
         try {
@@ -200,97 +133,6 @@ function sendUtteranceToServer(data, {uid: participant}, room, token ) {
         } catch (err) {
             console.error('Listener.WebRtc: ERROR', err);
         }
-    }
-}
-
-function loadMeetingData(uid, meetingId) {
-    async function thunk(dispatch /* , getState*/) {
-        const rawUtterances = await app.service('utterances')
-            .find({
-                query: {
-                    meeting: meetingId,
-                    $limit: 10000,
-                    stitch: true
-                }
-            });
-
-        const sortedUtterances = rawUtterances.slice().sort(cmpObjectProp('startTime'));
-        const participantUtterances = groupByPropertyValue(sortedUtterances, 'participant');
-
-        console.log('Action.dashboard.loadMeetingData: utterances:',
-                     { raw: rawUtterances,
-                         sorted: sortedUtterances,
-                         grouped: participantUtterances });
-
-        const speakingParticipantIds = Object.keys(participantUtterances);
-        const participantsQResponse = await app.service('participants')
-            .find({ query: { _id: { $in: speakingParticipantIds },
-                $limit: 100
-            }
-            });
-
-        if (participantsQResponse.total > participantsQResponse.limit) {
-            console.error('Action.dashboard.loadMeetingData: Error: Too many participants '
-                         + `(${participantsQResponse.total}) for query. `
-                         + `Raise limit of ${participantsQResponse.limit}`);
-        }
-        const speakingParticipants = participantsQResponse.data
-            .reduce((partMap, p) => partMap.set(p._id, { id: p._id,
-                name: p.name,
-                email: p.email }), new Map());
-
-        console.log('Action.dashboard.loadMeetingData: speakingParticipants:',
-                     { participantsQResponse,
-                         speakingParticipants });
-
-        return Promise.all([
-            getMeetingStats(participantUtterances, speakingParticipants, meetingId, dispatch)
-        ]);
-    }
-
-    return thunk;
-}
-
-async function getMeetingStats(participantUtterances, speakingParticipants, meetingId, dispatch) {
-    try {
-        const participantStats = [];
-
-        for (const participant of speakingParticipants.values()) {
-            const utterances = participantUtterances[participant.id];
-            const numUtterances = utterances.length;
-            const totalSecsUtterances
-                = utterances.reduce((uSecs, u) => uSecs + getDurationInSeconds(u.startTime, u.endTime), 0);
-            const meanSecsUtterances = numUtterances ? totalSecsUtterances / numUtterances : 0;
-
-            participantStats.push({
-                name: participant.name,
-                participantId: participant.id,
-                numUtterances,
-                lengthUtterances: totalSecsUtterances,
-                meanLengthUtterances: meanSecsUtterances
-            });
-        }
-
-        console.log('Action.dashboard.getMeetingStats: success', { participantStats });
-
-        // We've successfully loaded the meeting stats
-        dispatch({
-            type: actionTypes.DASHBOARD_FETCH_MEETING_STATS,
-            status: 'loaded',
-            meetingStats: participantStats
-        });
-
-        return participantStats;
-    } catch (e) {
-        console.error('Action.dashboard.getMeetingStats: ERROR encountered', e);
-
-        // dispatch({
-        //     type: ActionTypes.DASHBOARD_FETCH_MEETING_STATS,
-        //     status: 'error',
-        //     error: e
-        // });
-
-        throw e;
     }
 }
 
