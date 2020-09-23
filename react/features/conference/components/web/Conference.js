@@ -109,6 +109,11 @@ type Props = AbstractProps & {
      */
     webRtcPeers: boolean,
 
+    /**
+     * uid for MeetingMediator.
+     */
+    uid: string,
+
     dispatch: Function,
     t: Function
 }
@@ -207,7 +212,8 @@ class Conference extends AbstractConference<Props, *> {
             _layoutClassName,
             _showPrejoin,
             displayName,
-            webRtcPeers
+            webRtcPeers,
+            uid
         } = this.props;
         const hideLabels = filmstripOnly || _iAmRecorder;
 
@@ -217,14 +223,16 @@ class Conference extends AbstractConference<Props, *> {
                 id = 'videoconference_page'
                 onMouseMove = { this._onShowToolbar }>
 
-                <Draggable bounds = { 'parent' }>
-                    <div id = 'meeting-mediator-wrapper'>
-                        <MeetingMediator
-                            displayName = { displayName }
-                            isEnabled = { true }
-                            webRtcPeers = { webRtcPeers } />
-                    </div>
-                </Draggable>
+                {!_showPrejoin && uid !== 'local'
+                    && <Draggable bounds = { 'parent' }>
+                        <div id = 'meeting-mediator-wrapper'>
+                            <MeetingMediator
+                                displayName = { displayName }
+                                isEnabled = { true }
+                                webRtcPeers = { webRtcPeers } />
+                        </div>
+                    </Draggable>
+                }
 
                 <Notice />
                 <Subject />
@@ -319,6 +327,7 @@ function _mapStateToProps(state) {
         _roomName: getConferenceNameForTitle(state),
         _showPrejoin: isPrejoinPageVisible(state),
         displayName: state['features/base/participants'][0].name,
+        uid: state['features/base/participants'][0].id,
         webRtcPeers: state['features/base/participants'].map(p => {
             return { nick: `${p.id}|${p.name}` };
         })
