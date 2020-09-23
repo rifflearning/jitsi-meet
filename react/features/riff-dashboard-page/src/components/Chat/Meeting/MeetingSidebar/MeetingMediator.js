@@ -162,8 +162,7 @@ const mapStateToProps = state => ({
         if (i === 0) {
             return state['features/riff-metrics'].userData.uid;
         }
-
-        return p;
+        return p.id;
     }),
     webRtcRoom: state['features/base/conference'].room
 });
