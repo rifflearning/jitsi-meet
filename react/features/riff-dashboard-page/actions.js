@@ -154,9 +154,14 @@ export function maybeRedirectToLoginPage() {
 };
 
 export function setRiffFirebaseCredentials(userData) {
-    return {
-        type: actionTypes.SET_RIFF_FIREBASE_CREDENTIALS,
-        payload: userData
+    return (dispatch) => {
+        APP.conference.changeLocalDisplayName(userData.displayName);
+        APP.conference.changeLocalEmail(userData.email);
+
+        dispatch({
+            type: actionTypes.SET_RIFF_FIREBASE_CREDENTIALS,
+            payload: userData
+        });
     }
 };
 
