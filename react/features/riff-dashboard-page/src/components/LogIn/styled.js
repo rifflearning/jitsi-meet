@@ -26,7 +26,7 @@ import {
 } from 'Components/styled';
 
 const LogInViewContainer = styled.div`
-      background-image: linear-gradient(to bottom, ${Colors.white}, ${Colors.selago});
+      background-image: linear-gradient(-90deg,#282725 0,#282725 50%,#282725 100%);
 
     .inner {
         max-width: ${siteMaxWidth};
@@ -49,6 +49,7 @@ const LogInViewContainer = styled.div`
 const LogInFormContainer = styled.div`
     font-size: 16px;
     line-height: 1.63;
+    color: #fff;
 
     .sub-heading {
         margin: 24px 0;
@@ -58,7 +59,7 @@ const LogInFormContainer = styled.div`
 
     .sign-up-prompt {
         margin-top: 24px;
-        color: ${Colors.mineShaft};
+        color: ${Colors.white};
     }
 
     .forgot-password {

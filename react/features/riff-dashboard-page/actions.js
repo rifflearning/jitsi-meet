@@ -3,6 +3,7 @@
 /* global APP */
 
 import Sibilant from 'sibilant-webaudio';
+import { firebaseApp } from 'libs/utils/firebase_utils';
 
 import { getLocalJitsiAudioTrack } from '../base/tracks';
 import { setTileView } from '../video-layout';
@@ -302,3 +303,20 @@ async function getMeetingStats(participantUtterances, speakingParticipants, meet
         throw e;
     }
 }
+
+export function maybeRedirectToLoginPage() {
+    return new Promise(res => {
+        if (!config.iAmRecorder) {
+            firebaseApp.auth().onAuthStateChanged(user => {
+                if (user === null) {
+                    localStorage.setItem('prevPathname', window.location.pathname);
+                    window.location.href = '/static/login.html';
+                } else {
+                    res();
+                }
+            });
+        } else {
+            res();
+        }
+    });
+};

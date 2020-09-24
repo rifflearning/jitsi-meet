@@ -251,7 +251,7 @@ class NavBarView extends React.Component {
                     to={''}
                     className={`nav-link ${activeRoute === Routes.Chat ? 'is-active' : ''}`}
                     onClick={() => {
-                        window.location.pathname = `/${this.props.selectedMeeting.room}`;
+                        window.location.pathname = `/${this.props.roomName}`;
                     }}
                 >
                     {'Riff Video'}
@@ -310,7 +310,7 @@ class NavBarView extends React.Component {
                         // to={Routes.Home}
                         to={''}
                         key='logout'
-                        // onClick={this.props.handleLogOut}
+                        onClick={this.props.handleLogOut}
                     >
                         {'Sign Out'}
                     </Link>
@@ -334,18 +334,20 @@ class NavBarView extends React.Component {
         if (!this.props.isUserLoggedIn) {
             return (
                 <>
-                    <Link
-                        to={Routes.SignIn}
+                    {/* <Link
+                        // to={Routes.SignIn}
+                        to={""}
                         className='sign-in-btn'
                     >
                         {'Sign In'}
-                    </Link>
-                    <Link
-                        to={Routes.SignUp}
+                    </Link> */}
+                    <a
+                        href="https://staging.riffplatform.com/signup"
+                        target="_blank"
                         className='sign-up-btn'
                     >
                         {this.props.isPersonalMode ? 'Sign Up For Free' : 'Sign Up'}
-                    </Link>
+                    </a>
                 </>
             );
         }

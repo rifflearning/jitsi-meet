@@ -31,7 +31,7 @@ const FieldLabel = styled.label`
     line-height: 26px;
     display: block;
     margin-bottom: 4px;
-    color: ${Colors.mineShaft};
+    color: ${Colors.white};
 
     .is-required {
         color: ${Colors.deepRed};
