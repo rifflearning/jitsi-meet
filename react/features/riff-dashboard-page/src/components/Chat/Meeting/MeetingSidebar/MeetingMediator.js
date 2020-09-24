@@ -140,7 +140,7 @@ class MeetingMediator extends React.Component {
         const chartDiv = <div id='meeting-mediator'/>;
 
         return (
-            <div style={{ marginTop: '10px' }}>
+            <div>
                 <ChartCard
                     title={chartConfig.cardTitle}
                     chartInfo={chartConfig.info}
