@@ -774,7 +774,9 @@ export default class SmallVideo {
      * @private
      * @returns {void}
      */
-    _onContainerClick(event) {
+    _onContainerClick(/* event */) {
+        return; // disable full view onclick, stay in the tile view;
+        /*
         const triggerPin = this._shouldTriggerPin(event);
 
         if (event.stopPropagation && triggerPin) {
@@ -786,6 +788,7 @@ export default class SmallVideo {
         }
 
         return false;
+        */
     }
 
     /**
