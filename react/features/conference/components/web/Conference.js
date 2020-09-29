@@ -350,7 +350,7 @@ function _mapStateToProps(state) {
                 return { nick: `${uid}|${displayName}` };
             }
 
-            return { nick: `${p.id}|${p.name}` };
+            return { nick: p.name };
         })
     };
 }

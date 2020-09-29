@@ -27,6 +27,7 @@ import Mediator from 'libs/charts';
 import { app } from 'libs/riffdata-client';
 import { ChartTable } from 'components/A11y/ChartTable';
 import { ChartCard } from 'components/Dashboard/Metrics/ChartCard';
+import { maybeExtractIdFromDisplayName } from '../../../../../functions';
 
 /**
  *  Chart configuration properties
@@ -162,7 +163,7 @@ const mapStateToProps = state => ({
         if (i === 0) {
             return state['features/riff-metrics'].userData.uid;
         }
-        return p.id;
+        return maybeExtractIdFromDisplayName(p.name).firebaseId;
     }),
     webRtcRoom: state['features/base/conference'].room
 });

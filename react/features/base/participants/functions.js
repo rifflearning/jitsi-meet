@@ -2,6 +2,7 @@
 
 import { getGravatarURL } from '@jitsi/js-utils/avatar';
 
+import { maybeExtractIdFromDisplayName } from '../../riff-dashboard-page/functions';
 import { JitsiParticipantConnectionStatus } from '../lib-jitsi-meet';
 import { MEDIA_TYPE, shouldRenderVideoTrack } from '../media';
 import { toState } from '../redux';
@@ -161,7 +162,7 @@ export function getParticipantDisplayName(
 
     if (participant) {
         if (participant.name) {
-            return participant.name;
+            return maybeExtractIdFromDisplayName(participant.name).displayName;
         }
 
         if (participant.local) {

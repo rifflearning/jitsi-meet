@@ -155,7 +155,7 @@ export function maybeRedirectToLoginPage() {
 
 export function setRiffFirebaseCredentials(userData) {
     return (dispatch) => {
-        APP.conference.changeLocalDisplayName(userData.displayName);
+        APP.conference.changeLocalDisplayName(userData.uid + '|' + userData.displayName);
         APP.conference.changeLocalEmail(userData.email);
 
         dispatch({
