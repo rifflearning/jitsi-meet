@@ -66,7 +66,7 @@ export async function riffAddUserToMeeting({ uid, displayName, email }, meetingU
         await socket.emit('meetingJoined', {
             participant: uid,
             email,
-            name: displayName || uid,
+            name: displayName,
             room,
             description: 'default meeting description',
             meetingUrl,
@@ -155,7 +155,7 @@ export function maybeRedirectToLoginPage() {
 
 export function setRiffFirebaseCredentials(userData) {
     return (dispatch) => {
-        APP.conference.changeLocalDisplayName(userData.uid + '|' + userData.displayName);
+        APP.conference.changeLocalDisplayName(`${userData.uid}|${userData.displayName}`);
         APP.conference.changeLocalEmail(userData.email);
 
         dispatch({

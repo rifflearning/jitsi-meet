@@ -164,7 +164,7 @@ class Conference extends AbstractConference<Props, *> {
             if (user === null) {
                 return;
             }
-            const { displayName, email, uid } = user;
+            const { uid, email, displayName = email.split('@')[0] } = user;
 
             dispatch(setRiffFirebaseCredentials({
                 displayName,
