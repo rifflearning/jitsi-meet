@@ -95,6 +95,7 @@ class ProfileTab extends AbstractDialogTab<Props> {
                         <FieldTextStateless
                             autoFocus = { true }
                             compact = { true }
+                            disabled = { true }
                             id = 'setDisplayName'
                             label = { t('profile.setDisplayNameLabel') }
                             // eslint-disable-next-line react/jsx-no-bind
@@ -110,6 +111,7 @@ class ProfileTab extends AbstractDialogTab<Props> {
                     <div className = 'profile-edit-field'>
                         <FieldTextStateless
                             compact = { true }
+                            disabled = { true }
                             id = 'setEmail'
                             label = { t('profile.setEmailLabel') }
                             // eslint-disable-next-line react/jsx-no-bind
