@@ -24,7 +24,7 @@ import io from 'socket.io-client';
 let dataserverPath = '/api/videodata';
 dataserverPath += '/socket.io';
 
-const socket = io('https://dev.riffplatform.com', {
+const socket = io(process.env.RIFF_SERVER_URL, {
     timeout: 20000,
     path: dataserverPath,
     transports: [
