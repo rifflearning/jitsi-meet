@@ -2,6 +2,7 @@
 
 import React, { PureComponent } from 'react';
 
+import { maybeExtractIdFromDisplayName } from '../../../riff-dashboard-page/functions';
 import { IconShareDesktop } from '../../icons';
 import { getParticipantById } from '../../participants';
 import { connect } from '../../redux';
@@ -184,7 +185,7 @@ class Avatar<P: Props> extends PureComponent<P, State> {
 export function _mapStateToProps(state: Object, ownProps: Props) {
     const { colorBase, displayName, participantId } = ownProps;
     const _participant: ?Object = participantId && getParticipantById(state, participantId);
-    const _initialsBase = _participant?.name ?? displayName;
+    const _initialsBase = maybeExtractIdFromDisplayName(_participant?.name).displayName ?? displayName;
     const screenShares = state['features/video-layout'].screenShares || [];
 
     let _loadableAvatarUrl = _participant?.loadableAvatarUrl;

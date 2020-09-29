@@ -12,6 +12,7 @@ import {
 import { AbstractDialogTab } from '../../../base/dialog';
 import type { Props as AbstractDialogTabProps } from '../../../base/dialog';
 import { translate } from '../../../base/i18n';
+import { maybeExtractIdFromDisplayName } from '../../../riff-dashboard-page/functions';
 
 declare var APP: Object;
 
@@ -85,6 +86,8 @@ class ProfileTab extends AbstractDialogTab<Props> {
             t
         } = this.props;
 
+        const { firebaseIdWithSeparator, displayName: nameWithoutUid } = maybeExtractIdFromDisplayName(displayName);
+
         return (
             <div>
                 <div className = 'profile-edit'>
@@ -97,12 +100,12 @@ class ProfileTab extends AbstractDialogTab<Props> {
                             // eslint-disable-next-line react/jsx-no-bind
                             onChange = {
                                 ({ target: { value } }) =>
-                                    super._onChange({ displayName: value })
+                                    super._onChange({ displayName: `${firebaseIdWithSeparator}${value}` })
                             }
                             placeholder = { t('settings.name') }
                             shouldFitContainer = { true }
                             type = 'text'
-                            value = { displayName } />
+                            value = { nameWithoutUid } />
                     </div>
                     <div className = 'profile-edit-field'>
                         <FieldTextStateless
