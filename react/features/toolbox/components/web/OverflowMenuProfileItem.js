@@ -6,6 +6,7 @@ import { Avatar } from '../../../base/avatar';
 import { translate } from '../../../base/i18n';
 import { getLocalParticipant } from '../../../base/participants';
 import { connect } from '../../../base/redux';
+import { maybeExtractIdFromDisplayName } from '../../../riff-dashboard-page/functions';
 
 declare var interfaceConfig: Object;
 
@@ -86,7 +87,7 @@ class OverflowMenuProfileItem extends Component<Props> {
                         size = { 24 } />
                 </span>
                 <span className = 'profile-text'>
-                    { displayName }
+                    { maybeExtractIdFromDisplayName(displayName).displayName }
                 </span>
             </li>
         );

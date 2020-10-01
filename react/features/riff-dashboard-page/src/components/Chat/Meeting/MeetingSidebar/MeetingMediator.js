@@ -27,6 +27,7 @@ import Mediator from 'libs/charts';
 import { app } from 'libs/riffdata-client';
 import { ChartTable } from 'components/A11y/ChartTable';
 import { ChartCard } from 'components/Dashboard/Metrics/ChartCard';
+import { maybeExtractIdFromDisplayName } from '../../../../../functions';
 
 /**
  *  Chart configuration properties
@@ -157,9 +158,14 @@ class MeetingMediator extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    uid: state['features/base/participants'][0].id, //getUserId(state),
-    riffParticipants: state['features/base/participants'].map(el=>el.id), //state.riff.participants,
-    webRtcRoom: state['features/base/conference'].room //state['features/riff-metrics'].roomId
+    uid: getUserId(state),
+    riffParticipants: state['features/base/participants'].map((p, i) => {
+        if (i === 0) {
+            return state['features/riff-metrics'].userData.uid;
+        }
+        return maybeExtractIdFromDisplayName(p.name).firebaseId;
+    }),
+    webRtcRoom: state['features/base/conference'].room
 });
 
 const ConnectedMeetingMediator = connect(mapStateToProps)(MeetingMediator);
