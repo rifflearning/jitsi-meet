@@ -158,7 +158,7 @@ class MeetingMediator extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    uid: getUserId(state),
+    uid: state['features/riff-metrics'].userData.uid, //getUserId(state),
     riffParticipants: state['features/base/participants'].map((p, i) => {
         if (i === 0) {
             return state['features/riff-metrics'].userData.uid;
