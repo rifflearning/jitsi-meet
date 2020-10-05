@@ -14,7 +14,6 @@ import {
 import { openURLInBrowser } from '../base/util';
 import { executeDialOutRequest, executeDialOutStatusRequest, getDialInfoPageURL } from '../invite/functions';
 import { showErrorNotification } from '../notifications';
-import { startRiffServices } from '../riff-dashboard-page/actions';
 
 import {
     PREJOIN_START_CONFERENCE,
@@ -205,12 +204,8 @@ export function initPrejoin(tracks: Object[], errors: Object) {
  * @returns {Function}
  */
 export function joinConference() {
-    return (dispatch: Function) => {
-        dispatch(startRiffServices());
-
-        dispatch({
-            type: PREJOIN_START_CONFERENCE
-        });
+    return {
+        type: PREJOIN_START_CONFERENCE
     };
 }
 

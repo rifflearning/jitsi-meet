@@ -37,27 +37,22 @@ export function setTileViewByDefault() {
     };
 }
 
-export function attachSibilant() {
+export function attachSibilant(tracks) {
     return async (dispatch, getState) => {
-        const stream = getLocalJitsiAudioTrack(getState())?.stream;
+        const stream = tracks.find(t => t.isAudioTrack())?.stream;
+        if (!stream) return console.error('No audio stream. Error while attaching sibilant in attachSibilant action.');
 
-        if (stream) {
-            const speakingEvents = new Sibilant(stream);
+        const speakingEvents = new Sibilant(stream);
 
-            const { accessToken } = await loginToServerForSibilent();
+        const { accessToken } = await loginToServerForSibilent();
 
-            const userData = getState()['features/riff-metrics'].userData;
-            const meetingUrl = getState()['features/recent-list'].pop()?.conference;
-            const room = getState()['features/base/conference'].room;
+        const userData = getState()['features/riff-metrics'].userData;
+        const meetingUrl = getState()['features/recent-list'].pop()?.conference;
+        const room = getState()['features/base/conference'].room;
 
-            await riffAddUserToMeeting(userData, meetingUrl, room, accessToken);
+        await riffAddUserToMeeting(userData, meetingUrl, room, accessToken);
 
-            speakingEvents.bind('stoppedSpeaking', data => dispatch(sendUtteranceToServer(data, userData, room, accessToken)));
-
-        } else {
-            console.error('Error while attaching Sibilant. The track is not ready, will try again in 3 sec...');
-            setTimeout(() => dispatch(attachSibilant()), 3000);
-        }
+        speakingEvents.bind('stoppedSpeaking', data => dispatch(sendUtteranceToServer(data, userData, room, accessToken)));
     };
 }
 
@@ -144,6 +139,14 @@ export function maybeRedirectToLoginPage() {
                     localStorage.setItem('prevPathname', window.location.pathname);
                     window.location.href = '/static/login.html';
                 } else {
+                    const { uid, email, displayName = email.split('@')[0] } = user;
+
+                    APP.store.dispatch(setRiffFirebaseCredentials({
+                        displayName,
+                        email,
+                        uid
+                    }));
+
                     res();
                 }
             });
@@ -165,9 +168,13 @@ export function setRiffFirebaseCredentials(userData) {
     }
 };
 
-export function startRiffServices() {
+export function startRiffServices(tracks) {
     return dispatch => {
-        dispatch(attachSibilant());
-        dispatch(subscribeToEmotionsData());
+        dispatch(setTileViewByDefault());
+
+        maybeRedirectToLoginPage().then(() => {
+            dispatch(attachSibilant(tracks));
+            dispatch(subscribeToEmotionsData());
+        })
     }
 };

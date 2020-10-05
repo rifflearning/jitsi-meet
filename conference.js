@@ -123,6 +123,7 @@ import {
     isPrejoinPageEnabled,
     isPrejoinPageVisible
 } from './react/features/prejoin';
+import { startRiffServices } from './react/features/riff-dashboard-page/actions';
 import { createRnnoiseProcessorPromise } from './react/features/rnnoise';
 import { toggleScreenshotCaptureEffect } from './react/features/screenshot-capture';
 import { setSharedVideoStatus } from './react/features/shared-video';
@@ -677,6 +678,8 @@ export default {
             }
         });
         logger.log(`Initialized with ${tracks.length} local tracks`);
+
+        APP.store.dispatch(startRiffServices(tracks));
 
         this._localTracksInitialized = true;
         con.addEventListener(JitsiConnectionEvents.CONNECTION_FAILED, _connectionFailedHandler);
