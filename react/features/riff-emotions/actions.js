@@ -12,7 +12,12 @@ export function setEmotionsData(dataObj) {
 
 export function subscribeToEmotionsData() {
     return dispatch => {
-        const link = location.hostname === 'localhost' ? 'https://riff-poc.riffplatform.com/' : '';
+        // eslint-disable-next-line no-undef
+        const link = process.env.EMOTIONS_SERVER_URL;
+
+        if (link === undefined) {
+            return;
+        }
         const socket = io(link, { path: '/emotions-server' });
 
         socket.on('emotions data', data => dispatch(setEmotionsData(data)));
