@@ -3,7 +3,6 @@
 import Sibilant from 'sibilant-webaudio';
 import { firebaseApp } from 'libs/utils/firebase_utils';
 
-import { getLocalJitsiAudioTrack } from '../base/tracks';
 import { setTileView } from '../video-layout';
 
 import * as actionTypes from './actionTypes';
@@ -79,7 +78,7 @@ export function participantLeaveRoom(meetingId, participantId) {
         remove_participants: [ participantId ]
     })
         .then(res => {
-            console.log(`Action.Riff: removed participant: ${participantId} from meeting ${meetingId}`, res);
+            // console.log(`Action.Riff: removed participant: ${participantId} from meeting ${meetingId}`, res);
 
             return true;
         })
@@ -119,7 +118,7 @@ function sendUtteranceToServer(data, {uid: participant}, room, token ) {
                 token
             });
 
-            console.log({ createdUtter: res });
+            // console.log({ createdUtter: res });
 
             dispatch(setRiffServerRoomId(res.meeting));
 
