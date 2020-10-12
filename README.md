@@ -1,114 +1,109 @@
-# Jitsi Meet - Secure, Simple and Scalable Video Conferences
+# Jitsi Meet
 
-Jitsi Meet is an open-source (Apache) WebRTC JavaScript application that uses [Jitsi Videobridge](https://jitsi.org/videobridge) to provide high quality, [secure](https://jitsi.org/security) and scalable video conferences. Jitsi Meet in action can be seen at [here at the session #482 of the VoIP Users Conference](http://youtu.be/7vFUVClsNh0).
-
-The Jitsi Meet client runs in your browser, without installing anything else on your computer. You can try it out at https://meet.jit.si.
-
-Jitsi Meet allows very efficient collaboration. Users can stream their desktop or only some windows. It also supports shared document editing with Etherpad.
-
-## Installation
-
-On the client side, no installation is necessary. You just point your browser to the URL of your deployment. This section is about installing a Jitsi Meet suite on your server and hosting your own conferencing service.
-
-Installing Jitsi Meet is a simple experience. For Debian-based system, following the [quick install](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-quickstart) document, which uses the package system. You can also see a demonstration of the process in [this tutorial video](https://jitsi.org/tutorial).
-
-For other systems, or if you wish to install all components manually, see the [detailed manual installation instructions](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-manual).
-
-Installation with Docker is also available. Please see the [instruction](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-docker).
-
-## Download
-
-| Latest stable release | [![release](https://img.shields.io/badge/release-latest-green.svg)](https://github.com/jitsi/jitsi-meet/releases/latest) |
-|---|---|
-
-You can download Debian/Ubuntu binaries:
-* [stable](https://download.jitsi.org/stable/) ([instructions](https://jitsi.org/downloads/ubuntu-debian-installations-instructions/))
-* [testing](https://download.jitsi.org/testing/) ([instructions](https://jitsi.org/downloads/ubuntu-debian-installations-instructions-for-testing/))
-* [nightly](https://download.jitsi.org/unstable/) ([instructions](https://jitsi.org/downloads/ubuntu-debian-installations-instructions-nightly/))
-
-You can download source archives (produced by ```make source-package```):
-* [source builds](https://download.jitsi.org/jitsi-meet/src/)
-
-### Mobile apps
-
-* [Android](https://play.google.com/store/apps/details?id=org.jitsi.meet)
-
-[<img src="resources/img/google-play-badge.png" height="50">](https://play.google.com/store/apps/details?id=org.jitsi.meet)
-
-* [Android (F-Droid)](https://f-droid.org/en/packages/org.jitsi.meet/)
-
-[<img src="resources/img/f-droid-badge.png" height="50">](https://f-droid.org/en/packages/org.jitsi.meet/)
-
-* [iOS](https://itunes.apple.com/us/app/jitsi-meet/id1165103905)
-
-[<img src="resources/img/appstore-badge.png" height="50">](https://itunes.apple.com/us/app/jitsi-meet/id1165103905)
-
-You can also sign up for our open beta testing here:
-
-* [Android](https://play.google.com/apps/testing/org.jitsi.meet)
-* [iOS](https://testflight.apple.com/join/isy6ja7S)
-
-## Release notes
-
-Release notes for Jitsi Meet are maintained on [this repository](https://github.com/jitsi/jitsi-meet-release-notes).
-
-## Development
-
-For web development see [here](https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-web), and for mobile see [here](https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-mobile).
-
-## Contributing
-
-If you are looking to contribute to Jitsi Meet, first of all, thank you! Please
-see our [guidelines for contributing](CONTRIBUTING.md).
-
-## Embedding in external applications
-
-Jitsi Meet provides a very flexible way of embedding in external applications by using the [Jitsi Meet API](doc/api.md).
-
-## Security
-
-The security section here was starting to feel a bit too succinct for the complexity of the topic, so we created a post that covers the topic much more broadly here: https://jitsi.org/security
-
-The section on end-to-end encryption in that document is likely going to be one of the key points of interest: https://jitsi.org/security/#e2ee
-
-## Security issues
-
-For information on reporting security vulnerabilities in Jitsi Meet, see [SECURITY.md](./SECURITY.md).
-
-## Acknowledgements
-
-Jitsi Meet started out as a sample conferencing application using Jitsi Videobridge. It was originally developed by ESTOS' developer Philipp Hancke who then contributed it to the community where development continues with joint forces!
+## Development:
+Running with webpack-dev-server for development:
+```
+clone https://github.com/rifflearning/jitsi-meet.git
+git checkout develop
+npm install
+make dev
+```
+Also see official guide here [here](https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-web).
 
 ## Customization and deployment to AWS
-For running dev server run ```make dev```.
+In order to customize **jitsi-meet** with riff theme, all features and set up a new enviroment please follow next steps:
 
-In order to customize jitsi with riff theme, all features and set up a new enviroment please follow next steps.
+1. Install Jitsi-Meet to aws with [official guide](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-quickstart).
 
-1. Install Jitsi to aws with [official guide](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-quickstart).
-
-2. Install nodejs-emotions socket.io server to the same instance. (It's temprorary solution, will move this logic to riff-server)
-    * open port 4455 for connecting facial recognition server to nodejs-emotions server over the ```http```
-    * install unzip and nodejs to the aws instance
-    * move nodejs-emotions server on the instance and run it in background with ```node index.js &```
-    * configure nginx ```/etc/nginx/sites-available/[domain].conf``` and restart it with ```sudo systemctl restart nginx```:
+2. Deploy *develop* branch to the instance:
     ```
-    ...
+    git clone https://github.com/rifflearning/jitsi-meet.git
+    git checkout develop
+    npm install
+    ```
+    Add enviroment variables `.env` file (*ask colleagues for the config file*) with appropriate variables for deployment:
+    ```
+    ### Firebase for riff login
+    API_KEY=example_value
+    AUTH_DOMAIN=example_value
+    DATABASE_URL=example_value
+    PROJECT_ID=example_value
+    STORAGE_BUCKET=example_value
+    MESSAGING_SENDER_ID=example_value
+
+    ### AWS deployment
+    # Path to key.pem for aws deployment:
+    PEM_PATH=~/example/path/to/key.pem
+
+    # Aws instance name for deployment:
+    AWS_NAME=example_aws_name@0.0.0.0
+
+    # Riff-server url for sibilant:
+    RIFF_SERVER_URL=https://example-riff-server.com
+    ```
+    Build and deploy with:
+    ```
+    make deploy-aws
+    ```
+
+## Add emotional intelligence detection (optional)
+ Open **http port 4455** on aws for connecting facial recognition server to nodejs-emotions server over the `http`
+
+### Install nodejs-emotions server
+- download [nodejs-emotions.zip socket.io server](https://github.com/rifflearning/nodejs-emotions/archive/main.zip)
+
+- copy from local machine to aws instance:
+    ```
+    scp -i ~/path_to/key.pem ~/path_to/nodejs-emotions.zip ubuntu@3.135.3.68:/home/ubuntu
+    ```
+- connect to aws instance via *ssh* using *key.pem* and run nodejs-emotions:
+    ```
+    ssh -i ~/example_path_to/key.pem example_aws_name@0.0.0.0
+
+    # install *nodejs* and *unzip*:
+    sudo apt-get update
+    sudo apt-get install nodejs
+    sudo apt-get install unzip
+
+    # unzip:
+    unzip nodejs-emotions.zip
+    rm nodejs-emotions.zip
+
+    # run nodejs-emotions in background:
+    cd nodejs-emotions
+    npm i
+    node index.js &
+    ```
+    you can check if app is running:
+    ```
+    sudo netstat -nlp | grep :4455
+    ```
+### Add nginx config to redirect socket.io to nodejs-emotions server
+- find this part in the nginx config `/etc/nginx/sites-available/[domain].conf`:
+    ```
     #ensure all static content can always be found first
     location ~ ^/(libs|css|static|images|fonts|lang|sounds|connection_optimization|.well-known)/(.*)$
     {
-    ...
+        add_header 'Access-Control-Allow-Origin' '*';
+        alias /usr/share/jitsi-meet/$1/$2;
+
+        # cache all versioned files
+        if ($arg_v) {
+          expires 1y;
+        }
     }
+    ```
+    After that paste config for nodejs-emotions:
 
-    Then paste this config:
-
+    ```
     # config for socket.io for nodejs-emotions server
-    location ~* emotions-server {
+    location ^~ /emotions-server/ {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $http_host;
         proxy_set_header X-NginX-Proxy false;
 
-        proxy_pass http://localhost:4455;
+        proxy_pass http://localhost:4455/emotions-server/;
         proxy_redirect off;
 
         proxy_http_version 1.1;
@@ -116,8 +111,136 @@ In order to customize jitsi with riff theme, all features and set up a new envir
         proxy_set_header Connection "upgrade";
     }
     ```
+    and restart nginx:
+    ```
+    sudo systemctl restart nginx
+    ```
+### Add EMOTIONS_SERVER_URL url to the `.env` file
+```
+### Firebase for riff login
+API_KEY=example_value
+AUTH_DOMAIN=example_value
+DATABASE_URL=example_value
+PROJECT_ID=example_value
+STORAGE_BUCKET=example_value
+MESSAGING_SENDER_ID=example_value
 
-3. Deploy develop branch to the instance using commands:
-* ```npm install```
-* add enviroment variables ```/.env``` file (ask colleagues for the config file)
-* build and deploy with ```make deploy-aws```
+### AWS deployment
+# Path to key.pem for aws deployment:
+PEM_PATH=~/example/path/to/key.pem
+
+# Aws instance name for deployment:
+AWS_NAME=example_aws_name@0.0.0.0
+
+# Riff-server url for sibilant:
+RIFF_SERVER_URL=https://example-riff-server.com
+
+# Emotions-server url for emotion-intelligence:
+EMOTIONS_SERVER_URL=/
+```
+> **Warning:** *Don't forget to remove `EMOTIONS_SERVER_URL` in .env file when deploying to other aws servers without running nodejs-emotions server.*
+
+Now we have running nodejs-emotions and nginx config, and .env file confugured so you can deploy the app:
+```
+make deploy-aws
+```
+---
+## Add logs for browser usage
+You can run nodejs-browser-stats server on aws and pipe it to the `.log` file to see stats on every disconnect. You will be able to see:
+- browser name and version;
+- user info: id, firebaseId, name, email;
+- network stats: after 30 sec, every 5 minutes, onHangup.
+
+### Install nodejs-browser-stats server
+- download [nodejs-browser-stats.zip socket.io server](https://github.com/rifflearning/nodejs-browser-stats/archive/main.zip)
+
+- copy from local machine to aws instance:
+    ```
+    scp -i ~/path_to/key.pem ~/path_to/nodejs-browser-stats.zip ubuntu@3.135.3.68:/home/ubuntu
+    ```
+- connect to aws instance via *ssh* using *key.pem* and run nodejs-browser-stats:
+    ```
+    ssh -i ~/example_path_to/key.pem example_aws_name@0.0.0.0
+
+    # unzip:
+    unzip nodejs-browser-stats.zip
+    rm nodejs-browser-stats.zip
+
+    # run nodejs-browser-stats in background and pipe it to `.log` file:
+    cd nodejs-browser-stats
+    npm i
+    node index.js >> browser-logs.log &
+    ```
+    you can check if app is running:
+    ```
+    sudo netstat -nlp | grep :4454
+    ```
+### Add nginx config to redirect socket.io to nodejs-browser-stats server
+- find this part in the nginx config `/etc/nginx/sites-available/[domain].conf`:
+    ```
+    #ensure all static content can always be found first
+    location ~ ^/(libs|css|static|images|fonts|lang|sounds|connection_optimization|.well-known)/(.*)$
+    {
+        add_header 'Access-Control-Allow-Origin' '*';
+        alias /usr/share/jitsi-meet/$1/$2;
+
+        # cache all versioned files
+        if ($arg_v) {
+          expires 1y;
+        }
+    }
+    ```
+    After that paste config for nodejs-browser-stats:
+
+    ```
+    # config for socket.io for nodejs-browser-stats
+    location ^~ /api/nodejs-browser-stats/ {
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-NginX-Proxy false;
+
+        proxy_pass http://localhost:4454/;
+        proxy_redirect off;
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+    ```
+    and restart nginx:
+    ```
+    sudo systemctl restart nginx
+    ```
+### Add EMOTIONS_SERVER_URL to `.env` file:
+```
+### Firebase for riff login
+API_KEY=example_value
+AUTH_DOMAIN=example_value
+DATABASE_URL=example_value
+PROJECT_ID=example_value
+STORAGE_BUCKET=example_value
+MESSAGING_SENDER_ID=example_value
+
+### AWS deployment
+# Path to key.pem for aws deployment:
+PEM_PATH=~/example/path/to/key.pem
+
+# Aws instance name for deployment:
+AWS_NAME=example_aws_name@0.0.0.0
+
+# Riff-server url for sibilant:
+RIFF_SERVER_URL=https://example-riff-server.com
+
+# Emotions-server url for emotion-intelligence:
+# EMOTIONS_SERVER_URL=/
+
+# Browser-stats server url for logging browser usage:
+BROWSER_STATS_SERVER_URL=/
+```
+> **Warning:** *Don't forget to remove `BROWSER_STATS_SERVER_URL` in .env file when deploying to other aws servers without running nodejs-browser-stats server.*
+
+Now we have running nodejs-browser-stats and nginx config, and .env file confugured so you can deploy the app:
+```
+make deploy-aws
+```
