@@ -15,7 +15,7 @@ export function subscribeToEmotionsData() {
         // eslint-disable-next-line no-undef
         const link = process.env.EMOTIONS_SERVER_URL;
 
-        if (link === undefined) {
+        if (!link) {
             return;
         }
         const socket = io(link, { path: '/emotions-server' });
