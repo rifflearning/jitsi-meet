@@ -47,20 +47,20 @@ In order to customize **jitsi-meet** with riff theme, all features and set up a 
     ```
 
 ## Add emotional intelligence detection (optional)
- Open **http port 4455** on aws for connecting facial recognition server to nodejs-emotions server over the `http`
+Open **http port 4455** on aws for connecting facial recognition server to nodejs-emotions server over the `http`.
 
 ### Install nodejs-emotions server
 - download [nodejs-emotions.zip socket.io server](https://github.com/rifflearning/nodejs-emotions/archive/main.zip)
 
 - copy from local machine to aws instance:
     ```
-    scp -i ~/path_to/key.pem ~/path_to/nodejs-emotions.zip ubuntu@3.135.3.68:/home/ubuntu
+    scp -i ~/path_to/key.pem ~/path_to/nodejs-emotions.zip example-aws-name@0.0.0.0:/home/ubuntu
     ```
-- connect to aws instance via *ssh* using *key.pem* and run nodejs-emotions:
+- connect to aws instance via `ssh` using `key.pem` and run nodejs-emotions:
     ```
     ssh -i ~/example_path_to/key.pem example_aws_name@0.0.0.0
 
-    # install *nodejs* and *unzip*:
+    # install nodejs and unzip:
     sudo apt-get update
     sudo apt-get install nodejs
     sudo apt-get install unzip
@@ -74,12 +74,12 @@ In order to customize **jitsi-meet** with riff theme, all features and set up a 
     npm i
     node index.js &
     ```
-    you can check if app is running:
+    You can check if app is running:
     ```
     sudo netstat -nlp | grep :4455
     ```
 ### Add nginx config to redirect socket.io to nodejs-emotions server
-- find this part in the nginx config `/etc/nginx/sites-available/[domain].conf`:
+- find this part in the nginx config `/etc/nginx/sites-available/[domain].conf` on aws:
     ```
     #ensure all static content can always be found first
     location ~ ^/(libs|css|static|images|fonts|lang|sounds|connection_optimization|.well-known)/(.*)$
@@ -138,9 +138,9 @@ RIFF_SERVER_URL=https://example-riff-server.com
 # Emotions-server url for emotion-intelligence:
 EMOTIONS_SERVER_URL=/
 ```
-> **Warning:** *Don't forget to remove `EMOTIONS_SERVER_URL` in .env file when deploying to other aws servers without running nodejs-emotions server.*
+> **Warning:** *Don't forget to remove `EMOTIONS_SERVER_URL` in `.env` file when deploying to other aws instance without running nodejs-emotions server.*
 
-Now we have running nodejs-emotions and nginx config, and .env file confugured so you can deploy the app:
+Now we have running nodejs-emotions server and nginx config, and .env file confugured so you can deploy the app:
 ```
 make deploy-aws
 ```
@@ -156,9 +156,9 @@ You can run nodejs-browser-stats server on aws and pipe it to the `.log` file to
 
 - copy from local machine to aws instance:
     ```
-    scp -i ~/path_to/key.pem ~/path_to/nodejs-browser-stats.zip ubuntu@3.135.3.68:/home/ubuntu
+    scp -i ~/path_to/key.pem ~/path_to/nodejs-browser-stats.zip example-aws-name@0.0.0.0:/home/ubuntu
     ```
-- connect to aws instance via *ssh* using *key.pem* and run nodejs-browser-stats:
+- connect to aws instance via `ssh` using `key.pem` and run nodejs-browser-stats:
     ```
     ssh -i ~/example_path_to/key.pem example_aws_name@0.0.0.0
 
@@ -238,9 +238,9 @@ RIFF_SERVER_URL=https://example-riff-server.com
 # Browser-stats server url for logging browser usage:
 BROWSER_STATS_SERVER_URL=/
 ```
-> **Warning:** *Don't forget to remove `BROWSER_STATS_SERVER_URL` in .env file when deploying to other aws servers without running nodejs-browser-stats server.*
+> **Warning:** *Don't forget to remove `BROWSER_STATS_SERVER_URL` in `.env` file when deploying to other aws instance without running nodejs-browser-stats server.*
 
-Now we have running nodejs-browser-stats and nginx config, and .env file confugured so you can deploy the app:
+Now we have running nodejs-browser-stats server and nginx config, and .env file confugured so you can deploy the app:
 ```
 make deploy-aws
 ```
