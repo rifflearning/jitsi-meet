@@ -15,12 +15,8 @@ import { CalleeInfoContainer } from '../../../invite';
 import { LargeVideo } from '../../../large-video';
 import { KnockingParticipantList, LobbyScreen } from '../../../lobby';
 import { Prejoin, isPrejoinPageVisible } from '../../../prejoin';
-// eslint-disable-next-line import/order, max-len
-import { startRiffServices, setRiffFirebaseCredentials, setTileViewByDefault } from '../../../riff-dashboard-page/actions';
-
 // eslint-disable-next-line max-len
 import { MeetingMediator } from '../../../riff-dashboard-page/src/components/Chat/Meeting/MeetingSidebar/MeetingMediator';
-import { firebaseApp } from '../../../riff-dashboard-page/src/libs/utils/firebase_utils';
 import {
     Toolbox,
     fullScreenChanged,
@@ -154,28 +150,8 @@ class Conference extends AbstractConference<Props, *> {
      * @inheritdoc
      */
     componentDidMount() {
-        const { _roomName, _showPrejoin, dispatch } = this.props;
-
-        document.title = `${_roomName} | ${interfaceConfig.APP_NAME}`;
+        document.title = `${this.props._roomName} | ${interfaceConfig.APP_NAME}`;
         this._start();
-
-        // auth with firebase for riff-services
-        this.firebaseUnsubscribe = firebaseApp.auth().onAuthStateChanged(user => {
-            if (user === null) {
-                return;
-            }
-            const { uid, email, displayName = email.split('@')[0] } = user;
-
-            dispatch(setRiffFirebaseCredentials({
-                displayName,
-                email,
-                uid
-            }));
-
-            if (!_showPrejoin) {
-                dispatch(startRiffServices());
-            }
-        });
     }
 
     /**
@@ -210,8 +186,6 @@ class Conference extends AbstractConference<Props, *> {
             document.removeEventListener(name, this._onFullScreenChange));
 
         APP.conference.isJoined() && this.props.dispatch(disconnect());
-
-        this.firebaseUnsubscribe();
     }
 
     /**
@@ -320,9 +294,6 @@ class Conference extends AbstractConference<Props, *> {
 
         interfaceConfig.filmStripOnly
             && dispatch(setToolboxAlwaysVisible(true));
-
-        // riff features
-        dispatch(setTileViewByDefault());
     }
 }
 
