@@ -8,6 +8,7 @@ import { setTileView } from '../video-layout';
 import * as actionTypes from './actionTypes';
 import { app, socket } from 'libs/riffdata-client';
 import { subscribeToEmotionsData } from '../riff-emotions/actions';
+import { sendStatsOnConnect } from './nodejs-browser-stats';
 
 export function setRiffServerRoomId(roomId) {
     return {
@@ -38,20 +39,24 @@ export function setTileViewByDefault() {
 
 export function attachSibilant(tracks) {
     return async (dispatch, getState) => {
-        const stream = tracks.find(t => t.isAudioTrack())?.stream;
-        if (!stream) return console.error('No audio stream. Error while attaching sibilant in attachSibilant action.');
+        try {
+            const stream = tracks.find(t => t.isAudioTrack())?.stream;
+            if (!stream) return console.error('No audio stream. Error while attaching sibilant in attachSibilant action.');
 
-        const speakingEvents = new Sibilant(stream);
+            const speakingEvents = new Sibilant(stream);
 
-        const { accessToken } = await loginToServerForSibilent();
+            const { accessToken } = await loginToServerForSibilent();
 
-        const userData = getState()['features/riff-metrics'].userData;
-        const meetingUrl = getState()['features/recent-list'].pop()?.conference;
-        const room = getState()['features/base/conference'].room;
+            const userData = getState()['features/riff-metrics'].userData;
+            const meetingUrl = getState()['features/recent-list'].pop()?.conference;
+            const room = getState()['features/base/conference'].room;
 
-        await riffAddUserToMeeting(userData, meetingUrl, room, accessToken);
+            await riffAddUserToMeeting(userData, meetingUrl, room, accessToken);
 
-        speakingEvents.bind('stoppedSpeaking', data => dispatch(sendUtteranceToServer(data, userData, room, accessToken)));
+            speakingEvents.bind('stoppedSpeaking', data => dispatch(sendUtteranceToServer(data, userData, room, accessToken)));      
+        } catch (error) {
+            console.error('Error while attachSibilant', error);
+        }
     };
 }
 
@@ -118,7 +123,7 @@ function sendUtteranceToServer(data, {uid: participant}, room, token ) {
                 token
             });
 
-            // console.log({ createdUtter: res });
+            console.log({ createdUtter: res });
 
             dispatch(setRiffServerRoomId(res.meeting));
 
@@ -138,11 +143,11 @@ export function maybeRedirectToLoginPage() {
                     localStorage.setItem('prevPathname', window.location.pathname);
                     window.location.href = '/static/login.html';
                 } else {
-                    const { uid, email, displayName = email.split('@')[0] } = user;
+                    const { uid, email, displayName } = user;
 
                     APP.store.dispatch(setRiffFirebaseCredentials({
-                        displayName,
-                        email,
+                        displayName: displayName || email? email.split('@')[0] : 'Anonymous',
+                        email: email || 'anonymous',
                         uid
                     }));
 
@@ -174,6 +179,8 @@ export function startRiffServices(tracks) {
         maybeRedirectToLoginPage().then(() => {
             dispatch(attachSibilant(tracks));
             dispatch(subscribeToEmotionsData());
+
+            sendStatsOnConnect();
         })
     }
 };
