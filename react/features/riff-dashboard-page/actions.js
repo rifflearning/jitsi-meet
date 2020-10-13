@@ -146,7 +146,7 @@ export function maybeRedirectToLoginPage() {
                     const { uid, email, displayName } = user;
 
                     APP.store.dispatch(setRiffFirebaseCredentials({
-                        displayName: displayName || email? email.split('@')[0] : 'Anonymous',
+                        displayName: displayName || (email? email.split('@')[0] : 'Anonymous'),
                         email: email || 'anonymous',
                         uid
                     }));
