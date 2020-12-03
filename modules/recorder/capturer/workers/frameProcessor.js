@@ -7,7 +7,8 @@ self.addEventListener('message', (event) => {
     context = canvas.getContext("2d");
 
     context.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height);
-    canvas.convertToBlob().then((blob) => {
-        self.postMessage(blob);
-    });
+    canvas.convertToBlob({
+        type: "image/jpeg",
+        quality: 1
+    }).then(blob => self.postMessage(blob));
 });
