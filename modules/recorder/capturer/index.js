@@ -29,6 +29,11 @@ class Capturers {
     }
 
     _handleParticipantsUpdate = () => {
+        if (!getRoomId()) {
+            // we might need to wait for store to be updated with roomId
+            return;
+        }
+ 
         const update = selectUpdatedParticipants(Array.from(this._capturers.keys()));
 
         for (let participantId of update.left) {
@@ -40,7 +45,7 @@ class Capturers {
             const track = getTrackByParticipantId(participantId);
             const userId = getUserIdByParticipantId(participantId);
             const room = getRoom();
-            const roomId = getRoomId() || room;
+            const roomId = getRoomId();
             const capturer = new Capturer(room, roomId, userId, track);
             
             this._capturers.set(participantId, capturer);
