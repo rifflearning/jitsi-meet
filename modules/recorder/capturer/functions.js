@@ -29,12 +29,13 @@ export function getUserIdByParticipantId(participantId) {
 /**
  * Returns track associated with given participantId
  *
- * @returns {String}
+ * @returns {MediaStreamTrack}
  */
 export function getTrackByParticipantId(participantId) {
     return APP.store.getState()[FEATURES.TRACKS]
             .filter(track => track.mediaType === MEDIA_TYPE.VIDEO)
-            .find(track => track.participantId === participantId); 
+            .find(track => track.participantId === participantId)
+            .jitsiTrack.track;
 };
 
 /**

@@ -6,6 +6,7 @@ const p = require('path');
 const process = require('process');
 const webpack = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const WorkerPlugin = require('worker-plugin');
 
 // get .env variables
 const env = dotenv.config().parsed || {};
@@ -178,7 +179,8 @@ const config = {
                 exclude: /node_modules/,
                 failOnError: false
             }),
-        new webpack.DefinePlugin(envKeys)
+        new webpack.DefinePlugin(envKeys),
+        new WorkerPlugin()
     ].filter(Boolean),
     resolve: {
         alias: {
