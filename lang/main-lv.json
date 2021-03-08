@@ -452,7 +452,9 @@
         "unmute": "Ieslēgt skaņu/mikrofonu",
         "newDeviceCameraTitle": "Pamanīta jauna kamera",
         "newDeviceAudioTitle": "Pamanīta jauna audio ierīce",
-        "newDeviceAction": "Izmantot"
+        "newDeviceAction": "Izmantot",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "iestatījis kāds cits dalībnieks",
     "passwordDigitsOnly": "Līdz {{number}} cipariem",

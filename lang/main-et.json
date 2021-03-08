@@ -457,7 +457,9 @@
         "unmute": "Lülita mikrofon sisse",
         "newDeviceCameraTitle": "Leitud uus kaamera",
         "newDeviceAudioTitle": "Leitud uus heliseadeldis",
-        "newDeviceAction": "Kasuta"
+        "newDeviceAction": "Kasuta",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "määratud teise kasutaja poolt",
     "passwordDigitsOnly": "Kuni {{number}} tähemärki",

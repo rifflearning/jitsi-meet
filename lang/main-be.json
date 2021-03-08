@@ -465,7 +465,9 @@
         "unmute": "Уключыць мікрафон",
         "newDeviceCameraTitle": "Выяўлена новая камера",
         "newDeviceAudioTitle": "Выяўлена новае аўдыёпрылада",
-        "newDeviceAction": "Выкарыстоўваць"
+        "newDeviceAction": "Выкарыстоўваць",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "устаноўлены іншым удзельнікам",
     "passwordDigitsOnly": "Да {{number}} лічбаў",

@@ -474,7 +474,9 @@
         "unmute": "Stummschaltung aufheben",
         "newDeviceCameraTitle": "Neue Kamera erkannt",
         "newDeviceAudioTitle": "Neues Audiogerät erkannt",
-        "newDeviceAction": "Verwenden"
+        "newDeviceAction": "Verwenden",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "von einem anderen Teilnehmer gesetzt",
     "passwordDigitsOnly": "Bis zu {{number}} Ziffern",

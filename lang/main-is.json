@@ -460,7 +460,9 @@
         "unmute": "Afþagga",
         "newDeviceCameraTitle": "Ný myndavél fannst",
         "newDeviceAudioTitle": "Nýtt hljóðtæki fannst",
-        "newDeviceAction": "Nota"
+        "newDeviceAction": "Nota",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "sett af öðrum þátttakanda",
     "passwordDigitsOnly": "Allt að {{number}} stafir",

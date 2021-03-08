@@ -456,7 +456,9 @@
         "unmute": "取消靜音",
         "newDeviceCameraTitle": "偵測到新的攝影裝置",
         "newDeviceAudioTitle": "偵測到新的音效裝置",
-        "newDeviceAction": "使用"
+        "newDeviceAction": "使用",
+        "freezePingTitle": "",
+        "freezePingDescription": ""       
     },
     "passwordSetRemotely": "被其他參與者設定",
     "passwordDigitsOnly": "提昇到 {{number}} 位元",

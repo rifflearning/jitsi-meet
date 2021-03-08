@@ -468,7 +468,9 @@
         "OldElectronAPPTitle": "",
         "oldElectronClientDescription1": "",
         "oldElectronClientDescription2": "",
-        "oldElectronClientDescription3": ""
+        "oldElectronClientDescription3": "",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "beste parte-hartzaile batek ezarrita",
     "passwordDigitsOnly": "{{number}} digitu arte",

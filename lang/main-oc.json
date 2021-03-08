@@ -477,7 +477,9 @@
         "oldElectronClientDescription3": " ara !",
         "oldElectronClientDescription2": "darrièra compilacion",
         "oldElectronClientDescription1": "Sembla qu’utilizatz una version anciana del client Jitsi Meet qu’es conegut per conténer de problèmas de seguretat. Mercés de vos assegurar de metre a jorn ",
-        "OldElectronAPPTitle": "Problèma de seguretat !"
+        "OldElectronAPPTitle": "Problèma de seguretat !",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "causit per qualqu'un mai",
     "passwordDigitsOnly": "Fins a {{number}} chifras",

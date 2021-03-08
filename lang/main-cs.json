@@ -461,7 +461,9 @@
         "unmute": "",
         "newDeviceCameraTitle": "Detekována nová kamera",
         "newDeviceAudioTitle": "Detekováno nové zvukové zařízení",
-        "newDeviceAction": "Použít"
+        "newDeviceAction": "Použít",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "nastaveno jiným účastníkem",
     "passwordDigitsOnly": "Až {{number}} číslic",

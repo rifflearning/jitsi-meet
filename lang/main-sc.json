@@ -460,7 +460,9 @@
         "unmute": "Ativa su sonu",
         "newDeviceCameraTitle": "Càmera noa rilevada",
         "newDeviceAudioTitle": "Dispositivu de àudio nou rilevadu",
-        "newDeviceAction": "Imprea"
+        "newDeviceAction": "Imprea",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "cunfiguradu dae un'àtera persone",
     "passwordDigitsOnly": "Finas a {{number}} tzifras",

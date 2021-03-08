@@ -426,7 +426,9 @@
         "unmute": "",
         "newDeviceCameraTitle": "Camera mới được phát hiện",
         "newDeviceAudioTitle": "Thiết bị âm thanh mới được phát hiện",
-        "newDeviceAction": "Sử dụng"
+        "newDeviceAction": "Sử dụng",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "được thiết lập bởi một người khác",
     "passwordDigitsOnly": "",

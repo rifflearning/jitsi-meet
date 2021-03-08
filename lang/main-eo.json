@@ -471,7 +471,9 @@
         "OldElectronAPPTitle": "Sekurec-vundeblo!",
         "oldElectronClientDescription1": "Ŝajnas, ke vi uzas malnovan version de la kliento de Jitsi Meet, kiu havas konatajn sekurec-vundeblojn. Bonvolu ĝisdatigi al nia ",
         "oldElectronClientDescription2": "plej nova versio",
-        "oldElectronClientDescription3": " nun!"
+        "oldElectronClientDescription3": " nun!",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "agordita de alia partoprenanto",
     "passwordDigitsOnly": "Ĝis {{number}} ciferoj",

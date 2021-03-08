@@ -477,7 +477,9 @@
         "startSilentTitle": "Pridružili ste se brez zvoka!",
         "suboptimalBrowserWarning": "Kot kaže vaša uporabniška izkušnja z našim sistemom ne bo najboljša. Trudimo se, da bi  uporabniško izkušnjo izboljšali, do takrat pa prosimo uporabljajte enega od <a href='static/recommendedBrowsers.html' target='_blank'>popolnoma podprtih brskalnikov</a>.",
         "suboptimalExperienceTitle": "Opozorilo brskalnika",
-        "unmute": "Vklopi nazaj"
+        "unmute": "Vklopi nazaj",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordDigitsOnly": "Do {{number}} številk",
     "passwordSetRemotely": "nastavljeno s strani drugega uporabnika",

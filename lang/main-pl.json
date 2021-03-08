@@ -447,7 +447,9 @@
         "unmute": "Wyłącz wyciszenie",
         "newDeviceCameraTitle": "Wykryto nową kamerę",
         "newDeviceAudioTitle": "Wykryto nowe urządzenie dźwiękowe",
-        "newDeviceAction": "Użyj"
+        "newDeviceAction": "Użyj",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "wybrane przez innego uczestnika",
     "passwordDigitsOnly": "",

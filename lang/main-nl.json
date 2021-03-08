@@ -490,7 +490,9 @@
         "OldElectronAPPTitle": "Beveiligingskwetsbaarheid!",
         "oldElectronClientDescription1": "Het lijkt erop dat u een oude versie van Jitsi Meet gebruikt, waarvan beveiligingskwetsbaarheden bekend zijn. Zorg ervoor dat u nu bijwerkt naar de ",
         "oldElectronClientDescription2": "nieuwste versie",
-        "oldElectronClientDescription3": "!"
+        "oldElectronClientDescription3": "!",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "ingesteld door een andere deelnemer",
     "passwordDigitsOnly": "Maximaal {{number}} cijfers",

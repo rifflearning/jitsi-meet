@@ -457,7 +457,9 @@
         "unmute": "Įjungti garsą",
         "newDeviceCameraTitle": "Aptikta nauja kamera",
         "newDeviceAudioTitle": "Aptiktas naujas įrašo įrenginys",
-        "newDeviceAction": "Naudoti"
+        "newDeviceAction": "Naudoti",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "nustatytas kito naudotojo",
     "passwordDigitsOnly": "Daugiausia {{number}} skaičių",

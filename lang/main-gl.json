@@ -447,7 +447,9 @@
         "unmute": "Activar o son",
         "newDeviceCameraTitle": "Detectada unha nova cámara",
         "newDeviceAudioTitle": "Detectouse un novo dispositivo de son",
-        "newDeviceAction": "Utilizar"
+        "newDeviceAction": "Utilizar",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "estabelecida por outro participante",
     "passwordDigitsOnly": "Ata {{number}} díxitos",

@@ -461,7 +461,9 @@
         "unmute": "Включить микрофон",
         "newDeviceCameraTitle": "Обнаружена новая камера",
         "newDeviceAudioTitle": "Обнаружено новое аудиоустройство",
-        "newDeviceAction": "Использовать"
+        "newDeviceAction": "Использовать",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "установлен другим участником",
     "passwordDigitsOnly": "До {{number}} цифр",

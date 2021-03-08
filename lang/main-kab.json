@@ -428,7 +428,9 @@
         "unmute": "Susem",
         "newDeviceCameraTitle": "",
         "newDeviceAudioTitle": "",
-        "newDeviceAction": "Seqdec"
+        "newDeviceAction": "Seqdec",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "Yettwaɛeyyen sɣur yimekki nniḍen",
     "passwordDigitsOnly": "",

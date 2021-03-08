@@ -464,7 +464,9 @@
         "OldElectronAPPTitle": "פגיעות אבטחה!",
         "oldElectronClientDescription1": "נראה שאתה משתמש בגירסה ישנה של לקוח Jitsi Meet עם פגיעויות אבטחה ידועות. אנא וודא שאתה מעדכן ",
         "oldElectronClientDescription2": "לגירסה האחרונה",
-        "oldElectronClientDescription3": " כעת!"
+        "oldElectronClientDescription3": " כעת!",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "נקבע על ידי חבר אחר",
     "passwordDigitsOnly": "עד {{number}} ספרות",

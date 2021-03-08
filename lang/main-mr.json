@@ -469,7 +469,9 @@
         "OldElectronAPPTitle": "सुरक्षा असुरक्षा!",
         "oldElectronClientDescription1": "आपण सुरक्षा असुरक्षा ज्ञात असलेल्या जितसी मीट क्लायंटची जुनी आवृत्ती वापरत असल्याचे दिसून येत आहे. कृपया आमच्याकडे आपण अद्यतनित असल्याची खात्री करा",
         "oldElectronClientDescription2": "नवीनतम बिल्ड",
-        "oldElectronClientDescription3": " आता!"
+        "oldElectronClientDescription3": " आता!",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "दुसर्‍या सहभागीने सेट केलेले",
     "passwordDigitsOnly": " पर्यंत {{number}} अंक",

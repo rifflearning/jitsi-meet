@@ -457,7 +457,9 @@
         "unmute": "Дуутай",
         "newDeviceCameraTitle": "Шинэ камер",
         "newDeviceAudioTitle": "Шинэ аудио төхөөрөмж",
-        "newDeviceAction": "Хэрэглэх"
+        "newDeviceAction": "Хэрэглэх",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "өөр оролцогч хийсэн",
     "passwordDigitsOnly": "{{number}} хүртэлх тоо",

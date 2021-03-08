@@ -470,7 +470,9 @@
         "unmute": "Увімкнути мікрофон",
         "newDeviceCameraTitle": "Знайдено нову камеру",
         "newDeviceAudioTitle": "Знайдено новий звуковий пристрій",
-        "newDeviceAction": "Використовувати"
+        "newDeviceAction": "Використовувати",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "встановлено іншим учасником",
     "passwordDigitsOnly": "До {{number}} цифр",

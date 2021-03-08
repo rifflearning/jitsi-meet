@@ -442,7 +442,9 @@
         "unmute": "",
         "newDeviceCameraTitle": "检测到新相机",
         "newDeviceAudioTitle": "检测到新音频设备",
-        "newDeviceAction": "使用"
+        "newDeviceAction": "使用",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "由其他与会者设置",
     "passwordDigitsOnly": "",

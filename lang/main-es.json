@@ -488,7 +488,9 @@
         "OldElectronAPPTitle": "Vulnerabilidades de Seguridad!",
         "oldElectronClientDescription1": "Aparentemente usted está usuado una versión antigua de Jitsi Meet que tiene problemas de seguridad. Por favor actualice la versión con nuestra ",
         "oldElectronClientDescription2": "ultima versión",
-        "oldElectronClientDescription3": " ahora!"
+        "oldElectronClientDescription3": " ahora!",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "definida por otro participante",
     "passwordDigitsOnly": "Hasta {{number]] cifras",

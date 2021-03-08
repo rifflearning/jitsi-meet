@@ -484,7 +484,9 @@
         "OldElectronAPPTitle": "Güvenlik açığı!",
         "oldElectronClientDescription1": "Güvenlik açıkları bilinen Jitsi Meet istemcisinin eski bir sürümünü kullanıyor görünüyorsunuz. Lütfen güncellediğinizden emin olun.",
         "oldElectronClientDescription2": "son yapı",
-        "oldElectronClientDescription3": " şimdi!"
+        "oldElectronClientDescription3": " şimdi!",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
 
     },
     "passwordSetRemotely": "başka katılımcı tarafından ayarlandı",

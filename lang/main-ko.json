@@ -421,7 +421,9 @@
         "unmute": "",
         "newDeviceCameraTitle": "",
         "newDeviceAudioTitle": "",
-        "newDeviceAction": ""
+        "newDeviceAction": "",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "",
     "passwordDigitsOnly": "",

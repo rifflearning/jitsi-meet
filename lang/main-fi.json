@@ -426,7 +426,9 @@
         "unmute": "",
         "newDeviceCameraTitle": "Uusi kamera havaittu",
         "newDeviceAudioTitle": "Uusi äänilaite havaittu",
-        "newDeviceAction": "Käytä"
+        "newDeviceAction": "Käytä",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "",
     "passwordDigitsOnly": "",

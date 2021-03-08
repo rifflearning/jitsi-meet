@@ -453,7 +453,9 @@
         "newDeviceCameraTitle": "Ny kamera hittad",
         "newDeviceAudioTitle": "Ny ljudenhet hittad",
         "newDeviceAction": "Använd",
-        "suboptimalBrowserWarning": "Din mötesupplevelse kommer tyvärr inte att bli så bra. Vi letar efter sätt att förbättra detta, men fram till dess kan du försöka använda en av de <a href='{{recommendedBrowserPageLink}}' target='_blank'> fullt stödda webbläsarna </a>."
+        "suboptimalBrowserWarning": "Din mötesupplevelse kommer tyvärr inte att bli så bra. Vi letar efter sätt att förbättra detta, men fram till dess kan du försöka använda en av de <a href='{{recommendedBrowserPageLink}}' target='_blank'> fullt stödda webbläsarna </a>.",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "satt av en annan deltagare",
     "passwordDigitsOnly": "",

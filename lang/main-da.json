@@ -458,7 +458,9 @@
         "unmute": "",
         "newDeviceCameraTitle": "Nyt kamerat fundet",
         "newDeviceAudioTitle": "Ny lyd enhed fundet",
-        "newDeviceAction": "Benyt"
+        "newDeviceAction": "Benyt",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "sat af et andet medlem",
     "passwordDigitsOnly": "Op til {{number}} tal",

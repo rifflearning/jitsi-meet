@@ -458,7 +458,9 @@
         "unmute": "Zapnúť mikrofón",
         "newDeviceCameraTitle": "Bola zistená nová kamera",
         "newDeviceAudioTitle": "Bolo zistené nové audio zariadenie",
-        "newDeviceAction": "Použiť"
+        "newDeviceAction": "Použiť",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "nastavené iným účastníkom",
     "passwordDigitsOnly": "až {{number}} číslic",

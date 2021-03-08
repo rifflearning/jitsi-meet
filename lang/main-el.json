@@ -487,7 +487,9 @@
         "OldElectronAPPTitle": "Θέμα ευπάθειας ασφαλείας!",
         "oldElectronClientDescription1": "Φαίνεται ότι χρησιμοποιείτε μια παλιά έκδοση του πελάτη Jitsi Meet που έχει γνωστά θέματα ευπάθειας ασφαλείας. Παρακαλώ βεβαιωθείτε ότι έχετε την ενημερωμένη έκδοση για ",
         "oldElectronClientDescription2": "πρόσφατη έκδοση μας",
-        "oldElectronClientDescription3": " τώρα!"
+        "oldElectronClientDescription3": " τώρα!",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "ορίστηκε από άλλον συμμετέχοντα",
     "passwordDigitsOnly": "Έως {{number}} ψηφία",

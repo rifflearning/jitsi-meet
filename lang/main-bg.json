@@ -455,7 +455,9 @@
         "unmute": "Пускане на микрофона",
         "newDeviceCameraTitle": "Засечена е нова камера",
         "newDeviceAudioTitle": "Ново аудио устройство е засечено",
-        "newDeviceAction": "Използвай"
+        "newDeviceAction": "Използвай",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "зададена от друг участник",
     "passwordDigitsOnly": "До {{number}} цифри",

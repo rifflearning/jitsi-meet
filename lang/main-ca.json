@@ -460,7 +460,9 @@
         "unmute": "Activa el so",
         "newDeviceCameraTitle": "S'ha detectat una càmera nova",
         "newDeviceAudioTitle": "S'ha detectat un aparell d'àudio nou",
-        "newDeviceAction": "Usa"
+        "newDeviceAction": "Usa",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "establerta per una altre participant",
     "passwordDigitsOnly": "Fins a {{number}} dígits",

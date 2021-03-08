@@ -425,7 +425,9 @@
         "unmute": "",
         "newDeviceCameraTitle": "Trovata nuova videocamera",
         "newDeviceAudioTitle": "Trovata nuova origine audio",
-        "newDeviceAction": "Usala"
+        "newDeviceAction": "Usala",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "definita da altro utente",
     "passwordDigitsOnly": "Fino a {{number}} cifre",

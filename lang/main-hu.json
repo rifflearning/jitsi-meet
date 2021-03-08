@@ -456,7 +456,9 @@
         "unmute": "Visszahangosítás",
         "newDeviceCameraTitle": "Új kamera észlelve",
         "newDeviceAudioTitle": "Új hangeszköz észlelve",
-        "newDeviceAction": "Alkalmaz"
+        "newDeviceAction": "Alkalmaz",
+        "freezePingTitle": "",
+        "freezePingDescription": ""
     },
     "passwordSetRemotely": "egy másik résztvevő által beállítva",
     "passwordDigitsOnly": "Legfeljebb {{number}} szám",

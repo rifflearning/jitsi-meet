@@ -6,13 +6,19 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from '../../../base/redux';
 import { playSound } from '../../../base/sounds';
+import { showNotification } from '../../../../features/notifications';
 import { toggleFreezePing } from '../../actions/freezePing';
 import ToolbarButton from '../../../toolbox/components/web/ToolbarButton';
 import UpdateIcon from '@material-ui/icons/Update';
-import { PING_PERIOD, PING_MSG_SOUND_ID } from './constants';
+import { 
+    PING_PERIOD, 
+    PING_MSG_SOUND_ID,
+    NOTIFICATION_DESCRIPTION,
+    NOTIFICATION_TITLE
+ } from './constants';
 
 
-const FreezePingButton = ({ isActive, toggle, ping }) => {
+const FreezePingButton = ({ isActive, toggle, ping, notify }) => {
 
     const [ intervalId, setIntervalId ] = useState(null);
     const [ pageIsVisible, setPageIsVisible ] = useState(true);
@@ -36,20 +42,29 @@ const FreezePingButton = ({ isActive, toggle, ping }) => {
         }
     }, [isActive, pageIsVisible]);
 
+    const toggleWithNotificationIfSwitchingOff = () => {
+        toggle();
+
+        if (isActive) {
+            notify(NOTIFICATION_DESCRIPTION, NOTIFICATION_TITLE);
+        }
+    }
+
     return (
         <ToolbarButton
-            accessibilityLabel = 'Toggle freeze ping'
+            accessibilityLabel = 'Toggle Freeze Ping'
             icon = { UpdateIcon }
-            onClick = { () => toggle() }
+            onClick = { () => toggleWithNotificationIfSwitchingOff() }
             toggled = { isActive }
-            tooltip = 'Start / Stop freeze ping' />
+            tooltip = 'Enable / Disable Freeze Ping' />
     );
 };
 
 FreezePingButton.propTypes = {
     isActive: PropTypes.bool,
     toggle: PropTypes.func,
-    ping: PropTypes.func
+    ping: PropTypes.func,
+    notify: PropTypes.func
 };
 
 const mapStateToProps = state => {
@@ -62,6 +77,7 @@ const mapDispatchToProps = dispatch => {
     return {
         toggle: () => dispatch(toggleFreezePing()),
         ping: (soundId) => dispatch(playSound(soundId)),
+        notify: (description, title) => dispatch(showNotification({ descriptionKey: description, titleKey: title }))
     };
 };
 
