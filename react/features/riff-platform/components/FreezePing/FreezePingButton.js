@@ -2,12 +2,12 @@
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable import/order*/
 
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from '../../../base/redux';
+import { playSound } from '../../../base/sounds';
 import { toggleFreezePing } from '../../actions/freezePing';
 import ToolbarButton from '../../../toolbox/components/web/ToolbarButton';
-import { playSound } from '../../../base/sounds';
 import UpdateIcon from '@material-ui/icons/Update';
 import { PING_PERIOD, PING_MSG_SOUND_ID } from './constants';
 
