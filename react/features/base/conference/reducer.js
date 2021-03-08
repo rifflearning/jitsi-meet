@@ -24,7 +24,8 @@ import {
     SET_PREFERRED_VIDEO_QUALITY,
     SET_ROOM,
     SET_SIP_GATEWAY_ENABLED,
-    SET_START_MUTED_POLICY
+    SET_START_MUTED_POLICY,
+    IS_SHARING_SCREEN
 } from './actionTypes';
 import { VIDEO_QUALITY_LEVELS } from './constants';
 import { isRoomValid } from './functions';
@@ -119,6 +120,12 @@ ReducerRegistry.register(
                 ...state,
                 startAudioMutedPolicy: action.startAudioMutedPolicy,
                 startVideoMutedPolicy: action.startVideoMutedPolicy
+            };
+        
+        case IS_SHARING_SCREEN:
+            return {
+                ...state,
+                isSharingScreen: action.status
             };
         }
 

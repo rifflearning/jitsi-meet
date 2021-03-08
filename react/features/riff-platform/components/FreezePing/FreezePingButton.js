@@ -1,3 +1,4 @@
+/* global APP */
 /* eslint-disable max-len */
 /* eslint-disable import/order */
 /* eslint-disable padding-line-between-statements */
@@ -21,8 +22,7 @@ import {
 } from './constants';
 
 
-const FreezePingButton = ({ isActive, toggle, ping, notify }) => {
-
+const FreezePingButton = ({ isActive, isSharingScreen, toggle, ping, notify }) => {
     const [ intervalId, setIntervalId ] = useState(null);
     const [ pageIsVisible, setPageIsVisible ] = useState(true);
 
@@ -37,13 +37,13 @@ const FreezePingButton = ({ isActive, toggle, ping, notify }) => {
     }, []);
 
     useEffect(() => {
-        if (isActive && !pageIsVisible) {
+        if (isActive && !pageIsVisible && !isSharingScreen) {
             const id = setInterval(() => ping(PING_MSG_SOUND_ID), PING_PERIOD);
             setIntervalId(id);
         } else {
             clearInterval(intervalId);
         }
-    }, [ isActive, pageIsVisible ]);
+    }, [ isActive, pageIsVisible, isSharingScreen ]);
 
     const toggleWithNotificationIfSwitchingOff = () => {
         toggle();
@@ -65,6 +65,7 @@ const FreezePingButton = ({ isActive, toggle, ping, notify }) => {
 
 FreezePingButton.propTypes = {
     isActive: PropTypes.bool,
+    isSharingScreen: PropTypes.bool,
     toggle: PropTypes.func,
     ping: PropTypes.func,
     notify: PropTypes.func
@@ -72,7 +73,8 @@ FreezePingButton.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        isActive: state['features/riff-platform'].freezePing.isActive
+        isActive: state['features/riff-platform'].freezePing.isActive,
+        isSharingScreen: state['features/base/conference'].isSharingScreen
     };
 };
 

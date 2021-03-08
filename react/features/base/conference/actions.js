@@ -51,7 +51,8 @@ import {
     SET_PREFERRED_VIDEO_QUALITY,
     SET_ROOM,
     SET_PENDING_SUBJECT_CHANGE,
-    SET_START_MUTED_POLICY
+    SET_START_MUTED_POLICY,
+    IS_SHARING_SCREEN
 } from './actionTypes';
 import {
     AVATAR_ID_COMMAND,
@@ -775,5 +776,18 @@ export function setSubject(subject: string) {
                 subject
             });
         }
+    };
+}
+
+/**
+ * Changing status of screen sharing by user.
+ *
+ * @param {boolean} status - The new status.
+ * @returns {void}
+ */
+export function setScreenSharingStatus(status: boolean) {
+    return {
+        type: IS_SHARING_SCREEN,
+        status
     };
 }

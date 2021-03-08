@@ -43,7 +43,8 @@ import {
     onStartMutedPolicyChanged,
     p2pStatusChanged,
     sendLocalParticipant,
-    setDesktopSharingEnabled
+    setDesktopSharingEnabled,
+    setScreenSharingStatus
 } from './react/features/base/conference';
 import {
     checkAndNotifyForNewDevice,
@@ -1471,6 +1472,8 @@ export default {
 
             APP.API.notifyScreenSharingStatusChanged(
                 this.isSharingScreen, details);
+            
+            APP.store.dispatch(setScreenSharingStatus(this.isSharingScreen));    
         }
     },
 

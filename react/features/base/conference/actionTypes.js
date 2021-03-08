@@ -254,3 +254,13 @@ export const SET_SIP_GATEWAY_ENABLED = 'SET_SIP_GATEWAY_ENABLED';
  * }
  */
 export const SET_START_MUTED_POLICY = 'SET_START_MUTED_POLICY';
+
+/**
+ * The type of (redux) action which sets the flag if user currently sharing a screen.
+ *
+ * {
+ *     type: IS_SHARING_SCREEN,
+ *     status: boolean
+ * }
+ */
+export const IS_SHARING_SCREEN = 'IS_SHARING_SCREEN';
