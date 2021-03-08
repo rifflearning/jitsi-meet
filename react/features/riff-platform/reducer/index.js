@@ -11,6 +11,7 @@ import riff from './riff';
 import scheduler from './scheduler';
 import signIn from './signIn';
 import signUp from './signUp';
+import freezePing from './freezePing'
 
 ReducerRegistry.register('features/riff-platform',
   combineReducers({
@@ -22,6 +23,7 @@ ReducerRegistry.register('features/riff-platform',
       riff,
       resetPassword,
       meetingMediator,
-      localRecording
+      localRecording,
+      freezePing
   })
 );

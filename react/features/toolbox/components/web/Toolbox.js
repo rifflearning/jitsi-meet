@@ -47,6 +47,7 @@ import {
     RecordButton
 } from '../../../recording';
 import MeetingMediatorButton from '../../../riff-platform/components/DraggableMeetingMediator/MeetingMediatorButton';
+import FreezePingButton from '../../../riff-platform/components/FreezePing/FreezePingButton';
 import { SecurityDialogButton } from '../../../security';
 import {
     SETTINGS_TABS,
@@ -1209,6 +1210,10 @@ class Toolbox extends Component<Props, State> {
             buttonsRight.push('localrecording');
         }
 
+        if (this._shouldShowButton('freeze-ping') && !isMobileBrowser()) {
+            buttonsRight.push('freeze-ping');
+        }
+
         const movedButtons = [];
 
         if (buttonsLeft.length > maxNumberOfButtonsPerGroup) {
@@ -1282,6 +1287,9 @@ class Toolbox extends Component<Props, State> {
                             onClick = {
                                 this._onToolbarOpenLocalRecordingInfoDialog
                             } />
+                    }
+                    { buttonsRight.indexOf('freeze-ping') !== -1
+                        && <FreezePingButton />
                     }
                     { buttonsRight.indexOf('tileview') !== -1
                         && <TileViewButton /> }

@@ -190,7 +190,7 @@ var interfaceConfig = {
         'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
         'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
         /* 'tileview',*/ 'videobackgroundblur', 'download', 'help', 'mute-everyone', 'security',
-        'meetingmediator', 'localrecording'
+        'meetingmediator', 'localrecording', 'freeze-ping'
     ],
 
     TOOLBAR_TIMEOUT: 4000,

@@ -721,6 +721,18 @@ export default {
             }));
         }
 
+        // let intervalId;
+        // document.addEventListener("visibilitychange", () => {
+        //     if (document.visibilityState !== 'visible') {
+        //         intervalId = setInterval(() => {
+        //             APP.store.dispatch(playSound('INCOMING_MSG_SOUND'));
+        //             console.log("Please, move back to tab");
+        //         }, 1000);
+        //     } else {
+        //         clearInterval(intervalId);
+        //     }
+        // });
+
         // XXX The API will take care of disconnecting from the XMPP
         // server (and, thus, leaving the room) on unload.
         return new Promise((resolve, reject) => {
