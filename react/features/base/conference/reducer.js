@@ -121,7 +121,7 @@ ReducerRegistry.register(
                 startAudioMutedPolicy: action.startAudioMutedPolicy,
                 startVideoMutedPolicy: action.startVideoMutedPolicy
             };
-        
+
         case IS_SHARING_SCREEN:
             return {
                 ...state,

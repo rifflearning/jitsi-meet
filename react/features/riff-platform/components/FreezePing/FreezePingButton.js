@@ -1,4 +1,3 @@
-/* global APP */
 /* eslint-disable max-len */
 /* eslint-disable import/order */
 /* eslint-disable padding-line-between-statements */

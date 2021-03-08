@@ -1472,8 +1472,8 @@ export default {
 
             APP.API.notifyScreenSharingStatusChanged(
                 this.isSharingScreen, details);
-            
-            APP.store.dispatch(setScreenSharingStatus(this.isSharingScreen));    
+
+            APP.store.dispatch(setScreenSharingStatus(this.isSharingScreen));
         }
     },
 
