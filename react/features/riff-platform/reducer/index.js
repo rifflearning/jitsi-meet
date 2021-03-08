@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 
 import { ReducerRegistry } from '../../base/redux';
 
+import freezePing from './freezePing';
 import localRecording from './localRecording';
 import meeting from './meeting';
 import meetingMediator from './meetingMediator';
@@ -11,7 +12,6 @@ import riff from './riff';
 import scheduler from './scheduler';
 import signIn from './signIn';
 import signUp from './signUp';
-import freezePing from './freezePing'
 
 ReducerRegistry.register('features/riff-platform',
   combineReducers({

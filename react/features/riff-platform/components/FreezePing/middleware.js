@@ -1,7 +1,10 @@
+/* eslint-disable import/order */
+/* eslint-disable indent */
+
 import { MiddlewareRegistry } from '../../../base/redux';
 import { APP_WILL_MOUNT, APP_WILL_UNMOUNT } from '../../../base/app/actionTypes';
 import { registerSound, unregisterSound } from '../../../base/sounds';
-import { PING_MSG_SOUND_FILE, PING_MSG_SOUND_ID} from './constants';
+import { PING_MSG_SOUND_FILE, PING_MSG_SOUND_ID } from './constants';
 
 /**
  * Implements the middleware of the freeze ping feature.

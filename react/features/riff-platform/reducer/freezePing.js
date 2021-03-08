@@ -1,3 +1,6 @@
+/* eslint-disable indent */
+/* eslint-disable object-property-newline */
+
 import * as actionTypes from '../constants/actionTypes';
 
 const initialState = {

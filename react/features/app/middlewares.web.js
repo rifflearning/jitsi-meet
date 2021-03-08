@@ -13,6 +13,6 @@ import '../prejoin/middleware';
 import '../shared-video/middleware';
 import '../talk-while-muted/middleware';
 import '../riff-platform/components/LocalRecorder/middleware';
-import '../riff-platform/components/FreezePing/middleware'
+import '../riff-platform/components/FreezePing/middleware';
 
 import './middlewares.any';
