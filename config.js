@@ -1,9 +1,43 @@
 /* eslint-disable no-unused-vars, no-var */
 
 var config = {
-    // Connection
-    //
+    // Riff Analytics feature settings
+    riff: {
+        dataServer: {
+            url: '/',
+            path: '',
+            email: 'default-user-email',
+            password: 'default-user-password'
+        },
 
+        apiGateway: {
+            url: '/',
+            path: ''
+        },
+
+        embedded_ui: true,
+        showEmotionsMetrics: false,
+
+        negotiationMeetings: {
+            enable: false,
+            adminUserId: ''
+        },
+
+        meeting: {
+            enableMeetingMediator: true,    // should the meeting mediator be available
+            showMediatorOnJoinRegistered: true,
+            showMediatorOnJoinAnonymous: true,
+            enableDoc: true,        // is document sharing available?
+            docType: 'url',         // only 'url' at this time
+            useConfigDoc: false,
+            // showDocOnJoin, docUrl and docUrlParams are only used if useConfigDoc is true
+            showDocOnJoin: true,
+            docUrl: 'https://www.riffanalytics.ai',
+            docUrlParams: []        // valid values: 'uid', 'room', 'display_name'
+        }
+    },
+
+    // Connection
     hosts: {
         // XMPP domain.
         domain: 'jitsi-meet.example.com',
