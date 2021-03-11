@@ -494,7 +494,7 @@
         "oldElectronClientDescription2": "latest build",
         "oldElectronClientDescription3": " now!",
         "freezePingTitle": "Freeze Ping feature is disabled!",
-        "freezePingDescription": "You will no longer receive ping messages to come back every 5 minutes when you're away. Please note, that staying for a long period of time in another tab during the meeting is affecting application performance."
+        "freezePingDescription": "You will no longer receive notification messages about the browser tab performance."
     },
     "passwordSetRemotely": "set by another participant",
     "passwordDigitsOnly": "Up to {{number}} digits",

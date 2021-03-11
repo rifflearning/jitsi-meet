@@ -54,11 +54,11 @@ const FreezePingButton = ({ isActive, isSharingScreen, toggle, ping, notify }) =
 
     return (
         <ToolbarButton
-            accessibilityLabel = 'Toggle Freeze Ping'
+            accessibilityLabel = 'Toggle freeze notification'
             icon = { UpdateIcon }
             onClick = { () => toggleWithNotificationIfSwitchingOff() }
             toggled = { isActive }
-            tooltip = 'Enable / Disable Freeze Ping' />
+            tooltip = 'Enable / Disable freeze notification' />
     );
 };
 
@@ -81,7 +81,7 @@ const mapDispatchToProps = dispatch => {
     return {
         toggle: () => dispatch(toggleFreezePing()),
         ping: soundId => dispatch(playSound(soundId)),
-        notify: (description, title) => dispatch(showNotification({ descriptionKey: description, titleKey: title }))
+        notify: (descriptionKey, titleKey) => dispatch(showNotification({ descriptionKey, titleKey }))
     };
 };
 
