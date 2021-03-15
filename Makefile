@@ -88,8 +88,9 @@ dev: deploy-init deploy-css deploy-rnnoise-binary deploy-lib-jitsi-meet deploy-l
 	$(WEBPACK_DEV_SERVER) --host 0.0.0.0
 
 source-package: ## create a distribution tar file packaging all files to be served by a web server (run make all first)
+source-package: GIT_HEAD_HASH := $(shell git rev-parse --short HEAD)
 source-package: source-package-version
-	cd source_package ; tar cjf ../jitsi-meet.tar.bz2 jitsi-meet
+	cd source_package ; tar cjf ../jitsi-meet-$(GIT_HEAD_HASH)-UNKenv.tar.bz2 jitsi-meet
 	rm -rf source_package
 
 source-package-files: ## copy all files needed for distribution (built and static) to the source_package directory
