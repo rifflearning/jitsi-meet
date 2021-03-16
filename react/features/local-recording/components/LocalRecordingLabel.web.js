@@ -42,7 +42,6 @@ class LocalRecordingLabel extends Component<Props> {
             return null;
         }
 
-
         return (
             <Tooltip
                 content = { this.props.t('localRecording.labelToolTip') }
