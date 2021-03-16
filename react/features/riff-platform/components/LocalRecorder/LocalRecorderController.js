@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable flowtype/no-types-missing-file-annotation */
 
-import logger from '../../../local-recording/logger';
 import { downloadBlob } from '../../../local-recording/recording';
 import { sessionManager } from '../../../local-recording/session';
 
 import WebmAdapter from './WebmAdapter';
+import logger from './logger';
 
 /**
  * XMPP command for signaling the start of local recording to all clients.
