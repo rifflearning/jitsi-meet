@@ -8,24 +8,27 @@ import { connect } from '../../../base/redux';
 import { OverflowMenuItem } from '../../../base/toolbox';
 import ToolbarButton from '../../../toolbox/components/web/ToolbarButton';
 
+import { recordingController } from './LocalRecorderController';
 import LocalRecordingDialog from './LocalRecordingDialog';
 
-const LocalRecordingButton = ({ toggleLocalRecordingDialog, isOverflowButton }) => {
+const LocalRecordingButton = ({ toggleLocalRecordingDialog, isEngaged, isOverflowButton }) => {
 
     const doToggleLocalRecordingDialog = () => toggleLocalRecordingDialog();
+    const doStopLocalRecording = () => recordingController.stopRecording();
 
     return (
         isOverflowButton
             ? <OverflowMenuItem
-                accessibilityLabel = 'Toggle local recording'
+                accessibilityLabel = { 'Local Recording' }
                 icon = { IconRec }
                 key = 'rifflocalrecording'
-                onClick = { doToggleLocalRecordingDialog }
-                text = { 'Local Recording' } />
+                onClick = { isEngaged ? doStopLocalRecording : doToggleLocalRecordingDialog }
+                text = { isEngaged ? 'Stop Local Recording' : 'Start Local Recording' } />
             : <ToolbarButton
                 accessibilityLabel = 'Toggle local recording'
                 icon = { IconRec }
-                onClick = { doToggleLocalRecordingDialog }
+                onClick = { isEngaged ? doStopLocalRecording : doToggleLocalRecordingDialog }
+                toggled = { isEngaged }
                 tooltip = 'Local Recording' />
 
     );
@@ -37,8 +40,10 @@ LocalRecordingButton.propTypes = {
     toggleLocalRecordingDialog: PropTypes.func
 };
 
-const mapStateToProps = () => {
-    return {};
+const mapStateToProps = state => {
+    return {
+        isEngaged: state['features/riff-platform'].localRecording.stats?.isRecording
+    };
 };
 
 const mapDispatchToProps = dispatch => {

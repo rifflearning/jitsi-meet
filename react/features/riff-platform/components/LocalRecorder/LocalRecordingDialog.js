@@ -27,15 +27,12 @@ const useStyles = makeStyles(() => {
     };
 });
 
-
 const recordingSteps = [ 'To start recording click on start recording',
     'Select screen type to start recording',
-    'Click on share button to confirm recording',
-    'To stop recording click on stop recording'
+    'Click on share button to confirm recording'
 ];
 
-
-function LocalRecordingDialog({ onClose, localRecordingIsEngaged }) {
+function LocalRecordingDialog({ onClose }) {
 
     const classes = useStyles();
 
@@ -43,22 +40,9 @@ function LocalRecordingDialog({ onClose, localRecordingIsEngaged }) {
         onClose();
     };
 
-    const handleStart = () => {
+    const onSubmit = () => {
         recordingController.startRecording();
         handleCancel();
-    };
-
-
-    const handleStop = () => {
-        recordingController.stopRecording();
-        handleCancel();
-    };
-
-    const onSubmit = () => {
-        if (!localRecordingIsEngaged) {
-            return handleStart();
-        }
-        handleStop();
     };
 
     const renderControls = (
@@ -77,15 +61,12 @@ function LocalRecordingDialog({ onClose, localRecordingIsEngaged }) {
         </List>
     </>);
 
-    // eslint-disable-next-line no-negated-condition
-    const defineSubmitButtonText = !localRecordingIsEngaged ? 'Start Recording' : 'Stop Recording';
-
     return (
         <Dialog
             cancelKey = { 'dialog.close' }
             className = { classes.root }
             maxWidth = 'md'
-            okKey = { defineSubmitButtonText }
+            okKey = 'Start Recording'
             onCancel = { handleCancel }
             onSubmit = { onSubmit }>
             <Typography style = {{ fontSize: '1.5rem' }}>Local Recording</Typography>
@@ -97,16 +78,13 @@ function LocalRecordingDialog({ onClose, localRecordingIsEngaged }) {
 }
 
 LocalRecordingDialog.propTypes = {
-    localRecordingIsEngaged: PropTypes.bool,
     onClose: PropTypes.func
 };
 
-const mapStateToProps = state => {
-
-    return {
-        localRecordingIsEngaged: state['features/riff-platform'].localRecording?.stats?.isRecording
-    };
+const mapStateToProps = () => {
+    return { };
 };
+
 const mapDispatchToProps = dispatch => {
     return {
         onClose: () => dispatch(hideDialog())
