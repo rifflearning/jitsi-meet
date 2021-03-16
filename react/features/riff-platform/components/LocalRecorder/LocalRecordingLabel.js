@@ -8,7 +8,6 @@ import { CircularLabel } from '../../../base/label/index';
 import { connect } from '../../../base/redux';
 
 const LocalRecordingLabel = ({ isEngaged }) => {
-    console.log('isEngaged', isEngaged)
 
     if (!isEngaged) {
         return null;

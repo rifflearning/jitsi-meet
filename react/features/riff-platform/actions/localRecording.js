@@ -15,7 +15,7 @@ import {
  *     isEngaged: boolean
  * }}
  */
-export function localRecordingEngaged(isEngaged: Boolean) {
+export function locRecordingEngaged(isEngaged: Boolean) {
     return {
         type: LOC_RECORDING_ENGAGED,
         isEngaged
@@ -31,7 +31,7 @@ export function localRecordingEngaged(isEngaged: Boolean) {
  *     stats: Object
  * }}
  */
-export function localRecordingStats(stats: Object) {
+export function locRecordingStats(stats: Object) {
     return {
         type: LOC_RECORDING_STATS,
         stats

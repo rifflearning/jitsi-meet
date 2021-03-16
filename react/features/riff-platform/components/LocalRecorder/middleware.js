@@ -11,7 +11,7 @@ import { MiddlewareRegistry } from '../../../base/redux';
 import { SETTINGS_UPDATED } from '../../../base/settings/actionTypes';
 import { TRACK_ADDED } from '../../../base/tracks/actionTypes';
 import { showNotification } from '../../../notifications/actions';
-import { localRecordingEngaged, localRecordingStats, setSharedVideoId } from '../../actions/localRecording';
+import { locRecordingEngaged, locRecordingStats, setSharedVideoId } from '../../actions/localRecording';
 
 import DownloadInfoDialog from './DownloadInfoDialog';
 import { recordingController } from './LocalRecorderController';
@@ -19,6 +19,7 @@ import LocalRecordingDialog from './LocalRecordingDialog';
 import { createUserAudioTrack } from './helpers';
 
 declare var APP: Object;
+declare var interfaceConfig: Object;
 
 MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
     const result = next(action);
@@ -41,10 +42,9 @@ MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
 
     switch (action.type) {
     case CONFERENCE_JOINED: {
-        const { localRecording } = getState()['features/base/config'];
+        const enableRiffLocalRecording = interfaceConfig.TOOLBAR_BUTTONS.includes('rifflocalrecording');
         const isLocalRecordingEnabled = Boolean(
-            localRecording
-            && localRecording.enabled
+            enableRiffLocalRecording
             && typeof APP === 'object'
         );
 
@@ -54,10 +54,10 @@ MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
 
         // realize the delegates on recordingController, allowing the UI to
         // react to state changes in recordingController.
-        recordingController.onStateChanged = isEngaged => dispatch(localRecordingEngaged(isEngaged));
+        recordingController.onStateChanged = isEngaged => dispatch(locRecordingEngaged(isEngaged));
 
         recordingController.onStatusUpdated = stats => {
-            dispatch(localRecordingStats(stats));
+            dispatch(locRecordingStats(stats));
 
             if (stats?.isRecording) {
                 const { sharedVideoId } = getState()['features/riff-platform'].localRecording;

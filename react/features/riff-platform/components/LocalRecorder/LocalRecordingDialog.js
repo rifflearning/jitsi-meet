@@ -104,7 +104,7 @@ LocalRecordingDialog.propTypes = {
 const mapStateToProps = state => {
 
     return {
-        localRecordingIsEngaged: state['features/riff-platform'].localRecording.isEngaged
+        localRecordingIsEngaged: state['features/riff-platform'].localRecording?.stats?.isRecording
     };
 };
 const mapDispatchToProps = dispatch => {

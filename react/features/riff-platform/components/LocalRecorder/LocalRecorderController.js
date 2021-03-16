@@ -10,17 +10,17 @@ import WebmAdapter from './WebmAdapter';
 /**
  * XMPP command for signaling the start of local recording to all clients.
  */
-export const COMMAND_START = 'localRecStart';
+export const COMMAND_START = 'locRecStart';
 
 /**
  * XMPP command for signaling the stop of local recording to all clients.
  */
-export const COMMAND_STOP = 'localRecStop';
+export const COMMAND_STOP = 'locRecStop';
 
 /**
  * This is a workaround for newly-joined clients to receive remote presence.
  */
-const COMMAND_PING = 'localRecPing';
+const COMMAND_PING = 'locRecPing';
 
 /**
  * One-time command sent upon receiving a {@code COMMAND_PING}.
@@ -28,12 +28,12 @@ const COMMAND_PING = 'localRecPing';
  * This command does not carry any information itself, but rather forces the
  * XMPP server to resend the remote presence.
  */
-const COMMAND_PONG = 'localRecPong';
+const COMMAND_PONG = 'locRecPong';
 
 /**
  * Participant property key for local recording stats.
  */
-const PROPERTY_STATS = 'localRecStats';
+const PROPERTY_STATS = 'locRecStats';
 
 /**
  * Default recording format.
