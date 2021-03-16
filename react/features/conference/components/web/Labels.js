@@ -99,6 +99,9 @@ class Labels extends AbstractLabels<Props, State> {
                 {
                     this._renderInsecureRoomNameLabel()
                 }
+                {
+                    this._renderRiffLocalRecordingLabel()
+                }
             </div>
         );
     }

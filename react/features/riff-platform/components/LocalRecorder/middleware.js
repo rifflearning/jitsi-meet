@@ -10,12 +10,12 @@ import { PARTICIPANT_JOINED, PARTICIPANT_LEFT } from '../../../base/participants
 import { MiddlewareRegistry } from '../../../base/redux';
 import { SETTINGS_UPDATED } from '../../../base/settings/actionTypes';
 import { TRACK_ADDED } from '../../../base/tracks/actionTypes';
-import { LocalRecordingInfoDialog } from '../../../local-recording/components';
 import { showNotification } from '../../../notifications/actions';
 import { localRecordingEngaged, localRecordingStats, setSharedVideoId } from '../../actions/localRecording';
 
 import DownloadInfoDialog from './DownloadInfoDialog';
 import { recordingController } from './LocalRecorderController';
+import LocalRecordingDialog from './LocalRecordingDialog';
 import { createUserAudioTrack } from './helpers';
 
 declare var APP: Object;
@@ -83,7 +83,7 @@ MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
         typeof APP === 'object' && typeof APP.keyboardshortcut === 'object'
             && APP.keyboardshortcut.registerShortcut('L', null, () => {
                 sendAnalytics(createShortcutEvent('local.recording'));
-                dispatch(toggleDialog(LocalRecordingInfoDialog));
+                dispatch(toggleDialog(LocalRecordingDialog));
             }, 'keyboardShortcuts.localRecording');
 
         const { conference } = getState()['features/base/conference'];

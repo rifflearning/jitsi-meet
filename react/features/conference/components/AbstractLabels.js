@@ -6,6 +6,7 @@ import { E2EELabel } from '../../e2ee';
 import { isFilmstripVisible } from '../../filmstrip';
 import { LocalRecordingLabel } from '../../local-recording';
 import { RecordingLabel } from '../../recording';
+import RiffLocalRecordingLabel from '../../riff-platform/components/LocalRecorder/LocalRecordingLabel';
 import { TranscribingLabel } from '../../transcribing';
 import { shouldDisplayTileView } from '../../video-layout';
 import { VideoQualityLabel } from '../../video-quality';
@@ -107,6 +108,18 @@ export default class AbstractLabels<P: Props, S> extends Component<P, S> {
     _renderVideoQualityLabel() {
         return (
             <VideoQualityLabel />
+        );
+    }
+
+    /**
+     * Renders the {@code RiffLocalRecordingLabel}.
+     *
+     * @protected
+     * @returns {React$Element}
+     */
+    _renderRiffLocalRecordingLabel() {
+        return (
+            <RiffLocalRecordingLabel />
         );
     }
 }

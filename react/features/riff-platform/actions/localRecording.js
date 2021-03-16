@@ -1,29 +1,23 @@
-/* @flow */
-
 import {
-    LOCAL_RECORDING_ENGAGED,
-    LOCAL_RECORDING_STATS,
-    LOCAL_RECORDING_SET_SHARED_VIDEO_ID
+    LOC_RECORDING_ENGAGED,
+    LOC_RECORDING_STATS,
+    LOC_RECORDING_SET_SHARED_VIDEO_ID
 } from '../constants/actionTypes';
 
 // The following action signals state changes in local recording engagement.
-// In other words, the events of the local WebWorker / MediaRecorder starting to
-// record and finishing recording.
-// Note that this is not the event fired when the users tries to start the
-// recording in the UI.
 
 /**
  * Signals that local recording has been engaged.
  *
- * @param {Date} isEngaged - Local recording is engaged.
+ * @param {Date} isEngaged - Local recording is engaged/unengaged.
  * @returns {{
- *     type: LOCAL_RECORDING_ENGAGED,
+ *     type: LOC_RECORDING_ENGAGED,
  *     isEngaged: boolean
  * }}
  */
 export function localRecordingEngaged(isEngaged: Boolean) {
     return {
-        type: LOCAL_RECORDING_ENGAGED,
+        type: LOC_RECORDING_ENGAGED,
         isEngaged
     };
 }
@@ -33,13 +27,13 @@ export function localRecordingEngaged(isEngaged: Boolean) {
  *
  * @param {*} stats - The stats object.
  * @returns {{
- *     type: LOCAL_RECORDING_STATS_UPDATE,
+ *     type: LOC_RECORDING_STATS_UPDATE,
  *     stats: Object
  * }}
  */
 export function localRecordingStats(stats: Object) {
     return {
-        type: LOCAL_RECORDING_STATS,
+        type: LOC_RECORDING_STATS,
         stats
     };
 }
@@ -49,13 +43,13 @@ export function localRecordingStats(stats: Object) {
  *
  * @param {string} id - The shared YouTube video id.
  * @returns {{
-    *     type: LOCAL_RECORDING_SET_SHARED_VIDEO_ID,
+    *     type: LOC_RECORDING_SET_SHARED_VIDEO_ID,
     *     id: string
     * }}
     */
 export function setSharedVideoId(id: string) {
     return {
-        type: LOCAL_RECORDING_SET_SHARED_VIDEO_ID,
+        type: LOC_RECORDING_SET_SHARED_VIDEO_ID,
         id
     };
 }

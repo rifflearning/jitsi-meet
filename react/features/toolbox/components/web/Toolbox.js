@@ -47,6 +47,7 @@ import {
     RecordButton
 } from '../../../recording';
 import MeetingMediatorButton from '../../../riff-platform/components/DraggableMeetingMediator/MeetingMediatorButton';
+import RiffLocalRecordingButton from '../../../riff-platform/components/LocalRecorder/LocalRecordingButton';
 import { SecurityDialogButton } from '../../../security';
 import {
     SETTINGS_TABS,
@@ -82,6 +83,8 @@ import OverflowMenuButton from './OverflowMenuButton';
 import OverflowMenuProfileItem from './OverflowMenuProfileItem';
 import ToolbarButton from './ToolbarButton';
 import VideoSettingsButton from './VideoSettingsButton';
+
+window.interfaceConfig.TOOLBAR_BUTTONS = window.interfaceConfig.TOOLBAR_BUTTONS.concat('rifflocalrecording');
 
 /**
  * The type of the React {@code Component} props of {@link Toolbox}.
@@ -1208,6 +1211,9 @@ class Toolbox extends Component<Props, State> {
         if (this._shouldShowButton('localrecording') && !isMobileBrowser()) {
             buttonsRight.push('localrecording');
         }
+        if (this._shouldShowButton('rifflocalrecording') && !isMobileBrowser()) {
+            buttonsRight.push('rifflocalrecording');
+        }
 
         const movedButtons = [];
 
@@ -1282,6 +1288,9 @@ class Toolbox extends Component<Props, State> {
                             onClick = {
                                 this._onToolbarOpenLocalRecordingInfoDialog
                             } />
+                    }
+                    { buttonsRight.indexOf('rifflocalrecording') !== -1
+                        && <RiffLocalRecordingButton />
                     }
                     { buttonsRight.indexOf('tileview') !== -1
                         && <TileViewButton /> }

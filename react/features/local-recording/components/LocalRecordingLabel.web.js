@@ -42,6 +42,7 @@ class LocalRecordingLabel extends Component<Props> {
             return null;
         }
 
+
         return (
             <Tooltip
                 content = { this.props.t('localRecording.labelToolTip') }
@@ -65,8 +66,7 @@ class LocalRecordingLabel extends Component<Props> {
  * }}
  */
 function _mapStateToProps(state) {
-    // const { isEngaged } = state['features/local-recording'];
-    const { isEngaged } = state['features/riff-platform'].localRecording;
+    const { isEngaged } = state['features/local-recording'];
 
     return {
         isEngaged

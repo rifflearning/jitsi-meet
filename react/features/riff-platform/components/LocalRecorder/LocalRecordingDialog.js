@@ -1,7 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable require-jsdoc */
-/* global interfaceConfig */
 
 import { Typography, List, ListItem, ListItemText } from '@material-ui/core';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -30,21 +29,15 @@ const useStyles = makeStyles(() => {
 
 
 const recordingSteps = [ 'To start recording click on start recording',
-    // eslint-disable-next-line camelcase
-    `Select ${interfaceConfig.APP_NAME} screen type to start recording`,
+    'Select screen type to start recording',
     'Click on share button to confirm recording',
     'To stop recording click on stop recording'
 ];
 
 
-function LocalRecordingDialog({
-    onClose,
-    open }) {
+function LocalRecordingDialog({ onClose, localRecordingIsEngaged }) {
 
     const classes = useStyles();
-
-    const isLocalRecordingEngaged = Object.values(recordingController.getParticipantsStats()).find(participant =>
-        participant.isSelf && participant.recordingStats?.isRecording);
 
     const handleCancel = () => {
         onClose();
@@ -61,17 +54,12 @@ function LocalRecordingDialog({
         handleCancel();
     };
 
-
     const onSubmit = () => {
-        if (!isLocalRecordingEngaged) {
+        if (!localRecordingIsEngaged) {
             return handleStart();
         }
         handleStop();
     };
-
-    if (!open) {
-        return null;
-    }
 
     const renderControls = (
     <>
@@ -90,7 +78,7 @@ function LocalRecordingDialog({
     </>);
 
     // eslint-disable-next-line no-negated-condition
-    const defineSubmitButtonText = !isLocalRecordingEngaged ? 'Start Recording' : 'Stop Recording';
+    const defineSubmitButtonText = !localRecordingIsEngaged ? 'Start Recording' : 'Stop Recording';
 
     return (
         <Dialog
@@ -99,8 +87,7 @@ function LocalRecordingDialog({
             maxWidth = 'md'
             okKey = { defineSubmitButtonText }
             onCancel = { handleCancel }
-            onSubmit = { onSubmit }
-            open = { open }>
+            onSubmit = { onSubmit }>
             <Typography style = {{ fontSize: '1.5rem' }}>Local Recording</Typography>
             <DialogContent dividers = { true }>
                 {renderControls}
@@ -110,13 +97,15 @@ function LocalRecordingDialog({
 }
 
 LocalRecordingDialog.propTypes = {
-    onClose: PropTypes.func,
-    open: PropTypes.bool
+    localRecordingIsEngaged: PropTypes.bool,
+    onClose: PropTypes.func
 };
 
-const mapStateToProps = () => {
+const mapStateToProps = state => {
 
-    return { };
+    return {
+        localRecordingIsEngaged: state['features/riff-platform'].localRecording.isEngaged
+    };
 };
 const mapDispatchToProps = dispatch => {
     return {
