@@ -1119,6 +1119,10 @@ class Toolbox extends Component<Props, State> {
                         onClick = { this._onToolbarOpenLocalRecordingInfoDialog }
                         text = { t('localRecording.dialogTitle') } />
                 );
+            case 'rifflocalrecording':
+                return (
+                    <RiffLocalRecordingButton isOverflowButton = { true } />
+                );
             default:
                 return null;
             }
@@ -1208,7 +1212,7 @@ class Toolbox extends Component<Props, State> {
         if (this._shouldShowButton('tileview')) {
             buttonsRight.push('tileview');
         }
-        if (this._shouldShowButton('localrecording') && !isMobileBrowser()) {
+        if (this._shouldShowButton('localrecording')) {
             buttonsRight.push('localrecording');
         }
         if (this._shouldShowButton('rifflocalrecording') && !isMobileBrowser()) {

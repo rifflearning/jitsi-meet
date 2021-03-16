@@ -7,7 +7,7 @@ import {
 // The following action signals state changes in local recording engagement.
 
 /**
- * Signals that local recording has been engaged.
+ * Signals that local recording has been engaged/unengaged.
  *
  * @param {Date} isEngaged - Local recording is engaged/unengaged.
  * @returns {{
