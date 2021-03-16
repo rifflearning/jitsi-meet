@@ -5,22 +5,29 @@ var config = {
     riff: {
         dataServer: {
             url: '/',
-            path: '',
+            path: '/api/videodata',
             email: 'default-user-email',
             password: 'default-user-password'
         },
 
         apiGateway: {
             url: '/',
-            path: ''
+            path: '/api-gateway'
         },
 
-        embedded_ui: true,
-        showEmotionsMetrics: false,
+        embedded_access_only: true,
 
-        negotiationMeetings: {
-            enable: false,
-            adminUserId: ''
+        userAuthentication: {
+            allowAnonymousLogin: true,
+        },
+
+        metrics: {
+            showEmotionsMetrics: false,
+            sendUtteranceVolumes: false
+        },
+
+        scheduler: {
+            enableGroupMeetings: false
         },
 
         meeting: {
