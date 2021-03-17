@@ -19,7 +19,6 @@ import { connect } from '../../base/redux';
 import { resetPassword, hideResetMessage } from '../actions/resetPassword';
 import * as ROUTES from '../constants/routes';
 
-
 const useStyles = makeStyles(theme => {
     return {
         paper: {
@@ -47,46 +46,22 @@ const ResetPassword = ({ doReset, hideMessage, resetPasswordError, resetingPassw
     const history = useHistory();
 
     const [ email, setEmail ] = useState('');
-    const [ password, setPassword ] = useState('');
-    const [ password2, setPassword2 ] = useState('');
-
     const [ emailError, setEmailError ] = useState('');
-    const [ passwordError, setPasswordError ] = useState('');
-    const [ password2Error, setPassword2Error ] = useState('');
-
-    const [ isRedirecting, setIsRedirecting ] = useState(false);
+    const [ isRedirecting ] = useState(false);
 
     const onChangeEmail = e => setEmail(e.target.value);
-    const onChangePassword = e => setPassword(e.target.value);
-    const onChangePassword2 = e => setPassword2(e.target.value);
 
     // eslint-disable-next-line max-len
     const isEmailValid = () => Boolean(email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/));
-
-    // const isPasswordValid = () => Boolean(password.match(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/));
-    const isPasswordValid = () => Boolean(password.length >= 8);
-    const isPassword2Valid = () => password === password2;
 
     const isFormValid = () => {
         let isValid = true;
 
         setEmailError('');
-        setPasswordError('');
-        setPassword2Error('');
 
         if (!isEmailValid()) {
             isValid = false;
             setEmailError('Email is invalid');
-        }
-        if (!isPasswordValid()) {
-            isValid = false;
-            // eslint-disable-next-line max-len
-            // setPasswordError('Password must: have at least 8 characters, at least 1 letter (a, b, c...), at least 1 number (1, 2, 3...), include both uppercase and lowercase characters');
-            setPasswordError('Password must: have at least 8 characters');
-        }
-        if (!isPassword2Valid()) {
-            isValid = false;
-            setPassword2Error('Those passwords didn\'t match. Try again.');
         }
 
         return isValid;
@@ -100,14 +75,10 @@ const ResetPassword = ({ doReset, hideMessage, resetPasswordError, resetingPassw
             return;
         }
         doReset({
-            email,
-            password
+            email
         }).then(res => {
             if (res) {
-                setIsRedirecting(true);
-                setTimeout(() => {
-                    history.push(`${ROUTES.SIGNIN}`);
-                }, 5000);
+                history.push(`${ROUTES.VERIFY}${ROUTES.RESETPASSWORD}`);
             }
         });
     };
@@ -127,7 +98,7 @@ const ResetPassword = ({ doReset, hideMessage, resetPasswordError, resetingPassw
                 <Typography
                     component = 'h1'
                     variant = 'h5'>
-                    Type Your New Password
+                    Type your email address
                 </Typography>
                 <form
                     className = { classes.form }
@@ -151,40 +122,6 @@ const ResetPassword = ({ doReset, hideMessage, resetPasswordError, resetingPassw
                                 onChange = { onChangeEmail }
                                 error = { Boolean(emailError) }
                                 helperText = { emailError } />
-                        </Grid>
-                        <Grid
-                            item
-                            xs = { 12 }>
-                            <TextField
-                                variant = 'outlined'
-                                required
-                                fullWidth
-                                name = 'password'
-                                label = 'Password'
-                                type = 'password'
-                                id = 'password'
-                                autoComplete = 'current-password'
-                                value = { password }
-                                onChange = { onChangePassword }
-                                error = { Boolean(passwordError) }
-                                helperText = { passwordError } />
-                        </Grid>
-                        <Grid
-                            item
-                            xs = { 12 }>
-                            <TextField
-                                variant = 'outlined'
-                                required
-                                fullWidth
-                                name = 'password2'
-                                label = 'Confirm'
-                                type = 'password'
-                                id = 'password2'
-                                autoComplete = 'current-password2'
-                                value = { password2 }
-                                onChange = { onChangePassword2 }
-                                error = { Boolean(password2Error) }
-                                helperText = { password2Error } />
                         </Grid>
                     </Grid>
                     <Button

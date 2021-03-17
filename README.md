@@ -13,11 +13,11 @@ make dev
 ---
 ## Development with Riff features:
 
-Clone repository, checkout to `develop` or `integration-riff-platform` branch and install dependencies:
+Clone repository, checkout to `develop` branch and install dependencies:
 
 ```
 git clone https://github.com/rifflearning/jitsi-meet.git
-git checkout integration-riff-platform
+git checkout develop
 npm install
 ```
 
@@ -25,28 +25,61 @@ Create `.env` file in root dir (*ask colleagues for the `.env`*):
 
 ```
 ### Uncomment variables for specific instance deployment:
+## Local development:
+WEBPACK_DEV_SERVER_PROXY_TARGET=https://dev-jitsi.riffplatform.com
+RIFF_SERVER_URL=https://dev-jitsi.riffplatform.com 
+API_GATEWAY=https://dev-jitsi.riffplatform.com/api-gateway
+# for local api-gateway:
+# API_GATEWAY=https://localhost:4445/api
 
-## Deployment to rif-poc instance:
-API_GATEWAY=/api-gateway
-RIFF_SERVER_URL=/
-NEGOTIATIONS_GROUP_ADMIN_USER_ID=5feb8999575d80a6fe1b2961
-PEM_PATH=~/.ssh/riffdev_1_useast2_key.pem
-AWS_NAME=ubuntu@riff-poc.riffplatform.com
 
-## Deployment to hls-negotiations instance:
+
+### Deployment common variables:
+# PEM_PATH=~/.ssh/riffdev_1_useast2_key.pem
+# RIFF_SERVER_URL=/
 # API_GATEWAY=/api-gateway
-# RIFF_SERVER_URL=/
-# NEGOTIATIONS_GROUP_ADMIN_USER_ID=5feb890b2802c112989e367e
-# PEM_PATH=~/.ssh/riffdev_1_useast2_key.pem
-# AWS_NAME=ubuntu@hls-negotiations.riffremote.com
+# HIDE_MEETING_MEDIATOR_BY_DEFAULT_FOR_ANON_USER=true
 
-## Deployment to mattermost instance:
-# API_GATEWAY=
-# RIFF_SERVER_URL=/
-# NEGOTIATIONS_GROUP_ADMIN_USER_ID=
-# PEM_PATH=~/.ssh/riffdev_1_useast2_key.pem
+### Deployment specific variables:
+## dev-jitsi (DEV):
+# AWS_NAME=ubuntu@dev-jitsi.riffplatform.com
+# DISABLE_GROUPS=true
+# ADD_VOLUMES_FIELD_TO_UTTERANCE_OBJ=true
+
+## rif-poc:
+# AWS_NAME=ubuntu@riff-poc.riffplatform.com
+
+## hls-negotiations:
+# AWS_NAME=ubuntu@hls-negotiations.riffremote.com
+# DISABLE_EMOTIONS_CHART=true
+
+## nd-negotiations:
+# AWS_NAME=ubuntu@nd-negotiations.riffremote.com
+# DISABLE_EMOTIONS_CHART=true
+
+## pega:
+# AWS_NAME=ubuntu@pega.riffremote.com
+# DISABLE_EMOTIONS_CHART=true
+# DISABLE_GROUPS=true
+
+## staging.riffedu (DEV):
 # AWS_NAME=ubuntu@meet.staging.riffedu.com
 # MATTERMOST_EMBEDDED_ONLY=true
+
+## said-oxford.riffedu:
+# AWS_NAME=ubuntu@meet.said-oxford.riffedu.com
+# PEM_PATH=~/.ssh/riffdev_1_euwest2_key.pem
+# MATTERMOST_EMBEDDED_ONLY=true
+
+
+
+### Avaliable optional features flags:
+# DISABLE_GROUPS=true
+# DISABLE_EMOTIONS_CHART=true
+# MATTERMOST_EMBEDDED_ONLY=true # disables auth, enables "Meeting ended" page instead of admin panel
+# ADD_VOLUMES_FIELD_TO_UTTERANCE_OBJ=true # sends utterance obj with additional field 'volumes', for data analysis purposes only
+# HIDE_MEETING_MEDIATOR_BY_DEFAULT=true
+# HIDE_MEETING_MEDIATOR_BY_DEFAULT_FOR_ANON_USER=true
 ```
 
 Run dev server:
@@ -60,37 +93,26 @@ In order to customize *jitsi-meet* with riff theme, all features and set up a ne
 
 1. Install Jitsi-Meet to aws with [official guide](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-quickstart).
 
-2. Deploy *develop* or *integration-riff-platform* branch to the instance:
+2. Deploy `develop` branch to the instance:
     ```
     git clone https://github.com/rifflearning/jitsi-meet.git
-    git checkout integration-riff-platform
+    git checkout develop
     npm install
     ```
     Add appropriate variables `.env` for deployment and put `.pem` file to `~/.ssh/riffdev_1_useast2_key.pem` (*ask colleagues for the `.env` and `.pem` files*):
     ```
-    ### Uncomment variables for specific instance deployment:
-
-    ## Deployment to rif-poc instance:
-    API_GATEWAY=/api-gateway
-    RIFF_SERVER_URL=/
-    NEGOTIATIONS_GROUP_ADMIN_USER_ID=5feb8999575d80a6fe1b2961
+    ### Deployment common variables:
     PEM_PATH=~/.ssh/riffdev_1_useast2_key.pem
-    AWS_NAME=ubuntu@riff-poc.riffplatform.com
+    RIFF_SERVER_URL=/
+    API_GATEWAY=/api-gateway
+    HIDE_MEETING_MEDIATOR_BY_DEFAULT_FOR_ANON_USER=true
 
-    ## Deployment to hls-negotiations instance:
-    # API_GATEWAY=/api-gateway
-    # RIFF_SERVER_URL=/
-    # NEGOTIATIONS_GROUP_ADMIN_USER_ID=5feb890b2802c112989e367e
-    # PEM_PATH=~/.ssh/riffdev_1_useast2_key.pem
-    # AWS_NAME=ubuntu@hls-negotiations.riffremote.com
+    ### Deployment specific variables:
 
-    ## Deployment to mattermost instance:
-    # API_GATEWAY=
-    # RIFF_SERVER_URL=/
-    # NEGOTIATIONS_GROUP_ADMIN_USER_ID=
-    # PEM_PATH=~/.ssh/riffdev_1_useast2_key.pem
-    # AWS_NAME=ubuntu@meet.staging.riffedu.com
-    # MATTERMOST_EMBEDDED_ONLY=true
+    ## dev-jitsi (DEV):
+    AWS_NAME=ubuntu@dev-jitsi.riffplatform.com
+    DISABLE_GROUPS=true
+    ADD_VOLUMES_FIELD_TO_UTTERANCE_OBJ=true
     ```
     Build and deploy with:
     ```

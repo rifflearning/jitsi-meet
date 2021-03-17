@@ -209,10 +209,14 @@ export function setTileViewByDefault() {
 export function redirectToRiffMetrics() {
     return async (dispatch, getState) => {
         const roomId = getState()['features/riff-platform'].riff.roomId;
-        const { uid } = getState()['features/riff-platform'].signIn.user;
+        const { uid, isAnon } = getState()['features/riff-platform'].signIn.user;
 
         if (roomId) {
             await participantLeaveRoom(roomId, uid);
+        }
+
+        if (isAnon) {
+            dispatch(logout());
         }
 
         window.parent.postMessage('JITSI_CONFERENCE_END', '*');

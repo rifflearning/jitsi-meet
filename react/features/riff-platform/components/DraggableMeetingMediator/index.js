@@ -1,3 +1,4 @@
+/* global process */
 /* eslint-disable max-len */
 /* eslint-disable react/jsx-no-bind */
 
@@ -12,7 +13,7 @@ import { connect } from '../../../base/redux';
 import { MeetingMediator } from '../../../riff-dashboard-page/src/components/Chat/Meeting/MeetingSidebar/MeetingMediator';
 import { toggleMeetingMediator } from '../../actions/meetingMediator';
 
-const DraggableMeetingMediator = ({ displayName, webRtcPeers, isOpen, toggleMediator }) => {
+const DraggableMeetingMediator = ({ displayName, webRtcPeers, isOpen, toggleMediator, isAnon }) => {
 
     const size = useWindowSize();
     const bounds = { left: -200,
@@ -21,6 +22,12 @@ const DraggableMeetingMediator = ({ displayName, webRtcPeers, isOpen, toggleMedi
         bottom: size.height - 26 };
 
     const onCloseMeetingMediator = () => toggleMediator();
+
+    useEffect(() => {
+        if (process.env.HIDE_MEETING_MEDIATOR_BY_DEFAULT_FOR_ANON_USER === 'true' && isAnon) {
+            toggleMediator(false);
+        }
+    }, [ isAnon ]);
 
     return (
         <Draggable bounds = { bounds }>
@@ -42,6 +49,7 @@ const DraggableMeetingMediator = ({ displayName, webRtcPeers, isOpen, toggleMedi
 
 DraggableMeetingMediator.propTypes = {
     displayName: PropTypes.string,
+    isAnon: PropTypes.bool,
     isOpen: PropTypes.bool,
     toggleMediator: PropTypes.func,
     webRtcPeers: PropTypes.array
@@ -59,6 +67,7 @@ DraggableMeetingMediator.propTypes = {
 function _mapStateToProps(state) {
     return {
         displayName: state['features/riff-platform'].signIn.user?.displayName || '',
+        isAnon: state['features/riff-platform'].signIn.user?.isAnon,
         isOpen: state['features/riff-platform'].meetingMediator.isOpen,
         webRtcPeers: state['features/base/participants'].map((p, i) => {
             if (i === 0) {
@@ -81,7 +90,7 @@ function _mapStateToProps(state) {
  */
 function _mapDispatchToProps(dispatch) {
     return {
-        toggleMediator: () => dispatch(toggleMeetingMediator())
+        toggleMediator: bool => dispatch(toggleMeetingMediator(bool))
     };
 }
 

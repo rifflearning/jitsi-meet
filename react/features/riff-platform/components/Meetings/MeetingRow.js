@@ -45,7 +45,7 @@ const MeetingsRow = ({
     meeting = {},
     removeMeeting,
     removeMeetingsRecurring,
-    groupName,
+    isGroup,
     deleteLoading }) => {
     const classes = useStyles();
     const history = useHistory();
@@ -151,7 +151,7 @@ const MeetingsRow = ({
                     // eslint-disable-next-line react/jsx-no-bind
                     onClick = { handleMeetingDetailsClick }
                     variant = 'outlined'>Details</Button>
-                {!groupName
+                {!isGroup
                     && <Button
                         className = { classes.meetingButton }
                         // eslint-disable-next-line react/jsx-no-bind
@@ -174,8 +174,8 @@ const MeetingsRow = ({
 MeetingsRow.propTypes = {
     deleteLoading: PropTypes.bool,
 
-    // groupName - external prop for separate group (harvard), disable 'delete', 'edit' buttons, fetch groupped meeting.
-    groupName: PropTypes.string,
+    // isGroup - external prop for separate group (harvard), disable 'delete', 'edit' buttons, fetch groupped meeting.
+    isGroup: PropTypes.bool,
     meeting: PropTypes.object,
     removeMeeting: PropTypes.func,
     removeMeetingsRecurring: PropTypes.func
