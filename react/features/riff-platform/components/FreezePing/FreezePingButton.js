@@ -9,7 +9,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from '../../../base/redux';
 import { playSound } from '../../../base/sounds';
-import { showNotification } from '../../../../features/notifications';
+import { showNotification, NOTIFICATION_TIMEOUT } from '../../../../features/notifications';
 import { toggleFreezePing } from '../../actions/freezePing';
 import ToolbarButton from '../../../toolbox/components/web/ToolbarButton';
 import UpdateIcon from '@material-ui/icons/Update';
@@ -81,7 +81,7 @@ const mapDispatchToProps = dispatch => {
     return {
         toggle: () => dispatch(toggleFreezePing()),
         ping: soundId => dispatch(playSound(soundId)),
-        notify: (descriptionKey, titleKey) => dispatch(showNotification({ descriptionKey, titleKey }))
+        notify: (descriptionKey, titleKey) => dispatch(showNotification({ descriptionKey, titleKey }, NOTIFICATION_TIMEOUT))
     };
 };
 
