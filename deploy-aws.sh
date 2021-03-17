@@ -42,6 +42,10 @@ cp interface_config.js temp-deploy-aws/
 mkdir temp-deploy-aws/static
 cp -a static/* temp-deploy-aws/static
 
+# copy sounds
+mkdir temp-deploy-aws/sounds
+cp -a sounds/* temp-deploy-aws/sounds
+
 # copy css
 mkdir temp-deploy-aws/css
 cp css/all.css temp-deploy-aws/css/
@@ -82,6 +86,7 @@ rm -fr /home/ubuntu/temp-deploy-aws/css; \
 sudo rm -fr /usr/share/jitsi-meet/images; \
 sudo rm -fr /usr/share/jitsi-meet/libs; \
 sudo rm -fr /usr/share/jitsi-meet/static; \
+sudo rm -fr /usr/share/jitsi-meet/sounds; \
 sudo mv /home/ubuntu/temp-deploy-aws/* /usr/share/jitsi-meet/; \
 rm -rf /home/ubuntu/temp-deploy-aws; \
 '
