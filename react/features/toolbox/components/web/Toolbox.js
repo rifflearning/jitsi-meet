@@ -84,7 +84,6 @@ import OverflowMenuProfileItem from './OverflowMenuProfileItem';
 import ToolbarButton from './ToolbarButton';
 import VideoSettingsButton from './VideoSettingsButton';
 
-window.interfaceConfig.TOOLBAR_BUTTONS = window.interfaceConfig.TOOLBAR_BUTTONS.concat('rifflocalrecording');
 
 /**
  * The type of the React {@code Component} props of {@link Toolbox}.
