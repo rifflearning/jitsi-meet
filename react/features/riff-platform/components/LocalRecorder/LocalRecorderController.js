@@ -33,7 +33,7 @@ const COMMAND_PONG = 'locRecPong';
 /**
  * Participant property key for local recording stats.
  */
-const PROPERTY_STATS = 'locRecStats';
+export const PROPERTY_STATS = 'locRecStats';
 
 /**
  * Default recording format.
@@ -315,7 +315,7 @@ class LocalRecordingController {
      * @returns {void}
      */
     stopRecording() {
-        this._onStopCommand({ sessionToken: this._currentSessionToken });
+        this._onStopCommand();
     }
 
     /**
@@ -507,14 +507,10 @@ class LocalRecordingController {
      * Function for stop local recording.
      *
      * @private
-     * @param {*} sessionToken - The session token.
      * @returns {void}
      */
-    _onStopCommand({ sessionToken }) {
+    _onStopCommand() {
         if (this._state === ControllerState.RECORDING) {
-            // FIX: comment temporary for stop recording on conference leave
-        // && this._currentSessionToken === sessionToken)
-
             this._changeState(ControllerState.STOPPING);
             this._doStopRecording();
         }

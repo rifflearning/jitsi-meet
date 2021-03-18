@@ -11,7 +11,7 @@ import ToolbarButton from '../../../toolbox/components/web/ToolbarButton';
 import { recordingController } from './LocalRecorderController';
 import LocalRecordingDialog from './LocalRecordingDialog';
 
-const LocalRecordingButton = ({ toggleLocalRecordingDialog, isEngaged, isOverflowButton }) => {
+const LocalRecordingButton = ({ toggleLocalRecordingDialog, isEngagedLocally, isOverflowButton }) => {
 
     const doToggleLocalRecordingDialog = () => toggleLocalRecordingDialog();
     const doStopLocalRecording = () => recordingController.stopRecording();
@@ -19,30 +19,30 @@ const LocalRecordingButton = ({ toggleLocalRecordingDialog, isEngaged, isOverflo
     return (
         isOverflowButton
             ? <OverflowMenuItem
-                accessibilityLabel = { 'Local Recording' }
+                accessibilityLabel = 'Local Recording'
                 icon = { IconRec }
                 key = 'rifflocalrecording'
-                onClick = { isEngaged ? doStopLocalRecording : doToggleLocalRecordingDialog }
-                text = { isEngaged ? 'Stop Local Recording' : 'Start Local Recording' } />
+                onClick = { isEngagedLocally ? doStopLocalRecording : doToggleLocalRecordingDialog }
+                text = { isEngagedLocally ? 'Stop Local Recording' : 'Start Local Recording' } />
             : <ToolbarButton
-                accessibilityLabel = 'Toggle local recording'
+                accessibilityLabel = 'Toggle Local Recording'
                 icon = { IconRec }
-                onClick = { isEngaged ? doStopLocalRecording : doToggleLocalRecordingDialog }
-                toggled = { isEngaged }
-                tooltip = 'Local Recording' />
+                onClick = { isEngagedLocally ? doStopLocalRecording : doToggleLocalRecordingDialog }
+                toggled = { isEngagedLocally }
+                tooltip = 'Start / Stop Local Recording' />
 
     );
 };
 
 LocalRecordingButton.propTypes = {
-    isEngaged: PropTypes.bool,
+    isEngagedLocally: PropTypes.bool,
     isOverflowButton: PropTypes.bool,
     toggleLocalRecordingDialog: PropTypes.func
 };
 
 const mapStateToProps = state => {
     return {
-        isEngaged: state['features/riff-platform'].localRecording.stats?.isRecording
+        isEngagedLocally: state['features/riff-platform'].localRecording.stats?.isRecording
     };
 };
 
