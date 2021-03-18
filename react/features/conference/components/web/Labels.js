@@ -117,6 +117,8 @@ class Labels extends AbstractLabels<Props, State> {
     _renderInsecureRoomNameLabel: () => React$Element<any>;
 
     _renderVideoQualityLabel: () => React$Element<*>;
+
+    _renderRiffLocalRecordingLabel: () => React$Element<*>;
 }
 
 export default connect(_mapStateToProps)(Labels);

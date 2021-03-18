@@ -1,5 +1,3 @@
-// @flow
-
 import Tooltip from '@atlaskit/tooltip';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -35,4 +33,3 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps)(LocalRecordingLabel);
-

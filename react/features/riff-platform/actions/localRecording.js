@@ -15,7 +15,7 @@ import {
  *     isEngaged: boolean
  * }}
  */
-export function locRecordingEngaged(isEngaged: Boolean) {
+export function locRecordingEngaged(isEngaged) {
     return {
         type: LOC_RECORDING_ENGAGED,
         isEngaged
@@ -31,7 +31,7 @@ export function locRecordingEngaged(isEngaged: Boolean) {
  *     stats: Object
  * }}
  */
-export function locRecordingStats(stats: Object) {
+export function locRecordingStats(stats) {
     return {
         type: LOC_RECORDING_STATS,
         stats
@@ -47,7 +47,7 @@ export function locRecordingStats(stats: Object) {
     *     id: string
     * }}
     */
-export function setSharedVideoId(id: string) {
+export function setSharedVideoId(id) {
     return {
         type: LOC_RECORDING_SET_SHARED_VIDEO_ID,
         id
