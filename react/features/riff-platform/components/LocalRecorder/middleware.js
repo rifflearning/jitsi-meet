@@ -1,9 +1,8 @@
 /* @flow */
 
-import { createShortcutEvent, sendAnalytics } from '../../../analytics';
 import { APP_WILL_UNMOUNT } from '../../../base/app/actionTypes';
 import { CONFERENCE_JOINED, CONFERENCE_WILL_LEAVE } from '../../../base/conference/actionTypes';
-import { toggleDialog, openDialog, hideDialog } from '../../../base/dialog/actions';
+import { openDialog, hideDialog } from '../../../base/dialog/actions';
 import { i18next } from '../../../base/i18n';
 import { SET_AUDIO_MUTED } from '../../../base/media/actionTypes';
 import { PARTICIPANT_JOINED, PARTICIPANT_LEFT } from '../../../base/participants/actionTypes';
@@ -15,7 +14,6 @@ import { locRecordingEngaged, locRecordingStats, setSharedVideoId } from '../../
 
 import DownloadInfoDialog from './DownloadInfoDialog';
 import { recordingController } from './LocalRecorderController';
-import LocalRecordingDialog from './LocalRecordingDialog';
 import { createUserAudioTrack } from './helpers';
 
 declare var APP: Object;
@@ -79,12 +77,6 @@ MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
         recordingController.onMemoryExceeded = isExceeded => {
             dispatch((isExceeded ? openDialog : hideDialog)(DownloadInfoDialog));
         };
-
-        typeof APP === 'object' && typeof APP.keyboardshortcut === 'object'
-            && APP.keyboardshortcut.registerShortcut('L', null, () => {
-                sendAnalytics(createShortcutEvent('local.recording'));
-                dispatch(toggleDialog(LocalRecordingDialog));
-            }, 'keyboardShortcuts.localRecording');
 
         const { conference } = getState()['features/base/conference'];
         const meetingName = getState()['features/riff-platform']?.meeting?.meeting?.name;
