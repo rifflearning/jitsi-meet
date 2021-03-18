@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 import { isScreenShareSourceAvailable } from '../../../riff-dashboard-page/src/libs/utils';
 
-import { COMMAND_START, COMMAND_STOP } from './LocalRecorderController';
+import { COMMAND_START, COMMAND_STOP, PROPERTY_STATS } from './LocalRecorderController';
 
 class AudioStreamsMixer {
 
@@ -103,7 +103,9 @@ export const getCombinedStream = async participantStreams => {
 export const stopLocalVideo = recorderStream => recorderStream.getAudioTracks().forEach(track => track.stop());
 
 export const stopLocalRecordingHandling = user => {
-    const checkUserLocalRecordingStatus = JSON.parse(user._properties?.localRecStats || null);
+
+    const userLocStats = user?._properties && user?._properties[PROPERTY_STATS];
+    const checkUserLocalRecordingStatus = JSON.parse(userLocStats || null);
 
     if (checkUserLocalRecordingStatus?.isRecording) {
         user._conference.removeCommand(COMMAND_START);
