@@ -140,6 +140,10 @@ embedded-package: ## create package using embedded env settings (used by riffedu
 	ln -fs env-embedded .env
 	$(MAKE) all source-package ENV=embedded
 
+discovery-package: ## create package using discovery env settings (volume capture)
+	ln -fs env-discovery .env
+	$(MAKE) all source-package ENV=discovery
+
 # Help documentation à la https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 # if you want the help sorted rather than in the order of occurrence, pipe the grep to sort and pipe that to awk
 help: ## this help documentation (extracted from comments on the targets)
