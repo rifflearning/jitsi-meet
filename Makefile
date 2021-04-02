@@ -140,6 +140,10 @@ embedded-package: ## create package using embedded env settings (used by riffedu
 	ln -fs env-embedded .env
 	$(MAKE) all source-package ENV=embedded
 
+group-package: ## create package using group env settings
+	ln -fs env-group .env
+	$(MAKE) all source-package ENV=group
+
 discovery-package: ## create package using discovery env settings (volume capture)
 	ln -fs env-discovery .env
 	$(MAKE) all source-package ENV=discovery
