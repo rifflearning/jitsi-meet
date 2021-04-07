@@ -136,6 +136,10 @@ api-gateway-package: ## create package using api-gateway env settings (users and
 	ln -fs env-api-gateway .env
 	$(MAKE) all source-package ENV=api-gateway
 
+api-gateway-no-mm-package: ## create package using api-gateway-no-mm env settings (hide meeting mediator)
+	ln -fs env-api-gateway-no-mm .env
+	$(MAKE) all source-package ENV=api-gateway-no-mm
+
 embedded-package: ## create package using embedded env settings (used by riffedu)
 	ln -fs env-embedded .env
 	$(MAKE) all source-package ENV=embedded
