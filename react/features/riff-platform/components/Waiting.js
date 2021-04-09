@@ -35,6 +35,13 @@ const useStyles = makeStyles(theme => {
         },
         submit: {
             margin: theme.spacing(3, 0, 2)
+        },
+        textWhite: {
+            color: '#ffffff'
+        },
+        timeText: {
+            fontWeight: 700,
+            fontSize: '1.5rem'
         }
     };
 });
@@ -134,23 +141,39 @@ const Waiting = ({ meeting, checkIsMeetingAllowedProp }) => {
                 <br />
                 {Boolean(waitingTime) && meeting.dateStart
                     ? <Typography
+                        align = 'center'
                         component = 'p'
-                        variant = 'subtitle1' >
+                        color = 'textPrimary'
+                        variant = 'subtitle1'>
                         {`Meeting is scheduled for ${(new Date(meeting.dateStart)).toString()
                             .slice(0, 24)}`}
                     </Typography>
                     : expiredMeetingError ? null : <Typography
                         component = 'p'
-                        variant = 'h5' >
+                        className = { classes.textWhite }
+                        variant = 'h5'
+                        gutterBottom = { true } >
                         Redirecting to the meeting...
                     </Typography>
                 }
 
                 {/* host will be able to edit meeting, can go to meeting directly, can send invitation?' */}
-                <Typography color = 'error'>
-                    {Boolean(waitingTime)
-                    && `You can join the meeting 5 min before the start. You'll be able to join in ${time}`}
-                    {Boolean(noHostError) && 'No host, waiting for a host...'}
+                {Boolean(waitingTime) && (
+                    <>
+                        <Typography
+                            align = 'center'
+                            color = 'textPrimary'>
+                            You can join the meeting 5 min before the start. You'll be able to join in
+                        </Typography>
+                        <Typography
+                            color = 'textPrimary'
+                            className = { classes.timeText }>
+                            {time}
+                        </Typography>
+                </>
+                )}
+                <Typography color = 'textPrimary'>
+                    {Boolean(noHostError) && 'Waiting for the host...'}
                     {Boolean(expiredMeetingError) && 'Meeting is expired. Please, join another meeting.'}
                 </Typography>
             </div>

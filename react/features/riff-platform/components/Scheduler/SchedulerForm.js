@@ -16,6 +16,7 @@ import {
     Switch
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { Autocomplete } from '@material-ui/lab';
 import Alert from '@material-ui/lab/Alert';
 import {
     MuiPickersUtilsProvider,
@@ -23,6 +24,7 @@ import {
     KeyboardDatePicker
 } from '@material-ui/pickers';
 import moment from 'moment';
+import momentTZ from 'moment-timezone';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import 'moment-recur';
@@ -44,7 +46,8 @@ import {
     getRecurringWeeklyEventsByEndDate,
     getRecurringMonthlyEventsByOccurance,
     getRecurringMonthlyEventsByEndDate,
-    daysOfWeekMap
+    daysOfWeekMap,
+    getDateByTimeAndTimezone
 } from './helpers';
 
 moment.locale('en');
@@ -70,6 +73,14 @@ const useStyles = makeStyles(theme => {
         },
         formAlert: {
             border: 'none'
+        },
+        timezoneList: {
+            maxWidth: '260px'
+        },
+        datePickerInput: {
+            '&:read-only': {
+                color: '#ffffff'
+            }
         }
     };
 });
@@ -123,7 +134,6 @@ const recurrenceTypeMap = {
 
 const defaultOccurrences = 7;
 
-
 const calculateRecurringByEndDate = ({
     startDate,
     endDate,
@@ -137,7 +147,7 @@ const calculateRecurringByEndDate = ({
     monthlyByPosition
 }) => {
     let recurringEvents = [];
-    const checkDate = moment(endDate).isSameOrAfter(startDate);
+    const checkDate = endDate && endDate.isAfter(startDate);
 
     if (recurrenceType === 'daily') {
         recurringEvents = getRecurringDailyEventsByEndDate({
@@ -218,15 +228,17 @@ const getDaysOfWeekObj = ({ daysOfWeekArr, selectedDaysOfWeekArr }) => daysOfWee
     return acc;
 }, {});
 
-const getRecurringDatesWithTime = ({ dates, startDate, duration }) => {
-    const hStart = moment.utc(startDate).hours();
-    const mStart = moment.utc(startDate).minutes();
+// Returns start/end dates for recurring meetings with correct time by timezone in the ISO format.
+const getRecurringDatesWithTime = ({ dates, startDate, duration, timezone }) => {
+
+    const hStart = startDate.hours();
+    const mStart = startDate.minutes();
 
     return dates.map(date => {
-        const newDateStart = moment(date).set('hour', hStart)
-.set('minute', mStart);
-        const newDateEnd = newDateStart.clone().add('hours', duration.hours)
-.add('minutes', duration.minutes);
+        const newDateStart = getDateByTimeAndTimezone(date, timezone).set('hour', hStart)
+        .set('minute', mStart);
+        const newDateEnd = newDateStart.clone().add(duration.hours, 'hours')
+        .add(duration.minutes, 'minutes');
 
         return {
             startDate: newDateStart.toISOString(),
@@ -252,6 +264,15 @@ const getMeetingDuration = ({ dateStart, dateEnd }) => {
         durationM };
 };
 
+// Sets date correct time by timezone, returns date in the ISO format.
+const setCorrectTimeToDate = (correctD, d, timezone) => {
+    const h = correctD.hours();
+    const m = correctD.minutes();
+
+    return getDateByTimeAndTimezone(d, timezone).set('hour', h)
+        .set('minute', m)
+        .toISOString();
+};
 
 const SchedulerForm = ({
     userId,
@@ -269,10 +290,12 @@ const SchedulerForm = ({
     doLogout
 }) => {
     const classes = useStyles();
+    const localUserTimezone = momentTZ.tz.guess();
+    const [ timezone, setTimezone ] = useState(localUserTimezone);
 
     const [ name, setname ] = useState('');
     const [ description, setdescription ] = useState('');
-    const [ date, setdate ] = useState(moment());
+    const [ date, setdate ] = useState(getDateByTimeAndTimezone(moment(), timezone));
     const [ hours, setHours ] = useState(1);
     const [ minutes, setMinutes ] = useState(0);
     const [ allowAnonymous, setAllowAnonymous ] = useState(false);
@@ -280,12 +303,12 @@ const SchedulerForm = ({
     const [ recurrenceType, setRecurrenceType ] = useState('daily');
     const [ recurrenceInterval, setRecurrenceInterval ] = useState(1);
     const [ endDateBy, setEndDateBy ] = useState('endDateTime');
-    const [ endDate, setEndDate ] = useState(moment());
+    const [ endDate, setEndDate ] = useState(getDateByTimeAndTimezone(moment(), timezone));
     const [ endTimes, setEndTimes ] = useState(7);
     const [ monthlyBy, setMonthlyBy ] = useState('monthlyByDay');
     const [ monthlyByPosition, setMonthlyByPosition ] = useState('First');
     const [ monthlyByWeekDay, setMonthlyByWeekDay ] = useState('Mon');
-    const [ monthlyByDay, setMonthlyByDay ] = useState(Number(moment(date).format('D')));
+    const [ monthlyByDay, setMonthlyByDay ] = useState(Number(date.format('D')));
     const [ daysOfWeek, setDaysOfWeek ] = useState({
         Sun: false,
         Mon: false,
@@ -294,7 +317,7 @@ const SchedulerForm = ({
         Thu: false,
         Fri: false,
         Sat: false,
-        [moment(date).format('ddd')]: true
+        [date.format('ddd')]: true
     });
     const [ occurrenceCount, setOccuranceCount ] = useState(defaultOccurrences);
     const [ recurrenceDate, setRecurrenceDate ] = useState([]);
@@ -320,12 +343,19 @@ const SchedulerForm = ({
     const isEditAllMeetingsRecurring = defineEditMode() === 'all';
     const isEditOneOccurrence = defineEditMode() === 'one';
 
+    const setDateByTimezone = (d, tz) => setdate(getDateByTimeAndTimezone(d, tz));
+
+    useEffect(() => {
+        setDateByTimezone(date, timezone);
+    }, [ timezone ]);
+
     useEffect(() => {
         if (meeting && isEditing) {
 
             setname(meeting.name);
 
             const meetingData = isEditAllMeetingsRecurring ? meeting.recurrenceOptions?.defaultOptions : meeting;
+            const meetingTimezone = meeting.timezone ? meeting.timezone : localUserTimezone;
 
             setdescription(meetingData.description);
             setForbidNewParticipantsAfterDateEnd(meetingData.forbidNewParticipantsAfterDateEnd);
@@ -342,7 +372,9 @@ const SchedulerForm = ({
 
             setHours(durationH);
             setMinutes(durationM);
-            setdate(meetingData.dateStart);
+
+            setdate(momentTZ.tz(meetingData.dateStart, meetingTimezone));
+            setTimezone(meetingTimezone);
 
             const meetingRecurrenceOptions = meeting.recurrenceOptions?.options;
 
@@ -351,7 +383,7 @@ const SchedulerForm = ({
                 setRecurrenceType(meetingRecurrenceOptions.recurrenceType);
                 if (meetingRecurrenceOptions.dateEnd) {
                     setEndDateBy('endDateTime');
-                    setEndDate(meetingRecurrenceOptions.dateEnd);
+                    setEndDate(momentTZ.tz(meetingRecurrenceOptions.dateEnd, meetingTimezone));
                 } else {
                     setEndDateBy('endTimes');
                     setEndTimes(meetingRecurrenceOptions.timesEnd);
@@ -409,16 +441,20 @@ const SchedulerForm = ({
             return;
         }
 
-        const dateEnd = new Date(date);
+        const meetingStartDate = date.toISOString();
 
-        dateEnd.setHours(dateEnd.getHours() + hours);
-        dateEnd.setMinutes(dateEnd.getMinutes() + minutes);
+        const dateEnd = date
+            .clone()
+            .add(hours, 'hours')
+            .add(minutes, 'minutes')
+            .toISOString();
 
         const recurrenceValues = recurringMeeting
             ? getRecurringDatesWithTime({ dates: recurrenceDate,
                 startDate: date,
                 duration: { hours,
-                    minutes } })
+                    minutes },
+                timezone })
             : null;
 
         const getRecurrenceOptions = () => {
@@ -427,7 +463,9 @@ const SchedulerForm = ({
             };
 
             if (endDateBy === 'endDateTime') {
-                recurrenceOptions.dateEnd = endDate;
+                const endDateCorrectTime = setCorrectTimeToDate(date, endDate, timezone);
+
+                recurrenceOptions.dateEnd = endDateCorrectTime;
             } else {
                 recurrenceOptions.timesEnd = endTimes;
             }
@@ -449,7 +487,7 @@ const SchedulerForm = ({
         };
 
         const defaultOptions = {
-            dateStart: date,
+            dateStart: meetingStartDate,
             dateEnd,
             description,
             allowAnonymous,
@@ -462,11 +500,12 @@ const SchedulerForm = ({
             createdBy: userId,
             name,
             description,
-            dateStart: new Date(date).getTime(),
-            dateEnd: dateEnd.getTime(),
+            dateStart: meetingStartDate,
+            dateEnd,
             allowAnonymous,
             waitForHost,
             recurrenceValues,
+            timezone,
             recurrenceOptions: recurringMeeting ? {
                 defaultOptions,
                 options: getRecurrenceOptions()
@@ -486,8 +525,8 @@ const SchedulerForm = ({
                 return updateScheduleMeetingRecurringSingleOccurrence(meeting._id, meeting.roomId, {
                     name,
                     description,
-                    dateStart: new Date(date).getTime(),
-                    dateEnd: dateEnd.getTime(),
+                    dateStart: meetingStartDate,
+                    dateEnd,
                     allowAnonymous,
                     waitForHost,
                     forbidNewParticipantsAfterDateEnd,
@@ -511,11 +550,14 @@ const SchedulerForm = ({
 .endOf('year')
     };
 
+    // Passing true will change the time zone without changing the current time.
+    // We need it for correct reccuring dates using moment-recur.
+    // moment-recur handles dates only, time information is discarded.
     useEffect(() => {
         if (endDateBy === 'endDateTime') {
             const recurrence = calculateRecurringByEndDate({
-                startDate: moment.utc(date),
-                endDate: moment.utc(endDate),
+                startDate: date.clone().utc(true),
+                endDate: endDate.clone().utc(true),
                 daysInterval: recurrenceInterval,
                 occurrences: defaultOccurrences,
                 recurrenceType,
@@ -536,7 +578,8 @@ const SchedulerForm = ({
         monthlyBy,
         monthlyByDay,
         monthlyByWeekDay,
-        monthlyByPosition
+        monthlyByPosition,
+        timezone
     ]);
 
     useEffect(() => {
@@ -546,7 +589,7 @@ const SchedulerForm = ({
 
         if (endDateBy === 'endDateTime' && isUpdateEndDate) {
             const recurrence = calculateRecurringByEndDate({
-                startDate: moment.utc(date),
+                startDate: date.clone().utc(true),
                 endDate: null,
                 daysInterval: recurrenceInterval,
                 occurrences: defaultOccurrences,
@@ -560,19 +603,20 @@ const SchedulerForm = ({
 
             setOccuranceCount(recurrence.length);
             setRecurrenceDate(recurrence);
-            setEndDate(moment(recurrence[recurrence.length - 1]));
+            setEndDate(recurrence[recurrence.length - 1]);
         }
     }, [
         date,
         recurrenceType,
         recurrenceInterval,
-        endDateBy
+        endDateBy,
+        timezone
     ]);
 
     useEffect(() => {
         if (endDateBy !== 'endDateTime') {
             const recurrence = calculateRecurringByOccurrence({
-                startDate: moment.utc(date),
+                startDate: date.clone().utc(true),
                 daysInterval: recurrenceInterval,
                 occurrences: endTimes,
                 recurrenceType,
@@ -595,8 +639,10 @@ const SchedulerForm = ({
         monthlyBy,
         monthlyByDay,
         monthlyByWeekDay,
-        monthlyByPosition
+        monthlyByPosition,
+        timezone
     ]);
+
 
     const recurrenceDesc = () => {
         const intervalPart = `Every ${
@@ -645,6 +691,8 @@ const SchedulerForm = ({
                 : moment()
             : moment();
     };
+
+    const timeZonesList = momentTZ.tz.names();
 
     return (
         <form
@@ -730,8 +778,13 @@ const SchedulerForm = ({
                                     value = { date }
                                     onChange = { d => {
                                         setChangesMadeByUserActions(true);
-                                        setdate(d);
+                                        setDateByTimezone(d, timezone);
                                     } }
+                                    InputProps = {{ readOnly: true,
+                                        classes: {
+                                            input: classes.datePickerInput
+                                        }
+                                    }}
                                     KeyboardButtonProps = {{
                                         'aria-label': 'change date'
                                     }} />
@@ -743,7 +796,12 @@ const SchedulerForm = ({
                                     id = 'time-picker'
                                     label = 'Time'
                                     value = { date }
-                                    onChange = { setdate }
+                                    onChange = { d => setDateByTimezone(d, timezone) }
+                                    InputProps = {{ readOnly: true,
+                                        classes: {
+                                            input: classes.datePickerInput
+                                        }
+                                    }}
                                     KeyboardButtonProps = {{
                                         'aria-label': 'change time'
                                     }} />
@@ -794,6 +852,41 @@ const SchedulerForm = ({
                                 key = { el }
                                 value = { el }>{el}</MenuItem>))}
                         </TextField>
+                    </Grid>
+                </Grid>
+                <Grid
+                    item
+                    xs = { 12 }
+                    sm = { 3 }
+                    md = { 2 }>
+                    <Typography>
+            Time Zone
+                    </Typography>
+                </Grid>
+                <Grid
+                    container
+                    item
+                    xs = { 12 }
+                    sm = { 8 }
+                    md = { 10 }
+                    spacing = { 3 } >
+                    <Grid
+                        item
+                        xs = { 12 }
+                        md = { 4 } >
+                        <Autocomplete
+                            id = 'time-zone'
+                            getOptionLabel = { option => option }
+                            disableClearable = { true }
+                            disabled = { isEditOneOccurrence }
+                            value = { timezone }
+                            className = { classes.timezoneList }
+                            options = { timeZonesList }
+                            onChange = { (e, value) => setTimezone(value) }
+                            renderInput = { params => (<TextField
+                                { ...params }
+                                variant = 'outlined'
+                                margin = 'normal' />) } />
                     </Grid>
                 </Grid>
             </Grid>
@@ -1054,7 +1147,12 @@ const SchedulerForm = ({
                                         minDate = { endDateBy === 'endDateTime' ? date : undefined }
                                         label = 'End Date'
                                         value = { endDate || date }
-                                        onChange = { setEndDate }
+                                        onChange = { d => setEndDate(d) }
+                                        InputProps = {{ readOnly: true,
+                                            classes: {
+                                                input: classes.datePickerInput
+                                            }
+                                        }}
                                         KeyboardButtonProps = {{
                                             'aria-label': 'change date'
                                         }} />

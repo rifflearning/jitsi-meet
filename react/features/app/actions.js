@@ -25,7 +25,7 @@ import {
 } from '../base/util';
 import { clearNotifications, showNotification } from '../notifications';
 import { setFatalError } from '../overlay';
-import { redirectToRiffMetrics } from '../riff-platform/actions/jitsiActions';
+import { redirectToRiffAfterMeeting } from '../riff-platform/actions/jitsiActions';
 
 import {
     getDefaultURL,
@@ -312,11 +312,9 @@ export function maybeRedirectToWelcomePage(options: Object = {}) {
             }));
         }
 
-        const shouldRedirectToRiffMetricsPage = true; // maybe externalize this flag
+        return dispatch(redirectToRiffAfterMeeting());
 
-        if (shouldRedirectToRiffMetricsPage) {
-            return dispatch(redirectToRiffMetrics());
-        }
+        /* Jitsi original code
 
         // if Welcome page is enabled redirect to welcome page after 3 sec, if
         // there is a thank you message to be shown, 0.5s otherwise.
@@ -327,5 +325,6 @@ export function maybeRedirectToWelcomePage(options: Object = {}) {
                 },
                 options.showThankYou ? 3000 : 500);
         }
+        */
     };
 }

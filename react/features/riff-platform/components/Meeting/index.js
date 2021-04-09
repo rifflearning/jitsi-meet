@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 import { CheckCircleOutline, HighlightOffOutlined } from '@material-ui/icons';
 import moment from 'moment';
+import momentTZ from 'moment-timezone';
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
@@ -50,6 +51,11 @@ const useStyles = makeStyles(theme => {
             '& > .MuiGrid-item': {
                 paddingLeft: '0px'
             }
+        },
+        meetingTimezone: {
+            opacity: 0.7,
+            fontSize: '0.9rem',
+            marginTop: '10px !important'
         }
     };
 });
@@ -62,8 +68,10 @@ const MenuProps = {
     }
 };
 
-const getFormattedDate = (dateStart, dateEnd) => {
-    const duration = formatDurationTime(dateStart, dateEnd);
+const getFormattedDate = (dateStart, dateEnd, timezone) => {
+    const duration = timezone
+        ? formatDurationTime(momentTZ.tz(dateStart, timezone), momentTZ.tz(dateEnd, timezone))
+        : formatDurationTime(dateStart, dateEnd);
     const date = moment(dateStart).format('MMM DD, YYYY');
 
     return `${duration}, ${date}`;
@@ -212,6 +220,15 @@ function Meeting({
     const roomsNumbersArr = meeting.multipleRoomsQuantity ? getNumberRangeArray(1, meeting.multipleRoomsQuantity) : [];
 
     const isMeetingcreatedByCurrentUser = meeting?.createdBy === userId;
+    const localUserTimezone = momentTZ.tz.guess();
+
+    const isSameDay = momentTZ.tz(meeting.dateStart, localUserTimezone).format('DD')
+        === momentTZ.tz(meeting.dateStart, meeting.timezone).format('DD');
+
+    const timezoneTimeInfo = `${momentTZ.tz(meeting.dateStart, meeting.timezone).format('HH:mm')} -
+    ${momentTZ.tz(meeting.dateEnd, meeting.timezone).format('HH:mm')}, 
+    ${isSameDay ? '' : `${momentTZ.tz(meeting.dateStart, meeting.timezone).format('MMM DD')},`}
+     ${meeting.timezone}`;
 
     if (loading) {
         return <Loader />;
@@ -305,9 +322,18 @@ function Meeting({
                                 sm = { 8 }
                                 spacing = { 2 }
                                 xs = { 12 }>
-                                <Typography>
-                                    {getFormattedDate(meeting.dateStart, meeting.dateEnd)}
-                                </Typography>
+                                <Grid container = { true }>
+                                    <Typography>
+                                        {getFormattedDate(meeting.dateStart, meeting.dateEnd, meeting.timezone)}
+                                    </Typography>
+                                </Grid>
+                                {meeting?.timezone && localUserTimezone !== meeting?.timezone
+                                && <Grid container = { true }>
+                                    <Typography
+                                        className = { classes.meetingTimezone }>
+                                        {timezoneTimeInfo}
+                                    </Typography>
+                                </Grid>}
                             </Grid>
                         </Grid>
                         <Divider className = { classes.infoDivider } />

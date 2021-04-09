@@ -38,10 +38,12 @@ class ApiService {
     // auth
     signIn = ({ email, password }) => this.postWithJwt('/login', { email, password });
     signUp = ({ name, email, password }) => this.postWithJwt('/register', { name, email, password });
+    signUpVerify = token => this.postWithJwt('/register/verify', { token });
     fetchProfile = () => this.fetchWithJwt('/profile');
     // eslint-disable-next-line prefer-template
     fetchUserNames = arrUids => this.fetchWithJwt(`/profiles?${arrUids.map(id => '&id=' + id).join('')}`);
-    resetPassword = ({ email, password }) => this.postWithJwt('/reset', { email, password });
+    resetPassword = ({ email }) => this.postWithJwt('/reset', { email });
+    resetPasswordVerify = ({ token, password }) => this.postWithJwt('/reset/verify', { token, password });
 
     // fetchUserNames = mockFetchUserNames;
 
@@ -49,8 +51,8 @@ class ApiService {
     fetchMeeting = name => this.fetchWithJwt(`/meetings/${name}`);
     fetchMeetingByRoomId = roomId => this.fetchWithJwt(`/meetingByRoomId/${roomId}`);
     fetchMeetings = listType => this.fetchWithJwt(`/meetings?listType=${listType}`);
-    fetchMeetingsByGroup = (groupName, listType) =>
-        this.fetchWithJwt(`/fetchMeetingsByGroup/${groupName}?listType=${listType}`);
+    fetchMeetingsByGroup = listType =>
+        this.fetchWithJwt(`/fetchMeetingsByGroup?listType=${listType}`);
     fetchMeetingsRecurring = roomId => this.fetchWithJwt(`/fetchMeetingsRecurring/${roomId}`);
     scheduleMeeting = meeting => this.postWithJwt('/meetings', { meeting });
     deleteMeeting = id => this.fetchWithJwt(`/meetings/${id}`, { method: 'delete' });

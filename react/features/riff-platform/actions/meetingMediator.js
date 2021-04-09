@@ -2,8 +2,9 @@
 
 import * as actionTypes from '../constants/actionTypes';
 
-export function toggleMeetingMediator() {
+export function toggleMeetingMediator(isOpen) {
     return {
-        type: actionTypes.TOGGLE_MEETING_MEDIATOR
+        type: actionTypes.TOGGLE_MEETING_MEDIATOR,
+        isOpen
     };
 }

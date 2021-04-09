@@ -1,13 +1,13 @@
-/* global config, APP */
+/* global config, APP, process */
 /* eslint-disable require-jsdoc */
 
-import Sibilant from 'sibilant-webaudio';
+import Sibilant from '@rifflearning/sibilant';
 
 import UIEvents from '../../../../service/UI/UIEvents';
 import { app, socket } from '../../riff-dashboard-page/src/libs/riffdata-client';
 import * as actionTypes from '../constants/actionTypes';
 
-function setRiffServerRoomId(roomId) {
+function setRoomIdFromRiffDataServer(roomId) {
     return {
         type: actionTypes.SET_RIFF_SERVER_ROOM_ID,
         roomId
@@ -17,7 +17,7 @@ function setRiffServerRoomId(roomId) {
 export function attachSibilant(tracks) {
     return async (dispatch, getState) => {
         try {
-            const { accessToken } = await loginToServerForSibilant();
+            const { accessToken } = await loginToRiffDataServer();
 
             const userData = getState()['features/riff-platform'].signIn.user;
             const room = window.location.pathname.split('/')[1];
@@ -31,7 +31,7 @@ export function attachSibilant(tracks) {
                     end: new Date()
                 };
 
-                dispatch(sendUtteranceToServer(mockData, userData, room, accessToken));
+                dispatch(sendUtteranceToRiffDataServer(mockData, userData, room, accessToken));
 
                 return;
             }
@@ -42,17 +42,18 @@ export function attachSibilant(tracks) {
 
             // attach initialStream
             if (stream) {
-                reconnectSibilant(stream);
+                bindSibilantToStream(stream);
             }
 
+            // add more notes
             // try attach sibilant on devicelist change
-            document.addEventListener('RIFF_UPDATE_DEVICE_LIST', () => reconnectSibilant());
+            document.addEventListener('RIFF_UPDATE_DEVICE_LIST', () => bindSibilantToStream());
 
             // try attach sibilant on change audio device // setTimeout as a temprorary solution
-            APP.UI.addListener(UIEvents.AUDIO_DEVICE_CHANGED, () => setTimeout(() => reconnectSibilant(), 1000));
+            APP.UI.addListener(UIEvents.AUDIO_DEVICE_CHANGED, () => setTimeout(() => bindSibilantToStream(), 1000));
 
             // eslint-disable-next-line no-inner-declarations
-            function reconnectSibilant(initialStream) {
+            function bindSibilantToStream(initialStream) {
                 // eslint-disable-next-line max-len
                 const newStream = initialStream || APP.store.getState()['features/base/conference'].conference?.getLocalAudioTrack().stream;
 
@@ -62,7 +63,7 @@ export function attachSibilant(tracks) {
 
                     speakingEvents.bind(
                             'stoppedSpeaking',
-                            data => dispatch(sendUtteranceToServer(data, userData, room, accessToken))
+                            data => dispatch(sendUtteranceToRiffDataServer(data, userData, room, accessToken))
                     );
                 }
             }
@@ -83,7 +84,7 @@ async function riffAddUserToMeeting({ uid, displayName, context = '' }, room, to
             token
         });
     } catch (error) {
-        console.error('Error while riffAddUserToMeeting action');
+        console.error('Error while riffAddUserToMeeting action', error);
     }
 }
 
@@ -100,7 +101,7 @@ export function participantLeaveRoom(meetingId, participantId) {
         });
 }
 
-async function loginToServerForSibilant() {
+async function loginToRiffDataServer() {
     try {
         const { accessToken, user: { _id: uid } } = await app.authenticate({
             strategy: 'local',
@@ -113,28 +114,34 @@ async function loginToServerForSibilant() {
             uid
         };
     } catch (err) {
-        console.error('Error while loginToServerForSibilant', err);
+        console.error('Error while loginToRiffDataServer', err);
     }
 }
 
-function sendUtteranceToServer(data, { uid: participant }, room, token) {
+function sendUtteranceToRiffDataServer(data, { uid: participant }, room, token) {
     return async dispatch => {
         try {
+            const volumesObj = process.env.SEND_SIBILANT_VOLUMES_TO_RIFF_DATA_SERVER === 'true'
+                ? { volumes: data.volumes }
+                : {};
             const res = await app.service('utterances').create({
                 participant,
                 room,
                 startTime: data.start.toISOString(),
                 endTime: data.end.toISOString(),
-                token
+                token,
+                ...volumesObj
             });
 
-            console.log({ createdUtter: res });
+            console.log({ sentUtteranceToRiffData: res });
 
-            dispatch(setRiffServerRoomId(res.meeting));
+            const roomIdFromRiffDataServer = res.meeting;
+
+            dispatch(setRoomIdFromRiffDataServer(roomIdFromRiffDataServer));
 
             return undefined;
         } catch (err) {
-            console.error('Listener.WebRtc: ERROR', err);
+            console.error('Error while sendUtteranceToRiffDataServer', err);
         }
     };
 }

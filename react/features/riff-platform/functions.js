@@ -6,15 +6,48 @@ import * as ROUTES from './constants/routes';
 export const previousLocationRoomName = {
     isPrevPathRoomName: path => path?.split('/')[1] && (path?.split('/')[1] !== ROUTES.BASENAME.slice(1)),
     get() {
-        const prevPathname = sessionStorage.getItem('prevPathname');
+        const getWithExpiryAndRemove = key => {
+            const itemStr = localStorage.getItem(key);
 
-        sessionStorage.removeItem('prevPathname');
+            // if the item doesn't exist, return null
+            if (!itemStr) {
+                return null;
+            }
+            const item = JSON.parse(itemStr);
+            const now = new Date();
+
+            // compare the expiry time of the item with the current time
+            if (now.getTime() > item.expiry) {
+                // If the item is expired, delete the item from storage
+                // and return null
+                localStorage.removeItem(key);
+
+                return null;
+            }
+            localStorage.removeItem(key);
+
+            return item.value;
+        };
+        const prevPathname = getWithExpiryAndRemove('prevPathname');
 
         return prevPathname;
     },
     set(pathName) {
         if (this.isPrevPathRoomName(pathName)) {
-            sessionStorage.setItem('prevPathname', pathName);
+            const setWithExpiry = (key, value, ttl) => {
+                const now = new Date();
+
+                // `item` is an object which contains the original value
+                // as well as the time when it's supposed to expire
+                const item = {
+                    value,
+                    expiry: now.getTime() + ttl
+                };
+
+                localStorage.setItem(key, JSON.stringify(item));
+            };
+
+            setWithExpiry('prevPathname', pathName, 1000 * 60 * 5);
         }
     }
 };

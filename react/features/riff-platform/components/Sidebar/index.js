@@ -17,8 +17,6 @@ import MainListItems from './ListItems';
 
 export const drawerWidth = 240;
 
-const negotiationsGroupId = process.env.NEGOTIATIONS_GROUP_ADMIN_USER_ID;
-
 const useStyles = makeStyles(theme => {
     return {
         toolbarIcon: {
@@ -74,7 +72,7 @@ const Sidebar = ({ handleSidebarClose, isOpen }) => {
             <Divider />
             <List><MainListItems /></List>
             <Divider />
-            {negotiationsGroupId
+            {process.env.DISABLE_GROUPS !== 'true'
                 && <List><GroupsList /></List>
             }
         </Drawer>

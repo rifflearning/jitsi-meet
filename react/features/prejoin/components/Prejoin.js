@@ -338,8 +338,9 @@ class Prejoin extends Component<Props, State> {
                                     </ActionButton>
                                 </InlineDialog>
                                 {isAnon
-                                && <><br />or
+                                && <><br />or<br />
                                     <ActionButton
+                                        className = 'prejoin-preview-login-anon-btn'
                                         disabled = { joinButtonDisabled }
                                         onClick = { () => {
                                             previousLocationRoomName.set(window.location.pathname);

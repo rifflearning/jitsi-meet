@@ -15,7 +15,7 @@
  * ******************************************************************************/
 
 import SimpleWebRTC from '@rifflearning/simplewebrtc';
-import sibilant from 'sibilant-webaudio';
+import sibilant from '@rifflearning/sibilant';
 
 import { app } from 'libs/riffdata-client';
 import { logger } from 'libs/utils';

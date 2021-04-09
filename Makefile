@@ -12,6 +12,7 @@ STYLES_DESTINATION = css/all.css
 STYLES_MAIN = css/main.scss
 WEBPACK = ./node_modules/.bin/webpack
 WEBPACK_DEV_SERVER = ./node_modules/.bin/webpack-dev-server
+ENV ?= UNKenv
 
 all: compile deploy clean
 
@@ -87,9 +88,31 @@ deploy-aws: all
 dev: deploy-init deploy-css deploy-rnnoise-binary deploy-lib-jitsi-meet deploy-libflac
 	$(WEBPACK_DEV_SERVER) --host 0.0.0.0
 
-source-package:
-	mkdir -p source_package/jitsi-meet/css && \
-	cp -r *.js *.html resources/*.txt connection_optimization favicon.ico fonts images libs static sounds LICENSE lang source_package/jitsi-meet && \
-	cp css/all.css source_package/jitsi-meet/css && \
-	(cd source_package ; tar cjf ../jitsi-meet.tar.bz2 jitsi-meet) && \
+source-package: ## create a distribution tar file packaging all files to be served by a web server (run make all first)
+source-package: GIT_HEAD_HASH := $(shell git rev-parse --short HEAD)
+source-package: source-package-version
+	cd source_package ; tar cjf ../jitsi-meet-$(GIT_HEAD_HASH)-$(ENV).tar.bz2 jitsi-meet
 	rm -rf source_package
+
+source-package-files: ## copy all files needed for distribution (built and static) to the source_package directory
+	mkdir -p source_package/jitsi-meet/css
+	cp -r *.js *.html resources/*.txt connection_optimization favicon.ico fonts images libs static sounds LICENSE lang source_package/jitsi-meet
+	cp css/all.css source_package/jitsi-meet/css
+
+source-package-version: ## add versioning to all.css and app.bundle.min.js imports in index.html
+source-package-version: SHASUM_ALL_CSS = $(shell shasum ./css/all.css | cut -c -8)
+source-package-version: SHASUM_APP_BUNDLE = $(shell shasum ./libs/app.bundle.min.js | cut -c -8)
+source-package-version: source-package-files
+	@cd source_package/jitsi-meet ; \
+	echo "versioning all.css (v=$(SHASUM_ALL_CSS)) and app.bundle.min.js (v=$(SHASUM_APP_BUNDLE)) in index.html" ; \
+	sed -e 's/css\/all.css/&?v='$(SHASUM_ALL_CSS)'/' \
+		-e 's/\(app\.bundle\.min\.js\)?v=[0-9]\+/\1?v='$(SHASUM_APP_BUNDLE)'/' \
+		--in-place index.html
+
+api-gateway-package:
+	ln -fs env-api-gateway .env
+	$(MAKE) all source-package ENV=api-gateway
+
+embedded-package:
+	ln -fs env-embedded .env
+	$(MAKE) all source-package ENV=embedded

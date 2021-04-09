@@ -36,7 +36,7 @@ function getKeyByValue(object, value) {
     return Object.keys(object).find(key => object[key] === value);
 }
 
-const MeetingsList = ({ groupedMeetings = [], groupName }) => (
+const MeetingsList = ({ groupedMeetings = [], isGroup }) => (
     <Grid
         container = { true }
         spacing = { 3 }>
@@ -46,7 +46,7 @@ const MeetingsList = ({ groupedMeetings = [], groupName }) => (
             xs = { 12 }>
             <StyledPaper title = { date }>
                 <MeetingsTable
-                    groupName = { groupName }
+                    isGroup = { isGroup }
                     meetingsList = { groupedMeetings[date] } />
             </StyledPaper>
         </Grid>)
@@ -55,16 +55,16 @@ const MeetingsList = ({ groupedMeetings = [], groupName }) => (
 );
 
 MeetingsList.propTypes = {
-    // groupName - external prop for separate group (harvard), disable 'delete' button, fetch groupped meeting.
-    groupName: PropTypes.string,
-    groupedMeetings: PropTypes.object
+    // isGroup - external prop for separate group (harvard), disable 'delete' button, fetch groupped meeting.
+    groupedMeetings: PropTypes.object,
+    isGroup: PropTypes.bool
 };
 
 function Meetings({
     meetingsLists = [],
     getMeetingsLists,
     getMeetingsListByGroup,
-    groupName,
+    isGroup,
     loading,
     meetingsListType,
     updateMeetingsListType
@@ -75,8 +75,8 @@ function Meetings({
     const handleScheduleClick = useCallback(() => history.push(ROUTES.SCHEDULE), [ history ]);
 
     useEffect(() => {
-        if (groupName) {
-            getMeetingsListByGroup(groupName, meetingsListType);
+        if (isGroup) {
+            getMeetingsListByGroup(meetingsListType);
         } else {
             getMeetingsLists(meetingsListType);
         }
@@ -89,8 +89,8 @@ function Meetings({
 
     const meetingsTabContent = Object.keys(groupedMeetings).length
         ? (<MeetingsList
-            groupName = { groupName }
-            groupedMeetings = { groupedMeetings } />)
+            groupedMeetings = { groupedMeetings }
+            isGroup = { isGroup } />)
         : noMeetingDataText;
 
     return (
@@ -158,8 +158,8 @@ Meetings.propTypes = {
     getMeetingsListByGroup: PropTypes.func,
     getMeetingsLists: PropTypes.func,
 
-    // groupName - external prop for separate group (harvard), disable 'delete' button, fetch groupped meeting.
-    groupName: PropTypes.string,
+    // isGroup - external prop for separate group (harvard), disable 'delete' button, fetch groupped meeting.
+    isGroup: PropTypes.bool,
     loading: PropTypes.bool,
     meetingsListType: PropTypes.string,
     meetingsLists: PropTypes.array,
@@ -176,7 +176,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        getMeetingsListByGroup: (groupName, listType) => dispatch(getMeetingsByGroup(groupName, listType)),
+        getMeetingsListByGroup: listType => dispatch(getMeetingsByGroup(listType)),
         getMeetingsLists: listType => dispatch(getMeetings(listType)),
         updateMeetingsListType: listType => dispatch(setMeetingsListType(listType))
     };

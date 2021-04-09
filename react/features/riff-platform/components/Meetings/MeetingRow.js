@@ -3,6 +3,7 @@
 import { Button, makeStyles, MenuItem, TextField, Typography } from '@material-ui/core';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
+import momentTZ from 'moment-timezone';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -29,6 +30,9 @@ const useStyles = makeStyles(() => {
                     visibility: 'visible'
                 }
             }
+        },
+        meetingTimezone: {
+            opacity: 0.7
         }
     };
 });
@@ -45,7 +49,7 @@ const MeetingsRow = ({
     meeting = {},
     removeMeeting,
     removeMeetingsRecurring,
-    groupName,
+    isGroup,
     deleteLoading }) => {
     const classes = useStyles();
     const history = useHistory();
@@ -53,6 +57,8 @@ const MeetingsRow = ({
     const [ multipleRoom, setmultipleRooms ] = useState(1);
     const [ isOpenDeleteDialog, setisOpenDeleteDialog ] = useState(false);
     const [ isLinkCopied, setLinkCopied ] = useState(false);
+
+    const localUserTimezone = momentTZ.tz.guess();
 
     const handleStartClick = () => {
         const id = meeting.multipleRoomsQuantity ? `${meeting.roomId}-${multipleRoom}` : meeting.roomId;
@@ -84,7 +90,11 @@ const MeetingsRow = ({
         setisOpenDeleteDialog(false);
     };
 
-    const durationTime = formatDurationTime(meeting.dateStart, meeting.dateEnd);
+    const durationTime = meeting?.timezone
+        ? formatDurationTime(momentTZ.tz(meeting.dateStart, meeting.timezone),
+        momentTZ.tz(meeting.dateEnd, meeting.timezone))
+        : formatDurationTime(meeting.dateStart, meeting.dateEnd);
+
 
     const dialogDeleteValues = [ 'Delete one meeting',
         meeting.recurringParentMeetingId ? 'Delete all recurring meetings' : undefined ];
@@ -97,6 +107,13 @@ const MeetingsRow = ({
 
     const roomsNumbersArr = meeting.multipleRoomsQuantity ? getNumberRangeArray(1, meeting.multipleRoomsQuantity) : [];
 
+    const isSameDay = momentTZ.tz(meeting.dateStart, localUserTimezone).format('DD')
+    === momentTZ.tz(meeting.dateStart, meeting.timezone).format('DD');
+
+    const timezoneTimeInfo = `${momentTZ.tz(meeting.dateStart, meeting.timezone).format('HH:mm')} 
+    ${isSameDay ? '' : `${momentTZ.tz(meeting.dateStart, meeting.timezone).format('MMM DD')},`}
+    ${meeting?.timezone}`;
+
     return (
         <TableRow
             className = { classes.tableRow }
@@ -107,6 +124,11 @@ const MeetingsRow = ({
                     variant = 'h6' >
                     {durationTime}
                 </Typography>
+                {meeting?.timezone && localUserTimezone !== meeting?.timezone && <Typography
+                    className = { classes.meetingTimezone }
+                    variant = 'caption' >
+                    {timezoneTimeInfo}
+                </Typography> }
             </TableCell>
             <TableCell>
 
@@ -151,7 +173,7 @@ const MeetingsRow = ({
                     // eslint-disable-next-line react/jsx-no-bind
                     onClick = { handleMeetingDetailsClick }
                     variant = 'outlined'>Details</Button>
-                {!groupName
+                {!isGroup
                     && <Button
                         className = { classes.meetingButton }
                         // eslint-disable-next-line react/jsx-no-bind
@@ -174,8 +196,8 @@ const MeetingsRow = ({
 MeetingsRow.propTypes = {
     deleteLoading: PropTypes.bool,
 
-    // groupName - external prop for separate group (harvard), disable 'delete', 'edit' buttons, fetch groupped meeting.
-    groupName: PropTypes.string,
+    // isGroup - external prop for separate group (harvard), disable 'delete', 'edit' buttons, fetch groupped meeting.
+    isGroup: PropTypes.bool,
     meeting: PropTypes.object,
     removeMeeting: PropTypes.func,
     removeMeetingsRecurring: PropTypes.func

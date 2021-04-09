@@ -21,12 +21,14 @@ import EditMeeting from './EditMeeting';
 import Footer from './Footer';
 import Join from './Join';
 import Meeting from './Meeting';
+import MeetingEndedPage from './MeetingEndedPage';
 import AllMeetings from './Meetings';
 import Profile from './Profile';
 import ResetPassword from './ResetPassword';
 import Scheduler from './Scheduler';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
+import Verify from './Verify';
 import Waiting from './Waiting';
 
 const useStyles = makeStyles(theme => {
@@ -51,8 +53,6 @@ const useStyles = makeStyles(theme => {
         }
     };
 });
-
-const negotiationsGroupId = process.env.NEGOTIATIONS_GROUP_ADMIN_USER_ID;
 
 // eslint-disable-next-line require-jsdoc
 function Meetings() {
@@ -93,11 +93,11 @@ const Main = ({ user }) => {
             <Route
                 path = { ROUTES.MEETINGS }
                 component = { Meetings } />
-            {negotiationsGroupId
+            {process.env.DISABLE_GROUPS !== 'true'
                 && <Route
                     path = { ROUTES.MEETINGS_HARVARD }
                     // eslint-disable-next-line react/jsx-no-bind
-                    component = { () => <AllMeetings groupName = { negotiationsGroupId } /> } />
+                    component = { () => <AllMeetings isGroup = { true } /> } />
             }
             <Route path = { ROUTES.SCHEDULE } >
                 <Scheduler />
@@ -116,8 +116,15 @@ const Main = ({ user }) => {
                 path = { ROUTES.SIGNUP } >
                 <SignUp />
             </Route>
+            <Route
+                path = { ROUTES.VERIFY } >
+                <Verify />
+            </Route>
             <Route path = { ROUTES.RESETPASSWORD } >
                 <ResetPassword />
+            </Route>
+            <Route path = { ROUTES.MEETING_ENDED } >
+                <MeetingEndedPage />
             </Route>
             <Redirect to = { ROUTES.SIGNIN } />
         </Switch>
