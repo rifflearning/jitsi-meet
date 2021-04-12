@@ -128,6 +128,10 @@ source-package-version: source-package-files
 		-e 's/\(app\.bundle\.min\.js\)?v=[0-9]\+/\1?v='$(SHASUM_APP_BUNDLE)'/' \
 		--in-place index.html
 
+dev-package: ## create package using existing env settings for development deployment
+	$(MAKE) all source-package ENV=dev
+	mv --backup jitsi-meet-$(shell git rev-parse --short HEAD)-dev.tar.bz2 jitsi-meet-dev.tar.bz2
+
 api-gateway-package: ## create package using api-gateway env settings (users and their meetings are handled by the api-gateway)
 	ln -fs env-api-gateway .env
 	$(MAKE) all source-package ENV=api-gateway
