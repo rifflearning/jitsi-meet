@@ -23,13 +23,13 @@ const LocalRecordingButton = ({ toggleLocalRecordingDialog, isEngagedLocally, is
                 icon = { IconRec }
                 key = 'rifflocalrecording'
                 onClick = { isEngagedLocally ? doStopLocalRecording : doToggleLocalRecordingDialog }
-                text = { isEngagedLocally ? 'Stop Local Recording' : 'Start Local Recording' } />
+                text = { `${isEngagedLocally ? 'Stop' : 'Start'} Local Recording` } />
             : <ToolbarButton
                 accessibilityLabel = 'Toggle Local Recording'
                 icon = { IconRec }
                 onClick = { isEngagedLocally ? doStopLocalRecording : doToggleLocalRecordingDialog }
                 toggled = { isEngagedLocally }
-                tooltip = 'Start / Stop Local Recording' />
+                tooltip = { `${isEngagedLocally ? 'Stop' : 'Start'} Local Recording` } />
 
     );
 };
