@@ -104,14 +104,14 @@ export const stopLocalVideo = recorderStream => recorderStream.getAudioTracks().
 
 export const stopLocalRecordingHandling = user => {
 
-    const userLocStats = user?._properties && user?._properties[PROPERTY_STATS];
-    const checkUserLocalRecordingStatus = JSON.parse(userLocStats || null);
+    const userLocRecStats = user?._properties && user._properties[PROPERTY_STATS];
+    const checkUserLocalRecordingStatus = JSON.parse(userLocRecStats || null);
 
     if (checkUserLocalRecordingStatus?.isRecording) {
         user._conference.removeCommand(COMMAND_START);
         user._conference.sendCommand(COMMAND_STOP, {
             attributes: {
-                sessionToken: checkUserLocalRecordingStatus?.currentSessionToken
+                sessionToken: checkUserLocalRecordingStatus.currentSessionToken
             }
         });
     }
