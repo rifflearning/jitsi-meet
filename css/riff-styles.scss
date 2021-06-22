@@ -174,13 +174,19 @@ body > .tooltip {
     font-size: 20px;
 }
 
-.prejoin-preview-dropdown-container div:nth-child(2){
+.prejoin-preview-dropdown-container .prejoin-preview-login-anon-text {
     margin-top: 16px;
-    background: unset;
+    background: unset !important;
+    color: #ffffff;
 }
 
-.premeeting-screen .content input.field.focused {
-    box-shadow: 0 0 4px 3px $violetColor;
+.premeeting-screen {
+    .content input.field.focused {
+        box-shadow: 0 0 4px 3px $violetColor;
+    }
+    .action-btn .options:hover {
+        background-color: $primaryButtonHoverBackground;
+    }
 }
 
 .watermark {

@@ -399,7 +399,7 @@ class Prejoin extends Component<Props, State> {
                                     </ActionButton>
                                 </InlineDialog>
                                 {isAnon
-                                && <><div>or</div>
+                                && <><div className = 'prejoin-preview-login-anon-text'>or</div>
                                     <ActionButton
                                         className = 'prejoin-preview-login-anon-btn'
                                         disabled = { joinButtonDisabled }
