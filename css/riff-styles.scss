@@ -192,6 +192,7 @@ body > .tooltip {
 .watermark {
     width: 186px;
     height: 74px;
+    z-index: 10;
 }
 
 .participants_pane-content button {
