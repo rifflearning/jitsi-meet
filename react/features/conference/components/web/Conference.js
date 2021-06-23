@@ -118,9 +118,6 @@ class Conference extends AbstractConference<Props, *> {
     _onFullScreenChange: Function;
     _onShowToolbar: Function;
     _originalOnShowToolbar: Function;
-
-    // maybe remove ?
-    firebaseUnsubscribe: Function;
     _setBackground: Function;
 
     /**
@@ -207,25 +204,6 @@ class Conference extends AbstractConference<Props, *> {
         } = this.props;
 
         return (
-
-        // HEAD
-        // <div
-        //     className = { _layoutClassName }
-        //     id = 'videoconference_page'
-        //     onMouseMove = { this._onShowToolbar }>
-
-        //     {!_showPrejoin && <DraggableMeetingMediator />}
-
-        //     <Notice />
-        //     <Subject />
-        //     <InviteMore />
-        //     <div id = 'videospace'>
-        //         <LargeVideo />
-        //         <KnockingParticipantList />
-        //         <Filmstrip filmstripOnly = { filmstripOnly } />
-        //         { hideLabels || <Labels /> }
-        //     </div>
-
             <div id = 'layout_wrapper'>
                 <div
                     className = { _layoutClassName }

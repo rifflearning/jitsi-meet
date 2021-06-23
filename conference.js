@@ -129,7 +129,6 @@ import {
 
 import { startRiffServices } from './react/features/riff-platform/actions/jitsiActions';
 import { stopLocalRecordingHandling } from './react/features/riff-platform/components/LocalRecorder/helpers';
-//import { createRnnoiseProcessorPromise } from './react/features/rnnoise';
 import { disableReceiver, stopReceiver } from './react/features/remote-control';
 import { setScreenAudioShareState, isScreenAudioShared } from './react/features/screen-share/';
 

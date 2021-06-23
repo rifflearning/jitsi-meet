@@ -8,12 +8,6 @@ import { getParticipantCount } from '../../../base/participants';
 import { connect } from '../../../base/redux';
 import { beginAddPeople } from '../../../invite';
 import MultipleRoomsNameDropdown from '../../../riff-platform/components/Meeting/MultipleRoomsMeetingNameDropdown';
-// HEAD
-// import {
-//     isButtonEnabled,
-//     isToolboxVisible
-// } from '../../../toolbox';
-
 import { isButtonEnabled, isToolboxVisible } from '../../../toolbox/functions.web';
 
 declare var interfaceConfig: Object;
@@ -97,11 +91,7 @@ function mapStateToProps(state) {
     const hide = interfaceConfig.HIDE_INVITE_MORE_HEADER;
 
     return {
-// HEAD
-        //_tileViewEnabled: state['features/video-layout'].tileViewEnabled,
-        //_visible: isToolboxVisible(state) && isButtonEnabled('invite') && isAlone && !hide,
         _isMultipleRoomsQuantity: Boolean(state['features/riff-platform']?.meeting?.meeting?.multipleRoomsQuantity),
-
         _shouldShow: isButtonEnabled('invite', state) && isAlone && !hide,
         _toolboxVisible: isToolboxVisible(state)
     };
