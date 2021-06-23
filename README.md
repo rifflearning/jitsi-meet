@@ -185,7 +185,9 @@ In order to customize *jitsi-meet* with riff theme, all features and set up a ne
         'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
         'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
         'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
-        'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts', 'select-background', 'download', 'help', 'mute-everyone', 'mute-video-everyone', 'security', 'meetingmediator', 'localrecording'
+        'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts', 
+        'select-background', 'download', 'help', 'mute-everyone', 'mute-video-everyone', 
+        'security', 'meetingmediator', 'localrecording'
     ],
     ```
     Also optional flags:
