@@ -5,10 +5,8 @@ LIBJITSIMEET_DIR = node_modules/lib-jitsi-meet/
 LIBFLAC_DIR = node_modules/libflacjs/dist/min/
 OLM_DIR = node_modules/olm
 RNNOISE_WASM_DIR = node_modules/rnnoise-wasm/dist/
-
 TFLITE_WASM = react/features/stream-effects/virtual-background/vendor/tflite
 MEET_MODELS_DIR  = react/features/stream-effects/virtual-background/vendor/models/
-
 NODE_SASS = ./node_modules/.bin/sass
 NPM = npm
 OUTPUT_DIR = .
@@ -105,12 +103,8 @@ deploy-aws: all
 	sh ./deploy-aws.sh
 
 .NOTPARALLEL:
-
 dev: deploy-init deploy-css deploy-rnnoise-binary deploy-lib-jitsi-meet deploy-meet-models deploy-libflac deploy-olm deploy-tflite
 	$(WEBPACK_DEV_SERVER) --host 0.0.0.0
-
-# dev: deploy-init deploy-css deploy-rnnoise-binary deploy-tflite deploy-meet-models deploy-lib-jitsi-meet deploy-libflac deploy-olm
-# 	$(WEBPACK_DEV_SERVER) --detect-circular-deps
 
 source-package: ## create a distribution tar file packaging all files to be served by a web server (run make all first)
 source-package: GIT_HEAD_HASH := $(shell git rev-parse --short HEAD)
