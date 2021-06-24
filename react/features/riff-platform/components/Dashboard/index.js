@@ -1,7 +1,8 @@
 /* eslint-disable react/no-multi-comp */
 import React, { useEffect } from 'react';
+import { Dashboard } from '@rifflearning/riff-metrics';
 
-import Dashboard from './DashboardView';
+//import DashboardSecond from './DashboardView';
 
 const DashboardPage = () => {
     useEffect(() => {

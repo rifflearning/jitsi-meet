@@ -106,7 +106,7 @@ class Main extends React.Component {
             selectors: {
                 getCurrentUserId: () => this.props.user.uid,
                 getMetrics: () => this.props.metrics,
-                getIsRiffConnected: () => this.props.isRiffServerConnected
+                getIsRiffConnected: () => true
             }
         };
 
