@@ -1,5 +1,5 @@
 /* global APP, $ */
-
+// import { clickOnVideo } from '../../react/features/filmstrip/actions';
 import Logger from 'jitsi-meet-logger';
 
 import {
@@ -9,7 +9,6 @@ import {
     sendAnalytics
 } from '../../react/features/analytics';
 import { toggleDialog } from '../../react/features/base/dialog';
-import { clickOnVideo } from '../../react/features/filmstrip/actions';
 import { KeyboardShortcutsDialog }
     from '../../react/features/keyboard-shortcuts';
 import { SpeakerStats } from '../../react/features/speaker-stats';

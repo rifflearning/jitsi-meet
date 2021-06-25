@@ -5,8 +5,8 @@ import React, { Component } from 'react';
 import { MEDIA_TYPE } from '../../../base/media';
 import { getLocalParticipant, getParticipantById, PARTICIPANT_ROLE } from '../../../base/participants';
 import { connect } from '../../../base/redux';
-import DisplayParticipantNameIndicator from '../../../riff-platform/components/DisplayParticipantNameIndicator';
 import { getTrackByMediaTypeAndParticipant, isLocalTrackMuted, isRemoteTrackMuted } from '../../../base/tracks';
+import DisplayParticipantNameIndicator from '../../../riff-platform/components/DisplayParticipantNameIndicator';
 import { getCurrentLayout, LAYOUTS } from '../../../video-layout';
 
 import AudioMutedIndicator from './AudioMutedIndicator';

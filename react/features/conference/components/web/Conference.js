@@ -16,19 +16,7 @@ import { KnockingParticipantList, LobbyScreen } from '../../../lobby';
 import { ParticipantsPane } from '../../../participants-pane/components';
 import { getParticipantsPaneOpen } from '../../../participants-pane/functions';
 import { Prejoin, isPrejoinPageVisible } from '../../../prejoin';
-
-// eslint-disable-next-line max-len
 import DraggableMeetingMediator from '../../../riff-platform/components/DraggableMeetingMediator';
-
-// HEAD
-//import {
-
-    // Toolbox,
-    // fullScreenChanged,
-    //setToolboxAlwaysVisible
-
-    // showToolbox
-//} from '../../../toolbox';
 import { fullScreenChanged, showToolbox } from '../../../toolbox/actions.web';
 import { Toolbox } from '../../../toolbox/components/web';
 import { LAYOUTS, getCurrentLayout } from '../../../video-layout';

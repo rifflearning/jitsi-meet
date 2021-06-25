@@ -3,7 +3,6 @@
 import React, { PureComponent } from 'react';
 
 import { maybeExtractIdFromDisplayName } from '../../../riff-dashboard-page/functions';
-import { IconShareDesktop } from '../../icons'; 6;
 import { getParticipantById } from '../../participants';
 import { connect } from '../../redux';
 import { getAvatarColor, getInitials } from '../functions';

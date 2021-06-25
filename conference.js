@@ -126,12 +126,10 @@ import {
     isPrejoinPageVisible,
     makePrecallTest
 } from './react/features/prejoin';
-
+import { disableReceiver, stopReceiver } from './react/features/remote-control';
 import { startRiffServices } from './react/features/riff-platform/actions/jitsiActions';
 import { stopLocalRecordingHandling } from './react/features/riff-platform/components/LocalRecorder/helpers';
-import { disableReceiver, stopReceiver } from './react/features/remote-control';
 import { setScreenAudioShareState, isScreenAudioShared } from './react/features/screen-share/';
-
 import { toggleScreenshotCaptureEffect } from './react/features/screenshot-capture';
 import { AudioMixerEffect } from './react/features/stream-effects/audio-mixer/AudioMixerEffect';
 import { createPresenterEffect } from './react/features/stream-effects/presenter';
@@ -2782,7 +2780,7 @@ export default {
      */
     hangup(requestFeedback = false) {
 
-       // eventEmitter.emit(JitsiMeetConferenceEvents.BEFORE_HANGUP);
+        // eventEmitter.emit(JitsiMeetConferenceEvents.BEFORE_HANGUP);
 
         APP.store.dispatch(disableReceiver());
 
