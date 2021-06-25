@@ -14,10 +14,7 @@ import {
     getLocalParticipant,
     isLocalParticipantModerator
 } from '../../../base/participants';
-import {
-    AbstractButton,
-    type AbstractButtonProps
-} from '../../../base/toolbox';
+import { AbstractButton, type AbstractButtonProps } from '../../../base/toolbox/components';
 import { getActiveSession } from '../../functions';
 
 import { StartRecordingDialog, StopRecordingDialog } from './_';
@@ -159,13 +156,7 @@ export function _mapStateToProps(state: Object, ownProps: Props): Object {
             if (!visible && !_disabled) {
                 _disabled = true;
                 visible = true;
-
-                // button and tooltip
-                if (state['features/base/jwt'].isGuest) {
-                    _tooltip = 'dialog.recordingDisabledForGuestTooltip';
-                } else {
-                    _tooltip = 'dialog.recordingDisabledTooltip';
-                }
+                _tooltip = 'dialog.recordingDisabledTooltip';
             }
         }
     }

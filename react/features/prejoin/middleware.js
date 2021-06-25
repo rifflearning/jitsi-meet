@@ -1,12 +1,22 @@
 // @flow
 
+import { updateConfig } from '../base/config';
 import { SET_AUDIO_MUTED, SET_VIDEO_MUTED } from '../base/media';
 import { MiddlewareRegistry } from '../base/redux';
 import { updateSettings } from '../base/settings';
-import { getLocalVideoTrack, replaceLocalTrack } from '../base/tracks';
+import {
+    getLocalTracks,
+    replaceLocalTrack,
+    TRACK_ADDED,
+    TRACK_NO_DATA_FROM_SOURCE
+} from '../base/tracks';
 
 import { PREJOIN_START_CONFERENCE } from './actionTypes';
-import { setPrejoinPageVisibility } from './actions';
+import {
+    setDeviceStatusOk,
+    setDeviceStatusWarning,
+    setPrejoinPageVisibility
+} from './actions';
 import { isPrejoinPageVisible } from './functions';
 
 declare var APP: Object;
@@ -23,17 +33,22 @@ MiddlewareRegistry.register(store => next => async action => {
         const { getState, dispatch } = store;
         const state = getState();
         const { userSelectedSkipPrejoin } = state['features/prejoin'];
-        const localVideoTrack = getLocalVideoTrack(state['features/base/tracks']);
+        const localTracks = getLocalTracks(state['features/base/tracks']);
+        const { options } = action;
+
+        options && store.dispatch(updateConfig(options));
 
         userSelectedSkipPrejoin && dispatch(updateSettings({
             userSelectedSkipPrejoin
         }));
 
-        if (localVideoTrack?.muted) {
-            await dispatch(replaceLocalTrack(localVideoTrack.jitsiTrack, null));
+        // Do not signal audio/video tracks if the user joins muted.
+        for (const track of localTracks) {
+            if (track.muted) {
+                await dispatch(replaceLocalTrack(track.jitsiTrack, null));
+            }
         }
-
-        const jitsiTracks = getState()['features/base/tracks'].map(t => t.jitsiTrack);
+        const jitsiTracks = localTracks.map(t => t.jitsiTrack);
 
         dispatch(setPrejoinPageVisibility(false));
         APP.conference.prejoinStart(jitsiTracks);
@@ -55,6 +70,30 @@ MiddlewareRegistry.register(store => next => async action => {
             store.dispatch(updateSettings({
                 startWithVideoMuted: Boolean(action.muted)
             }));
+        }
+        break;
+    }
+
+    case TRACK_ADDED:
+    case TRACK_NO_DATA_FROM_SOURCE: {
+        const state = store.getState();
+
+        if (isPrejoinPageVisible(state)) {
+            const { track: { jitsiTrack: track } } = action;
+            const { deviceStatusType, deviceStatusText } = state['features/prejoin'];
+
+            if (!track.isAudioTrack()) {
+                break;
+            }
+
+            if (track.isReceivingData()) {
+                if (deviceStatusType === 'warning'
+                    && deviceStatusText === 'prejoin.audioDeviceProblem') {
+                    store.dispatch(setDeviceStatusOk('prejoin.lookGood'));
+                }
+            } else if (deviceStatusType === 'ok') {
+                store.dispatch(setDeviceStatusWarning('prejoin.audioDeviceProblem'));
+            }
         }
         break;
     }

@@ -180,6 +180,15 @@ In order to customize *jitsi-meet* with riff theme, all features and set up a ne
         enabled: true,
         format: 'webm'
     },
+    //the name of the toolbar buttons to display in the toolbar
+    toolbarButtons: [
+        'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
+        'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
+        'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
+        'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts', 
+        'select-background', 'download', 'help', 'mute-everyone', 'mute-video-everyone', 
+        'security', 'meetingmediator', 'localrecording'
+    ],
     ```
     Also optional flags:
     ```
@@ -194,4 +203,3 @@ In order to customize *jitsi-meet* with riff theme, all features and set up a ne
     // in case we want jibri, but value itself different for every domain
     hiddenDomain: 'recorder.example-domain.com',
     ```
-    

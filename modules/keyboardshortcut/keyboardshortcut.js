@@ -1,5 +1,5 @@
-/* global APP, $, interfaceConfig */
-
+/* global APP, $ */
+// import { clickOnVideo } from '../../react/features/filmstrip/actions';
 import Logger from 'jitsi-meet-logger';
 
 import {
@@ -55,7 +55,7 @@ const KeyboardShortcut = {
                     _shortcuts.get(key).function(e);
                 } else if (!isNaN(num) && num >= 0 && num <= 9) {
                     // disable 0-9 shortcuts
-                    // APP.UI.clickOnVideo(num);
+                    // APP.store.dispatch(clickOnVideo(num));
                 }
 
             }
@@ -204,14 +204,12 @@ const KeyboardShortcut = {
         });
         this._addShortcutToHelp('SPACE', 'keyboardShortcuts.pushToTalk');
 
-        if (!interfaceConfig.filmStripOnly) {
-            this.registerShortcut('T', null, () => {
-                sendAnalytics(createShortcutEvent('speaker.stats'));
-                APP.store.dispatch(toggleDialog(SpeakerStats, {
-                    conference: APP.conference
-                }));
-            }, 'keyboardShortcuts.showSpeakerStats');
-        }
+        this.registerShortcut('T', null, () => {
+            sendAnalytics(createShortcutEvent('speaker.stats'));
+            APP.store.dispatch(toggleDialog(SpeakerStats, {
+                conference: APP.conference
+            }));
+        }, 'keyboardShortcuts.showSpeakerStats');
 
         /**
          * FIXME: Currently focus keys are directly implemented below in

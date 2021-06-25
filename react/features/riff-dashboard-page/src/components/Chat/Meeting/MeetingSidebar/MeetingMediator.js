@@ -24,7 +24,7 @@ import { connect } from 'react-redux';
 import { getUserId } from 'Redux/selectors/user';
 
 import Mediator from 'libs/charts';
-import { app } from 'libs/riffdata-client';
+import { app } from '../../../../../../riff-platform/libs/riffdata-client';
 import { ChartTable } from 'components/A11y/ChartTable';
 import { ChartCard } from 'components/Dashboard/Metrics/ChartCard';
 import { maybeExtractIdFromDisplayName } from '../../../../../functions';

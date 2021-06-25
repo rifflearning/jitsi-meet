@@ -83,7 +83,7 @@ $modalBackgroundColor: #2f3146;
 
 // modal overrides (styles of modals provided by styled-components Atlaskit)
 div[role=dialog]{
-    background-color: $modalBackgroundColor;
+    background-color: $modalBackgroundColor !important;
     // color: $modalFontColor;
 
     
@@ -116,6 +116,7 @@ div[role=dialog]{
 
         button {
             background-color: $riffViolet;
+            color: #ffffff !important;
 
             :active {
                 background-color: $riffVioletDark;

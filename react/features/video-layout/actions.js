@@ -3,30 +3,44 @@
 import type { Dispatch } from 'redux';
 
 import {
-    SCREEN_SHARE_PARTICIPANTS_UPDATED,
+    SCREEN_SHARE_REMOTE_PARTICIPANTS_UPDATED,
+    SELECT_ENDPOINTS,
     SET_TILE_VIEW
 } from './actionTypes';
+import { shouldDisplayTileView } from './functions';
 
 /**
- * Creates a (redux) action which signals that the list of known participants
+ * Creates a (redux) action which signals that a new set of remote endpoints need to be selected.
+ *
+ * @param {Array<string>} participantIds - The remote participants that are currently selected
+ * for video forwarding from the bridge.
+ * @returns {{
+ *      type: SELECT_ENDPOINTS,
+ *      particpantsIds: Array<string>
+ * }}
+ */
+export function selectEndpoints(participantIds: Array<string>) {
+    return {
+        type: SELECT_ENDPOINTS,
+        participantIds
+    };
+}
+
+/**
+ * Creates a (redux) action which signals that the list of known remote participants
  * with screen shares has changed.
  *
- * @param {string} participantIds - The participants which currently have active
+ * @param {string} participantIds - The remote participants which currently have active
  * screen share streams.
- * @returns {Function}
+ * @returns {{
+ *     type: SCREEN_SHARE_REMOTE_PARTICIPANTS_UPDATED,
+ *     participantId: string
+ * }}
  */
-export function setParticipantsWithScreenShare(participantIds: Array<string>) {
-    return (dispatch: Dispatch<any>) => {
-
-        // back to tile view after opponent stop screen sharing
-        if (participantIds.length === 0) {
-            dispatch(setTileView(true));
-        }
-
-        return dispatch({
-            type: SCREEN_SHARE_PARTICIPANTS_UPDATED,
-            participantIds
-        });
+export function setRemoteParticipantsWithScreenShare(participantIds: Array<string>) {
+    return {
+        type: SCREEN_SHARE_REMOTE_PARTICIPANTS_UPDATED,
+        participantIds
     };
 }
 
@@ -37,10 +51,10 @@ export function setParticipantsWithScreenShare(participantIds: Array<string>) {
  * @param {boolean} enabled - Whether or not tile view should be shown.
  * @returns {{
  *     type: SET_TILE_VIEW,
- *     enabled: boolean
+ *     enabled: ?boolean
  * }}
  */
-export function setTileView(enabled: boolean) {
+export function setTileView(enabled: ?boolean) {
     return {
         type: SET_TILE_VIEW,
         enabled
@@ -55,8 +69,8 @@ export function setTileView(enabled: boolean) {
  */
 export function toggleTileView() {
     return (dispatch: Dispatch<any>, getState: Function) => {
-        const { tileViewEnabled } = getState()['features/video-layout'];
+        const tileViewActive = shouldDisplayTileView(getState());
 
-        dispatch(setTileView(!tileViewEnabled));
+        dispatch(setTileView(!tileViewActive));
     };
 }

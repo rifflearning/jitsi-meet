@@ -20,10 +20,8 @@
 #import "Types.h"
 #import "ViewController.h"
 
-@import Crashlytics;
-@import Fabric;
 @import Firebase;
-@import JitsiMeet;
+@import JitsiMeetSDK;
 
 @implementation AppDelegate
 
@@ -37,6 +35,7 @@
 
     jitsiMeet.defaultConferenceOptions = [JitsiMeetConferenceOptions fromBuilder:^(JitsiMeetConferenceOptionsBuilder *builder) {
         [builder setFeatureFlag:@"resolution" withValue:@(360)];
+        [builder setFeatureFlag:@"ios.screensharing.enabled" withBoolean:YES];
         builder.serverURL = [NSURL URLWithString:@"https://meet.jit.si"];
         builder.welcomePageEnabled = YES;
 
@@ -47,14 +46,18 @@
 #endif
     }];
 
+  [jitsiMeet application:application didFinishLaunchingWithOptions:launchOptions];
+
     // Initialize Crashlytics and Firebase if a valid GoogleService-Info.plist file was provided.
-    if ([FIRUtilities appContainsRealServiceInfoPlist] && ![jitsiMeet isCrashReportingDisabled]) {
-        NSLog(@"Enabling Crashlytics and Firebase");
+  if ([FIRUtilities appContainsRealServiceInfoPlist]) {
+        NSLog(@"Enabling Firebase");
         [FIRApp configure];
-        [Fabric with:@[[Crashlytics class]]];
+        // Crashlytics defaults to disabled with the FirebaseCrashlyticsCollectionEnabled Info.plist key.
+        [[FIRCrashlytics crashlytics] setCrashlyticsCollectionEnabled:![jitsiMeet isCrashReportingDisabled]];
     }
 
-    [jitsiMeet application:application didFinishLaunchingWithOptions:launchOptions];
+    ViewController *rootController = (ViewController *)self.window.rootViewController;
+    [jitsiMeet showSplashScreen:rootController.view];
 
     return YES;
 }

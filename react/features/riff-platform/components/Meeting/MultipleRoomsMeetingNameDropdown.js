@@ -13,9 +13,10 @@ const MenuProps = {
     PaperProps: {
         style: {
             maxHeight: 200,
-            color: '#5e6d7a',
-            fontSize: '13px',
-            lineHeight: '20px'
+            color: '#fff',
+            fontSize: '12px',
+            lineHeight: '16px',
+            background: 'rgba(0,0,0,.8)'
         }
     }
 };
@@ -25,23 +26,28 @@ const useStyles = makeStyles({
         pointerEvents: 'auto',
         marginLeft: '5px',
         '& .MuiOutlinedInput-input': {
-            paddingTop: '4px',
-            paddingBottom: '4px',
-            backgroundColor: 'white',
-            color: '#5e6d7a',
-            fontSize: '13px',
-            lineHeight: '20px',
-            borderRadius: '4px'
+            background: 'rgba(0,0,0,.8)',
+            borderRadius: '3px 0 0 3px',
+            display: 'inline-block',
+            color: '#fff',
+            fontSize: '12px',
+            lineHeight: '16px',
+            minWidth: '34px',
+            padding: '6px 30px 6px 8px'
         },
         '& .Mui-focused .MuiOutlinedInput-notchedOutline ': {
             border: '0',
             borderRadius: '4px'
+        },
+        '& .MuiSelect-icon': {
+            color: '#fff'
         }
     },
     selectItem: {
-        color: '#5e6d7a',
-        fontSize: '13px',
-        lineHeight: '20px'
+        background: 'rgba(0,0,0,.8)',
+        color: '#fff',
+        fontSize: '12px',
+        lineHeight: '16px'
     }
 });
 

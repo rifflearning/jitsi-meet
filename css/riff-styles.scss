@@ -1,3 +1,5 @@
+$violetColor: #775e80;
+
 html body {
   background-color: $defaultBackground;
 
@@ -127,13 +129,6 @@ body > .tooltip {
     }
 }
 
-#localVideoContainer {
-
-    .username-indicator-filmstrip-view .username-indicator {
-        margin-left: 0;
-    }
-}
-
 .username-indicator {
     font-size: 8pt;
     text-align: center;
@@ -177,4 +172,102 @@ body > .tooltip {
 
 .emotional-chart-emoji {
     font-size: 20px;
+}
+
+.prejoin-preview-dropdown-container .prejoin-preview-login-anon-text {
+    margin-top: 16px;
+    background: unset !important;
+    color: #ffffff;
+}
+
+.premeeting-screen {
+    .content input.field.focused {
+        box-shadow: 0 0 4px 3px $violetColor;
+    }
+    .action-btn .options:hover {
+        background-color: $primaryButtonHoverBackground;
+    }
+}
+
+.watermark {
+    width: 186px;
+    height: 74px;
+    z-index: 10;
+}
+
+.participants_pane-content button {
+    background: $primaryButtonBackground;
+
+        &:hover {
+            background: $primaryButtonHoverBackground;
+        }
+}
+
+.invite-more-dialog .copy-button {
+    background: $primaryButtonBackground;
+}
+
+// chat overrides 
+.chat-input-container.populated #chat-input .send-button {
+    background: $primaryButtonBackground;
+
+        &:hover {
+            background: $primaryButtonHoverBackground;
+        }
+}
+
+#chat-input {
+    &:focus-within {
+        border: 1px solid $riffViolet;
+    }
+    .jitsi-icon svg {
+        fill: #fff;
+    }
+}
+
+// video quality dialog overrides 
+.video-quality-dialog .video-quality-dialog-contents .video-quality-dialog-label-container.active {
+    color: $violetColor;
+
+    &::before {
+        background: $violetColor;
+    }
+}
+// security overrides
+.security-dialog.password-section .password-actions a {
+    color: $violetColor;
+}
+
+// start a live stream modal overrides
+.helper-link {
+    color: $violetColor;
+
+    &:hover {
+        color: $riffViolet;
+    }
+}
+
+// background dialog overrides
+.virtual-background-dialog {
+    .desktop-share-selected, .blur-selected, .slight-blur-selected,
+    .none-selected, .thumbnail-selected {
+        border-color: $riffViolet;
+    }
+
+    .desktop-share:hover, .thumbnail:hover, .blur:hover, .slight-blur:hover, .virtual-background-none:hover {
+        border-color: $violetColor;
+    }
+}
+
+.file-upload-label {
+    color: $riffViolet;
+
+    svg path {
+        fill: $riffViolet;
+    }
+}
+
+
+.device-selection .audio-output-preview a {
+    color: $violetColor;
 }

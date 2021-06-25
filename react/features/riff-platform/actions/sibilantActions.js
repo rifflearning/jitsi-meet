@@ -55,7 +55,7 @@ export function attachSibilant(tracks) {
             // eslint-disable-next-line no-inner-declarations
             function bindSibilantToStream(initialStream) {
                 // eslint-disable-next-line max-len
-                const newStream = initialStream || APP.store.getState()['features/base/conference'].conference?.getLocalAudioTrack().stream;
+                const newStream = initialStream || APP.store.getState()['features/base/conference'].conference?.getLocalAudioTrack()?.stream;
 
                 if (newStream && newStream !== oldStream) {
                     oldStream = newStream;

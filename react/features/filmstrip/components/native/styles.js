@@ -2,7 +2,7 @@
 
 import { ColorSchemeRegistry, schemeColor } from '../../../base/color-scheme';
 import { ColorPalette } from '../../../base/styles';
-import { FILMSTRIP_SIZE } from '../../constants';
+import { SMALL_THUMBNAIL_SIZE } from '../../constants';
 
 /**
  * Size for the Avatar.
@@ -15,6 +15,17 @@ export const AVATAR_SIZE = 50;
 export default {
 
     /**
+     * The display name container.
+     */
+    displayNameContainer: {
+        alignSelf: 'center',
+        bottom: 0,
+        flex: 1,
+        margin: 4,
+        position: 'absolute'
+    },
+
+    /**
      * The style of the narrow {@link Filmstrip} version which displays
      * thumbnails in a row at the bottom of the screen.
      */
@@ -22,7 +33,7 @@ export default {
         flexDirection: 'row',
         flexGrow: 0,
         justifyContent: 'flex-end',
-        height: FILMSTRIP_SIZE
+        marginBottom: 5
     },
 
     /**
@@ -77,12 +88,14 @@ export default {
         borderStyle: 'solid',
         borderWidth: 1,
         flex: 1,
-        height: 80,
+        height: SMALL_THUMBNAIL_SIZE,
         justifyContent: 'center',
         margin: 2,
+        maxHeight: SMALL_THUMBNAIL_SIZE,
+        maxWidth: SMALL_THUMBNAIL_SIZE,
         overflow: 'hidden',
         position: 'relative',
-        width: 80
+        width: SMALL_THUMBNAIL_SIZE
     },
 
     /**

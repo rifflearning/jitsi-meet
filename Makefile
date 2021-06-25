@@ -3,7 +3,10 @@ CLEANCSS = ./node_modules/.bin/cleancss
 DEPLOY_DIR = libs
 LIBJITSIMEET_DIR = node_modules/lib-jitsi-meet/
 LIBFLAC_DIR = node_modules/libflacjs/dist/min/
+OLM_DIR = node_modules/olm
 RNNOISE_WASM_DIR = node_modules/rnnoise-wasm/dist/
+TFLITE_WASM = react/features/stream-effects/virtual-background/vendor/tflite
+MEET_MODELS_DIR  = react/features/stream-effects/virtual-background/vendor/models/
 NODE_SASS = ./node_modules/.bin/sass
 NPM = npm
 OUTPUT_DIR = .
@@ -16,14 +19,17 @@ ENV ?= UNKenv
 
 all: compile deploy clean
 
-compile:
+compile: compile-load-test
 	$(WEBPACK) -p
+
+compile-load-test:
+	${NPM} install --prefix resources/load-test && ${NPM} run build --prefix resources/load-test
 
 clean:
 	rm -fr $(BUILD_DIR)
 
 .NOTPARALLEL:
-deploy: deploy-init deploy-appbundle deploy-rnnoise-binary deploy-lib-jitsi-meet deploy-libflac deploy-css deploy-local
+deploy: deploy-init deploy-appbundle deploy-rnnoise-binary deploy-tflite deploy-meet-models deploy-lib-jitsi-meet deploy-libflac deploy-olm deploy-css deploy-local
 
 deploy-init:
 	rm -fr $(DEPLOY_DIR)
@@ -39,8 +45,6 @@ deploy-appbundle:
 		$(BUILD_DIR)/external_api.min.map \
 		$(BUILD_DIR)/flacEncodeWorker.min.js \
 		$(BUILD_DIR)/flacEncodeWorker.min.map \
-		$(BUILD_DIR)/device_selection_popup_bundle.min.js \
-		$(BUILD_DIR)/device_selection_popup_bundle.min.map \
 		$(BUILD_DIR)/dial_in_info_bundle.min.js \
 		$(BUILD_DIR)/dial_in_info_bundle.min.map \
 		$(BUILD_DIR)/alwaysontop.min.js \
@@ -48,16 +52,15 @@ deploy-appbundle:
 		$(OUTPUT_DIR)/analytics-ga.js \
 		$(BUILD_DIR)/analytics-ga.min.js \
 		$(BUILD_DIR)/analytics-ga.min.map \
-		$(BUILD_DIR)/video-blur-effect.min.js \
-		$(BUILD_DIR)/video-blur-effect.min.map \
-		$(BUILD_DIR)/rnnoise-processor.min.js \
-		$(BUILD_DIR)/rnnoise-processor.min.map \
+		$(BUILD_DIR)/close3.min.js \
+		$(BUILD_DIR)/close3.min.map \
 		$(DEPLOY_DIR)
 
 deploy-lib-jitsi-meet:
 	cp \
 		$(LIBJITSIMEET_DIR)/lib-jitsi-meet.min.js \
 		$(LIBJITSIMEET_DIR)/lib-jitsi-meet.min.map \
+		$(LIBJITSIMEET_DIR)/lib-jitsi-meet.e2ee-worker.js \
 		$(LIBJITSIMEET_DIR)/connection_optimization/external_connect.js \
 		$(LIBJITSIMEET_DIR)/modules/browser/capabilities.json \
 		$(DEPLOY_DIR)
@@ -68,10 +71,25 @@ deploy-libflac:
 		$(LIBFLAC_DIR)/libflac4-1.3.2.min.js.mem \
 		$(DEPLOY_DIR)
 
+deploy-olm:
+	cp \
+		$(OLM_DIR)/olm.wasm \
+		$(DEPLOY_DIR)
+
 deploy-rnnoise-binary:
 	cp \
 		$(RNNOISE_WASM_DIR)/rnnoise.wasm \
 		$(DEPLOY_DIR)
+
+deploy-tflite:
+	cp \
+		$(TFLITE_WASM)/*.wasm \
+		$(DEPLOY_DIR)		
+
+deploy-meet-models:
+	cp \
+		$(MEET_MODELS_DIR)/*.tflite \
+		$(DEPLOY_DIR)	
 
 deploy-css:
 	$(NODE_SASS) $(STYLES_MAIN) $(STYLES_BUNDLE) && \
@@ -85,7 +103,7 @@ deploy-aws: all
 	sh ./deploy-aws.sh
 
 .NOTPARALLEL:
-dev: deploy-init deploy-css deploy-rnnoise-binary deploy-lib-jitsi-meet deploy-libflac
+dev: deploy-init deploy-css deploy-rnnoise-binary deploy-lib-jitsi-meet deploy-meet-models deploy-libflac deploy-olm deploy-tflite
 	$(WEBPACK_DEV_SERVER) --host 0.0.0.0
 
 source-package: ## create a distribution tar file packaging all files to be served by a web server (run make all first)
