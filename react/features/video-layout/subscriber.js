@@ -2,42 +2,23 @@
 
 import debounce from 'lodash/debounce';
 
-import {
-    VIDEO_QUALITY_LEVELS,
-    setMaxReceiverVideoQuality
-} from '../base/conference';
-import {
-    getPinnedParticipant,
-    pinParticipant
-} from '../base/participants';
 import { StateListenerRegistry, equals } from '../base/redux';
 import { isFollowMeActive } from '../follow-me';
-import { selectParticipant } from '../large-video';
+import { selectParticipant } from '../large-video/actions.any';
 
-import { setParticipantsWithScreenShare } from './actions';
-import { shouldDisplayTileView } from './functions';
-
-declare var APP: Object;
-declare var interfaceConfig: Object;
+import { setRemoteParticipantsWithScreenShare } from './actions';
+import { getAutoPinSetting, updateAutoPinnedParticipant } from './functions';
 
 /**
  * StateListenerRegistry provides a reliable way of detecting changes to
  * preferred layout state and dispatching additional actions.
  */
 StateListenerRegistry.register(
-    /* selector */ state => shouldDisplayTileView(state),
-    /* listener */ (displayTileView, store) => {
+    /* selector */ state => state['features/video-layout'].tileViewEnabled,
+    /* listener */ (tileViewEnabled, store) => {
         const { dispatch } = store;
 
         dispatch(selectParticipant());
-
-        if (!displayTileView) {
-            dispatch(setMaxReceiverVideoQuality(VIDEO_QUALITY_LEVELS.HIGH));
-
-            if (_getAutoPinSetting()) {
-                _updateAutoPinnedParticipant(store);
-            }
-        }
     }
 );
 
@@ -49,14 +30,14 @@ StateListenerRegistry.register(
 StateListenerRegistry.register(
     /* selector */ state => state['features/base/tracks'],
     /* listener */ debounce((tracks, store) => {
-        if (!_getAutoPinSetting() || isFollowMeActive(store)) {
+        if (!getAutoPinSetting() || isFollowMeActive(store)) {
             return;
         }
 
-        const oldScreenSharesOrder = store.getState()['features/video-layout'].screenShares || [];
+        const oldScreenSharesOrder = store.getState()['features/video-layout'].remoteScreenShares || [];
         const knownSharingParticipantIds = tracks.reduce((acc, track) => {
             if (track.mediaType === 'video' && track.videoType === 'desktop') {
-                const skipTrack = _getAutoPinSetting() === 'remote-only' && track.local;
+                const skipTrack = getAutoPinSetting() === 'remote-only' && track.local;
 
                 if (!skipTrack) {
                     acc.push(track.participantId);
@@ -82,48 +63,8 @@ StateListenerRegistry.register(
 
         if (!equals(oldScreenSharesOrder, newScreenSharesOrder)) {
             store.dispatch(
-                setParticipantsWithScreenShare(newScreenSharesOrder));
+                setRemoteParticipantsWithScreenShare(newScreenSharesOrder));
 
-            _updateAutoPinnedParticipant(store);
+            updateAutoPinnedParticipant(oldScreenSharesOrder, store);
         }
     }, 100));
-
-/**
- * A selector for retrieving the current automatic pinning setting.
- *
- * @private
- * @returns {string|undefined} The string "remote-only" is returned if only
- * remote screensharing should be automatically pinned, any other truthy value
- * means automatically pin all screenshares. Falsy means do not automatically
- * pin any screenshares.
- */
-function _getAutoPinSetting() {
-    return typeof interfaceConfig === 'object'
-        ? interfaceConfig.AUTO_PIN_LATEST_SCREEN_SHARE
-        : 'remote-only';
-}
-
-/**
- * Private helper to automatically pin the latest screen share stream or unpin
- * if there are no more screen share streams.
- *
- * @param {Store} store - The redux store.
- * @returns {void}
- */
-function _updateAutoPinnedParticipant({ dispatch, getState }) {
-    const state = getState();
-    const screenShares = state['features/video-layout'].screenShares;
-
-    if (!screenShares) {
-        return;
-    }
-
-    const latestScreenshareParticipantId
-        = screenShares[screenShares.length - 1];
-
-    if (latestScreenshareParticipantId) {
-        dispatch(pinParticipant(latestScreenshareParticipantId));
-    } else if (getPinnedParticipant(state['features/base/participants'])) {
-        dispatch(pinParticipant(null));
-    }
-}

@@ -37,7 +37,9 @@ export function getMeeting(meetingId) {
 
             if (res) {
                 meeting = res;
-                dispatch(meetingSuccess(meeting));
+
+                // store the current roomId with the selected room number (if present)
+                dispatch(meetingSuccess({ ...meeting, roomId: meetingId }));
             } else {
                 dispatch(meetingFailure('No meeting with this ID'));
             }

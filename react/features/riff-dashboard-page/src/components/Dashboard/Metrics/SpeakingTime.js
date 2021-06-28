@@ -24,15 +24,14 @@ import * as am4charts from '@amcharts/amcharts4/charts';
 
 import { ScaleLoader } from 'react-spinners';
 
+import { logger } from 'libs/utils';
 import {
     Colors,
     getColorMap,
-    logger,
-} from 'libs/utils';
+} from './colorsHelpers';
 import { EStatus, GraphConfigs, GraphTypes } from 'libs/utils/constants';
 
 import { ChartCard } from './ChartCard';
-import { AmChartsLegend } from './AmChartsLegend';
 
 /* ******************************************************************************
  * SpeakingTime                                                            */ /**
@@ -40,6 +39,7 @@ import { AmChartsLegend } from './AmChartsLegend';
  * React component to visualize the distribution of speaking time in a meeting.
  *
  ********************************************************************************/
+
 class SpeakingTime extends React.PureComponent {
     static propTypes = {
         /** meeting whose relevant data will be in graphDataset */
@@ -135,7 +135,7 @@ class SpeakingTime extends React.PureComponent {
         if (!isLoaded) {
             loadingDisplay = (
                 <div className='loading-overlay'>
-                    {<ScaleLoader color={Colors.lightRoyal} background={Colors.selago}/>}
+                    {<ScaleLoader color={Colors.lightRoyal} background={Colors.white} />}
                 </div>
             );
         }
@@ -151,13 +151,6 @@ class SpeakingTime extends React.PureComponent {
                 <div
                     className={'amcharts-graph-container speaking-time-graph-div'}
                 />
-                {this.state.updatedLegendAt !== null &&
-                    <AmChartsLegend
-                        graphType={this.props.graphType}
-                        getLegendItems={this.getLegendItems}
-                        updatedLegendAt={this.state.updatedLegendAt}
-                    />
-                }
             </ChartCard>
         );
     }
@@ -242,23 +235,31 @@ class SpeakingTime extends React.PureComponent {
      * @returns {array} containing the prepared data for the graph
      */
     getGraphData() {
-        const participantColors = getColorMap(this.props.meeting.participants, this.props.participantId);
+        const sortedParticipants = this.props.graphDataset.data.sort((a, b) => b.lengthUtterances - a.lengthUtterances);
 
-        const graphData = this.props.graphDataset.data.map((participant) => {
-            const name = participant.participantId === this.props.participantId ? 'You' : participant.name;
-            const lengthUtterances = participant.lengthUtterances;
+        const sortedParticipantsIds = sortedParticipants.map(participant => participant.participantId);
+        const participantColors = getColorMap(sortedParticipantsIds, this.props.participantId);
 
+        const selfData = [{
+            ...(this.props.graphDataset.data.find(el => el.participantId === this.props.participantId) || {}),
+            name: 'You',
+            participant: 'You'
+        }];
+
+        const otherData = sortedParticipants.filter(el => el.participantId !== this.props.participantId);
+
+        const graphData = selfData.concat(otherData).map(({ lengthUtterances, participantId, name }) => {
+            const { color, level, textColor } = participantColors.get(participantId) || {};
             const config = {
+                name: name.split(' ')[0],
                 participant: name,
                 lengthUtterances,
-                color: participantColors.get(participant.participantId),
+                color: am4core.color(color).brighten(level),
+                textColor
             };
-
-            const tooltip = GraphConfigs[this.props.graphType].getTooltip(config);
-            config.tooltipText = tooltip;
-
+            config.tooltipText = GraphConfigs[this.props.graphType].getTooltip(config);;
             return config;
-        }).sort((a, b) => b.lengthUtterances - a.lengthUtterances);
+        })
 
         logger.debug('SpeakingTime: graphData', { graphData });
         return graphData;
@@ -306,21 +307,56 @@ class SpeakingTime extends React.PureComponent {
 
         series.dataFields.value = 'lengthUtterances';
         series.dataFields.category = 'participant';
-        series.labels.template.disabled = true;
         series.padding = 0;
 
         const slices = series.slices.template;
         slices.propertyFields.fill = 'color';
         slices.cornerRadius = 1;
         slices.tooltipText = '{tooltipText}';
-        slices.stroke = am4core.color('#fff');
-        slices.strokeWidth = 1;
+
+        slices.strokeWidth = 0;
         slices.strokeOpacity = 1;
         slices.states.getKey('active').properties.shiftRadius = 0; // remove this default animation
 
-        series.legendSettings.labelText = '{name}';
-        series.legendSettings.valueText = '[bold]{value.percent}[/]%';
-        series.legendSettings.paddingLeft = 0;
+        const rgm = new am4core.LinearGradientModifier();
+        rgm.brightnesses.push(0, -0.07, -0.18);
+        slices.fillModifier = rgm;
+
+        series.labels.labelText = '{name}';
+        series.ticks.template.disabled = true;
+        series.labels.textAlign = "middle";
+        series.alignLabels = false;
+
+        const labels = series.labels.template;
+        labels.fill = am4core.color(Colors.white);
+        labels.text = "[font-weight: 600 text-transform: uppercase]{name}\n{value.percent.formatNumber('#.0')}%[/]";
+        labels.padding(0, 0, 0, 0);
+        labels.fontSize = 10;
+        labels.maxWidth = 55;
+        labels.truncate = true;
+        labels.radius = am4core.percent(-45);
+
+        labels.adapter.add("radius", function(radius, target) {
+            if (target.dataItem && target.dataItem.values.value.percent < 10) {
+              target.fill = am4core.color(Colors.mineShaft);
+              return 3;
+            }
+            return radius;
+          });
+
+          labels.adapter.add("fill", function(fill, target) {
+            if (target.dataItem && target.dataItem._dataContext.textColor) {
+              return am4core.color(target.dataItem._dataContext.textColor); 
+            }
+            return fill;
+          });
+
+          labels.adapter.add("disabled", function(disabled, target) {
+            if (target.dataItem && target.dataItem.values.value.percent < 5) {
+              return true;
+            }
+            return false;
+          });
 
         return series;
     }
@@ -344,9 +380,9 @@ class SpeakingTime extends React.PureComponent {
 
         // Create chart and place it inside the html element with id speaking-time-graph-div
         const chart = am4core.create('speaking-time-graph-div', am4charts.PieChart);
-        chart.background.fill = Colors.selago;
+        chart.background.fill = Colors.white;
         chart.numberFormatter.numberFormat = '##.#';
-        chart.radius = '75%';
+        chart.radius = '85%';
 
         // Fired when graph's data gets updated
         chart.events.on('datavalidated', () => {
@@ -362,6 +398,7 @@ class SpeakingTime extends React.PureComponent {
 
         this.chart = chart;
         this.pieSeries = pieSeries;
+
 
         return chart;
     }

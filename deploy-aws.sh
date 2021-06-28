@@ -59,7 +59,11 @@ awk "{gsub(/app.bundle.min.js\?v=139/,\"app.bundle.min.js?v=${SHA_SUM_APP_BUNDLE
 
 # copy all images
 mkdir temp-deploy-aws/images
-cp images/* temp-deploy-aws/images/
+cp -a images/* temp-deploy-aws/images/
+
+# copy all sounds
+mkdir temp-deploy-aws/sounds
+cp -a sounds/* temp-deploy-aws/sounds
 
 zip -r temp-deploy-aws.zip temp-deploy-aws
 
@@ -80,6 +84,7 @@ rm /home/ubuntu/temp-deploy-aws.zip; \
 sudo mv /home/ubuntu/temp-deploy-aws/css/all.css /usr/share/jitsi-meet/css/;  \
 rm -fr /home/ubuntu/temp-deploy-aws/css; \
 sudo rm -fr /usr/share/jitsi-meet/images; \
+sudo rm -fr /usr/share/jitsi-meet/sounds; \
 sudo rm -fr /usr/share/jitsi-meet/libs; \
 sudo rm -fr /usr/share/jitsi-meet/static; \
 sudo mv /home/ubuntu/temp-deploy-aws/* /usr/share/jitsi-meet/; \

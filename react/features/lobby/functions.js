@@ -1,23 +1,6 @@
 // @flow
 
 import { getCurrentConference } from '../base/conference';
-import { toState } from '../base/redux';
-
-const JID_PATTERN = '[^@]+@[^/]+/(.+)';
-
-/**
- * Returns a knocking participant by ID or JID.
- *
- * @param {Function | Object} stateful - The Redux state or a function that resolves to the Redux state.
- * @param {string} id - The ID or JID of the participant.
- * @returns {Object}
- */
-export function getKnockingParticipantById(stateful: Function | Object, id: string): Object {
-    const { knockingParticipants } = toState(stateful)['features/lobby'];
-    const idToFind = getIdFromJid(id) || id;
-
-    return knockingParticipants.find(p => p.id === idToFind);
-}
 
 /**
  * Approves (lets in) or rejects a knocking participant.
@@ -39,14 +22,13 @@ export function setKnockingParticipantApproval(getState: Function, id: string, a
     }
 }
 
-/**
- * Parses an ID from a JID, if a JID is provided, undefined otherwise.
- *
- * @param {string} jid - The JID to get the ID from.
- * @returns {?string}
- */
-function getIdFromJid(jid: string): ?string {
-    const match = new RegExp(JID_PATTERN, 'g').exec(jid) || [];
 
-    return match[1];
+/**
+ * Selector to return lobby state.
+ *
+ * @param {any} state - State object.
+ * @returns {any}
+ */
+export function getLobbyState(state: any) {
+    return state['features/lobby'];
 }

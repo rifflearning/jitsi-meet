@@ -4,8 +4,8 @@
 import Sibilant from '@rifflearning/sibilant';
 
 import UIEvents from '../../../../service/UI/UIEvents';
-import { app, socket } from '../../riff-dashboard-page/src/libs/riffdata-client';
 import * as actionTypes from '../constants/actionTypes';
+import { app, socket } from '../libs/riffdata-client';
 
 function setRoomIdFromRiffDataServer(roomId) {
     return {
@@ -55,7 +55,7 @@ export function attachSibilant(tracks) {
             // eslint-disable-next-line no-inner-declarations
             function bindSibilantToStream(initialStream) {
                 // eslint-disable-next-line max-len
-                const newStream = initialStream || APP.store.getState()['features/base/conference'].conference?.getLocalAudioTrack().stream;
+                const newStream = initialStream || APP.store.getState()['features/base/conference'].conference?.getLocalAudioTrack()?.stream;
 
                 if (newStream && newStream !== oldStream) {
                     oldStream = newStream;

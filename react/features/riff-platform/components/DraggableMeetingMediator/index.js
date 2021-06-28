@@ -1,17 +1,17 @@
 /* global process */
 /* eslint-disable max-len */
 /* eslint-disable react/jsx-no-bind */
+/* eslint-disable-next-line import/order */
 
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import Draggable from 'react-draggable';
 
-// eslint-disable-next-line import/order
 import { Icon, IconClose } from '../../../base/icons';
-// eslint-disable-next-line import/order
 import { connect } from '../../../base/redux';
-import { MeetingMediator } from '../../../riff-dashboard-page/src/components/Chat/Meeting/MeetingSidebar/MeetingMediator';
 import { toggleMeetingMediator } from '../../actions/meetingMediator';
+
+import { MeetingMediator } from './MeetingMediator';
 
 const DraggableMeetingMediator = ({ displayName, webRtcPeers, isOpen, toggleMediator, isAnon }) => {
 

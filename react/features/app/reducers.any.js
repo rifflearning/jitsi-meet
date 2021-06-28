@@ -1,6 +1,7 @@
 // @flow
 
 import '../analytics/reducer';
+import '../authentication/reducer';
 import '../base/app/reducer';
 import '../base/audio-only/reducer';
 import '../base/color-scheme/reducer';
@@ -11,6 +12,7 @@ import '../base/dialog/reducer';
 import '../base/flags/reducer';
 import '../base/jwt/reducer';
 import '../base/known-domains/reducer';
+import '../base/lastn/reducer';
 import '../base/lib-jitsi-meet/reducer';
 import '../base/logging/reducer';
 import '../base/media/reducer';
@@ -23,12 +25,12 @@ import '../base/sounds/reducer';
 import '../base/testing/reducer';
 import '../base/tracks/reducer';
 import '../base/user-interaction/reducer';
-import '../blur/reducer';
+import '../billing-counter/reducer';
 import '../calendar-sync/reducer';
 import '../chat/reducer';
 import '../deep-linking/reducer';
-import '../device-selection/reducer';
 import '../dropbox/reducer';
+import '../dynamic-branding/reducer';
 import '../etherpad/reducer';
 import '../filmstrip/reducer';
 import '../follow-me/reducer';
@@ -42,6 +44,7 @@ import '../recent-list/reducer';
 import '../recording/reducer';
 import '../settings/reducer';
 import '../subtitles/reducer';
+import '../screen-share/reducer';
 import '../toolbox/reducer';
 import '../transcribing/reducer';
 import '../video-layout/reducer';

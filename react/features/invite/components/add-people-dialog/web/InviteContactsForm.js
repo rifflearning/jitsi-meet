@@ -10,7 +10,9 @@ import { Icon, IconPhone } from '../../../../base/icons';
 import { getLocalParticipant } from '../../../../base/participants';
 import { MultiSelectAutocomplete } from '../../../../base/react';
 import { connect } from '../../../../base/redux';
+import { isVpaasMeeting } from '../../../../billing-counter/functions';
 import { hideAddPeopleDialog } from '../../../actions';
+import { INVITE_TYPES } from '../../../constants';
 import AbstractAddPeopleDialog, {
     type Props as AbstractProps,
     type State,
@@ -32,6 +34,11 @@ type Props = AbstractProps & {
     _footerTextEnabled: boolean,
 
     /**
+     * Whether the meeting belongs to JaaS user
+     */
+    _isVpaas: boolean,
+
+    /**
      * The redux {@code dispatch} function.
      */
     dispatch: Dispatch<any>,
@@ -49,6 +56,8 @@ class InviteContactsForm extends AbstractAddPeopleDialog<Props, State> {
     _multiselect = null;
 
     _resourceClient: Object;
+
+    _translations: Object;
 
     state = {
         addToCallError: false,
@@ -79,6 +88,16 @@ class InviteContactsForm extends AbstractAddPeopleDialog<Props, State> {
             makeQuery: this._query,
             parseResults: this._parseQueryResults
         };
+
+
+        const { t } = props;
+
+        this._translations = {
+            _dialOutEnabled: t('addPeople.phoneNumbers'),
+            _addPeopleEnabled: t('addPeople.contacts'),
+            _sipInviteEnabled: t('addPeople.sipAddresses')
+        };
+
     }
 
     /**
@@ -110,30 +129,30 @@ class InviteContactsForm extends AbstractAddPeopleDialog<Props, State> {
         const {
             _addPeopleEnabled,
             _dialOutEnabled,
+            _isVpaas,
+            _sipInviteEnabled,
             t
         } = this.props;
         const footerText = this._renderFooterText();
         let isMultiSelectDisabled = this.state.addToCallInProgress;
-        let placeholder;
-        let loadingMessage;
-        let noMatches;
+        const loadingMessage = 'addPeople.searching';
+        const noMatches = 'addPeople.noResults';
 
-        if (_addPeopleEnabled && _dialOutEnabled) {
-            loadingMessage = 'addPeople.loading';
-            noMatches = 'addPeople.noResults';
-            placeholder = 'addPeople.searchPeopleAndNumbers';
-        } else if (_addPeopleEnabled) {
-            loadingMessage = 'addPeople.loadingPeople';
-            noMatches = 'addPeople.noResults';
-            placeholder = 'addPeople.searchPeople';
-        } else if (_dialOutEnabled) {
-            loadingMessage = 'addPeople.loadingNumber';
-            noMatches = 'addPeople.noValidNumbers';
-            placeholder = 'addPeople.searchNumbers';
-        } else {
+        const features = {
+            _dialOutEnabled,
+            _addPeopleEnabled,
+            _sipInviteEnabled
+        };
+
+        const computedPlaceholder = Object.keys(features)
+            .filter(v => Boolean(features[v]))
+            .map(v => this._translations[v])
+            .join(', ');
+
+        const placeholder = computedPlaceholder ? `${t('dialog.add')} ${computedPlaceholder}` : t('addPeople.disabled');
+
+        if (!computedPlaceholder) {
             isMultiSelectDisabled = true;
-            noMatches = 'addPeople.noResults';
-            placeholder = 'addPeople.disabled';
         }
 
         return (
@@ -148,11 +167,12 @@ class InviteContactsForm extends AbstractAddPeopleDialog<Props, State> {
                     noMatchesFound = { t(noMatches) }
                     onItemSelected = { this._onItemSelected }
                     onSelectionChange = { this._onSelectionChange }
-                    placeholder = { t(placeholder) }
+                    placeholder = { placeholder }
                     ref = { this._setMultiSelectElement }
                     resourceClient = { this._resourceClient }
                     shouldFitContainer = { true }
-                    shouldFocus = { true } />
+                    shouldFocus = { true }
+                    showSupportLink = { !_isVpaas } />
                 { this._renderFormActions() }
             </div>
         );
@@ -173,7 +193,7 @@ class InviteContactsForm extends AbstractAddPeopleDialog<Props, State> {
      * @returns {Object} The item to display as selected in the input.
      */
     _onItemSelected(item) {
-        if (item.item.type === 'phone') {
+        if (item.item.type === INVITE_TYPES.PHONE) {
             item.content = item.item.number;
         }
 
@@ -277,7 +297,7 @@ class InviteContactsForm extends AbstractAddPeopleDialog<Props, State> {
      */
     _parseQueryResults(response = []) {
         const { t, _dialOutEnabled } = this.props;
-        const users = response.filter(item => item.type !== 'phone');
+        const users = response.filter(item => item.type === INVITE_TYPES.USER);
         const userDisplayItems = [];
 
         for (const user of users) {
@@ -301,7 +321,7 @@ class InviteContactsForm extends AbstractAddPeopleDialog<Props, State> {
                     content: `${phone} (${name})`,
                     elemBefore: elemAvatar,
                     item: {
-                        type: 'phone',
+                        type: INVITE_TYPES.PHONE,
                         number: phone
                     },
                     tag: {
@@ -312,7 +332,7 @@ class InviteContactsForm extends AbstractAddPeopleDialog<Props, State> {
             }
         }
 
-        const numbers = response.filter(item => item.type === 'phone');
+        const numbers = response.filter(item => item.type === INVITE_TYPES.PHONE);
         const telephoneIcon = this._renderTelephoneIcon();
 
         const numberDisplayItems = numbers.map(number => {
@@ -340,9 +360,25 @@ class InviteContactsForm extends AbstractAddPeopleDialog<Props, State> {
             };
         });
 
+
+        const sipAddresses = response.filter(item => item.type === INVITE_TYPES.SIP);
+
+        const sipDisplayItems = sipAddresses.map(sip => {
+            return {
+                filterValues: [
+                    sip.address
+                ],
+                content: sip.address,
+                description: '',
+                item: sip,
+                value: sip.address
+            };
+        });
+
         return [
             ...userDisplayItems,
-            ...numberDisplayItems
+            ...numberDisplayItems,
+            ...sipDisplayItems
         ];
     }
 
@@ -516,7 +552,8 @@ function _mapStateToProps(state) {
 
     return {
         ..._abstractMapStateToProps(state),
-        _footerTextEnabled: footerTextEnabled
+        _footerTextEnabled: footerTextEnabled,
+        _isVpaas: isVpaasMeeting(state)
     };
 }
 

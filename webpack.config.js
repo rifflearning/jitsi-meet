@@ -37,18 +37,35 @@ const minimize
  */
 function getPerformanceHints(size) {
     return {
-        // hints: minimize ? false : false,
+        // hints: minimize && !analyzeBundle ? 'error' : false,
         hints: false,
         maxAssetSize: size,
         maxEntrypointSize: size
     };
 }
 
+/**
+ * Build a BundleAnalyzerPlugin plugin instance for the given bundle name.
+ */
+function getBundleAnalyzerPlugin(name) {
+    if (!analyzeBundle) {
+        return [];
+    }
+
+    return [ new BundleAnalyzerPlugin({
+        analyzerMode: 'disabled',
+        generateStatsFile: true,
+        statsFilename: `${name}-stats.json`
+    }) ];
+}
+
+
 // The base Webpack configuration to bundle the JavaScript artifacts of
 // jitsi-meet such as app.bundle.js and external_api.js.
 const config = {
     devServer: {
         https: true,
+        host: '127.0.0.1',
         inline: true,
         proxy: {
             '/': {
@@ -73,6 +90,9 @@ const config = {
             ],
             loader: 'babel-loader',
             options: {
+                // Avoid loading babel.config.js, since we only use it for React Native.
+                configFile: false,
+
                 // XXX The require.resolve bellow solves failures to locate the
                 // presets when lib-jitsi-meet, for example, is npm linked in
                 // jitsi-meet.
@@ -116,7 +136,7 @@ const config = {
             // dependencies including lib-jitsi-meet.
 
             loader: 'expose-loader?$!expose-loader?jQuery',
-            test: /\/node_modules\/jquery\/.*\.js$/
+            test: /[/\\]node_modules[/\\]jquery[/\\].*\.js$/
         }, {
             // Allow CSS to be imported into JavaScript.
 
@@ -129,7 +149,8 @@ const config = {
             test: /\/node_modules\/@atlaskit\/modal-dialog\/.*\.js$/,
             resolve: {
                 alias: {
-                    'react-focus-lock': `${__dirname}/react/features/base/util/react-focus-lock-wrapper.js`
+                    'react-focus-lock': `${__dirname}/react/features/base/util/react-focus-lock-wrapper.js`,
+                    '../styled/Modal': `${__dirname}/react/features/base/dialog/components/web/ThemedDialog.js`
                 }
             }
         }, {
@@ -154,7 +175,11 @@ const config = {
         // Allow the use of the real filename of the module being executed. By
         // default Webpack does not leak path-related information and provides a
         // value that is a mock (/index.js).
-        __filename: true
+        __filename: true,
+
+        // Provide some empty Node modules (required by olm).
+        crypto: 'empty',
+        fs: 'empty'
     },
     optimization: {
         concatenateModules: minimize,
@@ -167,11 +192,6 @@ const config = {
         sourceMapFilename: `[name].${minimize ? 'min' : 'js'}.map`
     },
     plugins: [
-        analyzeBundle
-            && new BundleAnalyzerPlugin({
-                analyzerMode: 'disabled',
-                generateStatsFile: true
-            }),
         detectCircularDeps
             && new CircularDependencyPlugin({
                 allowAsyncCycles: false,
@@ -182,7 +202,9 @@ const config = {
     ].filter(Boolean),
     resolve: {
         alias: {
+
             jquery: `jquery/dist/jquery${minimize ? '.min' : ''}.js`,
+            'focus-visible': 'focus-visible/dist/focus-visible.min.js',
 
             // aliases for imports in riff components
             Images: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'assets'),
@@ -193,6 +215,7 @@ const config = {
             Selectors: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'redux', 'selectors'),
             RiffUtils: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'libs', 'utils'),
             libs: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'libs')
+
         },
         aliasFields: [
             'browser'
@@ -212,76 +235,73 @@ module.exports = [
         entry: {
             'app.bundle': './app.js'
         },
+        plugins: [
+            ...config.plugins,
+            ...getBundleAnalyzerPlugin('app'),
+            new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+        ],
         performance: getPerformanceHints(4 * 1024 * 1024)
-    }),
-    Object.assign({}, config, {
-        entry: {
-            'device_selection_popup_bundle': './react/features/settings/popup.js'
-        },
-        performance: getPerformanceHints(750 * 1024)
     }),
     Object.assign({}, config, {
         entry: {
             'alwaysontop': './react/features/always-on-top/index.js'
         },
+        plugins: [
+            ...config.plugins,
+            ...getBundleAnalyzerPlugin('alwaysontop')
+        ],
         performance: getPerformanceHints(400 * 1024)
     }),
     Object.assign({}, config, {
         entry: {
             'dial_in_info_bundle': './react/features/invite/components/dial-in-info-page'
         },
+        plugins: [
+            ...config.plugins,
+            ...getBundleAnalyzerPlugin('dial_in_info'),
+            new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+        ],
         performance: getPerformanceHints(500 * 1024)
     }),
     Object.assign({}, config, {
         entry: {
             'do_external_connect': './connection_optimization/do_external_connect.js'
         },
+        plugins: [
+            ...config.plugins,
+            ...getBundleAnalyzerPlugin('do_external_connect')
+        ],
         performance: getPerformanceHints(5 * 1024)
     }),
     Object.assign({}, config, {
         entry: {
             'flacEncodeWorker': './react/features/local-recording/recording/flac/flacEncodeWorker.js'
         },
+        plugins: [
+            ...config.plugins,
+            ...getBundleAnalyzerPlugin('flacEncodeWorker')
+        ],
         performance: getPerformanceHints(5 * 1024)
     }),
     Object.assign({}, config, {
         entry: {
             'analytics-ga': './react/features/analytics/handlers/GoogleAnalyticsHandler.js'
         },
+        plugins: [
+            ...config.plugins,
+            ...getBundleAnalyzerPlugin('analytics-ga')
+        ],
         performance: getPerformanceHints(5 * 1024)
     }),
-
-    // Because both video-blur-effect and rnnoise-processor modules are loaded
-    // in a lazy manner using the loadScript function with a hard coded name,
-    // i.e.loadScript('libs/rnnoise-processor.min.js'), webpack dev server
-    // won't know how to properly load them using the default config filename
-    // and sourceMapFilename parameters which target libs without .min in dev
-    // mode. Thus we change these modules to have the same filename in both
-    // prod and dev mode.
     Object.assign({}, config, {
         entry: {
-            'video-blur-effect': './react/features/stream-effects/blur/index.js'
+            'close3': './static/close3.js'
         },
-        output: Object.assign({}, config.output, {
-            library: [ 'JitsiMeetJS', 'app', 'effects' ],
-            libraryTarget: 'window',
-            filename: '[name].min.js',
-            sourceMapFilename: '[name].min.map'
-        }),
-        performance: getPerformanceHints(1 * 1024 * 1024)
-    }),
-
-    Object.assign({}, config, {
-        entry: {
-            'rnnoise-processor': './react/features/stream-effects/rnnoise/index.js'
-        },
-        output: Object.assign({}, config.output, {
-            library: [ 'JitsiMeetJS', 'app', 'effects', 'rnnoise' ],
-            libraryTarget: 'window',
-            filename: '[name].min.js',
-            sourceMapFilename: '[name].min.map'
-        }),
-        performance: getPerformanceHints(30 * 1024)
+        plugins: [
+            ...config.plugins,
+            ...getBundleAnalyzerPlugin('close3')
+        ],
+        performance: getPerformanceHints(128 * 1024)
     }),
 
     Object.assign({}, config, {
@@ -292,7 +312,11 @@ module.exports = [
             library: 'JitsiMeetExternalAPI',
             libraryTarget: 'umd'
         }),
-        performance: getPerformanceHints(30 * 1024)
+        plugins: [
+            ...config.plugins,
+            ...getBundleAnalyzerPlugin('external_api')
+        ],
+        performance: getPerformanceHints(35 * 1024)
     })
 ];
 

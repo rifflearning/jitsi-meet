@@ -7,10 +7,19 @@ jobs:
     name: Build Frontend
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-    - run: npm install
-    - run: npm run lint
-    - run: make
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+          registry-url: https://npm.pkg.github.com/
+
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies based on package-lock.json
+        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GPR_PRIVATE_READ_TOKEN }}
+
+      - run: npm run lint
+
+      - run: make

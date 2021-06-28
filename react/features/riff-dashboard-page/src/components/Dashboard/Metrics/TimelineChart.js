@@ -21,13 +21,15 @@ import * as am4charts from '@amcharts/amcharts4/charts';
 import { ScaleLoader } from 'react-spinners';
 
 import { d3 } from 'libs/d3';
+import { 
+    logger, 
+    formatDuration, 
+    getDurationInSeconds 
+} from 'libs/utils';
 import {
     Colors,
-    formatDuration,
     getColorMap,
-    getDurationInSeconds,
-    logger,
-} from 'libs/utils';
+} from './colorsHelpers';
 
 import {
     EStatus,
@@ -304,7 +306,7 @@ class TimelineChart extends React.Component {
         // Create chart and place it inside the html element with id timeline-plot-div
         const chart = am4core.create('timeline-plot-div', am4charts.XYChart);
 
-        chart.background.fill = Colors.selago;
+        chart.background.fill = Colors.white;
 
         // Create dateAxis axis
         const dateAxis = this.createXAxis(chart);
@@ -462,10 +464,18 @@ class TimelineChart extends React.Component {
      * @param {object} timelineData the timeline data for a meeting
      */
     addParticipantData(participantNames, timelineData) {
-        const participantColors = getColorMap(this.props.meeting.participants, this.props.participantId);
+        const participantsData = this.props.graphDatasets?.meeting_stats?.data || [];
+        //sorted participants ids are required for generating correct colors   
+        const sortedParticipantsIds = participantsData
+            .sort((a, b) => b.lengthUtterances - a.lengthUtterances)
+            .map(participant => participant.participantId);
+
+        const participantColors = getColorMap(sortedParticipantsIds, this.props.participantId);
 
         const participantSeriesData = [];
         timelineData.utts.map((utt) => {
+
+            const { color, level } = participantColors.get(utt.participant) || {};
 
             const name = participantNames[utt.participant];
             const fromDate = new Date(utt.startDate);
@@ -475,7 +485,7 @@ class TimelineChart extends React.Component {
                 categoryY: participantNames[utt.participant],
                 fromDate,
                 toDate,
-                color: participantColors.get(utt.participant),
+                color: am4core.color(color).brighten(level),
                 tooltipHTML: this.getUttTooltip(fromDate, toDate, name),
             };
 
@@ -512,6 +522,10 @@ class TimelineChart extends React.Component {
         participantSeries.columns.template.strokeOpacity = 1;
         participantSeries.hiddenInLegend = true; // No legend items for other participants utt's
         participantSeries.columns.template.height = am4core.percent(60); // height of horizontal columns
+
+        const rgm = new am4core.LinearGradientModifier();
+        rgm.brightnesses.push(0, -0.08);
+        participantSeries.columns.template.fillModifier = rgm;
 
         participantSeries.events.on('validated', () => {
             this.props.dashboardGraphLoaded(this.props.graphType);
@@ -604,6 +618,10 @@ class TimelineChart extends React.Component {
         categoryAxis.renderer.grid.template.disabled = true;
         categoryAxis.renderer.grid.template.location = 0;
         categoryAxis.labelColorField = 'color';
+
+        categoryAxis.renderer.labels.template.adapter.add("textOutput", function (text) {
+            return `[font-weight: 600 text-transform: uppercase]${text}`
+        });
 
         return categoryAxis;
     }

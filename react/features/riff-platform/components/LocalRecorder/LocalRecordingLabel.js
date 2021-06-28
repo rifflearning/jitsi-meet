@@ -1,11 +1,13 @@
-import Tooltip from '@atlaskit/tooltip';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { CircularLabel } from '../../../base/label/index';
+import { Label } from '../../../base/label/index';
 import { connect } from '../../../base/redux';
+import { Tooltip } from '../../../base/tooltip';
 
 const LocalRecordingLabel = ({ isEngaged }) => {
+
+    console.log('isEngaged', isEngaged)
 
     if (!isEngaged) {
         return null;
@@ -14,10 +16,10 @@ const LocalRecordingLabel = ({ isEngaged }) => {
     return (
         <Tooltip
             content = { 'Local recording is engaged' }
-            position = { 'left' }>
-            <CircularLabel
+            position = { 'bottom' }>
+            <Label
                 className = 'local-rec'
-                label = { 'REC' } />
+                text = { 'REC' } />
         </Tooltip>
     );
 };

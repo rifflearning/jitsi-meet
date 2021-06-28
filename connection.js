@@ -3,18 +3,20 @@
 import { jitsiLocalStorage } from '@jitsi/js-utils';
 import Logger from 'jitsi-meet-logger';
 
-import AuthHandler from './modules/UI/authentication/AuthHandler';
+import { redirectToTokenAuthService } from './modules/UI/authentication/AuthHandler';
+import { LoginDialog } from './react/features/authentication/components';
+import { isTokenAuthEnabled } from './react/features/authentication/functions';
 import {
     connectionEstablished,
     connectionFailed
 } from './react/features/base/connection/actions';
+import { openDialog } from './react/features/base/dialog/actions';
 import {
     isFatalJitsiConnectionError,
     JitsiConnectionErrors,
     JitsiConnectionEvents
 } from './react/features/base/lib-jitsi-meet';
 import { setPrejoinDisplayNameRequired } from './react/features/prejoin/actions';
-
 const logger = Logger.getLogger(__filename);
 
 /**
@@ -80,9 +82,9 @@ function checkForAttachParametersAndConnect(id, password, connection) {
  * @returns {Promise<JitsiConnection>} connection if
  * everything is ok, else error.
  */
-function connect(id, password, roomName) {
+export function connect(id, password, roomName) {
     const connectionConfig = Object.assign({}, config);
-    const { issuer, jwt } = APP.store.getState()['features/base/jwt'];
+    const { jwt } = APP.store.getState()['features/base/jwt'];
 
     // Use Websocket URL for the web app if configured. Note that there is no 'isWeb' check, because there's assumption
     // that this code executes only on web browsers/electron. This needs to be changed when mobile and web are unified.
@@ -94,11 +96,11 @@ function connect(id, password, roomName) {
     //  in future). It's included for the time being for Jitsi Meet and lib-jitsi-meet versions interoperability.
     connectionConfig.serviceUrl = connectionConfig.bosh = serviceUrl;
 
-    const connection
-        = new JitsiMeetJS.JitsiConnection(
-            null,
-            jwt && issuer && issuer !== 'anonymous' ? jwt : undefined,
-            connectionConfig);
+    if (connectionConfig.websocketKeepAliveUrl) {
+        connectionConfig.websocketKeepAliveUrl += `?room=${roomName}`;
+    }
+
+    const connection = new JitsiMeetJS.JitsiConnection(null, jwt, connectionConfig);
 
     if (config.iAmRecorder) {
         connection.addFeature(DISCO_JIBRI_FEATURE);
@@ -211,14 +213,41 @@ export function openConnection({ id, password, retry, roomName }) {
 
     return connect(id, password, roomName).catch(err => {
         if (retry) {
-            const { issuer, jwt } = APP.store.getState()['features/base/jwt'];
+            const { jwt } = APP.store.getState()['features/base/jwt'];
 
-            if (err === JitsiConnectionErrors.PASSWORD_REQUIRED
-                    && (!jwt || issuer === 'anonymous')) {
-                return AuthHandler.requestAuth(roomName, connect);
+            if (err === JitsiConnectionErrors.PASSWORD_REQUIRED && !jwt) {
+                return requestAuth(roomName);
             }
         }
 
         throw err;
+    });
+}
+
+/**
+ * Show Authentication Dialog and try to connect with new credentials.
+ * If failed to connect because of PASSWORD_REQUIRED error
+ * then ask for password again.
+ * @param {string} [roomName] name of the conference room
+ *
+ * @returns {Promise<JitsiConnection>}
+ */
+function requestAuth(roomName) {
+    const config = APP.store.getState()['features/base/config'];
+
+    if (isTokenAuthEnabled(config)) {
+        // This Promise never resolves as user gets redirected to another URL
+        return new Promise(() => redirectToTokenAuthService(roomName));
+    }
+
+    return new Promise(resolve => {
+        const onSuccess = connection => {
+            resolve(connection);
+        };
+
+        APP.store.dispatch(
+            openDialog(LoginDialog, { onSuccess,
+                roomName })
+        );
     });
 }

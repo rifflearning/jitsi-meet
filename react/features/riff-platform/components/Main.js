@@ -1,11 +1,13 @@
+/* eslint-disable require-jsdoc */
 /* global process */
 /* eslint-disable react/jsx-boolean-value */
 /* eslint-disable react/jsx-sort-props */
 /* eslint-disable react/no-multi-comp */
 
-import { makeStyles } from '@material-ui/core';
+import { withStyles } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
+import { initialize as initRiffMetrics } from '@rifflearning/riff-metrics';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
@@ -14,9 +16,12 @@ import {
 } from 'react-router-dom';
 
 import { connect } from '../../base/redux';
-import DashboardPage from '../../riff-dashboard-page/src/dashboard-page';
+import { loginToRiffDataServer } from '../actions/riffdataServer';
+import * as actionTypes from '../constants/actionTypes';
 import * as ROUTES from '../constants/routes';
+import { app as riffdataApp } from '../libs/riffdata-client';
 
+import Dashboard from './Dashboard';
 import EditMeeting from './EditMeeting';
 import Footer from './Footer';
 import Join from './Join';
@@ -31,7 +36,7 @@ import SignUp from './SignUp';
 import Verify from './Verify';
 import Waiting from './Waiting';
 
-const useStyles = makeStyles(theme => {
+const styles = theme => {
     return {
         appBarSpacer: theme.mixins.toolbar,
         content: {
@@ -52,7 +57,7 @@ const useStyles = makeStyles(theme => {
             flex: 1
         }
     };
-});
+};
 
 // eslint-disable-next-line require-jsdoc
 function Meetings() {
@@ -76,96 +81,133 @@ function Meetings() {
         </Switch>
     );
 }
+class Main extends React.Component {
+    static propTypes = {
+        authenticateToRiffDataServer: PropTypes.func.isRequired,
+        classes: PropTypes.any,
+        isRiffServerConnected: PropTypes.bool.isRequired,
+        metrics: PropTypes.object,
+        user: PropTypes.object
+    }
 
-const Main = ({ user }) => {
-    const classes = useStyles();
+    constructor(props) {
+        super(props);
 
-    const loggedInRoutes = (
-        <Switch>
-            <Route
-                exact = { true }
-                path = { ROUTES.PROFILE } >
-                <Profile />
-            </Route>
-            <Route
-                component = { DashboardPage }
-                path = { ROUTES.DASHBOARD } />
-            <Route
-                path = { ROUTES.MEETINGS }
-                component = { Meetings } />
-            {process.env.DISABLE_GROUPS !== 'true'
+        if (!this.props.isRiffServerConnected) {
+            this.props.authenticateToRiffDataServer();
+        }
+
+        const metricsConfig = {
+            serverConnections: { riffdataApp },
+            actionTypes: {
+                APP_USER_LOGOUT: actionTypes.LOGOUT,
+                APP_USER_LOGIN: actionTypes.LOGIN_SUCCESS
+            },
+            selectors: {
+                getCurrentUserId: () => this.props.user.uid,
+                getMetrics: () => this.props.metrics,
+                getIsRiffConnected: () => this.props.isRiffServerConnected
+            }
+        };
+
+        initRiffMetrics(metricsConfig);
+    }
+
+    render() {
+        const { classes } = this.props;
+        const loggedInRoutes = (
+            <Switch>
+                <Route
+                    exact = { true }
+                    path = { ROUTES.PROFILE } >
+                    <Profile />
+                </Route>
+                <Route
+                    path = { ROUTES.DASHBOARD } >
+                    <Dashboard />
+                </Route>
+                <Route
+                    path = { ROUTES.MEETINGS }
+                    component = { Meetings } />
+                {process.env.DISABLE_GROUPS !== 'true'
                 && <Route
                     path = { ROUTES.MEETINGS_HARVARD }
                     // eslint-disable-next-line react/jsx-no-bind
                     component = { () => <AllMeetings isGroup = { true } /> } />
-            }
-            <Route path = { ROUTES.SCHEDULE } >
-                <Scheduler />
-            </Route>
-            <Redirect to = { ROUTES.PROFILE } />
-        </Switch>
-    );
+                }
+                <Route path = { ROUTES.SCHEDULE } >
+                    <Scheduler />
+                </Route>
+                <Redirect to = { ROUTES.PROFILE } />
+            </Switch>
+        );
 
-    const authRoutes = (
-        <Switch>
-            <Route
-                path = { ROUTES.SIGNIN } >
-                <SignIn />
-            </Route>
-            <Route
-                path = { ROUTES.SIGNUP } >
-                <SignUp />
-            </Route>
-            <Route
-                path = { ROUTES.VERIFY } >
-                <Verify />
-            </Route>
-            <Route path = { ROUTES.RESETPASSWORD } >
-                <ResetPassword />
-            </Route>
-            <Route path = { ROUTES.MEETING_ENDED } >
-                <MeetingEndedPage />
-            </Route>
-            <Redirect to = { ROUTES.SIGNIN } />
-        </Switch>
-    );
+        const authRoutes = (
+            <Switch>
+                <Route
+                    path = { ROUTES.SIGNIN } >
+                    <SignIn />
+                </Route>
+                <Route
+                    path = { ROUTES.SIGNUP } >
+                    <SignUp />
+                </Route>
+                <Route
+                    path = { ROUTES.VERIFY } >
+                    <Verify />
+                </Route>
+                <Route path = { ROUTES.RESETPASSWORD } >
+                    <ResetPassword />
+                </Route>
+                <Route path = { ROUTES.MEETING_ENDED } >
+                    <MeetingEndedPage />
+                </Route>
+                <Redirect to = { ROUTES.SIGNIN } />
+            </Switch>
+        );
 
-    return (
-        <main className = { classes.content }>
-            <div className = { classes.appBarSpacer } />
-            <Container
-                maxWidth = 'lg'
-                className = { classes.container }>
-                <div className = { classes.mainContainer }>
-                    <Switch>
-                        <Route
-                            exact = { true }
-                            path = { ROUTES.JOIN } >
-                            <Join />
-                        </Route>
-                        <Route path = { `${ROUTES.WAITING}/:meetingId` } >
-                            <Waiting />
-                        </Route>
+        return (
+            <main className = { classes.content }>
+                <div className = { classes.appBarSpacer } />
+                <Container
+                    maxWidth = 'lg'
+                    className = { classes.container }>
+                    <div className = { classes.mainContainer }>
+                        <Switch>
+                            <Route
+                                exact = { true }
+                                path = { ROUTES.JOIN } >
+                                <Join />
+                            </Route>
+                            <Route path = { `${ROUTES.WAITING}/:meetingId` } >
+                                <Waiting />
+                            </Route>
 
-                        {user ? loggedInRoutes : authRoutes}
-                    </Switch>
-                </div>
-                <Box pt = { 4 }>
-                    <Footer />
-                </Box>
-            </Container>
-        </main>
-    );
-};
-
-Main.propTypes = {
-    user: PropTypes.object
-};
+                            {this.props.user ? loggedInRoutes : authRoutes}
+                        </Switch>
+                    </div>
+                    <Box pt = { 4 }>
+                        <Footer />
+                    </Box>
+                </Container>
+            </main>
+        );
+    }
+}
 
 const mapStateToProps = state => {
+
     return {
-        user: state['features/riff-platform'].signIn.user
+        user: state['features/riff-platform'].signIn.user,
+        metrics: state['features/riff-platform'].metrics,
+        isRiffServerConnected: Boolean(state['features/riff-platform'].riffDataServer.authToken)
     };
 };
 
-export default connect(mapStateToProps)(Main);
+const mapDispatchToProps = dispatch => {
+    return {
+        authenticateToRiffDataServer: () => dispatch(loginToRiffDataServer())
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Main));

@@ -37,11 +37,9 @@ import {
 } from 'libs/utils/constants';
 
 import { ChartCard } from './ChartCard';
-
-import { AmChartsLegend } from './AmChartsLegend';
 import EmotionsGraph from './EmotionsGraph';
 
-import api from '../../../../../riff-platform/api'
+import api from '../../../../../riff-platform/api';
 /* ******************************************************************************
  * EmotionsChart                                                           */ /**
  *
@@ -184,31 +182,24 @@ class EmotionsChart extends React.Component {
 
         return (
             <ChartCard
-                title={'Emotions Chart'}
-                chartInfo={'This chart shows emotions of each participant during the meeting.'}
+                title={'Emotions Chart (experimental feature)'}
+                chartInfo={'This chart shows how your emotions and the average emotional state of all the participants are changed during the meeting.'}
                 chartCardId={'EmotionsChartId'}
             >
                 {loadingDisplay}
                 {emptyGraphText}
-                <div
-                    className='amcharts-graph-container'>
-                    <EmotionsGraph data={this.state.emotionsData} />
-                </div>
-
-                {/* {this.state.updatedLegendAt !== null &&
-                    <AmChartsLegend
-                        graphType={this.props.graphType}
-                        getLegendItems={this.getLegendItems}
-                        updatedLegendAt={this.state.updatedLegendAt}
-                    />
-                } */}
+                    <EmotionsGraph
+                        data={this.state.emotionsData}
+                        participantId={this.props.participantId}
+                        startTime={timelineData?.startTime}
+                        endTime={timelineData?.endTime}
+                        dashboardGraphLoaded={this.props.dashboardGraphLoaded} />
             </ChartCard>
         );
     }
 
     getEmotionsData() {
         if (!this.props.meeting?._id) return console.error('no meeting id for getEmotionsData');
-        console.log('fetch data')
         this.setState({ emotionsDataLoading: true });
         api.fetchEmotions(this.props.meeting._id)
             .then((data) => this.setState({ emotionsDataLoading: false, emotionsData: data }))

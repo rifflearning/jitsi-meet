@@ -5,7 +5,7 @@ import React from 'react';
 import { toggleDialog } from '../../../base/dialog/actions';
 import { IconRec } from '../../../base/icons';
 import { connect } from '../../../base/redux';
-import { OverflowMenuItem } from '../../../base/toolbox';
+import { OverflowMenuItem } from '../../../base/toolbox/components';
 import ToolbarButton from '../../../toolbox/components/web/ToolbarButton';
 
 import { recordingController } from './LocalRecorderController';

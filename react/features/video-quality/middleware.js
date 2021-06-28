@@ -1,10 +1,13 @@
 // @flow
 
-import { CONFERENCE_JOINED } from '../base/conference/actionTypes';
-import { setPreferredVideoQuality } from '../base/conference/actions';
+import { CONFERENCE_JOINED } from '../base/conference';
+import { SET_CONFIG } from '../base/config';
 import { MiddlewareRegistry } from '../base/redux';
 
+import { setPreferredVideoQuality } from './actions';
 import logger from './logger';
+
+import './subscriber';
 
 /**
  * Implements the middleware of the feature video-quality.
@@ -25,6 +28,17 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
                 logger.info(`Configured preferred receiver video frame height to: ${resolution}`);
             }
         }
+        break;
+    }
+    case SET_CONFIG: {
+        const state = getState();
+        const { videoQuality = {} } = state['features/base/config'];
+        const { persistedPrefferedVideoQuality } = state['features/video-quality-persistent-storage'];
+
+        if (videoQuality.persist && typeof persistedPrefferedVideoQuality !== 'undefined') {
+            dispatch(setPreferredVideoQuality(persistedPrefferedVideoQuality));
+        }
+
         break;
     }
     }

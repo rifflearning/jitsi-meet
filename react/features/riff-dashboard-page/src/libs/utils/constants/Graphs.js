@@ -12,7 +12,8 @@
  *
  * ******************************************************************************/
 
-import { Colors, formatDuration, getColorForSelf } from 'libs/utils';
+import { formatDuration } from 'libs/utils';
+import { Colors, getColorForSelf } from '../../../components/Dashboard/Metrics/colorsHelpers';
 
 /**
  * identifiers for datasets that are used on the dashboard
@@ -45,6 +46,19 @@ const GraphTypes = {
     PARTICIPANT_SCORE: 'participant_score',
 };
 
+/**
+ * identifiers for event types that extract particular types of events from a
+ * graph dataset, such as the influences of a particular participant from the
+ * INFLUENCE dataset.
+ */
+const EventTypes = {
+    MY_INFLUENCE: 'my_influence',
+    THEIR_INFLUENCE: 'their_influence',
+    MY_INTERRUPTIONS: 'my_interruptions',
+    THEIR_INTERRUPTIONS: 'their_interruptions',
+    MY_AFFIRMATIONS: 'my_affirmations',
+    THEIR_AFFIRMATIONS: 'their_affirmations',
+}
 /**
  * Stores a configuration object for different graph types.
  *
@@ -118,7 +132,7 @@ const GraphConfigs = {
         },
         whatIsCounted: 'Influences',
         legendLabel: 'Their Influences',
-        color: Colors.deepBlush,
+        color: Colors.lightPurple,
         datasetType: GraphDatasetTypes.INFLUENCES,
     },
 
@@ -172,7 +186,7 @@ const GraphConfigs = {
         },
         whatIsCounted: 'Interruptions',
         legendLabel: 'Their Interruptions',
-        color: Colors.deepBlush,
+        color: Colors.lightPurple,
         datasetType: GraphDatasetTypes.INTERRUPTIONS,
     },
 
@@ -211,7 +225,7 @@ const GraphConfigs = {
         legendLabel: 'Their Affirmations',
         whatIsCounted: 'Affirmations',
         relationshipType: 'Their Affirmations',
-        color: Colors.deepBlush,
+        color: Colors.lightPurple,
         eventsFilter: (events, uid) => {
             return events.filter((event) => {
                 return event.earlierUtt.utt.participant === uid;
