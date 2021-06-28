@@ -18,6 +18,7 @@ import { createUserAudioTrack } from './helpers';
 
 declare var APP: Object;
 declare var interfaceConfig: Object;
+declare var config: Object;
 
 MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
     const result = next(action);
@@ -40,7 +41,9 @@ MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
 
     switch (action.type) {
     case CONFERENCE_JOINED: {
-        const enableRiffLocalRecording = interfaceConfig.TOOLBAR_BUTTONS.includes('rifflocalrecording');
+        const enableRiffLocalRecording = (config.toolbarButtons
+            && config.toolbarButtons.includes('rifflocalrecording'))
+            || interfaceConfig.TOOLBAR_BUTTONS.includes('rifflocalrecording');
         const isLocalRecordingEnabled = Boolean(
             enableRiffLocalRecording
             && typeof APP === 'object'

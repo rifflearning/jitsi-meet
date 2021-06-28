@@ -7,8 +7,6 @@ import { Tooltip } from '../../../base/tooltip';
 
 const LocalRecordingLabel = ({ isEngaged }) => {
 
-    console.log('isEngaged', isEngaged)
-
     if (!isEngaged) {
         return null;
     }
