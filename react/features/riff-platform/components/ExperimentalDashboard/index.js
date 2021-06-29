@@ -28,15 +28,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { ScaleLoader } from 'react-spinners';
 
-import Affirmations from '../Metrics/Affirmations';
-import EmotionsChart from '../Metrics/EmotionsChart';
-import Influence from '../Metrics/Influence';
-import Interruptions from '../Metrics/Interruptions';
-import SpeakingTime from '../Metrics/SpeakingTime';
-import Timeline from '../Metrics/TimelineChart';
-import { Colors } from '../colorHelper';
-import { EventConfigs } from '../config';
-import { setWindowScrolling } from '../functions';
+import Affirmations from './Metrics/Affirmations';
+import EmotionsChart from './Metrics/EmotionsChart';
+import Influence from './Metrics/Influence';
+import Interruptions from './Metrics/Interruptions';
+import SpeakingTime from './Metrics/SpeakingTime';
+import Timeline from './Metrics/TimelineChart';
+import { Colors } from './colorHelper';
+import { EventConfigs } from './config';
+import { setWindowScrolling } from './functions';
 import {
     RequestStatus,
     loadMetricDatasets,
@@ -49,7 +49,7 @@ import {
     getUserMeetingsError,
     getUserMeetingsStatus,
     logger
-} from '../utils';
+} from './utils';
 
 const logContext = 'Dashboard';
 
@@ -224,51 +224,55 @@ class DashboardView extends React.Component {
         const timelineRowStyle = { height: '450px' };
 
         return (
-            <div
-                className = 'dashboard-view-component'>
-                <div className = 'inner'>
-                    {this.props.children}
-                    <MeetingList
-                        meetings = { this.props.meetings }
-                        onSelectionChanged = { this.onSelectionChanged }
-                        selectedMeeting = { this.props.selectedMeeting }
-                        selectedMeetingIsBusy = { !this.props.areAllChartsRendered } />
-                    <div className = 'dashboard-content-container'>
-                        <div className = 'dashboard-header-container'>
-                            <h1 className = 'header'>{'Your Conversations'}</h1>
-                        </div>
-                        <MeetingInfo />
-                        <div ref = { this.mainContent } />
-                        <div className = 'metrics-container'>
-                            <div
-                                className = 'metric-row'
-                                style = { metricRowStyle }>
-                                <div className = 'metric-container'>
-                                    <SpeakingTime />
+            <div id = 'riff-dashboard-page-full'>
+                <div id = 'main-content-container'>
+                    <div
+                        className = 'dashboard-view-component'>
+                        <div className = 'inner'>
+                            {this.props.children}
+                            <MeetingList
+                                meetings = { this.props.meetings }
+                                onSelectionChanged = { this.onSelectionChanged }
+                                selectedMeeting = { this.props.selectedMeeting }
+                                selectedMeetingIsBusy = { !this.props.areAllChartsRendered } />
+                            <div className = 'dashboard-content-container'>
+                                <div className = 'dashboard-header-container'>
+                                    <h1 className = 'header'>{'Your Conversations'}</h1>
                                 </div>
-                                <div className = 'metric-container'>
-                                    <Influence />
+                                <MeetingInfo />
+                                <div ref = { this.mainContent } />
+                                <div className = 'metrics-container'>
+                                    <div
+                                        className = 'metric-row'
+                                        style = { metricRowStyle }>
+                                        <div className = 'metric-container'>
+                                            <SpeakingTime />
+                                        </div>
+                                        <div className = 'metric-container'>
+                                            <Influence />
+                                        </div>
+                                    </div>
+                                    <div
+                                        className = 'metric-row'
+                                        style = { metricRowStyle }>
+                                        <div className = 'metric-container'>
+                                            <Interruptions />
+                                        </div>
+                                        <div className = 'metric-container'>
+                                            <Affirmations />
+                                        </div>
+                                    </div>
+                                    <div
+                                        className = 'metric-row'
+                                        style = { timelineRowStyle }>
+                                        <Timeline />
+                                    </div>
+                                    <div
+                                        className = 'metric-row'
+                                        style = { timelineRowStyle }>
+                                        <EmotionsChart />
+                                    </div>
                                 </div>
-                            </div>
-                            <div
-                                className = 'metric-row'
-                                style = { metricRowStyle }>
-                                <div className = 'metric-container'>
-                                    <Interruptions />
-                                </div>
-                                <div className = 'metric-container'>
-                                    <Affirmations />
-                                </div>
-                            </div>
-                            <div
-                                className = 'metric-row'
-                                style = { timelineRowStyle }>
-                                <Timeline />
-                            </div>
-                            <div
-                                className = 'metric-row'
-                                style = { timelineRowStyle }>
-                                <EmotionsChart />
                             </div>
                         </div>
                     </div>

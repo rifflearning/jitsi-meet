@@ -5,6 +5,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import BarChartIcon from '@material-ui/icons/BarChart';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 import PeopleIcon from '@material-ui/icons/People';
 import PersonIcon from '@material-ui/icons/Person';
 import React from 'react';
@@ -45,6 +46,15 @@ export default () => {
                     <BarChartIcon />
                 </ListItemIcon>
                 <ListItemText primary = 'Riff Metrics' />
+            </ListItem>
+            <ListItem
+                button = { true }
+                onClick = { () => history.push(ROUTES.EXPERIMENTAL_DASHBOARD) }
+                selected = { isSelected(ROUTES.EXPERIMENTAL_DASHBOARD) }>
+                <ListItemIcon>
+                    <DashboardIcon />
+                </ListItemIcon>
+                <ListItemText primary = 'Experimental Metrics' />
             </ListItem>
         </div>
     );
