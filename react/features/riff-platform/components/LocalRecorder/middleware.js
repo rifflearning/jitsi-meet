@@ -1,15 +1,20 @@
+/* eslint-disable max-len */
 /* @flow */
 
 import { APP_WILL_UNMOUNT } from '../../../base/app/actionTypes';
 import { CONFERENCE_JOINED, CONFERENCE_WILL_LEAVE } from '../../../base/conference/actionTypes';
 import { openDialog, hideDialog } from '../../../base/dialog/actions';
 import { i18next } from '../../../base/i18n';
+import { MEDIA_TYPE } from '../../../base/media';
 import { SET_AUDIO_MUTED } from '../../../base/media/actionTypes';
 import { PARTICIPANT_JOINED, PARTICIPANT_LEFT } from '../../../base/participants/actionTypes';
 import { MiddlewareRegistry } from '../../../base/redux';
 import { SETTINGS_UPDATED } from '../../../base/settings/actionTypes';
+import { isLocalTrackMuted } from '../../../base/tracks';
 import { TRACK_ADDED } from '../../../base/tracks/actionTypes';
 import { showNotification } from '../../../notifications/actions';
+import { VIDEO_PLAYER_PARTICIPANT_NAME, YOUTUBE_PLAYER_PARTICIPANT_NAME } from '../../../shared-video/constants';
+import { muteLocal } from '../../../video-menu/actions.any';
 import { locRecordingEngaged, locRecordingStats, setSharedVideoId } from '../../actions/localRecording';
 
 import DownloadInfoDialog from './DownloadInfoDialog';
@@ -63,7 +68,13 @@ MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
             if (stats?.isRecording) {
                 const { sharedVideoId } = getState()['features/riff-platform'].localRecording;
 
+                // if video sharing is turned on we need to record it by user microfon
                 if (sharedVideoId) {
+                    const isLocalParticipantTrackMuted = isLocalTrackMuted(getState()['features/base/tracks'], MEDIA_TYPE.AUDIO);
+
+                    if (isLocalParticipantTrackMuted) {
+                        dispatch(muteLocal(false, MEDIA_TYPE.AUDIO));
+                    }
                     onSharingVideoAdded(sharedVideoId);
                 }
             }
@@ -113,7 +124,7 @@ MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
             return;
         }
 
-        if (track.jitsiTrack && track.jitsiTrack.getType() === 'audio') {
+        if (track.jitsiTrack && track.jitsiTrack.getType() === MEDIA_TYPE.AUDIO) {
             recordingController.onNewParticipantAudioStreamAdded(track.jitsiTrack.stream, track.participantId);
         }
         break;
@@ -125,10 +136,13 @@ MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
         break;
     }
     case PARTICIPANT_JOINED: {
-        if (action.participant.name === 'YouTube') {
-            dispatch(setSharedVideoId(action.participant.id));
+        const participant = action.participant;
+
+        if (participant.name === VIDEO_PLAYER_PARTICIPANT_NAME
+        || participant.name === YOUTUBE_PLAYER_PARTICIPANT_NAME) {
+            dispatch(setSharedVideoId(participant.id));
             if (getRecordingStatus()) {
-                onSharingVideoAdded(action.participant.id);
+                onSharingVideoAdded(participant.id);
             }
         }
 

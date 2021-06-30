@@ -97,7 +97,12 @@ export type Props = {
      /**
       * The video id
       */
-     videoId: string
+     videoId: string,
+
+     /**
+      * Indicates whether the local recording audio is enabled
+     */
+     _isLocalRecordingEnabled: boolean
 }
 
 /**
@@ -306,10 +311,11 @@ class AbstractVideoManager extends Component<Props> {
      * @returns {void}
      */
     smartAudioMute() {
-        const { _isLocalAudioMuted, _muteLocal } = this.props;
+        const { _isLocalAudioMuted, _muteLocal, _isLocalRecordingEnabled } = this.props;
 
         if (!_isLocalAudioMuted
-            && this.isSharedVideoVolumeOn()) {
+            && this.isSharedVideoVolumeOn()
+            && !_isLocalRecordingEnabled) {
             sendAnalytics(createEvent('audio.muted'));
             _muteLocal(true);
         }
@@ -385,6 +391,7 @@ export function _mapStateToProps(state: Object): $Shape<Props> {
     const { ownerId, status, time, videoUrl, muted } = state['features/shared-video'];
     const localParticipant = getLocalParticipant(state);
     const _isLocalAudioMuted = isLocalTrackMuted(state['features/base/tracks'], MEDIA_TYPE.AUDIO);
+    const _isLocalRecordingEnabled = state['features/riff-platform'].localRecording?.stats?.isRecording;
 
     return {
         _conference: getCurrentConference(state),
@@ -394,7 +401,8 @@ export function _mapStateToProps(state: Object): $Shape<Props> {
         _ownerId: ownerId,
         _status: status,
         _time: time,
-        _videoUrl: videoUrl
+        _videoUrl: videoUrl,
+        _isLocalRecordingEnabled
     };
 }
 
