@@ -176,10 +176,7 @@ In order to customize *jitsi-meet* with riff theme, all features and set up a ne
         enabled: false
     }
     disableDeepLinking: true,
-    localRecording: {
-        enabled: true,
-        format: 'webm'
-    },
+    
     //the name of the toolbar buttons to display in the toolbar
     toolbarButtons: [
         'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',

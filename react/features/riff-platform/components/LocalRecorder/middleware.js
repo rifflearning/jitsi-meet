@@ -29,7 +29,7 @@ MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
     const result = next(action);
 
 
-    const getRecordingStatus = () => getState()['features/riff-platform'].localRecording?.stats?.isRecording;
+    const isRecordingStatus = () => getState()['features/riff-platform'].localRecording?.stats?.isRecording;
 
     const getLocalRecordingMessage = (messageKey, messageParams) => {
         return {
@@ -68,7 +68,7 @@ MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
             if (stats?.isRecording) {
                 const { sharedVideoId } = getState()['features/riff-platform'].localRecording;
 
-                // if video sharing is turned on we need to record it by user microfon
+                // if video sharing is turned on we need to record video audio by user microfon
                 if (sharedVideoId) {
                     const isLocalParticipantTrackMuted = isLocalTrackMuted(getState()['features/base/tracks'], MEDIA_TYPE.AUDIO);
 
@@ -116,7 +116,7 @@ MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
         break;
     }
     case TRACK_ADDED: {
-        const isRecording = getRecordingStatus();
+        const isRecording = isRecordingStatus();
         const { conference } = getState()['features/base/conference'];
         const { track } = action;
 
@@ -130,7 +130,7 @@ MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
         break;
     }
     case CONFERENCE_WILL_LEAVE: {
-        if (getRecordingStatus()) {
+        if (isRecordingStatus()) {
             recordingController.stopRecording();
         }
         break;
@@ -141,7 +141,7 @@ MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
         if (participant.name === VIDEO_PLAYER_PARTICIPANT_NAME
         || participant.name === YOUTUBE_PLAYER_PARTICIPANT_NAME) {
             dispatch(setSharedVideoId(participant.id));
-            if (getRecordingStatus()) {
+            if (isRecordingStatus()) {
                 onSharingVideoAdded(participant.id);
             }
         }
@@ -149,7 +149,7 @@ MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
         break;
     }
     case PARTICIPANT_LEFT: {
-        if (getRecordingStatus()) {
+        if (isRecordingStatus()) {
             recordingController.removeParticipantAudioStream(action.participant.id);
         }
         const { sharedVideoId } = getState()['features/riff-platform'].localRecording;
