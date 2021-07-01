@@ -27,7 +27,7 @@ MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
     const result = next(action);
 
 
-    const isRecordingStatus = () => getState()['features/riff-platform'].localRecording?.stats?.isRecording;
+    const isRecordingStatus = () => getState()['features/riff-platform'].localRecording.stats?.isRecording;
 
     const getLocalRecordingMessage = (messageKey, messageParams) => {
         return {

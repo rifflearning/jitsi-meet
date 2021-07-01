@@ -9,7 +9,7 @@ import {
 /**
  * Signals that local recording has been engaged/unengaged.
  *
- * @param {Date} isEngaged - Local recording is engaged/unengaged.
+ * @param {boolean} isEngaged - Local recording is engaged/unengaged.
  * @returns {{
  *     type: LOC_RECORDING_ENGAGED,
  *     isEngaged: boolean

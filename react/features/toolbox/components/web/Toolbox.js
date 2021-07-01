@@ -1275,6 +1275,7 @@ class Toolbox extends Component<Props> {
                         key = 'tileview'
                         showLabel = { true } />);
         }
+
         if (this.props._shouldShowButton('meetingmediator')) {
             buttons.has('meetingmediator')
                 ? mainMenuAdditionalButtons.push(<MeetingMediatorButton />)
@@ -1282,7 +1283,8 @@ class Toolbox extends Component<Props> {
                     closeOverflowMenuIfOpen = { this._closeOverflowMenuIfOpen }
                     isOverflowMenu = { true } />);
         }
-        if (this.props._shouldShowButton('rifflocalrecording')) {
+
+        if (this.props._shouldShowButton('rifflocalrecording') && !this.props_isMobile) {
             buttons.has('rifflocalrecording')
                 ? mainMenuAdditionalButtons.push(<RiffLocalRecordingButton />)
                 : overflowMenuAdditionalButtons.push(<RiffLocalRecordingButton isOverflowButton = { true } />);
