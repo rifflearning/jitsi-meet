@@ -23,6 +23,7 @@ import { app as riffdataApp } from '../libs/riffdata-client';
 
 import Dashboard from './Dashboard';
 import EditMeeting from './EditMeeting';
+import ExperimentalDashboard from './ExperimentalDashboard';
 import Footer from './Footer';
 import Join from './Join';
 import Meeting from './Meeting';
@@ -125,6 +126,10 @@ class Main extends React.Component {
                 <Route
                     path = { ROUTES.DASHBOARD } >
                     <Dashboard />
+                </Route>
+                <Route
+                    path = { ROUTES.EXPERIMENTAL_DASHBOARD } >
+                    <ExperimentalDashboard />
                 </Route>
                 <Route
                     path = { ROUTES.MEETINGS }

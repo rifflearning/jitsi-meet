@@ -6,3 +6,11 @@
 @use '../node_modules/@rifflearning/riff-metrics/sass/speaking_time';
 @use '../node_modules/@rifflearning/riff-metrics/sass/timeline';
 @use '../node_modules/@rifflearning/riff-metrics/sass/dashboard';
+
+.amcharts-legend-container .legend-item .label {
+    background: unset;
+}
+
+.empty-graph-text {
+    color: #4a4a4a;
+}

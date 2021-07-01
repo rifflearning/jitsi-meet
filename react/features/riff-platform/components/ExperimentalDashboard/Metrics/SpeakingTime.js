@@ -134,7 +134,9 @@ class SpeakingTime extends React.PureComponent {
         const { isLoaded } = this.getDatasetStatus();
 
         let emptyGraphText = null;
-        const isGraphEmpty = this.props.graphDataset.participantStats.size === 0;
+        const isGraphEmpty = this.props.graphDataset.participantStats.size === 0
+            || ![ ...this.props.graphDataset.participantStats.entries() ]
+            .find(participantStats => participantStats[1].totalSecsUtterances > 0);
 
         if (isGraphEmpty) {
             emptyGraphText = <div className = 'empty-graph-text'>{config.empty}</div>;
