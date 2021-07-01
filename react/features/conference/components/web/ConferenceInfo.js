@@ -8,6 +8,7 @@ import { connect } from '../../../base/redux';
 import { E2EELabel } from '../../../e2ee';
 import { LocalRecordingLabel } from '../../../local-recording';
 import { RecordingLabel } from '../../../recording';
+import RiffLocalRecordingLabel from '../../../riff-platform/components/LocalRecorder/LocalRecordingLabel';
 import MultipleRoomsNameDropdown from '../../../riff-platform/components/Meeting/MultipleRoomsMeetingNameDropdown';
 import { isToolboxVisible } from '../../../toolbox/functions.web';
 import { TranscribingLabel } from '../../../transcribing';
@@ -97,6 +98,7 @@ function ConferenceInfo(props: Props) {
                 <TranscribingLabel />
                 <VideoQualityLabel />
                 <InsecureRoomNameLabel />
+                <RiffLocalRecordingLabel />
             </div>
         </div>
     );

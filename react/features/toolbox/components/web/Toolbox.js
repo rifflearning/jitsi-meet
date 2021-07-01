@@ -53,6 +53,7 @@ import {
     RecordButton
 } from '../../../recording';
 import MeetingMediatorButton from '../../../riff-platform/components/DraggableMeetingMediator/MeetingMediatorButton';
+import RiffLocalRecordingButton from '../../../riff-platform/components/LocalRecorder/LocalRecordingButton';
 import { isScreenAudioShared, isScreenAudioSupported } from '../../../screen-share/';
 import SecurityDialogButton from '../../../security/components/security-dialog/SecurityDialogButton';
 import {
@@ -97,7 +98,6 @@ import OverflowMenuProfileItem from './OverflowMenuProfileItem';
 import ToggleCameraButton from './ToggleCameraButton';
 import ToolbarButton from './ToolbarButton';
 import VideoSettingsButton from './VideoSettingsButton';
-
 
 /**
  * The type of the React {@code Component} props of {@link Toolbox}.
@@ -1282,6 +1282,12 @@ class Toolbox extends Component<Props> {
                 : overflowMenuAdditionalButtons.push(<MeetingMediatorButton
                     closeOverflowMenuIfOpen = { this._closeOverflowMenuIfOpen }
                     isOverflowMenu = { true } />);
+        }
+
+        if (this.props._shouldShowButton('rifflocalrecording') && !this.props._isMobile) {
+            buttons.has('rifflocalrecording')
+                ? mainMenuAdditionalButtons.push(<RiffLocalRecordingButton />)
+                : overflowMenuAdditionalButtons.push(<RiffLocalRecordingButton isOverflowButton = { true } />);
         }
 
         return {

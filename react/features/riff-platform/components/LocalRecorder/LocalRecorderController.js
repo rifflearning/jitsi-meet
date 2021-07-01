@@ -1,26 +1,26 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable flowtype/no-types-missing-file-annotation */
 
-import logger from '../../../local-recording/logger';
 import { downloadBlob } from '../../../local-recording/recording';
 import { sessionManager } from '../../../local-recording/session';
 
 import WebmAdapter from './WebmAdapter';
+import logger from './logger';
 
 /**
  * XMPP command for signaling the start of local recording to all clients.
  */
-export const COMMAND_START = 'localRecStart';
+export const COMMAND_START = 'locRecStart';
 
 /**
  * XMPP command for signaling the stop of local recording to all clients.
  */
-export const COMMAND_STOP = 'localRecStop';
+export const COMMAND_STOP = 'locRecStop';
 
 /**
  * This is a workaround for newly-joined clients to receive remote presence.
  */
-const COMMAND_PING = 'localRecPing';
+const COMMAND_PING = 'locRecPing';
 
 /**
  * One-time command sent upon receiving a {@code COMMAND_PING}.
@@ -28,12 +28,12 @@ const COMMAND_PING = 'localRecPing';
  * This command does not carry any information itself, but rather forces the
  * XMPP server to resend the remote presence.
  */
-const COMMAND_PONG = 'localRecPong';
+const COMMAND_PONG = 'locRecPong';
 
 /**
  * Participant property key for local recording stats.
  */
-const PROPERTY_STATS = 'localRecStats';
+export const PROPERTY_STATS = 'locRecStats';
 
 /**
  * Default recording format.
@@ -315,7 +315,7 @@ class LocalRecordingController {
      * @returns {void}
      */
     stopRecording() {
-        this._onStopCommand({ sessionToken: this._currentSessionToken });
+        this._onStopCommand();
     }
 
     /**
@@ -507,14 +507,10 @@ class LocalRecordingController {
      * Function for stop local recording.
      *
      * @private
-     * @param {*} sessionToken - The session token.
      * @returns {void}
      */
-    _onStopCommand({ sessionToken }) {
+    _onStopCommand() {
         if (this._state === ControllerState.RECORDING) {
-            // FIX: comment temporary for stop recording on conference leave
-        // && this._currentSessionToken === sessionToken)
-
             this._changeState(ControllerState.STOPPING);
             this._doStopRecording();
         }

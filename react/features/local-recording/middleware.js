@@ -1,6 +1,6 @@
 /* @flow */
 
-/* import { createShortcutEvent, sendAnalytics } from '../analytics';
+import { createShortcutEvent, sendAnalytics } from '../analytics';
 import { APP_WILL_UNMOUNT } from '../base/app/actionTypes';
 import { CONFERENCE_JOINED } from '../base/conference/actionTypes';
 import { toggleDialog } from '../base/dialog/actions';
@@ -93,4 +93,4 @@ MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
     }
 
     return result;
-});*/
+});

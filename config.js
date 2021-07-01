@@ -611,17 +611,20 @@ var config = {
     // Local Recording
     //
 
-    localRecording: {
+    // localRecording: {
     // Enables local recording.
     // Additionally, 'localrecording' (all lowercase) needs to be added to
     // the `toolbarButtons`-array for the Local Recording button to show up
     // on the toolbar.
     //
-        enabled: true,
+    //     enabled: true,
+    //
 
-        // The recording format, can be one of 'ogg', 'flac', 'wav' or 'webm'.
-        format: 'webm'
-    },
+    // The recording format, can be one of 'ogg', 'flac' or 'wav'.
+    //     format: 'flac'
+    //
+
+    // },
 
     // Options related to end-to-end (participant to participant) ping.
     // e2eping: {

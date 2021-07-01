@@ -1,7 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable require-jsdoc */
-/* global interfaceConfig */
 
 import { Typography, List, ListItem, ListItemText } from '@material-ui/core';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -28,50 +27,23 @@ const useStyles = makeStyles(() => {
     };
 });
 
-
 const recordingSteps = [ 'To start recording click on start recording',
-    // eslint-disable-next-line camelcase
-    `Select ${interfaceConfig.APP_NAME} screen type to start recording`,
-    'Click on share button to confirm recording',
-    'To stop recording click on stop recording'
+    'Select screen type to start recording',
+    'Click on share button to confirm recording'
 ];
 
-
-function LocalRecordingDialog({
-    onClose,
-    open }) {
+function LocalRecordingDialog({ onClose }) {
 
     const classes = useStyles();
-
-    const isLocalRecordingEngaged = Object.values(recordingController.getParticipantsStats()).find(participant =>
-        participant.isSelf && participant.recordingStats?.isRecording);
 
     const handleCancel = () => {
         onClose();
     };
 
-    const handleStart = () => {
+    const onSubmit = () => {
         recordingController.startRecording();
         handleCancel();
     };
-
-
-    const handleStop = () => {
-        recordingController.stopRecording();
-        handleCancel();
-    };
-
-
-    const onSubmit = () => {
-        if (!isLocalRecordingEngaged) {
-            return handleStart();
-        }
-        handleStop();
-    };
-
-    if (!open) {
-        return null;
-    }
 
     const renderControls = (
     <>
@@ -89,18 +61,14 @@ function LocalRecordingDialog({
         </List>
     </>);
 
-    // eslint-disable-next-line no-negated-condition
-    const defineSubmitButtonText = !isLocalRecordingEngaged ? 'Start Recording' : 'Stop Recording';
-
     return (
         <Dialog
             cancelKey = { 'dialog.close' }
             className = { classes.root }
             maxWidth = 'md'
-            okKey = { defineSubmitButtonText }
+            okKey = 'Start Recording'
             onCancel = { handleCancel }
-            onSubmit = { onSubmit }
-            open = { open }>
+            onSubmit = { onSubmit }>
             <Typography style = {{ fontSize: '1.5rem' }}>Local Recording</Typography>
             <DialogContent dividers = { true }>
                 {renderControls}
@@ -110,14 +78,13 @@ function LocalRecordingDialog({
 }
 
 LocalRecordingDialog.propTypes = {
-    onClose: PropTypes.func,
-    open: PropTypes.bool
+    onClose: PropTypes.func
 };
 
 const mapStateToProps = () => {
-
     return { };
 };
+
 const mapDispatchToProps = dispatch => {
     return {
         onClose: () => dispatch(hideDialog())
