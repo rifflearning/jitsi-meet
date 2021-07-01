@@ -1284,7 +1284,7 @@ class Toolbox extends Component<Props> {
                     isOverflowMenu = { true } />);
         }
 
-        if (this.props._shouldShowButton('rifflocalrecording') && !this.props_isMobile) {
+        if (this.props._shouldShowButton('rifflocalrecording') && !this.props._isMobile) {
             buttons.has('rifflocalrecording')
                 ? mainMenuAdditionalButtons.push(<RiffLocalRecordingButton />)
                 : overflowMenuAdditionalButtons.push(<RiffLocalRecordingButton isOverflowButton = { true } />);
