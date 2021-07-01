@@ -16,7 +16,7 @@ const LocalRecordingLabel = ({ isEngaged }) => {
             content = { 'Local recording is engaged' }
             position = { 'bottom' }>
             <Label
-                className = 'local-rec'
+                className = 'local-rec-label'
                 text = { 'REC' } />
         </Tooltip>
     );
