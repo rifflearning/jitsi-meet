@@ -10,11 +10,9 @@ import { SET_AUDIO_MUTED } from '../../../base/media/actionTypes';
 import { PARTICIPANT_JOINED, PARTICIPANT_LEFT } from '../../../base/participants/actionTypes';
 import { MiddlewareRegistry } from '../../../base/redux';
 import { SETTINGS_UPDATED } from '../../../base/settings/actionTypes';
-import { isLocalTrackMuted } from '../../../base/tracks';
 import { TRACK_ADDED } from '../../../base/tracks/actionTypes';
 import { showNotification } from '../../../notifications/actions';
 import { VIDEO_PLAYER_PARTICIPANT_NAME, YOUTUBE_PLAYER_PARTICIPANT_NAME } from '../../../shared-video/constants';
-import { muteLocal } from '../../../video-menu/actions.any';
 import { locRecordingEngaged, locRecordingStats, setSharedVideoId } from '../../actions/localRecording';
 
 import DownloadInfoDialog from './DownloadInfoDialog';
@@ -70,11 +68,6 @@ MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
 
                 // if video sharing is turned on we need to record video audio by user microfon
                 if (sharedVideoId) {
-                    const isLocalParticipantTrackMuted = isLocalTrackMuted(getState()['features/base/tracks'], MEDIA_TYPE.AUDIO);
-
-                    if (isLocalParticipantTrackMuted) {
-                        dispatch(muteLocal(false, MEDIA_TYPE.AUDIO));
-                    }
                     onSharingVideoAdded(sharedVideoId);
                 }
             }

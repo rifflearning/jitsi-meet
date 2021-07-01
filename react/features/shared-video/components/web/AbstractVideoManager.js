@@ -314,8 +314,7 @@ class AbstractVideoManager extends Component<Props> {
         const { _isLocalAudioMuted, _muteLocal, _isLocalRecordingEnabled } = this.props;
 
         if (!_isLocalAudioMuted
-            && this.isSharedVideoVolumeOn()
-            && !_isLocalRecordingEnabled) {
+            && this.isSharedVideoVolumeOn()) {
             sendAnalytics(createEvent('audio.muted'));
             _muteLocal(true);
         }
