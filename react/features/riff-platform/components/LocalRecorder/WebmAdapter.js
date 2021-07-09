@@ -108,11 +108,11 @@ export default class WebmAdapter extends RecordingAdapter {
     }
 
     /**
-     * Returns the remote participant audio stream.
+     * Returns the remote participant id and audio stream.
       *@Private.
      *
      * @param {Object} participant - The participant object.
-     * @returns {(Track|undefined)}
+     * @returns {({Object}|undefined)} - The object with participant id and audio stream.
      */
     _getAudioParticipantStream(participant) {
         if (participant._tracks?.length) {
@@ -124,15 +124,15 @@ export default class WebmAdapter extends RecordingAdapter {
     }
 
     /**
-     * Returns array of remote participants audio stream.
+     * Returns array of remote participants id and their audio stream.
      *@Private.
      *
-     * @returns {(Track[])} - List of all participant audio streams.
+     * @returns {(Object[])} - List of remote participants id and their audio stream.
      */
     _getAudioParticipantsStream() {
         const participantsAudioStreamArray = this._conference.getParticipants()
           .map(participant => this._getAudioParticipantStream(participant))
-          .filter(stream => stream);
+          .filter(participant => participant && participant.stream);
 
         return participantsAudioStreamArray;
     }
