@@ -412,7 +412,7 @@ function Meeting({
                                     item = { true }>
                                     <Box pr = { 1 }>{defineIcon[meeting.allowAnonymous]}</Box>
                                     <Typography>
-                                         Allow anonymous users
+                                         Allow guest users
                                     </Typography>
                                 </Grid>
                             </Grid>

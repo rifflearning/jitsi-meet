@@ -298,7 +298,7 @@ const SchedulerForm = ({
     const [ date, setdate ] = useState(getDateByTimeAndTimezone(moment(), timezone));
     const [ hours, setHours ] = useState(1);
     const [ minutes, setMinutes ] = useState(0);
-    const [ allowAnonymous, setAllowAnonymous ] = useState(false);
+    const [ allowAnonymous, setAllowAnonymous ] = useState(true);
     const [ recurringMeeting, setRecurringMeeting ] = useState(false);
     const [ recurrenceType, setRecurrenceType ] = useState('daily');
     const [ recurrenceInterval, setRecurrenceInterval ] = useState(1);
@@ -1207,7 +1207,7 @@ const SchedulerForm = ({
                     item
                     xs = { 12 }>
                     <FormControlLabel
-                        label = 'Allow anonymous users'
+                        label = 'Allow guest users'
                         control = { <Checkbox
                             name = 'allowAnonymous'
                             checked = { allowAnonymous }

@@ -7,9 +7,9 @@ Scheduler functionality:
 - scheduler allows users to create recurring meetings. These meetings can be repeated on a daily, weekly, monthly. Users can set all necessary parameters, including the recurrence. User can set end date or set number of occurrence;
 - scheduler allows setting meetings in different time zones. By default, local timezone is used. When the user selects another timezone, the scheduler will save the meeting time accordingly to the selected timezone value. 
 
-- user can set 'Allow anonymous users' option which allows anonymous users to join the meeting;
+- user can set 'Allow guest users' option which allows anonymous users to join the meeting;
 - user can set multiple numbers of rooms for one meeting;
-- meeting can be edited. In edit case, the current meeting is removed and created one new. If one occurrence is edited we pass the current `roomId` and recurrence options to new meeting.
+- meeting can be edited. In edit case, the current meeting is removed and created one new. 
 
 Dates are stored in UTC time in database. Client uses time by timezone using function which set defined timezone to date:
 ```
