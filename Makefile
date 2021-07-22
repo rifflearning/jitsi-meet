@@ -8,6 +8,7 @@ RNNOISE_WASM_DIR = node_modules/rnnoise-wasm/dist/
 TFLITE_WASM = react/features/stream-effects/virtual-background/vendor/tflite
 MEET_MODELS_DIR  = react/features/stream-effects/virtual-background/vendor/models/
 NODE_SASS = ./node_modules/.bin/sass
+SASS_OPTIONS = --load-path ./node_modules
 NPM = npm
 OUTPUT_DIR = .
 STYLES_BUNDLE = css/all.bundle.css
@@ -84,15 +85,15 @@ deploy-rnnoise-binary:
 deploy-tflite:
 	cp \
 		$(TFLITE_WASM)/*.wasm \
-		$(DEPLOY_DIR)		
+		$(DEPLOY_DIR)
 
 deploy-meet-models:
 	cp \
 		$(MEET_MODELS_DIR)/*.tflite \
-		$(DEPLOY_DIR)	
+		$(DEPLOY_DIR)
 
 deploy-css:
-	$(NODE_SASS) $(STYLES_MAIN) $(STYLES_BUNDLE) && \
+	$(NODE_SASS) $(SASS_OPTIONS) $(STYLES_MAIN) $(STYLES_BUNDLE) && \
 	$(CLEANCSS) --skip-rebase $(STYLES_BUNDLE) > $(STYLES_DESTINATION) ; \
 	rm $(STYLES_BUNDLE)
 
