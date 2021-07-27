@@ -128,10 +128,19 @@ source-package-version: source-package-files
 		-e 's/\(app\.bundle\.min\.js\)?v=[0-9]\+/\1?v='$(SHASUM_APP_BUNDLE)'/' \
 		--in-place index.html
 
-api-gateway-package:
+api-gateway-package: ## create package using api-gateway env settings (users and their meetings are handled by the api-gateway)
 	ln -fs env-api-gateway .env
 	$(MAKE) all source-package ENV=api-gateway
 
-embedded-package:
+embedded-package: ## create package using embedded env settings (used by riffedu)
 	ln -fs env-embedded .env
 	$(MAKE) all source-package ENV=embedded
+
+# Help documentation à la https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
+# if you want the help sorted rather than in the order of occurrence, pipe the grep to sort and pipe that to awk
+help: ## this help documentation (extracted from comments on the targets)
+	@echo ""                                            ; \
+	echo "Useful targets in this riff-docker Makefile:" ; \
+	(grep -E '^[a-zA-Z_-]+ ?:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = " ?:.*?## "}; {printf "\033[36m%-20s\033[0m : %s\n", $$1, $$2}') ; \
+	echo ""
+
