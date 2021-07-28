@@ -8,6 +8,7 @@ RNNOISE_WASM_DIR = node_modules/rnnoise-wasm/dist/
 TFLITE_WASM = react/features/stream-effects/virtual-background/vendor/tflite
 MEET_MODELS_DIR  = react/features/stream-effects/virtual-background/vendor/models/
 NODE_SASS = ./node_modules/.bin/sass
+SASS_OPTIONS = --load-path ./node_modules
 NPM = npm
 OUTPUT_DIR = .
 STYLES_BUNDLE = css/all.bundle.css
@@ -84,15 +85,15 @@ deploy-rnnoise-binary:
 deploy-tflite:
 	cp \
 		$(TFLITE_WASM)/*.wasm \
-		$(DEPLOY_DIR)		
+		$(DEPLOY_DIR)
 
 deploy-meet-models:
 	cp \
 		$(MEET_MODELS_DIR)/*.tflite \
-		$(DEPLOY_DIR)	
+		$(DEPLOY_DIR)
 
 deploy-css:
-	$(NODE_SASS) $(STYLES_MAIN) $(STYLES_BUNDLE) && \
+	$(NODE_SASS) $(SASS_OPTIONS) $(STYLES_MAIN) $(STYLES_BUNDLE) && \
 	$(CLEANCSS) --skip-rebase $(STYLES_BUNDLE) > $(STYLES_DESTINATION) ; \
 	rm $(STYLES_BUNDLE)
 
@@ -127,10 +128,23 @@ source-package-version: source-package-files
 		-e 's/\(app\.bundle\.min\.js\)?v=[0-9]\+/\1?v='$(SHASUM_APP_BUNDLE)'/' \
 		--in-place index.html
 
-api-gateway-package:
+dev-package: ## create package using existing env settings for development deployment
+	$(MAKE) all source-package ENV=dev
+	mv --backup jitsi-meet-$(shell git rev-parse --short HEAD)-dev.tar.bz2 jitsi-meet-dev.tar.bz2
+
+api-gateway-package: ## create package using api-gateway env settings (users and their meetings are handled by the api-gateway)
 	ln -fs env-api-gateway .env
 	$(MAKE) all source-package ENV=api-gateway
 
-embedded-package:
+embedded-package: ## create package using embedded env settings (used by riffedu)
 	ln -fs env-embedded .env
 	$(MAKE) all source-package ENV=embedded
+
+# Help documentation à la https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
+# if you want the help sorted rather than in the order of occurrence, pipe the grep to sort and pipe that to awk
+help: ## this help documentation (extracted from comments on the targets)
+	@echo ""                                            ; \
+	echo "Useful targets in this riff-docker Makefile:" ; \
+	(grep -E '^[a-zA-Z_-]+ ?:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = " ?:.*?## "}; {printf "\033[36m%-20s\033[0m : %s\n", $$1, $$2}') ; \
+	echo ""
+
