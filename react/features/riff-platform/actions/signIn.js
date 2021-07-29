@@ -74,3 +74,34 @@ export function signIn({ email, password }) {
         }
     };
 }
+
+
+export function signInLtiSuccess(user, token, navigateToRoomName) {
+    return async dispatch => {
+         jwt.set(token);
+console.log('token', token)
+        //  const user = await api.isAuth();
+
+        console.log('user', user);
+
+        if (user === null) {
+            jwt.remove();
+        } else {
+            setLocalDisplayNameAndEmail(user);
+
+            dispatch({
+                type: actionTypes.LOGIN_SUCCESS,
+                user
+            });
+            navigateToRoomName();
+            // const prevPathname = previousLocationRoomName.get();
+
+            // console.log('prevPathname', prevPathname);
+            // if (prevPathname) {
+            //     // navigate to room name
+            //     return prevPathname;
+            // }
+        }
+    };
+}
+

@@ -15,3 +15,4 @@ export const DASHBOARD = '/dashboard';
 export const EXPERIMENTAL_DASHBOARD = '/experimental-dashboard';
 
 export const MEETINGS_HARVARD = '/meetings-negotiations';
+export const SIGNIN_LTI = '/login-lti';
