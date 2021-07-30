@@ -71,7 +71,7 @@ const Header = ({ handleSidebarOpen, isOpen, user, doLogout }) => {
             context_label: 'esme-learning',
             context_title: 'RIFF TEST',
             custom_cohort_id: '397',
-            custom_cohort_name: '6102ca75a792ea4917f94c2f',
+            custom_cohort_name: '6103f3d60760b8633aff006e',
             custom_component_display_name: '\'Staging RiffEdu Communications\'',
             custom_team_id: '',
             custom_team_name: '',
@@ -99,7 +99,7 @@ const Header = ({ handleSidebarOpen, isOpen, user, doLogout }) => {
             manualRedirect: 'true'
         };
 
-        fetch(`${API_GATEWAY_LINK}/lti/launch/ljklj`, {
+        fetch(`${API_GATEWAY_LINK}/lti/launch/test`, {
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             },

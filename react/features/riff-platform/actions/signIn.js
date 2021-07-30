@@ -78,11 +78,7 @@ export function signIn({ email, password }) {
 
 export function signInLtiSuccess(user, token, navigateToRoomName) {
     return async dispatch => {
-         jwt.set(token);
-console.log('token', token)
-        //  const user = await api.isAuth();
-
-        console.log('user', user);
+        jwt.set(token);
 
         if (user === null) {
             jwt.remove();
@@ -94,13 +90,6 @@ console.log('token', token)
                 user
             });
             navigateToRoomName();
-            // const prevPathname = previousLocationRoomName.get();
-
-            // console.log('prevPathname', prevPathname);
-            // if (prevPathname) {
-            //     // navigate to room name
-            //     return prevPathname;
-            // }
         }
     };
 }
