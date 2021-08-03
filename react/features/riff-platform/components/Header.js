@@ -71,7 +71,7 @@ const Header = ({ handleSidebarOpen, isOpen, user, doLogout }) => {
             context_label: 'esme-learning',
             context_title: 'RIFF TEST',
             custom_cohort_id: '397',
-            custom_cohort_name: '6103f3d60760b8633aff006e',
+            custom_cohort_name: 'Default Group',
             custom_component_display_name: '\'Staging RiffEdu Communications\'',
             custom_team_id: '',
             custom_team_name: '',
@@ -108,7 +108,7 @@ const Header = ({ handleSidebarOpen, isOpen, user, doLogout }) => {
         })
             .then(response => response.json())
             .then(res =>
-                history.push(`${res.url}`))
+                window.location.replace(`${res.url}`))
         .catch(err => {
             console.log('err.status', err.status);
             console.log('err keys', Object.keys(err));

@@ -9,7 +9,7 @@ import api from '../api';
 import RiffPlatform from '../components';
 import * as actionTypes from '../constants/actionTypes';
 import * as ROUTES from '../constants/routes';
-import { isRiffPlatformCurrentPath, previousLocationRoomName } from '../functions';
+import { jwt, isRiffPlatformCurrentPath, previousLocationRoomName, ltiUserInfo } from '../functions';
 
 import { checkIsMeetingAllowed } from './meeting';
 import { logout } from './signIn';
@@ -36,6 +36,10 @@ export async function shouldRedirectToRiff() {
     if (process.env.MATTERMOST_EMBEDDED_ONLY === 'true') {
         setMatterMostUserFromLink();
 
+        return false;
+    }
+
+    if (await isLtiUser()) {
         return false;
     }
 
@@ -170,6 +174,82 @@ export async function setMatterMostUserFromLink() {
         type: actionTypes.MEETING_SUCCESS,
         meeting: meetingMock
     });
+    setLocalDisplayNameAndEmail(userMock);
+}
+
+// eslint-disable-next-line require-jsdoc
+async function isLtiUser() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const user = await api.isAuth();
+    const ltiUserFound = urlParams.get('ltiUser');
+
+    const ltiData = JSON.parse(ltiUserInfo.get());
+
+    if (ltiData?.uid && user?.uid === ltiData?.uid && window.location.pathname.split('/')[1] === ltiData?.roomId) {
+
+        const meetingMock = {
+            _id: ObjectID.generate(),
+            roomId: ltiData.roomId,
+            name: ltiData.roomId.split('-')[1].replace(/%20/g, ' ')
+        };
+
+        APP.store.dispatch({
+            type: actionTypes.LOGIN_SUCCESS,
+            user
+        });
+
+        APP.store.dispatch({
+            type: actionTypes.MEETING_SUCCESS,
+            meeting: meetingMock
+        });
+
+        return true;
+    }
+
+    if (!ltiUserFound) {
+        return false;
+    }
+
+    setLtiUserFromLink();
+
+    return true;
+}
+
+/**
+ * Sets user and meeting data from lti.
+ *
+ * @returns {boolean}
+*/
+export async function setLtiUserFromLink() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('jwtToken');
+
+    const userMock = {
+        uid: urlParams.get('uid') || ObjectID.generate(),
+        displayName: urlParams.get('name') || 'No name',
+        email: urlParams.get('email') || ''
+    };
+
+    const meetingMock = {
+        _id: ObjectID.generate(),
+        roomId: window.location.pathname.split('/')[1],
+        name: window.location.pathname.split('/')[1].split('-')[1].replace(/%20/g, ' ')
+    };
+
+    APP.store.dispatch({
+        type: actionTypes.LOGIN_SUCCESS,
+        user: userMock
+    });
+    APP.store.dispatch({
+        type: actionTypes.MEETING_SUCCESS,
+        meeting: meetingMock
+    });
+
+    ltiUserInfo.set({
+        uid: userMock.uid,
+        roomId: meetingMock.roomId
+    });
+    jwt.set(token);
     setLocalDisplayNameAndEmail(userMock);
 }
 

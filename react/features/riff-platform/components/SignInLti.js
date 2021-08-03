@@ -7,10 +7,11 @@ import React, { useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 
 import { connect } from '../../base/redux';
+import { meetingSuccess } from '../actions/meeting';
 import { signInLtiSuccess } from '../actions/signIn';
 import * as ROUTES from '../constants/routes';
 
-const SignInLti = ({ doLtiLogin }) => {
+const SignInLti = ({ doLtiLogin, setMeeting }) => {
     const location = useLocation();
     const history = useHistory();
 
@@ -20,27 +21,35 @@ const SignInLti = ({ doLtiLogin }) => {
         const displayName = queryParams.get('name');
         const email = queryParams.get('email');
         const uid = queryParams.get('uid');
-        const meetingId = queryParams.get('meetingId');
+        const roomName = queryParams.get('roomName');
         const token = queryParams.get('jwtToken');
 
-        const navigateToRoomName = () => history.push(`${ROUTES.WAITING}/${meetingId}`);
+        const meetingMock = {
+            _id: '6107deef54a329525c0283bc',
+            roomId: roomName,
+            name: roomName
+        };
+
+        const navigateToRoomName = () => history.push(`${ROUTES.WAITING}/${meetingMock._id}-${meetingMock.roomId}`);
 
         const user = { uid,
             email,
-            displayName };
+            displayName,
+            isLti: true
+        };
 
+        setMeeting(meetingMock);
         doLtiLogin(user, token, navigateToRoomName);
     }, []);
 
     return (
-        <div>
-            In progress ...
-        </div>
+        <div> In progress </div>
     );
 };
 
 SignInLti.propTypes = {
-    doLtiLogin: PropTypes.func
+    doLtiLogin: PropTypes.func,
+    setMeeting: PropTypes.func
 };
 
 const mapStateToProps = () => {
@@ -49,7 +58,8 @@ const mapStateToProps = () => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        doLtiLogin: (user, token, navigateToRoomName) => dispatch(signInLtiSuccess(user, token, navigateToRoomName))
+        doLtiLogin: (user, token, navigateToRoomName) => dispatch(signInLtiSuccess(user, token, navigateToRoomName)),
+        setMeeting: meeting => dispatch(meetingSuccess(meeting))
     };
 };
 
