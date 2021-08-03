@@ -18,7 +18,6 @@ import { logout } from '../actions/signIn';
 import * as ROUTES from '../constants/routes';
 
 import { drawerWidth } from './Sidebar';
-window.config.clientNode = 'https://0.0.0.0:8080';
 
 const useStyles = makeStyles(theme => {
     return {
@@ -52,7 +51,6 @@ const useStyles = makeStyles(theme => {
     };
 });
 
-
 const Header = ({ handleSidebarOpen, isOpen, user, doLogout }) => {
     const classes = useStyles();
     const history = useHistory();
@@ -63,60 +61,6 @@ const Header = ({ handleSidebarOpen, isOpen, user, doLogout }) => {
     };
 
     const isSidebarEnabled = Boolean(user);
-//just for LTI testing
-    const tryLtiLogin = () => {
-        const API_GATEWAY_LINK = process.env.API_GATEWAY;
-        const body = {
-            context_id: 'course-v1:esme-learning+RIFF+RIFF',
-            context_label: 'esme-learning',
-            context_title: 'RIFF TEST',
-            custom_cohort_id: '397',
-            custom_cohort_name: 'Default Group',
-            custom_component_display_name: '\'Staging RiffEdu Communications\'',
-            custom_team_id: '',
-            custom_team_name: '',
-            custom_user_id: '62178',
-            launch_presentation_locale: 'en',
-            launch_presentation_return_url: '',
-            lis_person_contact_email_primary: 'devin@esmelearning.com',
-            lis_person_name_family: 'Chaloux',
-            lis_person_name_full: 'Devin Chaloux',
-            lis_person_name_given: 'Devin',
-            lis_person_sourcedid: 'DevinChaloux',
-            lis_result_sourcedid: 'course-v1%3Aesme-learning%2BRIFF%2BRIFF:tahoe.appsembler.com-df3e770ad298463589e44869320caf99:ecce9f3a276c101cb5e84ce76fa38903',
-            lti_message_type: 'basic-lti-launch-request',
-            lti_version: 'LTI-1p0',
-            oauth_callback: 'about:blank',
-            oauth_consumer_key: 'testing-appsembler_8061',
-            oauth_nonce: '2df7aea9b234f090bebbc8686583a2a2',
-            oauth_signature: 'vH0PqYQ7HQ6jFeOdvleMcFy5qE8%3D',
-            oauth_signature_method: 'HMAC-SHA1',
-            oauth_timestamp: '1627400671',
-            oauth_version: '1.0',
-            resource_link_id: 'tahoe.appsembler.com-df3e770ad298463589e44869320caf99',
-            roles: 'Administrator',
-            user_id: 'ecce9f3a276c101cb5e84ce76fa38903',
-            manualRedirect: 'true'
-        };
-
-        fetch(`${API_GATEWAY_LINK}/lti/launch/test`, {
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            method: 'POST',
-            body: JSON.stringify(body)
-        })
-            .then(response => response.json())
-            .then(res =>
-                window.location.replace(`${res.url}`))
-        .catch(err => {
-            console.log('err.status', err.status);
-            console.log('err keys', Object.keys(err));
-        });
-
-
-        // /return await r.json();
-    };
 
     return (
         <div>
@@ -146,9 +90,6 @@ const Header = ({ handleSidebarOpen, isOpen, user, doLogout }) => {
                     </Typography>
                     <div
                         style = { style }>
-                        <Button
-                            onClick = { () => tryLtiLogin() }
-                            variant = 'outlined'>Try LTI Login </Button>
                         {isSidebarEnabled
                             && <Button onClick = { () => history.push(ROUTES.SCHEDULE) }>Schedule a meeting</Button>}
                         <Button onClick = { () => history.push(ROUTES.JOIN) }>Join a meeting</Button>
