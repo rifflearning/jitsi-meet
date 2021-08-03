@@ -177,33 +177,41 @@ export async function setMatterMostUserFromLink() {
     setLocalDisplayNameAndEmail(userMock);
 }
 
-// eslint-disable-next-line require-jsdoc
+/**
+ * Check for Lti user`s credentials and if found use them to login, return true
+ * if successful, false if Lti user`s credentials were not used to login.
+ *
+ * @returns {boolean}
+*/
 async function isLtiUser() {
     const urlParams = new URLSearchParams(window.location.search);
-    const user = await api.isAuth();
     const ltiUserFound = urlParams.get('ltiUser');
-
     const ltiData = JSON.parse(ltiUserInfo.get());
 
-    if (ltiData?.uid && user?.uid === ltiData?.uid && window.location.pathname.split('/')[1] === ltiData?.roomId) {
+    if (ltiData?.uid) {
+        const user = await api.isAuth();
 
-        const meetingMock = {
-            _id: ObjectID.generate(),
-            roomId: ltiData.roomId,
-            name: ltiData.roomId.split('-')[1].replace(/%20/g, ' ')
-        };
+        // LTI users may only use the specified room name from LTI and name
+        if (user?.uid === ltiData?.uid && window.location.pathname.split('/')[1] === ltiData?.roomId) {
 
-        APP.store.dispatch({
-            type: actionTypes.LOGIN_SUCCESS,
-            user
-        });
+            const meetingMock = {
+                _id: ObjectID.generate(),
+                roomId: ltiData.roomId,
+                name: ltiData.roomId.split('-')[1].replace(/%20/g, ' ')
+            };
 
-        APP.store.dispatch({
-            type: actionTypes.MEETING_SUCCESS,
-            meeting: meetingMock
-        });
+            APP.store.dispatch({
+                type: actionTypes.LOGIN_SUCCESS,
+                user
+            });
 
-        return true;
+            APP.store.dispatch({
+                type: actionTypes.MEETING_SUCCESS,
+                meeting: meetingMock
+            });
+
+            return true;
+        }
     }
 
     if (!ltiUserFound) {
@@ -301,6 +309,8 @@ export function redirectToRiffAfterMeeting() {
             return navigateWithoutReload(RiffPlatform, `${ROUTES.BASENAME}${ROUTES.MEETING_ENDED}`);
         }
 
+        // We don`t need query/search params for the dashboard that come from LTI
+        customHistory.replace({ search: '' });
         navigateWithoutReload(RiffPlatform, `${ROUTES.BASENAME}${ROUTES.DASHBOARD}`);
     };
 }
