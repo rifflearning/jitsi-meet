@@ -12,7 +12,7 @@ function meetingRequest() {
     };
 }
 
-export function meetingSuccess(meeting) {
+function meetingSuccess(meeting) {
     return {
         type: actionTypes.MEETING_SUCCESS,
         meeting

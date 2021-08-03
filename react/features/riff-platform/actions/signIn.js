@@ -74,23 +74,3 @@ export function signIn({ email, password }) {
         }
     };
 }
-
-
-export function signInLtiSuccess(user, token, navigateToRoomName) {
-    return async dispatch => {
-        jwt.set(token);
-
-        if (user === null) {
-            jwt.remove();
-        } else {
-            setLocalDisplayNameAndEmail(user);
-
-            dispatch({
-                type: actionTypes.LOGIN_SUCCESS,
-                user
-            });
-            navigateToRoomName();
-        }
-    };
-}
-
