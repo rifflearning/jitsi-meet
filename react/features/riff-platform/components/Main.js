@@ -33,7 +33,6 @@ import Profile from './Profile';
 import ResetPassword from './ResetPassword';
 import Scheduler from './Scheduler';
 import SignIn from './SignIn';
-import SignInLti from './SignInLti';
 import SignUp from './SignUp';
 import Verify from './Verify';
 import Waiting from './Waiting';
@@ -167,9 +166,6 @@ class Main extends React.Component {
                 </Route>
                 <Route path = { ROUTES.MEETING_ENDED } >
                     <MeetingEndedPage />
-                </Route>
-                <Route path = { ROUTES.SIGNIN_LTI } >
-                    <SignInLti />
                 </Route>
                 <Redirect to = { ROUTES.SIGNIN } />
             </Switch>
