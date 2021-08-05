@@ -188,7 +188,7 @@ async function isLtiUser() {
     const ltiUserFound = urlParams.get('ltiUser');
     const ltiData = JSON.parse(ltiUserInfo.get());
 
-    if (ltiData?.uid) {
+    if (ltiData?.uid && !ltiUserFound) {
         const user = await api.isAuth();
 
         // LTI users may only use the specified room name from LTI and name
@@ -238,6 +238,7 @@ export async function setLtiUserFromLink() {
 
         return false;
     }
+
 
     const meetingMock = {
         _id: ObjectID.generate(),
