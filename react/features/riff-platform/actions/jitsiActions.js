@@ -197,7 +197,7 @@ async function isLtiUser() {
             const meetingMock = {
                 _id: ObjectID.generate(),
                 roomId: ltiData.roomId,
-                name: ltiData.roomId.split('-')[1].replace(/%20/g, ' ')
+                name: ltiData.roomName
             };
 
             APP.store.dispatch({
@@ -241,7 +241,7 @@ export async function setLtiUserFromLink() {
     const meetingMock = {
         _id: ObjectID.generate(),
         roomId: window.location.pathname.split('/')[1],
-        name: window.location.pathname.split('/')[1].split('-')[1].replace(/%20/g, ' ')
+        name: urlParams.get('roomName') || ''
     };
 
     APP.store.dispatch({
@@ -255,7 +255,8 @@ export async function setLtiUserFromLink() {
 
     ltiUserInfo.set({
         uid: userMock.uid,
-        roomId: meetingMock.roomId
+        roomId: meetingMock.roomId,
+        roomName: meetingMock.roomName
     });
     jwt.set(token);
     setLocalDisplayNameAndEmail(userMock);
