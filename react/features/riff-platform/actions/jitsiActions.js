@@ -192,7 +192,7 @@ async function isLtiUser() {
         const user = await api.isAuth();
 
         // LTI users may only use the specified room name from LTI and name
-        if (user?.uid === ltiData?.uid && window.location.pathname.split('/')[1] === ltiData?.roomId) {
+        if (user?.uid === ltiData?.uid && window.location.pathname.split('/')[1] === ltiData.roomId) {
 
             const meetingMock = {
                 _id: ObjectID.generate(),
@@ -218,9 +218,7 @@ async function isLtiUser() {
         return false;
     }
 
-    setLtiUserFromLink();
-
-    return true;
+    return await setLtiUserFromLink();
 }
 
 /**
@@ -232,11 +230,14 @@ export async function setLtiUserFromLink() {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('jwtToken');
 
-    const userMock = {
-        uid: urlParams.get('uid') || ObjectID.generate(),
-        displayName: urlParams.get('name') || 'No name',
-        email: urlParams.get('email') || ''
-    };
+    jwt.set(token);
+    const user = await api.isAuth();
+
+    if (!user) {
+        jwt.remove();
+
+        return false;
+    }
 
     const meetingMock = {
         _id: ObjectID.generate(),
@@ -246,20 +247,20 @@ export async function setLtiUserFromLink() {
 
     APP.store.dispatch({
         type: actionTypes.LOGIN_SUCCESS,
-        user: userMock
+        user
     });
     APP.store.dispatch({
         type: actionTypes.MEETING_SUCCESS,
         meeting: meetingMock
     });
-
     ltiUserInfo.set({
-        uid: userMock.uid,
+        uid: user.uid,
         roomId: meetingMock.roomId,
-        roomName: meetingMock.roomName
+        roomName: meetingMock.name
     });
-    jwt.set(token);
-    setLocalDisplayNameAndEmail(userMock);
+    setLocalDisplayNameAndEmail(user);
+
+    return true;
 }
 
 /**
