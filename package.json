@@ -1,6 +1,6 @@
 {
   "name": "@rifflearning/jitsi-meet",
-  "version": "0.0.0",
+  "version": "0.1.0-dev.1",
   "description": "Riff Videochat app based on the jitsi-meet project",
   "repository": {
     "type": "git",
@@ -13,7 +13,6 @@
     "browser"
   ],
   "author": "",
-  "readmeFilename": "README.md",
   "dependencies": {
     "@amcharts/amcharts4": "^4.10.16",
     "@atlaskit/button": "15.1.4",
