@@ -18,6 +18,24 @@ WEBPACK = ./node_modules/.bin/webpack
 WEBPACK_DEV_SERVER = ./node_modules/.bin/webpack-dev-server
 ENV ?= UNKenv
 
+SRC_PKG_FILES := \
+	README.md               \
+	CHANGELOG.md            \
+	LICENSE                 \
+	favicon.ico             \
+	package.json            \
+	*.js                    \
+	*.html                  \
+	resources/*.txt         \
+	connection_optimization \
+	fonts                   \
+	images                  \
+	libs                    \
+	static                  \
+	sounds                  \
+	lang                    \
+
+
 all: compile deploy clean
 
 compile: compile-load-test
@@ -115,7 +133,7 @@ source-package: source-package-version
 
 source-package-files: ## copy all files needed for distribution (built and static) to the source_package directory
 	mkdir -p source_package/jitsi-meet/css
-	cp -r *.js *.html resources/*.txt connection_optimization favicon.ico fonts images libs static sounds LICENSE lang source_package/jitsi-meet
+	cp -r $(SRC_PKG_FILES) source_package/jitsi-meet
 	cp css/all.css source_package/jitsi-meet/css
 
 source-package-version: ## add versioning to all.css and app.bundle.min.js imports in index.html
