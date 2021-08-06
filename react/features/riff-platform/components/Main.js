@@ -127,10 +127,12 @@ class Main extends React.Component {
                     path = { ROUTES.DASHBOARD } >
                     <Dashboard />
                 </Route>
-                <Route
+                {process.env.ENABLE_EXPERIMENTAL_METRICS === 'true'
+                && <Route
                     path = { ROUTES.EXPERIMENTAL_DASHBOARD } >
                     <ExperimentalDashboard />
                 </Route>
+                }
                 <Route
                     path = { ROUTES.MEETINGS }
                     component = { Meetings } />

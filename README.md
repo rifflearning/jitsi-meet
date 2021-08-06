@@ -74,6 +74,7 @@ API_GATEWAY=https://dev-jitsi.riffplatform.com/api-gateway
 
 
 ### Avaliable optional features flags:
+# ENABLE_EXPERIMENTAL_METRICS=true
 # DISABLE_GROUPS=true
 # DISABLE_EMOTIONS_CHART=true
 # MATTERMOST_EMBEDDED_ONLY=true # disables auth, enables "Meeting ended" page instead of admin panel
