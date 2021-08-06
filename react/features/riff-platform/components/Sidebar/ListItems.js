@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-sort-props */
 /* eslint-disable react/jsx-no-bind */
+/* global process */
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -47,7 +48,8 @@ export default () => {
                 </ListItemIcon>
                 <ListItemText primary = 'Riff Metrics' />
             </ListItem>
-            <ListItem
+            {process.env.ENABLE_EXPERIMENTAL_METRICS === 'true'
+            && <ListItem
                 button = { true }
                 onClick = { () => history.push(ROUTES.EXPERIMENTAL_DASHBOARD) }
                 selected = { isSelected(ROUTES.EXPERIMENTAL_DASHBOARD) }>
@@ -56,6 +58,7 @@ export default () => {
                 </ListItemIcon>
                 <ListItemText primary = 'Experimental Metrics' />
             </ListItem>
+            }
         </div>
     );
 };
