@@ -18,6 +18,24 @@ WEBPACK = ./node_modules/.bin/webpack
 WEBPACK_DEV_SERVER = ./node_modules/.bin/webpack-dev-server
 ENV ?= UNKenv
 
+SRC_PKG_FILES := \
+	README.md               \
+	CHANGELOG.md            \
+	LICENSE                 \
+	favicon.ico             \
+	package.json            \
+	*.js                    \
+	*.html                  \
+	resources/*.txt         \
+	connection_optimization \
+	fonts                   \
+	images                  \
+	libs                    \
+	static                  \
+	sounds                  \
+	lang                    \
+
+
 all: compile deploy clean
 
 compile: compile-load-test
@@ -108,14 +126,14 @@ dev: deploy-init deploy-css deploy-rnnoise-binary deploy-lib-jitsi-meet deploy-m
 	$(WEBPACK_DEV_SERVER) --host 0.0.0.0
 
 source-package: ## create a distribution tar file packaging all files to be served by a web server (run make all first)
-source-package: GIT_HEAD_HASH := $(shell git rev-parse --short HEAD)
+source-package: PKG_VERSION := ${shell sed -nE 's/^\s*\"version\": \"([^\"]+)\",$$/\1/p' package.json}
 source-package: source-package-version
-	cd source_package ; tar cjf ../jitsi-meet-$(GIT_HEAD_HASH)-$(ENV).tar.bz2 jitsi-meet
+	cd source_package ; tar cjf ../rifflearning-jitsi-meet-$(PKG_VERSION)-$(ENV).tar.bz2 jitsi-meet
 	rm -rf source_package
 
 source-package-files: ## copy all files needed for distribution (built and static) to the source_package directory
 	mkdir -p source_package/jitsi-meet/css
-	cp -r *.js *.html resources/*.txt connection_optimization favicon.ico fonts images libs static sounds LICENSE lang source_package/jitsi-meet
+	cp -r $(SRC_PKG_FILES) source_package/jitsi-meet
 	cp css/all.css source_package/jitsi-meet/css
 
 source-package-version: ## add versioning to all.css and app.bundle.min.js imports in index.html
@@ -128,17 +146,31 @@ source-package-version: source-package-files
 		-e 's/\(app\.bundle\.min\.js\)?v=[0-9]\+/\1?v='$(SHASUM_APP_BUNDLE)'/' \
 		--in-place index.html
 
-dev-package: ## create package using existing env settings for development deployment
-	$(MAKE) all source-package ENV=dev
-	mv --backup jitsi-meet-$(shell git rev-parse --short HEAD)-dev.tar.bz2 jitsi-meet-dev.tar.bz2
+dev-package: ## create package using working dir code and existing env settings for development deployment
+dev-package: PKG_VERSION := ${shell sed -nE 's/^\s*\"version\": \"([^\"]+)\",$$/\1/p' package.json}
+dev-package:
+	$(MAKE) all source-package ENV=custom
+	mv --backup rifflearning-jitsi-meet-$(PKG_VERSION)-custom.tar.bz2 rifflearning-jitsi-meet-dev.tar.bz2
 
 api-gateway-package: ## create package using api-gateway env settings (users and their meetings are handled by the api-gateway)
 	ln -fs env-api-gateway .env
 	$(MAKE) all source-package ENV=api-gateway
 
+api-gateway-no-mm-package: ## create package using api-gateway-no-mm env settings (hide meeting mediator)
+	ln -fs env-api-gateway-no-mm .env
+	$(MAKE) all source-package ENV=api-gateway-no-mm
+
 embedded-package: ## create package using embedded env settings (used by riffedu)
 	ln -fs env-embedded .env
 	$(MAKE) all source-package ENV=embedded
+
+group-package: ## create package using group env settings
+	ln -fs env-group .env
+	$(MAKE) all source-package ENV=group
+
+discovery-package: ## create package using discovery env settings (volume capture)
+	ln -fs env-discovery .env
+	$(MAKE) all source-package ENV=discovery
 
 # Help documentation à la https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 # if you want the help sorted rather than in the order of occurrence, pipe the grep to sort and pipe that to awk
@@ -147,4 +179,3 @@ help: ## this help documentation (extracted from comments on the targets)
 	echo "Useful targets in this riff-docker Makefile:" ; \
 	(grep -E '^[a-zA-Z_-]+ ?:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = " ?:.*?## "}; {printf "\033[36m%-20s\033[0m : %s\n", $$1, $$2}') ; \
 	echo ""
-
