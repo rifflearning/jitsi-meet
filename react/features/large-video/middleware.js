@@ -9,6 +9,7 @@ import {
     getLocalParticipant
 } from '../base/participants';
 import { MiddlewareRegistry } from '../base/redux';
+import { isTestModeEnabled } from '../base/testing';
 import {
     getTrackByJitsiTrack,
     TRACK_ADDED,
@@ -16,7 +17,8 @@ import {
     TRACK_UPDATED
 } from '../base/tracks';
 
-import { selectParticipant, selectParticipantInLargeVideo } from './actions';
+import { selectParticipant, selectParticipantInLargeVideo } from './actions.any';
+import logger from './logger';
 
 import './subscriber';
 
@@ -32,7 +34,12 @@ MiddlewareRegistry.register(store => next => action => {
 
     switch (action.type) {
     case DOMINANT_SPEAKER_CHANGED: {
-        const localParticipant = getLocalParticipant(store.getState());
+        const state = store.getState();
+        const localParticipant = getLocalParticipant(state);
+
+        if (isTestModeEnabled(state)) {
+            logger.info(`Dominant speaker changed event for: ${action.participant.id}`);
+        }
 
         if (localParticipant && localParticipant.id !== action.participant.id) {
             store.dispatch(selectParticipantInLargeVideo());

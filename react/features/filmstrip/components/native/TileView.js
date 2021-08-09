@@ -8,12 +8,9 @@ import {
 } from 'react-native';
 import type { Dispatch } from 'redux';
 
-import {
-    getNearestReceiverVideoQualityLevel,
-    setMaxReceiverVideoQuality
-} from '../../../base/conference';
 import { connect } from '../../../base/redux';
 import { ASPECT_RATIO_NARROW } from '../../../base/responsive-ui/constants';
+import { setTileViewDimensions } from '../../actions.native';
 
 import Thumbnail from './Thumbnail';
 import styles from './styles';
@@ -244,6 +241,8 @@ class TileView extends Component<Props> {
             aspectRatio: TILE_ASPECT_RATIO,
             flex: 0,
             height: this._getTileDimensions().height,
+            maxHeight: null,
+            maxWidth: null,
             width: null
         };
 
@@ -266,10 +265,14 @@ class TileView extends Component<Props> {
      * @returns {void}
      */
     _updateReceiverQuality() {
-        const { height } = this._getTileDimensions();
-        const qualityLevel = getNearestReceiverVideoQualityLevel(height);
+        const { height, width } = this._getTileDimensions();
 
-        this.props.dispatch(setMaxReceiverVideoQuality(qualityLevel));
+        this.props.dispatch(setTileViewDimensions({
+            thumbnailSize: {
+                height,
+                width
+            }
+        }));
     }
 }
 

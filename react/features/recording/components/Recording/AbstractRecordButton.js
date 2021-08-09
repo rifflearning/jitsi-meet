@@ -1,20 +1,20 @@
 // @flow
 
+import EmotionsIcon from '@material-ui/icons/EmojiEmotions';
+
+// import { IconToggleRecording } from '../../../base/icons';
+
 import {
     createToolbarEvent,
     sendAnalytics
 } from '../../../analytics';
 import { openDialog } from '../../../base/dialog';
-import { IconToggleRecording } from '../../../base/icons';
 import { JitsiRecordingConstants } from '../../../base/lib-jitsi-meet';
 import {
     getLocalParticipant,
     isLocalParticipantModerator
 } from '../../../base/participants';
-import {
-    AbstractButton,
-    type AbstractButtonProps
-} from '../../../base/toolbox';
+import { AbstractButton, type AbstractButtonProps } from '../../../base/toolbox/components';
 import { getActiveSession } from '../../functions';
 
 import { StartRecordingDialog, StopRecordingDialog } from './_';
@@ -56,7 +56,7 @@ export type Props = AbstractButtonProps & {
  */
 export default class AbstractRecordButton<P: Props> extends AbstractButton<P, *> {
     accessibilityLabel = 'toolbar.accessibilityLabel.recording';
-    icon = IconToggleRecording;
+    icon = EmotionsIcon;
     label = 'dialog.startRecording';
     toggledLabel = 'dialog.stopRecording';
 
@@ -156,13 +156,7 @@ export function _mapStateToProps(state: Object, ownProps: Props): Object {
             if (!visible && !_disabled) {
                 _disabled = true;
                 visible = true;
-
-                // button and tooltip
-                if (state['features/base/jwt'].isGuest) {
-                    _tooltip = 'dialog.recordingDisabledForGuestTooltip';
-                } else {
-                    _tooltip = 'dialog.recordingDisabledTooltip';
-                }
+                _tooltip = 'dialog.recordingDisabledTooltip';
             }
         }
     }

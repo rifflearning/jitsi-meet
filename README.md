@@ -1,80 +1,203 @@
-# Jitsi Meet - Secure, Simple and Scalable Video Conferences
+<p align="center"><img align="center" src="images/jitsilogo.png" /></p>
 
-Jitsi Meet is an open-source (Apache) WebRTC JavaScript application that uses [Jitsi Videobridge](https://jitsi.org/videobridge) to provide high quality, [secure](https://jitsi.org/security) and scalable video conferences. Jitsi Meet in action can be seen at [here at the session #482 of the VoIP Users Conference](http://youtu.be/7vFUVClsNh0).
+# Jitsi Meet
+## Development:
+Running with webpack-dev-server for development:
+```
+clone https://github.com/rifflearning/jitsi-meet.git
+npm install
+make dev
+```
+*Also see official guide here [here](https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-web)*.
 
-The Jitsi Meet client runs in your browser, without installing anything else on your computer. You can try it out at https://meet.jit.si.
+---
+## Development with Riff features:
 
-Jitsi Meet allows very efficient collaboration. Users can stream their desktop or only some windows. It also supports shared document editing with Etherpad.
+Clone repository, checkout to `develop` branch and install dependencies:
 
-## Installation
+```
+git clone https://github.com/rifflearning/jitsi-meet.git
+git checkout develop
+npm install
+```
 
-On the client side, no installation is necessary. You just point your browser to the URL of your deployment. This section is about installing a Jitsi Meet suite on your server and hosting your own conferencing service.
+Create `.env` file in root dir (*ask colleagues for the `.env`*):
 
-Installing Jitsi Meet is a simple experience. For Debian-based system, following the [quick install](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-quickstart) document, which uses the package system. You can also see a demonstration of the process in [this tutorial video](https://jitsi.org/tutorial).
+```
+### Uncomment variables for specific instance deployment:
+## Local development:
+WEBPACK_DEV_SERVER_PROXY_TARGET=https://dev-jitsi.riffplatform.com
+RIFF_SERVER_URL=https://dev-jitsi.riffplatform.com 
+API_GATEWAY=https://dev-jitsi.riffplatform.com/api-gateway
+# for local api-gateway:
+# API_GATEWAY=https://localhost:4445/api
 
-For other systems, or if you wish to install all components manually, see the [detailed manual installation instructions](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-manual).
 
-Installation with Docker is also available. Please see the [instruction](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-docker).
 
-## Download
+### Deployment common variables:
+# PEM_PATH=~/.ssh/riffdev_1_useast2_key.pem
+# RIFF_SERVER_URL=/
+# API_GATEWAY=/api-gateway
+# HIDE_MEETING_MEDIATOR_BY_DEFAULT_FOR_ANON_USER=true
 
-| Latest stable release | [![release](https://img.shields.io/badge/release-latest-green.svg)](https://github.com/jitsi/jitsi-meet/releases/latest) |
-|---|---|
+### Deployment specific variables:
+## dev-jitsi (DEV):
+# AWS_NAME=ubuntu@dev-jitsi.riffplatform.com
+# DISABLE_GROUPS=true
+# SEND_SIBILANT_VOLUMES_TO_RIFF_DATA_SERVER=true
 
-You can download Debian/Ubuntu binaries:
-* [stable](https://download.jitsi.org/stable/) ([instructions](https://jitsi.org/downloads/ubuntu-debian-installations-instructions/))
-* [testing](https://download.jitsi.org/testing/) ([instructions](https://jitsi.org/downloads/ubuntu-debian-installations-instructions-for-testing/))
-* [nightly](https://download.jitsi.org/unstable/) ([instructions](https://jitsi.org/downloads/ubuntu-debian-installations-instructions-nightly/))
+## rif-poc:
+# AWS_NAME=ubuntu@riff-poc.riffplatform.com
 
-You can download source archives (produced by ```make source-package```):
-* [source builds](https://download.jitsi.org/jitsi-meet/src/)
+## hls-negotiations:
+# AWS_NAME=ubuntu@hls-negotiations.riffremote.com
+# DISABLE_EMOTIONS_CHART=true
 
-### Mobile apps
+## nd-negotiations:
+# AWS_NAME=ubuntu@nd-negotiations.riffremote.com
+# DISABLE_EMOTIONS_CHART=true
 
-* [Android](https://play.google.com/store/apps/details?id=org.jitsi.meet)
+## pega:
+# AWS_NAME=ubuntu@pega.riffremote.com
+# DISABLE_EMOTIONS_CHART=true
+# DISABLE_GROUPS=true
 
-[<img src="resources/img/google-play-badge.png" height="50">](https://play.google.com/store/apps/details?id=org.jitsi.meet)
+## staging.riffedu (DEV):
+# AWS_NAME=ubuntu@meet.staging.riffedu.com
+# MATTERMOST_EMBEDDED_ONLY=true
 
-* [Android (F-Droid)](https://f-droid.org/en/packages/org.jitsi.meet/)
+## said-oxford.riffedu:
+# AWS_NAME=ubuntu@meet.said-oxford.riffedu.com
+# PEM_PATH=~/.ssh/riffdev_1_euwest2_key.pem
+# MATTERMOST_EMBEDDED_ONLY=true
 
-[<img src="resources/img/f-droid-badge.png" height="50">](https://f-droid.org/en/packages/org.jitsi.meet/)
 
-* [iOS](https://itunes.apple.com/us/app/jitsi-meet/id1165103905)
 
-[<img src="resources/img/appstore-badge.png" height="50">](https://itunes.apple.com/us/app/jitsi-meet/id1165103905)
+### Avaliable optional features flags:
+# ENABLE_EXPERIMENTAL_METRICS=true
+# DISABLE_GROUPS=true
+# DISABLE_EMOTIONS_CHART=true
+# MATTERMOST_EMBEDDED_ONLY=true # disables auth, enables "Meeting ended" page instead of admin panel
+# SEND_SIBILANT_VOLUMES_TO_RIFF_DATA_SERVER=true # sends utterance obj with additional field 'volumes', for data analysis purposes only
+# HIDE_MEETING_MEDIATOR_BY_DEFAULT=true
+# HIDE_MEETING_MEDIATOR_BY_DEFAULT_FOR_ANON_USER=true
+```
 
-You can also sign up for our open beta testing here:
+Run dev server:
 
-* [Android](https://play.google.com/apps/testing/org.jitsi.meet)
-* [iOS](https://testflight.apple.com/join/isy6ja7S)
+```
+make dev
+```
+---
+## Customization and deployment to AWS
+In order to customize *jitsi-meet* with riff theme, all features and set up a new enviroment please follow next steps:
 
-## Release notes
+1. Install Jitsi-Meet to aws with [official guide](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-quickstart).
 
-Release notes for Jitsi Meet are maintained on [this repository](https://github.com/jitsi/jitsi-meet-release-notes).
+2. Deploy `develop` branch to the instance:
+    ```
+    git clone https://github.com/rifflearning/jitsi-meet.git
+    git checkout develop
+    npm install
+    ```
+    Add appropriate variables `.env` for deployment and put `.pem` file to `~/.ssh/riffdev_1_useast2_key.pem` (*ask colleagues for the `.env` and `.pem` files*):
+    ```
+    ### Deployment common variables:
+    PEM_PATH=~/.ssh/riffdev_1_useast2_key.pem
+    RIFF_SERVER_URL=/
+    API_GATEWAY=/api-gateway
+    HIDE_MEETING_MEDIATOR_BY_DEFAULT_FOR_ANON_USER=true
 
-## Development
+    ### Deployment specific variables:
 
-For web development see [here](https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-web), and for mobile see [here](https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-mobile).
+    ## dev-jitsi (DEV):
+    AWS_NAME=ubuntu@dev-jitsi.riffplatform.com
+    DISABLE_GROUPS=true
+    SEND_SIBILANT_VOLUMES_TO_RIFF_DATA_SERVER=true
+    ```
+    Build and deploy with:
+    ```
+    make deploy-aws
+    ```
+3. Deploy and run [api-gateway](https://github.com/rifflearning/riff-jitsi-platform/tree/main/api-gateway) on aws instance.
+4. Add nginx configs to `/etc/nginx/sites-available/riff-poc.riffplatform.com.conf`:
 
-## Contributing
+    Add to the top of the file:
+    ```
+    map $http_upgrade $connection_upgrade
+    {
+        default upgrade;
+        '' close;
+    }
+    ```
+    Insert after `gzip_min_length 512;`:
+    ```
+    
+    # blocks iOS native client
+    if ($http_user_agent ~* "^jitsi-meet\/101*") {
+        return   403;
+    }
 
-If you are looking to contribute to Jitsi Meet, first of all, thank you! Please
-see our [guidelines for contributing](CONTRIBUTING.md).
+    # blocks android native client
+    if ($http_user_agent ~* "^okhttp\/*") {
+        return   403;
+    }
+    ```
+    Insert after `# BOSH location = /http-bind { ... }` and replace `RIFF_DATA_IP`:
+    
+    (*you may need to set up a new riff-data server instance*)
+    ```
+    # config for api-gateway for Riff-Jitsi-Platform
+    location ^~ /api-gateway/ {
+        proxy_pass https://localhost:4445/api/;
+    }
 
-## Embedding in external applications
+    # config for riff-data server:
+    location ^~ /api/videodata/socket.io/ {
+        proxy_pass http://RIFF_DATA_IP:3000/socket.io/;
 
-Jitsi Meet provides a very flexible way of embedding in external applications by using the [Jitsi Meet API](doc/api.md).
+        # proxy_websocket_params
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_cache_bypass $http_upgrade;
 
-## Security
+        # cors_params
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+        add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range';
+        add_header 'Access-Control-Expose-Headers' 'Content-Length,Content-Range';
+    }
 
-The security section here was starting to feel a bit too succinct for the complexity of the topic, so we created a post that covers the topic much more broadly here: https://jitsi.org/security
+    ```
+5. Change flags in aws instance file `/etc/jitsi/meet/[host]-config.js`:
+    ```
+    prejoinPageEnabled: true,
+    p2p:{
+        enabled: false
+    }
+    disableDeepLinking: true,
+    
+    //the name of the toolbar buttons to display in the toolbar
+    toolbarButtons: [
+        'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
+        'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
+        'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
+        'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts', 
+        'select-background', 'download', 'help', 'mute-everyone', 'mute-video-everyone', 
+        'security', 'meetingmediator', 'rifflocalrecording'
+    ],
+    ```
+    Also optional flags:
+    ```
+    disableSimulcast: true,
 
-The section on end-to-end encryption in that document is likely going to be one of the key points of interest: https://jitsi.org/security/#e2ee
+    // in case meetings recording by jibri is needed
+    fileRecordingsEnabled: true, 
 
-## Security issues
+    // depends on videobridge configuration
+    openBridgeChannel: 'websocket',
 
-For information on reporting security vulnerabilities in Jitsi Meet, see [SECURITY.md](./SECURITY.md).
-
-## Acknowledgements
-
-Jitsi Meet started out as a sample conferencing application using Jitsi Videobridge. It was originally developed by ESTOS' developer Philipp Hancke who then contributed it to the community where development continues with joint forces!
+    // in case we want jibri, but value itself different for every domain
+    hiddenDomain: 'recorder.example-domain.com',
+    ```

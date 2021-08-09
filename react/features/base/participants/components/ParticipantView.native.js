@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { Text, View } from 'react-native';
 
-import { YoutubeLargeVideo } from '../../../youtube-player';
+import { YoutubeLargeVideo } from '../../../shared-video/components';
 import { Avatar } from '../../avatar';
 import { translate } from '../../i18n';
 import { JitsiParticipantConnectionStatus } from '../../lib-jitsi-meet';
@@ -224,7 +224,7 @@ class ParticipantView extends Component<Props> {
                     onPress = { renderYoutubeLargeVideo ? undefined : onPress }
                     value = '' />
 
-                { renderYoutubeLargeVideo && <YoutubeLargeVideo youtubeId = { this.props.participantId } /> }
+                { renderYoutubeLargeVideo && <YoutubeLargeVideo youtubeUrl = { this.props.participantId } /> }
 
                 { !_isFakeParticipant && renderVideo
                     && <VideoTrack

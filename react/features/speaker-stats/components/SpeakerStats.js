@@ -6,6 +6,7 @@ import { Dialog } from '../../base/dialog';
 import { translate } from '../../base/i18n';
 import { getLocalParticipant } from '../../base/participants';
 import { connect } from '../../base/redux';
+import { maybeExtractIdFromDisplayName } from '../../riff-dashboard-page/functions';
 
 import SpeakerStatsItem from './SpeakerStatsItem';
 import SpeakerStatsLabels from './SpeakerStatsLabels';
@@ -144,6 +145,8 @@ class SpeakerStats extends Component<Props, State> {
                 = this.state.stats[userId].getDisplayName()
                     || interfaceConfig.DEFAULT_REMOTE_DISPLAY_NAME;
         }
+
+        displayName = maybeExtractIdFromDisplayName(displayName).displayName;
 
         return (
             <SpeakerStatsItem

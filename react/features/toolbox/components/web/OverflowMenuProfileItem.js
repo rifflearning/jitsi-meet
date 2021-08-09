@@ -6,6 +6,7 @@ import { Avatar } from '../../../base/avatar';
 import { translate } from '../../../base/i18n';
 import { getLocalParticipant } from '../../../base/participants';
 import { connect } from '../../../base/redux';
+import { maybeExtractIdFromDisplayName } from '../../../riff-dashboard-page/functions';
 
 declare var interfaceConfig: Object;
 
@@ -83,10 +84,10 @@ class OverflowMenuProfileItem extends Component<Props> {
                 <span className = 'overflow-menu-item-icon'>
                     <Avatar
                         participantId = { _localParticipant.id }
-                        size = { 24 } />
+                        size = { 20 } />
                 </span>
                 <span className = 'profile-text'>
-                    { displayName }
+                    { maybeExtractIdFromDisplayName(displayName).displayName }
                 </span>
             </li>
         );
@@ -120,7 +121,7 @@ class OverflowMenuProfileItem extends Component<Props> {
 function _mapStateToProps(state) {
     return {
         _localParticipant: getLocalParticipant(state),
-        _unclickable: !state['features/base/jwt'].isGuest
+        _unclickable: state['features/base/config'].disableProfile
             || !interfaceConfig.SETTINGS_SECTIONS.includes('profile')
     };
 }

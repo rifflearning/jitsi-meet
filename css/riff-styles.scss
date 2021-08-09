@@ -1,0 +1,276 @@
+$violetColor: #775e80;
+
+html body {
+  background-color: $defaultBackground;
+
+    #react #riff-dashboard-page-full {
+        background-color: $defaultBackground;
+        font-family: sans-serif;
+
+        h2 {
+            color: #ffffff;
+        }
+
+        .chart-card-container {
+                box-shadow: 0 1px 5px 0 rgba(#000000, 0.13);
+                background-color: #ffffff;
+        
+                .chart-card-title {
+                    line-height: 1.75;
+                    text-transform: uppercase;
+                    margin-bottom: 20px;
+                }        
+        
+            .loading-overlay {
+                background: #ffffff;
+            } 
+        
+            .empty-graph-text {
+                background: #ffffff;
+            }
+        
+            .amcharts-legend-container {
+                background: unset;
+            }
+        
+
+        }
+    }
+}
+
+.has-text-centered {
+    text-align: center !important;
+}
+
+.is-size-7 {
+    font-size: .75rem!important;
+}
+
+#meeting-mediator-wrapper {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    cursor: move;
+    pointer-events: all;
+
+    .chart-card-info-small {
+        box-sizing: border-box;
+    }
+    
+
+    &.closed {
+       display: none;
+    }
+
+     .chart-card-title {
+        justify-content: start !important;
+
+         .chart-card-toggle {
+             margin-left: 10px;
+        }
+    }
+
+     .meeting-mediator-close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        color: #4a4a4a;
+        cursor: pointer;
+        height: 24px;
+        width: 24px;
+        padding: 5px;
+        z-index: 1;
+
+        svg {
+            fill: #4a4a4a;
+        }
+    }
+}
+
+/* tooltip for meeting-mediator */
+body > .tooltip {
+    z-index: 1000;
+}
+
+.prejoin-preview-login-anon-btn {
+    width: 50% !important;
+    box-sizing: border-box;
+}
+
+.videocontainer__toolbar {
+    background-image: linear-gradient(to top,rgba(0,0,0,.6),rgba(0,0,0,0));
+}
+
+// fix bottom difference between indicators for using text-overflow: ellipsis
+.indicator-container {
+    overflow: hidden;
+}
+
+.indicator-container:nth-child(1) .username-indicator {
+    margin-left: 0;
+}
+
+.username-indicator-container {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 60%;
+    
+    &.username-indicator-filmstrip-view {
+        float: left !important;
+
+        .username-indicator {
+            margin-left: 10px;
+        }
+    }
+
+    div {
+        display: inline;
+    }
+}
+
+.username-indicator {
+    font-size: 8pt;
+    text-align: center;
+    color: #fff;
+    width: 12px;
+    line-height: 22px;
+    height: 22px;
+    padding: 0;
+    border: 0;
+    margin: 0 5px 0 5px;
+}
+
+// Participant name by default always show on video container
+// in order to improve the user experience.  
+.displayNameContainer {
+  display: none;
+}
+
+.large-video-labels .circular-label.file {
+    background: #99ae90;
+}
+
+.emotion-container {
+    justify-content: center;
+
+    .emotion-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .emotion-label {
+        font-size: 14px;
+        line-height: 1.43;
+        color: #4a4a4a;
+        margin-left: 5px;
+        margin-right: 10px;
+        font-weight: 700;
+    }
+}
+
+.emotional-chart-emoji {
+    font-size: 20px;
+}
+
+.prejoin-preview-dropdown-container .prejoin-preview-login-anon-text {
+    margin-top: 16px;
+    background: unset !important;
+    color: #ffffff;
+}
+
+.premeeting-screen {
+    .content input.field.focused {
+        box-shadow: 0 0 4px 3px $violetColor;
+    }
+    .action-btn .options:hover {
+        background-color: $primaryButtonHoverBackground;
+    }
+}
+
+.watermark {
+    width: 186px;
+    height: 74px;
+    z-index: 10;
+}
+
+.participants_pane-content button {
+    background: $primaryButtonBackground;
+
+        &:hover {
+            background: $primaryButtonHoverBackground;
+        }
+}
+
+.invite-more-dialog .copy-button {
+    background: $primaryButtonBackground;
+}
+
+// chat overrides 
+.chat-input-container.populated #chat-input .send-button {
+    background: $primaryButtonBackground;
+
+        &:hover {
+            background: $primaryButtonHoverBackground;
+        }
+}
+
+#chat-input {
+    &:focus-within {
+        border: 1px solid $riffViolet;
+    }
+    .jitsi-icon svg {
+        fill: #fff;
+    }
+}
+
+// video quality dialog overrides 
+.video-quality-dialog .video-quality-dialog-contents .video-quality-dialog-label-container.active {
+    color: $violetColor;
+
+    &::before {
+        background: $violetColor;
+    }
+}
+// security overrides
+.security-dialog.password-section .password-actions a {
+    color: $violetColor;
+}
+
+// start a live stream modal overrides
+.helper-link {
+    color: $violetColor;
+
+    &:hover {
+        color: $riffViolet;
+    }
+}
+
+// background dialog overrides
+.virtual-background-dialog {
+    .desktop-share-selected, .blur-selected, .slight-blur-selected,
+    .none-selected, .thumbnail-selected {
+        border-color: $riffViolet;
+    }
+
+    .desktop-share:hover, .thumbnail:hover, .blur:hover, .slight-blur:hover, .virtual-background-none:hover {
+        border-color: $violetColor;
+    }
+}
+
+.file-upload-label {
+    color: $riffViolet;
+
+    svg path {
+        fill: $riffViolet;
+    }
+}
+
+.device-selection .audio-output-preview a {
+    color: $violetColor;
+}
+
+.local-rec-label {
+    background-color: #E04757;
+}

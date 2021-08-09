@@ -10,6 +10,7 @@ import {
     getParticipantDisplayName
 } from '../base/participants';
 import { MiddlewareRegistry, StateListenerRegistry } from '../base/redux';
+import { maybeExtractIdFromDisplayName } from '../riff-dashboard-page/functions';
 
 import {
     clearNotifications,
@@ -69,7 +70,7 @@ MiddlewareRegistry.register(store => next => action => {
                 store.dispatch(showNotification({
                     descriptionKey: 'notify.disconnected',
                     titleKey: 'notify.somebody',
-                    title: participant.name
+                    title: maybeExtractIdFromDisplayName(participant.name).displayName
                 }, NOTIFICATION_TIMEOUT));
             }
         }

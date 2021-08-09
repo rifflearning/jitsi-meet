@@ -1,0 +1,25 @@
+// add variables
+$riffViolet:#93759e;
+$riffVioletDark:#775e80;
+
+$welcomePageTabContainerColor: #bda5c5;
+$welcomePageTabContainerTextColor: #3d2558;
+$welcomePageTabContainerItem: rgba(255,255,255,0.50);
+$welcomePageTabContainerItemHover: rgba(255,255,255,0.25);
+
+// override _light.scss theme
+$defaultBackground: #282725;
+$primaryButtonBackground: $riffVioletDark;
+$primaryButtonHoverBackground: $riffViolet;
+$overlayButtonBg: $riffViolet;
+$reloadProgressBarBg: $riffViolet;
+$popupSliderColor: #9603da;
+$videoQualityActive: $riffVioletDark;
+
+// override _variables.scss
+$welcomePageBackground: linear-gradient(-90deg, $defaultBackground 0%, $defaultBackground 50%, $defaultBackground 100%);
+$videoThumbnailSelected: $riffViolet;
+$videoThumbnailHovered:  rgba(147, 117, 158, 0.4);
+$dominantSpeakerBg: $riffViolet;
+$connectionIndicatorBg: $riffViolet;
+$audioLevelBg: $riffViolet;

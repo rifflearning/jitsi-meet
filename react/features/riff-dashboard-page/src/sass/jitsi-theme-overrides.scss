@@ -1,0 +1,44 @@
+html, body {
+  background-color: #282725;
+};
+
+// override styled components of navbar
+.navbar.is-transparent {
+  background-color: #282725;
+  
+  .nav-route-btns {
+    .nav-link {
+      background: #282725;
+      color: #fff;
+    }
+  }
+}
+
+#main-content-container {
+  color: #fff;
+  
+  .dashboard-view-component {
+    // background-image: linear-gradient(to bottom, $color-white, $color-selago);
+    background-image: linear-gradient(-90deg,#282725 0,#282725 50%,#282725 100%);
+    color: #fff;
+    
+    .meeting-list-component {
+      border-top-right-radius: 4px;
+    }
+
+    .meeting-info-component {
+      .meeting-name {
+        color: #fff;
+      }
+      .meeting-details {
+        color: #ffffffcc;
+    
+        h2 {
+          i {
+            color: rgba(255, 255, 255, 0.87);
+          }
+        }
+      }
+    }
+  }
+}

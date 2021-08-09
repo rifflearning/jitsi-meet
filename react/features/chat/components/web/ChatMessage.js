@@ -6,6 +6,7 @@ import { toArray } from 'react-emoji-render';
 
 import { translate } from '../../../base/i18n';
 import { Linkify } from '../../../base/react';
+import { maybeExtractIdFromDisplayName } from '../../../riff-dashboard-page/functions';
 import { MESSAGE_TYPE_LOCAL } from '../../constants';
 import AbstractChatMessage, {
     type Props
@@ -78,7 +79,7 @@ class ChatMessage extends AbstractChatMessage<Props> {
     _renderDisplayName() {
         return (
             <div className = 'display-name'>
-                { this.props.message.displayName }
+                { maybeExtractIdFromDisplayName(this.props.message.displayName).displayName }
             </div>
         );
     }

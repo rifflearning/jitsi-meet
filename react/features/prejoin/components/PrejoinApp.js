@@ -2,11 +2,14 @@
 
 import { AtlasKitThemeProvider } from '@atlaskit/theme';
 import React from 'react';
+import { batch } from 'react-redux';
 
 import { BaseApp } from '../../../features/base/app';
 import { setConfig } from '../../base/config';
+import { DialogContainer } from '../../base/dialog';
 import { createPrejoinTracks } from '../../base/tracks';
-import { initPrejoin } from '../actions';
+import { getConferenceOptions } from '../../conference/functions';
+import { initPrejoin, makePrecallTest } from '../actions';
 
 import Prejoin from './Prejoin';
 
@@ -21,6 +24,11 @@ type Props = {
      * Flag signaling the visibility of join label, input and buttons
      */
     showJoinActions: boolean,
+
+    /**
+     * Flag signaling the visibility of the skip prejoin toggle
+     */
+    showSkipPrejoin: boolean,
 };
 
 /**
@@ -42,13 +50,14 @@ export default class PrejoinApp extends BaseApp<Props> {
         this._init.then(async () => {
             const { store } = this.state;
             const { dispatch } = store;
-            const { showAvatar, showJoinActions } = this.props;
+            const { showAvatar, showJoinActions, showSkipPrejoin } = this.props;
 
             super._navigate({
                 component: Prejoin,
                 props: {
                     showAvatar,
-                    showJoinActions
+                    showJoinActions,
+                    showSkipPrejoin
                 }
             });
 
@@ -64,7 +73,10 @@ export default class PrejoinApp extends BaseApp<Props> {
 
             const tracks = await tryCreateLocalTracks;
 
-            dispatch(initPrejoin(tracks, errors));
+            batch(() => {
+                dispatch(initPrejoin(tracks, errors));
+                dispatch(makePrecallTest(getConferenceOptions(store.getState())));
+            });
         });
     }
 
@@ -88,6 +100,10 @@ export default class PrejoinApp extends BaseApp<Props> {
      * @returns {React$Element}
      */
     _renderDialogContainer() {
-        return null;
+        return (
+            <AtlasKitThemeProvider mode = 'dark'>
+                <DialogContainer />
+            </AtlasKitThemeProvider>
+        );
     }
 }

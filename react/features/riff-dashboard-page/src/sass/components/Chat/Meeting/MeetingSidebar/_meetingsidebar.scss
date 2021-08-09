@@ -1,0 +1,23 @@
+/* ******************************************************************************
+ * _meetingsidebar.scss                                                                     *
+ * *************************************************************************/ /**
+ *
+ * @fileoverview SCSS partial for components in Chat/Meeting/MeetingSidebar
+ *
+ * [More detail about the file's contents]
+ *
+ * Created on       May 27, 2019
+ * @author          Brec Hanson
+ *
+ * @copyright (c) 2019-present Riff Learning Inc.,
+ *            MIT License (see https://opensource.org/licenses/MIT)
+ *
+ * ******************************************************************************/
+
+.side-bar-icon {
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.side-bar-icon.is-danger {
+    color: rgba(0, 0, 0, 0.54);
+}

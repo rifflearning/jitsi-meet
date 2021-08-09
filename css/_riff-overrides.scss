@@ -1,0 +1,152 @@
+$modalFontColor: #c9c1df;
+$modalFontColorHover: #d7b3ffc2;
+$modalBackgroundColor: #2f3146;
+
+// _country-picker.scss overrides
+.cpick-input {
+    caret-color: $primaryButtonBackground;
+}
+
+// _premeeting-screens.scss overrides
+.premeeting-screen .action-btn.primary {
+    background: $primaryButtonBackground;
+    border: 1px solid $primaryButtonBackground;
+}
+
+// _invite_more.scss overrides
+.invite-more {
+    &-button {
+        background: $primaryButtonBackground;
+
+        &:hover {
+            background: $primaryButtonHoverBackground;
+        }
+    }
+    &-dialog {
+        &.copy-link {
+            background: $primaryButtonBackground;
+
+            &:hover {
+                background: $primaryButtonHoverBackground;
+            }
+        }
+
+        &.invite-buttons {
+            &-add {
+                background: $primaryButtonBackground;
+            }
+
+        }
+
+    }
+}
+
+// _welcome_page.scss overrides
+.welcome {
+    .header {
+        #enter_room {
+            .enter-room-input-container {
+                color: $welcomePageTabContainerTextColor;
+
+                ::placeholder {
+                    color: $welcomePageTabContainerTextColor;
+                }
+            }
+        }
+
+        .tab-container {
+            background: $welcomePageTabContainerColor;
+        }
+    }
+
+    .welcome-page-button {
+        background: $overlayButtonBg;
+    }
+}
+
+// _meetings_list.scss overrides
+.meetings-list {
+    color: $welcomePageTabContainerTextColor;
+
+    .button {
+        background: $overlayButtonBg;
+    }
+
+    .item {
+        background: $welcomePageTabContainerItem;
+
+        &.with-click-handler:hover {
+            background-color: $welcomePageTabContainerItemHover;
+        }
+    }
+}
+
+// modal overrides (styles of modals provided by styled-components Atlaskit)
+div[role=dialog]{
+    background-color: $modalBackgroundColor !important;
+    // color: $modalFontColor;
+
+    
+    #modal-dialog-ok-button {
+      background-color: $riffViolet;
+    }
+
+    #modal-dialog-cancel-button {
+        // color:$modalFontColor !important;
+
+        &:hover {
+          background-color: #413152;
+        }
+        &:active {
+          background-color: #dab3ff;
+          color: #7000cc !important;
+        }
+    }
+    
+    #modal-dialog-form {
+        // color: $modalFontColor !important;
+
+        [class^='Checkbox'] [role="presentation"] {
+            // color: red;
+        }
+
+        .device-selection .audio-input-preview .audio-input-preview-level {
+            background-color: $riffViolet;
+        }
+
+        button {
+            background-color: $riffViolet;
+            color: #ffffff !important;
+
+            :active {
+                background-color: $riffVioletDark;
+            }
+        }
+
+        [role=tab]{
+            color: $modalFontColor;
+
+            // &:focus, &[aria-selected=true]:focus {
+            //     box-shadow: 0 0 0 2px $riffViolet inset;
+            // }
+            &:hover {
+                color: $modalFontColorHover;
+            }
+            &:active {
+                color: $riffViolet;
+            }
+
+            &[aria-selected=true] {
+                color: $riffViolet;
+
+                span {
+                    background-color: $riffViolet;
+                }
+            }
+        }
+    }
+}
+
+div[role=presentation]{
+    background-color: rgba(13, 20, 36, 0.63);
+}

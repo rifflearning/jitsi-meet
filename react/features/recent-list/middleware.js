@@ -9,6 +9,7 @@ import {
 import { addKnownDomains } from '../base/known-domains';
 import { MiddlewareRegistry } from '../base/redux';
 import { parseURIString } from '../base/util';
+import { isRiffPlatformCurrentPath } from '../riff-platform/functions';
 
 import { _storeCurrentConference, _updateConferenceDuration } from './actions';
 import { isRecentListEnabled } from './functions';
@@ -96,7 +97,7 @@ function _conferenceWillLeave({ dispatch, getState }, next, action) {
          * It is better to use action.conference[JITSI_CONFERENCE_URL_KEY]
          * in order to make sure we get the url the conference is leaving
          * from (i.e. the room we are leaving from) because if the order of events
-         * is different, we cannot be guranteed that the location URL in base
+         * is different, we cannot be guaranteed that the location URL in base
          * connection is the url we are leaving from... not the one we are going to
          * (the latter happens on mobile -- if we use the web implementation);
          * however, the conference object on web does not have
@@ -128,7 +129,7 @@ function _conferenceWillLeave({ dispatch, getState }, next, action) {
 function _setRoom({ dispatch, getState }, next, action) {
     const { doNotStoreRoom } = getState()['features/base/config'];
 
-    if (!doNotStoreRoom && action.room) {
+    if (!doNotStoreRoom && action.room && !isRiffPlatformCurrentPath()) {
         const { locationURL } = getState()['features/base/connection'];
 
         if (locationURL) {

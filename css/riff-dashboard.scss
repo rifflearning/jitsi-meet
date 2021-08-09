@@ -1,0 +1,188 @@
+#main-content-container {
+    color: #fff;
+
+    h1 {
+        color: #fff;
+    }
+    
+    .dashboard-view-component {
+        background-image: linear-gradient(-90deg,#282725 0,#282725 50%,#282725 100%);
+        color: #fff;
+      
+      .meeting-list-component {
+          border-top-right-radius: 4px;
+      }
+  
+        .meeting-info-component {
+                .meeting-title {
+                color: #fff;
+                }
+                .meeting-details {
+                    color: #ffffff;
+            
+                h2 {
+                    font-size: 16px;
+                    margin-top: 0;
+                    i {
+                    color: rgba(255, 255, 255, 0.87);
+                    }
+                }
+            }
+        }
+    }
+}
+
+.chart-card-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 1px 5px 0 rgba(#000000, 0.13);
+    background-color: #ffffff;
+    box-sizing: border-box;
+    padding: 12px;
+    text-align: center;
+
+    .chart-card-box {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+
+        .chart-card-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            line-height: 1.75;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            color: #333333;
+        }
+        .chart-card-wrapper {
+            min-height: 0;
+            flex-grow: 1;
+            flex-shrink: 1;
+
+            .chart-card {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+        }
+    }
+    .chart-card-icon {
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        border: none;
+        background: 0 0;
+        padding: 0;
+    }
+
+    .loading-overlay {
+        background: #ffffff;
+    } 
+
+    .empty-graph-text {
+        background: #ffffff;
+        color: #333333;
+    }
+} 
+
+.chart-card-info-container {
+    background-color: rgba(229, 229, 229, .95);
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    padding: 12px;
+
+    .chart-card-icon-box {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        .chart-card-icon {
+            color: #333333;
+        }
+    }
+
+    .chart-card-info-box {    
+        margin: 0 2em;
+        color: #333333;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        white-space: pre-line;
+        font-size: 1rem;
+        overflow: auto;
+        padding: 0;
+        max-height: 95%;
+
+        @media screen and (max-width: 960px) {
+            margin: 0;
+        }
+
+        &::-webkit-scrollbar {
+            width: 2px;
+        }
+        
+        &.info-small {
+            padding: 2em .5em;
+            font-size: 0.75rem;
+        }
+    }
+}
+.emotion-legend-wrapper {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   padding-bottom: 10px;
+
+    .emotion-legend-container {
+        flex-wrap: wrap;
+        display: flex;
+        align-items: center;
+        padding: 6px;
+        justify-content: flex-start;
+
+        .emotion-legend-item {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 5px 10px;
+
+            &.hidden {
+                opacity: .5;
+            }
+
+            &.empty-dataset {
+                cursor: default;
+            }
+            
+            .left {
+                display: flex;
+                align-items: center;
+            }
+
+            .peer-color {
+                width: 10px;
+                height: 10px;
+                margin-right: 5px;
+                border-radius: 3px;
+            }
+
+            .legend-label {
+                font-size: 10px;
+                line-height: 1.43;
+                color: #4a4a4a;
+            }
+        }
+    }
+}

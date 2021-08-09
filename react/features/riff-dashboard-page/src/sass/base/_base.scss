@@ -1,0 +1,48 @@
+/* ******************************************************************************
+ * _base.scss                                                                   *
+ * *************************************************************************/ /**
+ *
+ * @fileoverview SCSS partial for site-wide styles
+ *
+ * [More detail about the file's contents]
+ *
+ * Created on       May 27, 2019
+ * @author          Brec Hanson
+ *
+ * @copyright (c) 2019-present Riff Learning Inc.,
+ *            MIT License (see https://opensource.org/licenses/MIT)
+ *
+ * ******************************************************************************/
+
+body {
+    background-color: $color-white;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    letter-spacing: normal;
+    font-stretch: normal;
+    font-style: normal;
+    letter-spacing: normal;
+    color: $color-mineShaft;
+}
+
+a:hover {
+    color: change-color($color-mauve, $alpha: 0.7);
+}
+
+.a11y-browser-alert {
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    position: fixed;
+    left: -1px;
+    bottom: -1px;
+}
+
+.is-clickable {
+    cursor: pointer;
+}
+
+.text-bold {
+    font-weight: bold;
+}

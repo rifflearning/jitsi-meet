@@ -2,7 +2,7 @@
 
 import React, { PureComponent } from 'react';
 
-import { IconShareDesktop } from '../../icons';
+import { maybeExtractIdFromDisplayName } from '../../../riff-dashboard-page/functions';
 import { getParticipantById } from '../../participants';
 import { connect } from '../../redux';
 import { getAvatarColor, getInitials } from '../functions';
@@ -12,7 +12,7 @@ import { StatelessAvatar } from '.';
 export type Props = {
 
     /**
-     * The string we base the initials on (this is generated from a list of precendences).
+     * The string we base the initials on (this is generated from a list of precedences).
      */
     _initialsBase: ?string,
 
@@ -39,6 +39,11 @@ export type Props = {
     displayName?: string,
 
     /**
+     * Whether or not to update the background color of the avatar
+     */
+    dynamicColor?: Boolean,
+
+    /**
      * ID of the element, if any.
      */
     id?: string,
@@ -59,6 +64,11 @@ export type Props = {
     status?: ?string,
 
     /**
+     * TestId of the element, if any.
+     */
+    testId?: string,
+
+    /**
      * URL of the avatar, if any.
      */
     url: ?string,
@@ -74,6 +84,15 @@ export const DEFAULT_SIZE = 65;
  * Implements a class to render avatars in the app.
  */
 class Avatar<P: Props> extends PureComponent<P, State> {
+    /**
+     * Default values for {@code Avatar} component's properties.
+     *
+     * @static
+     */
+    static defaultProps = {
+        dynamicColor: true
+    };
+
     /**
      * Instantiates a new {@code Component}.
      *
@@ -119,9 +138,11 @@ class Avatar<P: Props> extends PureComponent<P, State> {
             _loadableAvatarUrl,
             className,
             colorBase,
+            dynamicColor,
             id,
             size,
             status,
+            testId,
             url
         } = this.props;
         const { avatarFailed } = this.state;
@@ -134,6 +155,7 @@ class Avatar<P: Props> extends PureComponent<P, State> {
             onAvatarLoadError: undefined,
             size,
             status,
+            testId,
             url: undefined
         };
 
@@ -150,7 +172,10 @@ class Avatar<P: Props> extends PureComponent<P, State> {
         const initials = getInitials(_initialsBase);
 
         if (initials) {
-            avatarProps.color = getAvatarColor(colorBase || _initialsBase);
+            if (dynamicColor) {
+                avatarProps.color = getAvatarColor(colorBase || _initialsBase);
+            }
+
             avatarProps.initials = initials;
         }
 
@@ -184,18 +209,11 @@ class Avatar<P: Props> extends PureComponent<P, State> {
 export function _mapStateToProps(state: Object, ownProps: Props) {
     const { colorBase, displayName, participantId } = ownProps;
     const _participant: ?Object = participantId && getParticipantById(state, participantId);
-    const _initialsBase = _participant?.name ?? displayName;
-    const screenShares = state['features/video-layout'].screenShares || [];
-
-    let _loadableAvatarUrl = _participant?.loadableAvatarUrl;
-
-    if (participantId && screenShares.includes(participantId)) {
-        _loadableAvatarUrl = IconShareDesktop;
-    }
+    const _initialsBase = maybeExtractIdFromDisplayName(_participant?.name).displayName ?? displayName;
 
     return {
         _initialsBase,
-        _loadableAvatarUrl,
+        _loadableAvatarUrl: _participant?.loadableAvatarUrl,
         colorBase: !colorBase && _participant ? _participant.id : colorBase
     };
 }
