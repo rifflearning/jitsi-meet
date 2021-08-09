@@ -58,6 +58,23 @@ class ApiService {
     deleteMeeting = id => this.fetchWithJwt(`/meetings/${id}`, { method: 'delete' });
     deleteMeetingsRecurring = roomId => this.fetchWithJwt(`/meetingsRecurring/${roomId}`, { method: 'delete' });
     updateMeeting = (id, meeting) => this.putWithJwt(`/meetings/${id}`, { meeting });
+    fetchUserPersonalMeeting = () => {
+        return {
+            participantsVisited: [
+                '60239f107794a4005ee0b4ef'
+            ],
+            roomId: '60c8e3b68ff10a1df3636c4e',
+            _id: '60c8e3b68ff10a1df3636c4f',
+            createdBy: '60239f107794a4005ee0b4ef',
+            name: 'User`s Personal Meeting Room',
+            description: '',
+            dateStart: null,
+            dateEnd: null,
+            allowAnonymous: true,
+            waitForHost: false,
+            timezone: 'Europe/Kiev'
+        };
+    };
 
 
     joinMeeting = id => this.postWithJwt(`/meetings/${id}/join`);

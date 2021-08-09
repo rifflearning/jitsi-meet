@@ -11,9 +11,11 @@ import { useHistory } from 'react-router';
 
 import { connect } from '../../../base/redux';
 import { getMeetings, getMeetingsByGroup, setMeetingsListType } from '../../actions/meetings';
+import { getUserPersonalMeetingRoom } from '../../actions/personalMeeting';
 import * as ROUTES from '../../constants/routes';
 import { groupMeetingsByDays } from '../../functions';
 import Loader from '../Loader';
+import UserPersonalMeetingRoom from '../Meeting/PersonalMeeting';
 import StyledPaper from '../StyledPaper';
 
 import MeetingTabPanel from './MeetingTabPanel';
@@ -29,7 +31,8 @@ const useStyles = makeStyles(() => {
 
 const meetingListTypeMap = {
     upcoming: 0,
-    previous: 1
+    previous: 1,
+    pmr: 2
 };
 
 function getKeyByValue(object, value) {
@@ -67,18 +70,23 @@ function Meetings({
     isGroup,
     loading,
     meetingsListType,
-    updateMeetingsListType
+    updateMeetingsListType,
+    getPersonalMeetingRoom,
+    personalMeetingRoom
 }) {
 
     const classes = useStyles();
     const history = useHistory();
     const handleScheduleClick = useCallback(() => history.push(ROUTES.SCHEDULE), [ history ]);
 
+    console.log('meetingsListType', meetingsListType);
     useEffect(() => {
         if (isGroup) {
             getMeetingsListByGroup(meetingsListType);
         } else {
-            getMeetingsLists(meetingsListType);
+            meetingsListType === meetingListTypeMap[2]
+                ? getPersonalMeetingRoom()
+                : getMeetingsLists(meetingsListType);
         }
     }, [ meetingsListType ]);
 
@@ -87,7 +95,7 @@ function Meetings({
     // eslint-disable-next-line max-len
     const noMeetingDataText = `There are no ${meetingsListType} meetings. To schedule a new meeting click SCHEDULE A MEETING`;
 
-    const meetingsTabContent = Object.keys(groupedMeetings).length
+    const meetingsListTabContent = Object.keys(groupedMeetings).length
         ? (<MeetingsList
             groupedMeetings = { groupedMeetings }
             isGroup = { isGroup } />)
@@ -110,8 +118,10 @@ function Meetings({
                         item = { true }>
                         <Box pb = { 1 }>
                             <Tabs
-                                onChange = { (_event, type) =>
-                                    updateMeetingsListType(getKeyByValue(meetingListTypeMap, type)) }
+                                onChange = { (_event, type) => {
+                                    updateMeetingsListType(getKeyByValue(meetingListTypeMap, type));
+                                }
+                                }
                                 value = { meetingListTypeMap[meetingsListType] }>
                                 <Tab
                                     className = { classes.tab }
@@ -119,6 +129,9 @@ function Meetings({
                                 <Tab
                                     className = { classes.tab }
                                     label = 'Previous' />
+                                <Tab
+                                    className = { classes.tab }
+                                    label = 'Personal Meeting Room' />
                             </Tabs>
                         </Box>
                     </Grid>
@@ -141,12 +154,17 @@ function Meetings({
                         <MeetingTabPanel
                             index = { 0 }
                             value = { meetingListTypeMap[meetingsListType] }>
-                            { meetingsTabContent }
+                            { meetingsListTabContent }
                         </MeetingTabPanel>
                         <MeetingTabPanel
                             index = { 1 }
                             value = { meetingListTypeMap[meetingsListType] }>
-                            { meetingsTabContent }
+                            { meetingsListTabContent }
+                        </MeetingTabPanel>
+                        <MeetingTabPanel
+                            index = { 2 }
+                            value = { meetingListTypeMap[meetingsListType] }>
+                            <UserPersonalMeetingRoom meeting = { personalMeetingRoom } />
                         </MeetingTabPanel>
                     </Grid>}
             </Grid>
@@ -159,10 +177,12 @@ Meetings.propTypes = {
     getMeetingsLists: PropTypes.func,
 
     // isGroup - external prop for separate group (harvard), disable 'delete' button, fetch groupped meeting.
+    getPersonalMeetingRoom: PropTypes.func,
     isGroup: PropTypes.bool,
     loading: PropTypes.bool,
     meetingsListType: PropTypes.string,
     meetingsLists: PropTypes.array,
+    personalMeetingRoom: PropTypes.object,
     updateMeetingsListType: PropTypes.func
 };
 
@@ -170,7 +190,8 @@ const mapStateToProps = state => {
     return {
         meetingsLists: state['features/riff-platform'].meetings.meetingsLists,
         loading: state['features/riff-platform'].meetings.loading,
-        meetingsListType: state['features/riff-platform'].meetings.listType
+        meetingsListType: state['features/riff-platform'].meetings.listType,
+        personalMeetingRoom: state['features/riff-platform'].personalMeeting
     };
 };
 
@@ -178,7 +199,8 @@ const mapDispatchToProps = dispatch => {
     return {
         getMeetingsListByGroup: listType => dispatch(getMeetingsByGroup(listType)),
         getMeetingsLists: listType => dispatch(getMeetings(listType)),
-        updateMeetingsListType: listType => dispatch(setMeetingsListType(listType))
+        updateMeetingsListType: listType => dispatch(setMeetingsListType(listType)),
+        getPersonalMeetingRoom: () => dispatch(getUserPersonalMeetingRoom())
     };
 };
 
