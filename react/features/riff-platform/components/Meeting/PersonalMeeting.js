@@ -41,10 +41,8 @@ const useStyles = makeStyles(theme => {
                 paddingLeft: '0px'
             }
         },
-        meetingTimezone: {
-            opacity: 0.7,
-            fontSize: '0.9rem',
-            marginTop: '10px !important'
+        itemBox: {
+            padding: '0 16px'
         }
     };
 });
@@ -61,12 +59,15 @@ function UserPersonalMeetingRoom({
     fetchPersonalMeeting,
     loading,
     error,
-    user = {}
+    user = {},
+    showDetailsEnabled = false,
+    title
 }) {
 
     const classes = useStyles();
 
     const [ isLinkCopied, setLinkCopied ] = useState(false);
+    const [ isDetailsShown, setIsDetailsShown ] = useState(!showDetailsEnabled);
 
     useEffect(() => {
         if (!meeting._id) {
@@ -91,6 +92,8 @@ function UserPersonalMeetingRoom({
         return window.location.replace(`/${id}`);
     };
 
+    const handleShowDetails = value => setIsDetailsShown(value);
+
     const defineIcon = {
         true: <CheckCircleOutline />,
         false: <HighlightOffOutlined />
@@ -105,124 +108,160 @@ function UserPersonalMeetingRoom({
     }
 
     return (
-        <Grid
-            container = { true }
-            spacing = { 3 }>
-            <Grid
-                item = { true }
-                xs = { 12 }>
-                <StyledPaper>
+        <StyledPaper title = { title }>
+            { isDetailsShown
+                ? <Grid
+                    alignItems = 'center'
+                    className = { classes.container }
+                    container = { true }
+                    item = { true }
+                    spacing = { 4 }
+                    xs = { 12 }>
                     <Grid
                         alignItems = 'center'
-                        className = { classes.container }
                         container = { true }
-                        item = { true }
-                        spacing = { 4 }
-                        xs = { 12 } >
+                        item = { true }>
                         <Grid
-                            alignItems = 'center'
-                            container = { true }
-                            item = { true }>
-                            <Grid
-                                item = { true }
-                                md = { 2 }
-                                sm = { 3 }
-                                xs = { 12 }>
-                                <Typography>
-                                Name
-                                </Typography>
-                            </Grid>
-                            <Grid
-                                item = { true }
-                                md = { 10 }
-                                sm = { 8 }
-                                xs = { 12 } >
-                                <Typography>
-                                    {meeting.name}
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                        <Divider className = { classes.infoDivider } />
-                        <Grid
-                            alignItems = 'center'
-                            container = { true }
-                            item = { true }>
-                            <Grid
-                                item = { true }
-                                md = { 2 }
-                                sm = { 3 }
-                                xs = { 12 }>
-                                <Typography>
-                                    Meeting Options
-                                </Typography>
-                            </Grid>
-                            <Grid
-                                alignItems = 'center'
-                                className = { classes.rightColumn }
-                                container = { true }
-                                direction = 'column'
-                                item = { true }
-                                md = { 10 }
-                                sm = { 8 }
-                                spacing = { 2 }
-                                xs = { 12 }>
-                                <Grid
-                                    container = { true }
-                                    item = { true }>
-                                    <Box pr = { 1 }>{defineIcon[Boolean(meeting.waitForHost)]}</Box>
-                                    <Typography>
-                                       Wait for a host of the meeting
-                                    </Typography>
-                                </Grid>
-                                <Grid
-                                    container = { true }
-                                    item = { true }>
-                                    <Box pr = { 1 }>
-                                        {defineIcon[Boolean(meeting.forbidNewParticipantsAfterDateEnd)]}
-                                    </Box>
-                                    <Typography>
-                                        Forbid new participants after the meeting is over
-                                    </Typography>
-                                </Grid>
-                                <Grid
-                                    container = { true }
-                                    item = { true }>
-                                    <Box pr = { 1 }>{defineIcon[Boolean(meeting.allowAnonymous)]}</Box>
-                                    <Typography>
-                                         Allow guest users
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                        <Divider className = { classes.infoDivider } />
-                        <Grid
-                            alignItems = 'center'
-                            container = { true }
                             item = { true }
-                            spacing = { 3 }>
-                            <Button
-                                className = { classes.meetingButton }
-                                color = 'primary'
-                                onClick = { handleStartClick }
-                                variant = 'contained'>Start</Button>
-                            <Button
-                                className = { classes.meetingButton }
-                                color = { isLinkCopied ? 'default' : 'primary' }
-                                onClick = { handleLinkCopy }
-                                variant = { isLinkCopied ? 'text' : 'outlined' }>
-                                {isLinkCopied ? 'Copied!' : 'Copy link'}
-                            </Button>
-                            <Button
-                                className = { classes.meetingButton }
-                                color = 'default'
-
-                                // onClick = { handleEditClick }
-                                variant = 'outlined'>Edit</Button>
+                            md = { 2 }
+                            sm = { 3 }
+                            xs = { 12 }>
+                            <Typography>
+                                Name
+                            </Typography>
+                        </Grid>
+                        <Grid
+                            item = { true }
+                            md = { 10 }
+                            sm = { 8 }
+                            xs = { 12 } >
+                            <Typography>
+                                {meeting.name}
+                            </Typography>
                         </Grid>
                     </Grid>
-                </StyledPaper>
-            </Grid>
-        </Grid>
+                    <Divider className = { classes.infoDivider } />
+                    <Grid
+                        alignItems = 'center'
+                        container = { true }
+                        item = { true }>
+                        <Grid
+                            item = { true }
+                            md = { 2 }
+                            sm = { 3 }
+                            xs = { 12 }>
+                            <Typography>
+                                Meeting Options
+                            </Typography>
+                        </Grid>
+                        <Grid
+                            alignItems = 'center'
+                            className = { classes.rightColumn }
+                            container = { true }
+                            direction = 'column'
+                            item = { true }
+                            md = { 10 }
+                            sm = { 8 }
+                            spacing = { 2 }
+                            xs = { 12 }>
+                            <Grid
+                                container = { true }
+                                item = { true }>
+                                <Box pr = { 1 }>{defineIcon[Boolean(meeting.waitForHost)]}</Box>
+                                <Typography>
+                                       Wait for a host of the meeting
+                                </Typography>
+                            </Grid>
+                            <Grid
+                                container = { true }
+                                item = { true }>
+                                <Box pr = { 1 }>
+                                    {defineIcon[Boolean(meeting.forbidNewParticipantsAfterDateEnd)]}
+                                </Box>
+                                <Typography>
+                                        Forbid new participants after the meeting is over
+                                </Typography>
+                            </Grid>
+                            <Grid
+                                container = { true }
+                                item = { true }>
+                                <Box pr = { 1 }>{defineIcon[Boolean(meeting.allowAnonymous)]}</Box>
+                                <Typography>
+                                         Allow guest users
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Divider className = { classes.infoDivider } />
+                    <Grid
+                        alignItems = 'center'
+                        container = { true }
+                        item = { true }
+                        spacing = { 3 }>
+                        <Button
+                            className = { classes.meetingButton }
+                            color = 'primary'
+                            onClick = { handleStartClick }
+                            variant = 'contained'>Start</Button>
+                        <Button
+                            className = { classes.meetingButton }
+                            color = { isLinkCopied ? 'default' : 'primary' }
+                            onClick = { handleLinkCopy }
+                            variant = { isLinkCopied ? 'text' : 'outlined' }>
+                            {isLinkCopied ? 'Copied!' : 'Copy link'}
+                        </Button>
+                        <Button
+                            className = { classes.meetingButton }
+                            color = 'default'
+
+                            // onClick = { handleEditClick }
+                            variant = 'outlined'>Edit</Button>
+                        {showDetailsEnabled
+                           && <Button
+                               className = { classes.meetingButton }
+                               onClick = { () => handleShowDetails(false) }>
+                                    Hide details
+                           </Button>}
+                    </Grid>
+                </Grid>
+                : <Grid
+                    alignItems = 'center'
+                    className = { classes.itemBox }
+                    container = { true }
+                    justify = 'space-between'>
+                    <Grid
+                        item = { true }>
+                        <Typography>
+                            {meeting.name}
+                        </Typography>
+                    </Grid>
+                    <Grid
+                        alignItems = 'center'
+                        container = { true }
+                        item = { true }
+                        justify = 'flex-end'
+                        xs = { 6 }>
+                        <Button
+                            className = { classes.meetingButton }
+                            color = 'primary'
+                            onClick = { handleStartClick }
+                            variant = 'contained'>Start</Button>
+                        <Button
+                            className = { classes.meetingButton }
+                            color = { isLinkCopied ? 'default' : 'primary' }
+                            onClick = { handleLinkCopy }
+                            variant = { isLinkCopied ? 'text' : 'outlined' }>
+                            {isLinkCopied ? 'Copied!' : 'Copy link'}
+                        </Button>
+                        <Button
+                            className = { classes.meetingButton }
+                            onClick = { () => handleShowDetails(true) }>
+                                Show details
+                        </Button>
+                    </Grid>
+
+                </Grid>}
+        </StyledPaper>
     );
 }
 
@@ -231,6 +270,10 @@ UserPersonalMeetingRoom.propTypes = {
     fetchPersonalMeeting: PropTypes.func,
     loading: PropTypes.bool,
     meeting: PropTypes.object,
+
+    // uses for the possibility to show main content with show more details button
+    showDetailsEnabled: PropTypes.bool,
+    title: PropTypes.string,
     user: PropTypes.object
 };
 

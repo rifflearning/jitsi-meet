@@ -4,21 +4,35 @@ import React, { useEffect } from 'react';
 
 import { connect } from '../../base/redux';
 import { getMeetings } from '../actions/meetings';
+import { getUserPersonalMeetingRoom } from '../actions/personalMeeting';
 import { logout } from '../actions/signIn';
 import { groupMeetingsByDays } from '../functions';
 
+import UserPersonalMeetingRoom from './Meeting/PersonalMeeting';
 import MeetingsTable from './Meetings/MeetingsTable';
 import StyledPaper from './StyledPaper';
 
-const App = ({ doLogout, profileInfo, meetingsLists = [], getMeetingsLists, isAnon }) => {
+const UserProfile = ({
+    doLogout,
+    profileInfo,
+    meetingsLists = [],
+    getMeetingsLists,
+    isAnon,
+    personalRoom = {},
+    fetchPersonalRoom
+}) => {
     useEffect(() => {
         getMeetingsLists();
+        if (!personalRoom._id && profileInfo?.pmrId) {
+            fetchPersonalRoom(profileInfo.pmrId);
+        }
     }, []);
 
     const groupedMeetings = groupMeetingsByDays(meetingsLists);
 
     // eslint-disable-next-line max-len
     const noMeetingDataText = 'The user doesn`t have any upcoming meetings today. To schedule a new meeting click SCHEDULE A MEETING';
+    const noPersonalRoom = 'The user doesn`t have personal meeting room';
 
     return (
         <Grid
@@ -49,6 +63,16 @@ const App = ({ doLogout, profileInfo, meetingsLists = [], getMeetingsLists, isAn
             <Grid
                 item = { true }
                 xs = { 12 }>
+                {personalRoom._id
+                    ? <UserPersonalMeetingRoom
+                        meeting = { personalRoom }
+                        showDetailsEnabled = { true }
+                        title = 'Personal Room' />
+                    : noPersonalRoom}
+            </Grid>
+            <Grid
+                item = { true }
+                xs = { 12 }>
                 <StyledPaper title = 'Meetings for today:'>
                     {groupedMeetings.Today?.length
                         ? <MeetingsTable
@@ -61,11 +85,13 @@ const App = ({ doLogout, profileInfo, meetingsLists = [], getMeetingsLists, isAn
     );
 };
 
-App.propTypes = {
+UserProfile.propTypes = {
     doLogout: PropTypes.func,
+    fetchPersonalRoom: PropTypes.func,
     getMeetingsLists: PropTypes.func,
     isAnon: PropTypes.bool,
     meetingsLists: PropTypes.array,
+    personalRoom: PropTypes.object,
     profileInfo: PropTypes.object
 };
 
@@ -73,15 +99,17 @@ const mapStateToProps = state => {
     return {
         isAnon: Boolean(state['features/riff-platform'].signIn.user?.isAnon),
         profileInfo: state['features/riff-platform'].signIn.user,
-        meetingsLists: state['features/riff-platform'].meetings.meetingsLists
+        meetingsLists: state['features/riff-platform'].meetings.meetingsLists,
+        personalRoom: state['features/riff-platform'].personalMeeting.meeting
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         doLogout: obj => dispatch(logout(obj)),
-        getMeetingsLists: () => dispatch(getMeetings('upcoming'))
+        getMeetingsLists: () => dispatch(getMeetings('upcoming')),
+        fetchPersonalRoom: id => dispatch(getUserPersonalMeetingRoom(id))
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(UserProfile);

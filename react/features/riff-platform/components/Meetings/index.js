@@ -84,7 +84,7 @@ function Meetings({
         if (isGroup) {
             getMeetingsListByGroup(meetingsListType);
         } else {
-            //TODO refactor
+            // TODO refactor
             meetingsListType === meetingListTypeMap[2]
                 ? getPersonalMeetingRoom(pmrId)
                 : getMeetingsLists(meetingsListType);
@@ -165,7 +165,9 @@ function Meetings({
                         <MeetingTabPanel
                             index = { 2 }
                             value = { meetingListTypeMap[meetingsListType] }>
-                            <UserPersonalMeetingRoom meeting = { personalMeetingRoom } />
+                            <UserPersonalMeetingRoom
+                                meeting = { personalMeetingRoom }
+                                showDetailsEnabled = { false } />
                         </MeetingTabPanel>
                     </Grid>}
             </Grid>
