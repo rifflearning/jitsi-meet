@@ -72,20 +72,21 @@ function Meetings({
     meetingsListType,
     updateMeetingsListType,
     getPersonalMeetingRoom,
-    personalMeetingRoom
+    personalMeetingRoom,
+    pmrId
 }) {
 
     const classes = useStyles();
     const history = useHistory();
     const handleScheduleClick = useCallback(() => history.push(ROUTES.SCHEDULE), [ history ]);
 
-    console.log('meetingsListType', meetingsListType);
     useEffect(() => {
         if (isGroup) {
             getMeetingsListByGroup(meetingsListType);
         } else {
+            //TODO refactor
             meetingsListType === meetingListTypeMap[2]
-                ? getPersonalMeetingRoom()
+                ? getPersonalMeetingRoom(pmrId)
                 : getMeetingsLists(meetingsListType);
         }
     }, [ meetingsListType ]);
@@ -183,6 +184,9 @@ Meetings.propTypes = {
     meetingsListType: PropTypes.string,
     meetingsLists: PropTypes.array,
     personalMeetingRoom: PropTypes.object,
+
+    // user's personal meeting room id
+    pmrId: PropTypes.string,
     updateMeetingsListType: PropTypes.func
 };
 
@@ -191,7 +195,8 @@ const mapStateToProps = state => {
         meetingsLists: state['features/riff-platform'].meetings.meetingsLists,
         loading: state['features/riff-platform'].meetings.loading,
         meetingsListType: state['features/riff-platform'].meetings.listType,
-        personalMeetingRoom: state['features/riff-platform'].personalMeeting
+        personalMeetingRoom: state['features/riff-platform'].personalMeeting,
+        pmrId: state['features/riff-platform'].signIn.user.pmrId
     };
 };
 
@@ -200,7 +205,7 @@ const mapDispatchToProps = dispatch => {
         getMeetingsListByGroup: listType => dispatch(getMeetingsByGroup(listType)),
         getMeetingsLists: listType => dispatch(getMeetings(listType)),
         updateMeetingsListType: listType => dispatch(setMeetingsListType(listType)),
-        getPersonalMeetingRoom: () => dispatch(getUserPersonalMeetingRoom())
+        getPersonalMeetingRoom: id => dispatch(getUserPersonalMeetingRoom(id))
     };
 };
 

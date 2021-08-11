@@ -60,7 +60,8 @@ function UserPersonalMeetingRoom({
     meeting = {},
     fetchPersonalMeeting,
     loading,
-    error
+    error,
+    user = {}
 }) {
 
     const classes = useStyles();
@@ -69,7 +70,9 @@ function UserPersonalMeetingRoom({
 
     useEffect(() => {
         if (!meeting._id) {
-            fetchPersonalMeeting();
+            const pmrId = user.pmrId;
+
+            fetchPersonalMeeting(pmrId);
         }
     }, [ ]);
 
@@ -174,7 +177,9 @@ function UserPersonalMeetingRoom({
                                 <Grid
                                     container = { true }
                                     item = { true }>
-                                    <Box pr = { 1 }>{defineIcon[Boolean(meeting.forbidNewParticipantsAfterDateEnd)]}</Box>
+                                    <Box pr = { 1 }>
+                                        {defineIcon[Boolean(meeting.forbidNewParticipantsAfterDateEnd)]}
+                                    </Box>
                                     <Typography>
                                         Forbid new participants after the meeting is over
                                     </Typography>
@@ -225,20 +230,22 @@ UserPersonalMeetingRoom.propTypes = {
     error: PropTypes.string,
     fetchPersonalMeeting: PropTypes.func,
     loading: PropTypes.bool,
-    meeting: PropTypes.object
+    meeting: PropTypes.object,
+    user: PropTypes.object
 };
 
 const mapStateToProps = state => {
     return {
         loading: state['features/riff-platform'].personalMeeting.loading,
         error: state['features/riff-platform'].personalMeeting.error,
-        meeting: state['features/riff-platform'].personalMeeting.meeting
+        meeting: state['features/riff-platform'].personalMeeting.meeting,
+        user: state['features/riff-platform'].signIn.user
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        fetchPersonalMeeting: () => dispatch(getUserPersonalMeetingRoom())
+        fetchPersonalMeeting: id => dispatch(getUserPersonalMeetingRoom(id))
     };
 };
 

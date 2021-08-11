@@ -22,13 +22,13 @@ function personalMeetingFailure(error) {
     };
 }
 
-export function getUserPersonalMeetingRoom() {
+export function getUserPersonalMeetingRoom(id) {
     return async dispatch => {
-        dispatch(personalMeetingRequest());
+        dispatch(personalMeetingRequest(id));
         let meeting = null;
 
         try {
-            const res = api.fetchUserPersonalMeeting();
+            const res = await api.fetchMeetingByRoomId(id);
 
             if (res) {
                 meeting = res;
