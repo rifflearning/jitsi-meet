@@ -287,7 +287,8 @@ const SchedulerForm = ({
     updateError,
     updateLoading,
     isAnon,
-    doLogout
+    doLogout,
+    userName
 }) => {
     const classes = useStyles();
     const localUserTimezone = momentTZ.tz.guess();
@@ -331,6 +332,7 @@ const SchedulerForm = ({
     const [ multipleRooms, setmultipleRooms ] = useState(2);
 
     const [ changesMadeByUserActions, setChangesMadeByUserActions ] = useState(false);
+    const [ isPersonalRoom, setIsPersonalRoom ] = useState(false);
 
     const history = useHistory();
 
@@ -353,6 +355,7 @@ const SchedulerForm = ({
         if (meeting && isEditing) {
 
             setname(meeting.name);
+            setIsPersonalRoom(meeting.isPersonal);
 
             const meetingData = isEditAllMeetingsRecurring ? meeting.recurrenceOptions?.defaultOptions : meeting;
             const meetingTimezone = meeting.timezone ? meeting.timezone : localUserTimezone;
@@ -361,20 +364,21 @@ const SchedulerForm = ({
             setForbidNewParticipantsAfterDateEnd(meetingData.forbidNewParticipantsAfterDateEnd);
             setWaitForHost(meetingData.waitForHost);
             setAllowAnonymous(meetingData.allowAnonymous);
+            if (!meeting.isPersonal) {
+                if (meetingData.multipleRoomsQuantity) {
+                    setisMultipleRooms(true);
+                    setmultipleRooms(meetingData.multipleRoomsQuantity);
+                }
 
-            if (meetingData.multipleRoomsQuantity) {
-                setisMultipleRooms(true);
-                setmultipleRooms(meetingData.multipleRoomsQuantity);
+                const { durationH, durationM } = getMeetingDuration({ dateStart: meetingData.dateStart,
+                    dateEnd: meetingData.dateEnd });
+
+                setHours(durationH);
+                setMinutes(durationM);
+
+                setdate(momentTZ.tz(meetingData.dateStart, meetingTimezone));
+                setTimezone(meetingTimezone);
             }
-
-            const { durationH, durationM } = getMeetingDuration({ dateStart: meetingData.dateStart,
-                dateEnd: meetingData.dateEnd });
-
-            setHours(durationH);
-            setMinutes(durationM);
-
-            setdate(momentTZ.tz(meetingData.dateStart, meetingTimezone));
-            setTimezone(meetingTimezone);
 
             const meetingRecurrenceOptions = meeting.recurrenceOptions?.options;
 
@@ -514,8 +518,19 @@ const SchedulerForm = ({
             multipleRoomsQuantity: isMultipleRooms ? multipleRooms : null
         };
 
+        const personalMeetingData = {
+            dateStart: null,
+            dateEnd: null,
+            isPersonal: true
+        };
+
+        const meetingInfo = isPersonalRoom
+            ? { ...meetingData,
+                ...personalMeetingData }
+            : meetingData;
+
         if (!isEditing) {
-            return scheduleMeeting(meetingData, history);
+            return scheduleMeeting(meetingInfo, history);
         } else if (isEditing) {
             if (isEditAllMeetingsRecurring) {
                 return updateScheduleMeetingsRecurring(meeting.roomId,
@@ -536,7 +551,7 @@ const SchedulerForm = ({
             }
 
             return updateScheduleMeeting(meeting._id, { roomId: meeting.roomId,
-                ...meetingData }, history);
+                ...meetingInfo }, history);
 
         }
     };
@@ -694,6 +709,18 @@ const SchedulerForm = ({
 
     const timeZonesList = momentTZ.tz.names();
 
+    useEffect(() => {
+        if (isPersonalRoom) {
+            setname(`Personal meeting room by ${userName}`);
+            setWaitForHost(true);
+        } else {
+            setname('');
+            setWaitForHost(false);
+
+        }
+
+    }, [ isPersonalRoom ]);
+
     return (
         <form
             className = { classes.form }
@@ -743,6 +770,21 @@ const SchedulerForm = ({
             </Grid>
 
             <Grid
+                container>
+                <Grid
+                    item
+                    xs = { 12 }>
+                    <FormControlLabel
+                        label = 'Personal Meeting Room'
+                        control = { <Checkbox
+                            name = 'createPersonalRoom'
+                            checked = { isPersonalRoom }
+                            onChange = { e => setIsPersonalRoom(e.target.checked) } />
+                        } />
+                </Grid>
+            </Grid>
+            { !isPersonalRoom
+            && <Grid
                 container
                 alignItems = 'center'
                 spacing = { 2 }>
@@ -809,7 +851,6 @@ const SchedulerForm = ({
                         </Grid>
                     </MuiPickersUtilsProvider>
                 </Grid>
-
                 <Grid
                     item
                     xs = { 12 }
@@ -889,9 +930,8 @@ const SchedulerForm = ({
                                 margin = 'normal' />) } />
                     </Grid>
                 </Grid>
-            </Grid>
-
-            <Grid
+            </Grid> }
+            { !isPersonalRoom && <Grid
                 container
                 spacing = { 2 }>
                 <Grid
@@ -918,6 +958,7 @@ const SchedulerForm = ({
                 </Grid>
                 }
             </Grid>
+            }
             {recurringMeeting && !isEditOneOccurrence
                 && <Grid
                     container
@@ -1226,34 +1267,35 @@ const SchedulerForm = ({
                             onChange = { e => setWaitForHost(e.target.checked) } />
                         } />
                 </Grid>
-
-                <Grid
-                    item
-                    xs = { 12 }>
-                    <FormControlLabel
-                        label = 'Forbid new participants after the meeting is over'
-                        control = { <Checkbox
-                            name = 'forbidNewParticipantsAfterDateEnd'
-                            checked = { forbidNewParticipantsAfterDateEnd }
-                            onChange = { e => setForbidNewParticipantsAfterDateEnd(e.target.checked) } />
-                        } />
-                </Grid>
-
-                <Grid
-                    container
-                    spacing = { 2 }>
+                { !isPersonalRoom
+                && <>
                     <Grid
                         item
                         xs = { 12 }>
                         <FormControlLabel
-                            label = 'Multiple rooms in one meeting'
-                            control = { <Switch
-                                name = 'isMultipleRooms'
-                                checked = { isMultipleRooms }
-                                onChange = { e => setisMultipleRooms(e.target.checked) } />
+                            label = 'Forbid new participants after the meeting is over'
+                            control = { <Checkbox
+                                name = 'forbidNewParticipantsAfterDateEnd'
+                                checked = { forbidNewParticipantsAfterDateEnd }
+                                onChange = { e => setForbidNewParticipantsAfterDateEnd(e.target.checked) } />
                             } />
                     </Grid>
-                    {isMultipleRooms
+
+                    <Grid
+                        container
+                        spacing = { 2 }>
+                        <Grid
+                            item
+                            xs = { 12 }>
+                            <FormControlLabel
+                                label = 'Multiple rooms in one meeting'
+                                control = { <Switch
+                                    name = 'isMultipleRooms'
+                                    checked = { isMultipleRooms }
+                                    onChange = { e => setisMultipleRooms(e.target.checked) } />
+                                } />
+                        </Grid>
+                        {isMultipleRooms
                         && <Grid item>
                             <TextField
                                 id = 'multipleRooms'
@@ -1266,8 +1308,10 @@ const SchedulerForm = ({
                                     value = { el }>{ el }</MenuItem>))}
                             </TextField>
                         </Grid>
-                    }
-                </Grid>
+                        }
+                    </Grid>
+                </>
+                }
             </Grid>
 
             <Typography color = 'error'>
@@ -1326,7 +1370,8 @@ SchedulerForm.propTypes = {
     updateScheduleMeeting: PropTypes.func,
     updateScheduleMeetingRecurringSingleOccurrence: PropTypes.func,
     updateScheduleMeetingsRecurring: PropTypes.func,
-    userId: PropTypes.string
+    userId: PropTypes.string,
+    userName: PropTypes.string
 };
 
 const mapStateToProps = state => {
@@ -1336,7 +1381,9 @@ const mapStateToProps = state => {
         loading: state['features/riff-platform'].scheduler.loading,
         error: state['features/riff-platform'].scheduler.error,
         updateError: state['features/riff-platform'].scheduler.updateError,
-        updateLoading: state['features/riff-platform'].scheduler.updateLoading
+        updateLoading: state['features/riff-platform'].scheduler.updateLoading,
+        userName: state['features/riff-platform'].signIn.user?.displayName
+
     };
 };
 

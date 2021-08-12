@@ -13,9 +13,11 @@ import {
 import { CheckCircleOutline, HighlightOffOutlined } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router';
 
 import { connect } from '../../../base/redux';
 import { getUserPersonalMeetingRoom } from '../../actions/personalMeeting';
+import * as ROUTES from '../../constants/routes';
 import Loader from '../Loader';
 import StyledPaper from '../StyledPaper';
 
@@ -62,7 +64,7 @@ function UserPersonalMeetingRoom({
     showDetailsEnabled = false,
     title
 }) {
-
+    const history = useHistory();
     const classes = useStyles();
 
     const [ isLinkCopied, setLinkCopied ] = useState(false);
@@ -90,6 +92,12 @@ function UserPersonalMeetingRoom({
     };
 
     const handleShowDetails = value => setIsDetailsShown(value);
+
+    const handleEditClick = () => {
+        const url = `${ROUTES.MEETINGS}/${meeting._id}/edit`;
+
+        return history.push(url);
+    };
 
     const defineIcon = {
         true: <CheckCircleOutline />,
@@ -205,8 +213,7 @@ function UserPersonalMeetingRoom({
                         <Button
                             className = { classes.meetingButton }
                             color = 'default'
-
-                            // onClick = { handleEditClick }
+                            onClick = { handleEditClick }
                             variant = 'outlined'>Edit</Button>
                         {showDetailsEnabled
                            && <Button

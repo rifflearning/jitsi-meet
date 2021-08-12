@@ -301,42 +301,45 @@ function Meeting({
                             </Grid>
                         </Grid>
                         <Divider className = { classes.infoDivider } />
-                        <Grid
-                            alignItems = 'center'
-                            container = { true }
-                            item = { true }>
-                            <Grid
-                                item = { true }
-                                md = { 2 }
-                                sm = { 3 }
-                                xs = { 12 }>
-                                <Typography>
-                    Time
-                                </Typography>
-                            </Grid>
+                        { !meeting.isPersonal && <>
                             <Grid
                                 alignItems = 'center'
                                 container = { true }
-                                item = { true }
-                                md = { 10 }
-                                sm = { 8 }
-                                spacing = { 2 }
-                                xs = { 12 }>
-                                <Grid container = { true }>
+                                item = { true }>
+                                <Grid
+                                    item = { true }
+                                    md = { 2 }
+                                    sm = { 3 }
+                                    xs = { 12 }>
                                     <Typography>
-                                        {getFormattedDate(meeting.dateStart, meeting.dateEnd, meeting.timezone)}
+                    Time
                                     </Typography>
                                 </Grid>
-                                {meeting?.timezone && localUserTimezone !== meeting?.timezone
+                                <Grid
+                                    alignItems = 'center'
+                                    container = { true }
+                                    item = { true }
+                                    md = { 10 }
+                                    sm = { 8 }
+                                    spacing = { 2 }
+                                    xs = { 12 }>
+                                    <Grid container = { true }>
+                                        <Typography>
+                                            {getFormattedDate(meeting.dateStart, meeting.dateEnd, meeting.timezone)}
+                                        </Typography>
+                                    </Grid>
+                                    {meeting?.timezone && localUserTimezone !== meeting?.timezone
                                 && <Grid container = { true }>
                                     <Typography
                                         className = { classes.meetingTimezone }>
                                         {timezoneTimeInfo}
                                     </Typography>
                                 </Grid>}
+                                </Grid>
                             </Grid>
-                        </Grid>
-                        <Divider className = { classes.infoDivider } />
+                            <Divider className = { classes.infoDivider } />
+                        </>
+                        }
                         {meeting.recurrenceOptions
                         && <>
                             <Grid
