@@ -75,6 +75,18 @@ export function getMeetingById(meetingId) {
     };
 }
 
+export function markInterestingMoment(meetingId) {
+    return async (dispatch, getState) => {
+        try {
+            const { uid } = await getState()['features/riff-platform'].signIn.user;
+
+            await api.postInterestingMoment(meetingId, uid, new Date().toISOString());
+        } catch (error) {
+            return { error };
+        }
+    };
+}
+
 export function checkIsMeetingAllowed(meetingId) {
     return async (dispatch, getState) => {
         try {
