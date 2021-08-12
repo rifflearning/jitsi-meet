@@ -59,7 +59,6 @@ function UserPersonalMeetingRoom({
     fetchPersonalMeeting,
     loading,
     error,
-    user = {},
     showDetailsEnabled = false,
     title
 }) {
@@ -71,9 +70,7 @@ function UserPersonalMeetingRoom({
 
     useEffect(() => {
         if (!meeting._id) {
-            const pmrId = user.pmrId;
-
-            fetchPersonalMeeting(pmrId);
+            fetchPersonalMeeting();
         }
     }, [ ]);
 
@@ -99,12 +96,17 @@ function UserPersonalMeetingRoom({
         false: <HighlightOffOutlined />
     };
 
+    const noPersonalRoom = 'The user doesn`t have personal meeting room';
+
     if (loading) {
         return <Loader />;
     }
 
     if (error) {
         return errorMessage(error);
+    }
+    if (!meeting._id) {
+        return <StyledPaper title = { title }>{noPersonalRoom}</StyledPaper>;
     }
 
     return (
@@ -170,16 +172,6 @@ function UserPersonalMeetingRoom({
                                 <Box pr = { 1 }>{defineIcon[Boolean(meeting.waitForHost)]}</Box>
                                 <Typography>
                                        Wait for a host of the meeting
-                                </Typography>
-                            </Grid>
-                            <Grid
-                                container = { true }
-                                item = { true }>
-                                <Box pr = { 1 }>
-                                    {defineIcon[Boolean(meeting.forbidNewParticipantsAfterDateEnd)]}
-                                </Box>
-                                <Typography>
-                                        Forbid new participants after the meeting is over
                                 </Typography>
                             </Grid>
                             <Grid
@@ -259,7 +251,6 @@ function UserPersonalMeetingRoom({
                                 Show details
                         </Button>
                     </Grid>
-
                 </Grid>}
         </StyledPaper>
     );
@@ -273,22 +264,20 @@ UserPersonalMeetingRoom.propTypes = {
 
     // uses for the possibility to show main content with show more details button
     showDetailsEnabled: PropTypes.bool,
-    title: PropTypes.string,
-    user: PropTypes.object
+    title: PropTypes.string
 };
 
 const mapStateToProps = state => {
     return {
-        loading: state['features/riff-platform'].personalMeeting.loading,
-        error: state['features/riff-platform'].personalMeeting.error,
-        meeting: state['features/riff-platform'].personalMeeting.meeting,
-        user: state['features/riff-platform'].signIn.user
+        loading: state['features/riff-platform'].meetings.loading,
+        error: state['features/riff-platform'].meetings.error,
+        meeting: state['features/riff-platform'].personalMeeting.meeting
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        fetchPersonalMeeting: id => dispatch(getUserPersonalMeetingRoom(id))
+        fetchPersonalMeeting: () => dispatch(getUserPersonalMeetingRoom())
     };
 };
 

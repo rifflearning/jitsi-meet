@@ -1,6 +1,8 @@
 /* eslint-disable require-jsdoc */
 import api from '../api';
 import * as actionTypes from '../constants/actionTypes';
+import * as LIST_TYPES from '../constants/meetingsListTypes';
+
 
 function personalMeetingRequest() {
     return {
@@ -22,16 +24,16 @@ function personalMeetingFailure(error) {
     };
 }
 
-export function getUserPersonalMeetingRoom(id) {
+export function getUserPersonalMeetingRoom() {
     return async dispatch => {
-        dispatch(personalMeetingRequest(id));
+        dispatch(personalMeetingRequest());
         let meeting = null;
 
         try {
-            const res = await api.fetchMeetingByRoomId(id);
+            const res = await api.fetchMeetings(LIST_TYPES.PERSONAL);
 
-            if (res) {
-                meeting = res;
+            if (res.length) {
+                meeting = res[0];
                 dispatch(personalMeetingSuccess(meeting));
             } else {
                 dispatch(personalMeetingFailure('No personal meeting'));
