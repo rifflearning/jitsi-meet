@@ -25,6 +25,7 @@ import {
     IconRaisedHand,
     IconRec,
     IconShareAudio,
+    IconStar,
     IconShareDesktop
 } from '../../../base/icons';
 import JitsiMeetJS from '../../../base/lib-jitsi-meet';
@@ -52,6 +53,7 @@ import {
     LiveStreamButton,
     RecordButton
 } from '../../../recording';
+import { markInterestingMoment } from '../../../riff-platform/actions/meeting';
 import MeetingMediatorButton from '../../../riff-platform/components/DraggableMeetingMediator/MeetingMediatorButton';
 import RiffLocalRecordingButton from '../../../riff-platform/components/LocalRecorder/LocalRecordingButton';
 import { isScreenAudioShared, isScreenAudioSupported } from '../../../screen-share/';
@@ -241,6 +243,9 @@ type Props = {
      */
     dispatch: Function,
 
+    _riffPlatform: Object,
+    _markInterestingMoment: Function,
+
     /**
      * Invoked to obtain translated strings.
      */
@@ -290,6 +295,7 @@ class Toolbox extends Component<Props> {
         this._onToolbarToggleShareAudio = this._onToolbarToggleShareAudio.bind(this);
         this._onToolbarOpenLocalRecordingInfoDialog = this._onToolbarOpenLocalRecordingInfoDialog.bind(this);
         this._onShortcutToggleTileView = this._onShortcutToggleTileView.bind(this);
+        this._onToolbarClickInterestingMoment = this._onToolbarClickInterestingMoment.bind(this);
     }
 
     /**
@@ -885,6 +891,16 @@ class Toolbox extends Component<Props> {
     _onToolbarToggleRaiseHand: () => void;
 
     /**
+     * Marks current moment of conversation as interesting.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onToolbarClickInterestingMoment() {
+        this.props.dispatch(markInterestingMoment(this.props._riffPlatform.meeting.meeting._id));
+    }
+
+    /**
      * Creates an analytics toolbar event and dispatches an action for toggling
      * raise hand.
      *
@@ -1245,6 +1261,25 @@ class Toolbox extends Component<Props> {
                     text = { t(`toolbar.${_raisedHand ? 'lowerYourHand' : 'raiseYourHand'}`) } />);
         }
 
+        // HACK: _shouldShowButton doesn't want to show markmoment, despite defining it in all places
+        // if (!this.props._shouldShowButton('markmoment')) {
+        buttons.has('markmoment')
+            ? mainMenuAdditionalButtons.push(<ToolbarButton
+                accessibilityLabel = { t('toolbar.accessibilityLabel.markMoment') }
+                icon = { IconStar }
+                key = 'markmoment'
+                onClick = { this._onToolbarClickInterestingMoment }
+                toggled = { _raisedHand }
+                tooltip = { t('toolbar.markMoment') } />)
+            : overflowMenuAdditionalButtons.push(<OverflowMenuItem
+                accessibilityLabel = { t('toolbar.accessibilityLabel.markMoment') }
+                icon = { IconStar }
+                key = 'markmoment'
+                onClick = { this._onToolbarClickInterestingMoment }
+                text = { t('toolbar.markMoment') } />);
+
+        // }
+
         if (this.props._shouldShowButton('participants-pane') || this.props._shouldShowButton('invite')) {
             buttons.has('participants-pane')
                 ? mainMenuAdditionalButtons.push(
@@ -1413,6 +1448,7 @@ function _mapStateToProps(state) {
 
     return {
         _chatOpen: state['features/chat'].isOpen,
+        _riffPlatform: state['features/riff-platform'],
         _clientWidth: clientWidth,
         _conference: conference,
         _desktopSharingEnabled: desktopSharingEnabled,
