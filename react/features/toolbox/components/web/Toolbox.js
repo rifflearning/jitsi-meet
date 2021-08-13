@@ -243,8 +243,10 @@ type Props = {
      */
     dispatch: Function,
 
-    _riffPlatform: Object,
-    _markInterestingMoment: Function,
+    /**
+     * ID of current meeting in riff-jitsi-platform api-gateway
+     */
+    _meetingId: String,
 
     /**
      * Invoked to obtain translated strings.
@@ -897,7 +899,7 @@ class Toolbox extends Component<Props> {
      * @returns {void}
      */
     _onToolbarClickInterestingMoment() {
-        this.props.dispatch(markInterestingMoment(this.props._riffPlatform.meeting.meeting._id));
+        this.props.dispatch(markInterestingMoment(this.props._meetingId));
     }
 
     /**
@@ -1448,7 +1450,7 @@ function _mapStateToProps(state) {
 
     return {
         _chatOpen: state['features/chat'].isOpen,
-        _riffPlatform: state['features/riff-platform'],
+        _meetingId: state['features/riff-platform'].meeting.meeting._id,
         _clientWidth: clientWidth,
         _conference: conference,
         _desktopSharingEnabled: desktopSharingEnabled,
