@@ -31,6 +31,7 @@ import 'moment-recur';
 import { useHistory } from 'react-router';
 
 import { connect } from '../../../base/redux';
+import { getUserPersonalMeetingRoom } from '../../actions/personalMeeting';
 import { schedule,
     updateSchedule,
     updateScheduleRecurring,
@@ -288,7 +289,9 @@ const SchedulerForm = ({
     updateLoading,
     isAnon,
     doLogout,
-    userName
+    userName,
+    fetchPersonalMeeting,
+    personalMeeting
 }) => {
     const classes = useStyles();
     const localUserTimezone = momentTZ.tz.guess();
@@ -530,6 +533,12 @@ const SchedulerForm = ({
             : meetingData;
 
         if (!isEditing) {
+            if (personalMeeting?._id) {
+
+                return updateScheduleMeeting(personalMeeting._id, { roomId: personalMeeting.roomId,
+                    ...meetingInfo }, history);
+            }
+
             return scheduleMeeting(meetingInfo, history);
         } else if (isEditing) {
             if (isEditAllMeetingsRecurring) {
@@ -710,16 +719,29 @@ const SchedulerForm = ({
     const timeZonesList = momentTZ.tz.names();
 
     useEffect(() => {
-        if (isPersonalRoom) {
-            setname(`Personal meeting room by ${userName}`);
+        if (!isEditing) {
+            fetchPersonalMeeting();
+        }
+    }, [ ]);
+
+    useEffect(() => {
+        if (isPersonalRoom && !personalMeeting?._id) {
+            setname(`${userName}'s Personal Meeting Room`);
             setWaitForHost(true);
-        } else {
+        } else if (!isPersonalRoom) {
             setname('');
+            setdescription('');
             setWaitForHost(false);
+            setAllowAnonymous(true);
+        } else if (isPersonalRoom && personalMeeting?._id) {
+            setname(personalMeeting.name);
+            setdescription(personalMeeting.description);
+            setWaitForHost(personalMeeting.waitForHost);
+            setAllowAnonymous(personalMeeting.allowAnonymous);
 
         }
 
-    }, [ isPersonalRoom ]);
+    }, [ personalMeeting, isPersonalRoom ]);
 
     return (
         <form
@@ -730,6 +752,21 @@ const SchedulerForm = ({
             <Grid
                 container
                 spacing = { 1 }>
+                <Grid
+                    container>
+                    {!isEditing && !meeting?.isPersonal && <Grid
+                        item
+                        xs = { 12 }>
+                        <FormControlLabel
+                            label = 'Use Personal Meeting Room'
+                            control = { <Checkbox
+                                name = 'usePersonalRoom'
+                                checked = { isPersonalRoom }
+                                onChange = { e => setIsPersonalRoom(e.target.checked) } />
+                            } />
+                    </Grid>
+                    }
+                </Grid>
                 <Grid
                     item
                     xs = { 12 }
@@ -766,21 +803,6 @@ const SchedulerForm = ({
                         name = 'description'
                         value = { description }
                         onChange = { e => setdescription(e.target.value) } />
-                </Grid>
-            </Grid>
-
-            <Grid
-                container>
-                <Grid
-                    item
-                    xs = { 12 }>
-                    <FormControlLabel
-                        label = 'Personal Meeting Room'
-                        control = { <Checkbox
-                            name = 'createPersonalRoom'
-                            checked = { isPersonalRoom }
-                            onChange = { e => setIsPersonalRoom(e.target.checked) } />
-                        } />
                 </Grid>
             </Grid>
             { !isPersonalRoom
@@ -1382,8 +1404,8 @@ const mapStateToProps = state => {
         error: state['features/riff-platform'].scheduler.error,
         updateError: state['features/riff-platform'].scheduler.updateError,
         updateLoading: state['features/riff-platform'].scheduler.updateLoading,
-        userName: state['features/riff-platform'].signIn.user?.displayName
-
+        userName: state['features/riff-platform'].signIn.user?.displayName,
+        personalMeeting: state['features/riff-platform'].personalMeeting.meeting
     };
 };
 
@@ -1395,7 +1417,8 @@ const mapDispatchToProps = dispatch => {
         updateScheduleMeetingsRecurring: (roomId, meeting, history) =>
             dispatch(updateScheduleRecurring(roomId, meeting, history)),
         updateScheduleMeetingRecurringSingleOccurrence: (roomId, id, meeting, history) =>
-            dispatch(updateScheduleRecurringSingleOccurrence(roomId, id, meeting, history))
+            dispatch(updateScheduleRecurringSingleOccurrence(roomId, id, meeting, history)),
+        fetchPersonalMeeting: () => dispatch(getUserPersonalMeetingRoom())
     };
 };
 

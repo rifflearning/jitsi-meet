@@ -402,14 +402,14 @@ function Meeting({
                                        Wait for a host of the meeting
                                     </Typography>
                                 </Grid>
-                                <Grid
+                                { !meeting.isPersonal && <Grid
                                     container = { true }
                                     item = { true }>
                                     <Box pr = { 1 }>{defineIcon[meeting.forbidNewParticipantsAfterDateEnd]}</Box>
                                     <Typography>
                                         Forbid new participants after the meeting is over
                                     </Typography>
-                                </Grid>
+                                </Grid> }
                                 <Grid
                                     container = { true }
                                     item = { true }>
@@ -487,11 +487,11 @@ function Meeting({
                                     variant = 'outlined'>
                              Edit
                                 </Button>
-                                <Button
+                                { !meeting.isPersonal && <Button
                                     className = { classes.meetingButton }
                                     onClick = { handleDeleteClick }>
                                         Delete
-                                </Button>
+                                </Button> }
                                     </>
                             }
                             <ConfirmationDialogRaw

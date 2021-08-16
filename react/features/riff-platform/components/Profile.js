@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 
 import { connect } from '../../base/redux';
 import { getMeetings } from '../actions/meetings';
+import { getUserPersonalMeetingRoom } from '../actions/personalMeeting';
 import { logout } from '../actions/signIn';
 import * as LIST_TYPES from '../constants/meetingsListTypes';
 import { groupMeetingsByDays } from '../functions';
@@ -19,15 +20,13 @@ const UserProfile = ({
     meetingsLists = [],
     getMeetingsLists,
     isAnon,
-    personalRoom = {},
-    fetchPersonalRoom
+    personalMeeting = {},
+    fetchPersonalMeeting
 }) => {
 
     useEffect(() => {
         getMeetingsLists();
-        if (!personalRoom._id) {
-            fetchPersonalRoom();
-        }
+        fetchPersonalMeeting();
     }, []);
 
     const groupedMeetings = groupMeetingsByDays(meetingsLists);
@@ -61,14 +60,15 @@ const UserProfile = ({
                 </StyledPaper>
 
             </Grid>
-            <Grid
+            {personalMeeting?._id && <Grid
                 item = { true }
                 xs = { 12 }>
                 <UserPersonalMeetingRoom
-                    meeting = { personalRoom }
+                    meeting = { personalMeeting }
                     showDetailsEnabled = { true }
                     title = 'Personal Room' />
             </Grid>
+            }
             <Grid
                 item = { true }
                 xs = { 12 }>
@@ -86,11 +86,11 @@ const UserProfile = ({
 
 UserProfile.propTypes = {
     doLogout: PropTypes.func,
-    fetchPersonalRoom: PropTypes.func,
+    fetchPersonalMeeting: PropTypes.func,
     getMeetingsLists: PropTypes.func,
     isAnon: PropTypes.bool,
     meetingsLists: PropTypes.array,
-    personalRoom: PropTypes.object,
+    personalMeeting: PropTypes.object,
     profileInfo: PropTypes.object
 };
 
@@ -99,7 +99,7 @@ const mapStateToProps = state => {
         isAnon: Boolean(state['features/riff-platform'].signIn.user?.isAnon),
         profileInfo: state['features/riff-platform'].signIn.user,
         meetingsLists: state['features/riff-platform'].meetings.meetingsLists,
-        personalRoom: state['features/riff-platform'].meetings.meetingsLists?.find(m => m.isPersonal)
+        personalMeeting: state['features/riff-platform'].personalMeeting.meeting
     };
 };
 
@@ -107,7 +107,7 @@ const mapDispatchToProps = dispatch => {
     return {
         doLogout: obj => dispatch(logout(obj)),
         getMeetingsLists: () => dispatch(getMeetings(LIST_TYPES.UPCOMING)),
-        fetchPersonalRoom: () => dispatch(getMeetings(LIST_TYPES.PERSONAL))
+        fetchPersonalMeeting: () => dispatch(getUserPersonalMeetingRoom())
     };
 };
 
