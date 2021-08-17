@@ -734,7 +734,8 @@ const SchedulerForm = ({
     useEffect(() => {
         if (!isEditing) {
             if (isPersonalRoom && !personalMeeting?._id) {
-                setname(`${userName}'s Personal Meeting Room`);
+                setname(`${userName}'s Meeting`);
+                setdescription(`${userName}'s Personal Meeting Room`);
                 setWaitForHost(true);
             } else if (isPersonalRoom && personalMeeting?._id) {
                 setname(personalMeeting.name);

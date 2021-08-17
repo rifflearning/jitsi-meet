@@ -66,7 +66,7 @@ const UserProfile = ({
                 <UserPersonalMeetingRoom
                     meeting = { personalMeeting }
                     showDetailsEnabled = { true }
-                    title = 'Personal Room' />
+                    title = 'Personal Meeting Room' />
             </Grid>
             }
             <Grid
