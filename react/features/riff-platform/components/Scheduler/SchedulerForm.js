@@ -13,9 +13,11 @@ import {
     TextField,
     Typography,
     Radio,
-    Switch
+    Switch,
+    Tooltip
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import InfoIcon from '@material-ui/icons/Info';
 import { Autocomplete } from '@material-ui/lab';
 import Alert from '@material-ui/lab/Alert';
 import {
@@ -82,6 +84,12 @@ const useStyles = makeStyles(theme => {
             '&:read-only': {
                 color: '#ffffff'
             }
+        },
+        labelWithTooltip: {
+            marginRight: '5px'
+        },
+        infoIcon: {
+            fontSize: '1rem'
         }
     };
 });
@@ -719,7 +727,7 @@ const SchedulerForm = ({
     const timeZonesList = momentTZ.tz.names();
 
     useEffect(() => {
-        if (!isEditing) {
+        if (!isEditing && !personalMeeting?._id) {
             fetchPersonalMeeting();
         }
     }, [ ]);
@@ -757,13 +765,22 @@ const SchedulerForm = ({
                     {!isEditing && !meeting?.isPersonal && <Grid
                         item
                         xs = { 12 }>
-                        <FormControlLabel
-                            label = 'Use Personal Meeting Room'
-                            control = { <Checkbox
-                                name = 'usePersonalRoom'
-                                checked = { isPersonalRoom }
-                                onChange = { e => setIsPersonalRoom(e.target.checked) } />
-                            } />
+                            <>
+                                <FormControlLabel
+                                    // eslint-disable-next-line max-len
+                                    label = { personalMeeting?._id ? 'Use Personal Meeting Room' : 'Personalize your meeting' }
+                                    className = { classes.labelWithTooltip }
+                                    control = { <Checkbox
+                                        name = 'usePersonalRoom'
+                                        checked = { isPersonalRoom }
+                                        onChange = { e => setIsPersonalRoom(e.target.checked) } />
+                                    } />
+                                <Tooltip
+                                    title = 'Use this to meet anytime'
+                                    placement = 'right-start'>
+                                    <InfoIcon className = { classes.infoIcon } />
+                                </Tooltip>
+                        </>
                     </Grid>
                     }
                 </Grid>
