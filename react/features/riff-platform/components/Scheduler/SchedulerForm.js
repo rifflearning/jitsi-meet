@@ -364,9 +364,8 @@ const SchedulerForm = ({
 
     useEffect(() => {
         if (meeting && isEditing) {
-
             setname(meeting.name);
-            setIsPersonalRoom(meeting.isPersonal);
+            setIsPersonalRoom(Boolean(meeting.isPersonal));
 
             const meetingData = isEditAllMeetingsRecurring ? meeting.recurrenceOptions?.defaultOptions : meeting;
             const meetingTimezone = meeting.timezone ? meeting.timezone : localUserTimezone;
@@ -727,28 +726,28 @@ const SchedulerForm = ({
     const timeZonesList = momentTZ.tz.names();
 
     useEffect(() => {
-        if (!isEditing && !personalMeeting?._id) {
+        if (!isEditing) {
             fetchPersonalMeeting();
         }
     }, [ ]);
 
     useEffect(() => {
-        if (isPersonalRoom && !personalMeeting?._id) {
-            setname(`${userName}'s Personal Meeting Room`);
-            setWaitForHost(true);
-        } else if (!isPersonalRoom) {
-            setname('');
-            setdescription('');
-            setWaitForHost(false);
-            setAllowAnonymous(true);
-        } else if (isPersonalRoom && personalMeeting?._id) {
-            setname(personalMeeting.name);
-            setdescription(personalMeeting.description);
-            setWaitForHost(personalMeeting.waitForHost);
-            setAllowAnonymous(personalMeeting.allowAnonymous);
-
+        if (!isEditing) {
+            if (isPersonalRoom && !personalMeeting?._id) {
+                setname(`${userName}'s Personal Meeting Room`);
+                setWaitForHost(true);
+            } else if (isPersonalRoom && personalMeeting?._id) {
+                setname(personalMeeting.name);
+                setdescription(personalMeeting.description);
+                setWaitForHost(personalMeeting.waitForHost);
+                setAllowAnonymous(personalMeeting.allowAnonymous);
+            } else if (!isPersonalRoom) {
+                setname('');
+                setdescription('');
+                setWaitForHost(false);
+                setAllowAnonymous(true);
+            }
         }
-
     }, [ personalMeeting, isPersonalRoom ]);
 
     return (
