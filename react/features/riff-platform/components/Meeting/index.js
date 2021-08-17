@@ -175,7 +175,14 @@ function Meeting({
 
     const handleDeleteClick = () => setisOpenDeleteDialog(true);
 
-    const handleEditClick = () => setIsOpenEditDialog(true);
+    const handleEditClick = () => {
+        const id = meeting.multipleRoomsQuantity ? `${meeting._id}-${multipleRoom}` : meeting._id;
+
+        if (!meeting.recurringParentMeetingId) {
+            return history.push(`${ROUTES.MEETINGS}/${id}/edit`);
+        }
+        setIsOpenEditDialog(true);
+    };
 
     const defineIcon = {
         true: <CheckCircleOutline />,
@@ -201,9 +208,7 @@ function Meeting({
         const id = meeting.multipleRoomsQuantity ? `${meeting._id}-${multipleRoom}` : meeting._id;
         const url = `${ROUTES.MEETINGS}/${id}/edit`;
 
-        if (value === 'Edit one meeting' && !meeting.recurringParentMeetingId) {
-            return history.push(url);
-        } else if (value === 'Edit all recurring meetings') {
+        if (value === 'Edit all recurring meetings') {
             return history.push(`${url}?mode=all`);
         } else if (value === 'Edit one meeting' && meeting.recurringParentMeetingId) {
             return history.push(`${url}?mode=one`);
