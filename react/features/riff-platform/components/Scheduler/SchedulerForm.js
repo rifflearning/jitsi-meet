@@ -540,7 +540,7 @@ const SchedulerForm = ({
             : meetingData;
 
         if (!isEditing) {
-            if (personalMeeting?._id) {
+            if (isPersonalRoom && personalMeeting?._id) {
 
                 return updateScheduleMeeting(personalMeeting._id, { roomId: personalMeeting.roomId,
                     ...meetingInfo }, history);
