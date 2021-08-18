@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 
 import API from '../../../api';
 import ChartCard from '../ChartCard/ChartCard';
+import { Colors } from '../colorHelper';
 import { getSelectedMeeting } from '../utils';
 
 const InterestingMoments = props => {
@@ -74,6 +75,8 @@ const InterestingMoments = props => {
 
         bullet.tooltipText = '{userName}, {time}: {value.workingValue.formatNumber(\'#.\')}';
         bullet.strokeWidth = 3;
+
+        bullet.fill = am4core.color(Colors.riffViolet);
         bullet.stroke = am4core.color('#ffffff');
         bullet.strokeOpacity = 0;
 
