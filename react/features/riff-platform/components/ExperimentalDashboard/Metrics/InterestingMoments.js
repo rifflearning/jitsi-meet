@@ -95,7 +95,6 @@ const InterestingMoments = props => {
         hoverState.properties.strokeOpacity = 1;
 
         chart.scrollbarX = new am4core.Scrollbar();
-        chart.scrollbarX.parent = chart.bottomAxesContainer;
 
         chartRef.current = chart;
 
