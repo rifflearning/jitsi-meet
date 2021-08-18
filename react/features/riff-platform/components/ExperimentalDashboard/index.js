@@ -31,6 +31,7 @@ import { ScaleLoader } from 'react-spinners';
 import Affirmations from './Metrics/Affirmations';
 import EmotionsChart from './Metrics/EmotionsChart';
 import Influence from './Metrics/Influence';
+import InterestingMoments from './Metrics/InterestingMoments';
 import Interruptions from './Metrics/Interruptions';
 import SpeakingTime from './Metrics/SpeakingTime';
 import Timeline from './Metrics/TimelineChart';
@@ -266,6 +267,11 @@ class DashboardView extends React.Component {
                                         className = 'metric-row'
                                         style = { timelineRowStyle }>
                                         <Timeline />
+                                    </div>
+                                    <div
+                                        className = 'metric-row'
+                                        style = { timelineRowStyle }>
+                                        <InterestingMoments />
                                     </div>
                                     <div
                                         className = 'metric-row'

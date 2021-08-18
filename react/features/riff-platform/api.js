@@ -3,8 +3,7 @@
 /* eslint-disable valid-jsdoc */
 /* eslint-disable no-invalid-this */
 import { jwt } from './functions';
-
-// import { mockFetchEmotions, mockFetchUserNames } from './mockData';
+import { mockFetchEmotions } from './mockData';
 
 const API_GATEWAY_LINK = process.env.API_GATEWAY;
 
@@ -63,9 +62,9 @@ class ApiService {
     joinMeeting = id => this.postWithJwt(`/meetings/${id}/join`);
 
     // emotions
-    fetchEmotions = meetingId => this.fetchWithJwt(`/emotion/roomid/${meetingId}`);
+    // fetchEmotions = meetingId => this.fetchWithJwt(`/emotion/roomid/${meetingId}`);
 
-    // fetchEmotions = mockFetchEmotions;
+    fetchEmotions = mockFetchEmotions;
 
     // interesting moments
     postInterestingMoment = (meetingId, submittedBy, time) =>
@@ -73,6 +72,9 @@ class ApiService {
             submittedBy,
             time
         })
+
+    fetchInterestingMoments = meetingId => this.fetchWithJwt(`/meetings/${meetingId}/interestingMoments`);
+
 
     // helper, returns userObj if authenticated, otherwise null
     isAuth = async () => {
