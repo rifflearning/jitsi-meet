@@ -16,15 +16,23 @@ import { ExperimentalDashboard } from '@rifflearning/riff-metrics';
 import React from 'react';
 
 import EmotionsChart from './Metrics/EmotionsChart';
+import InterestingMoments from './Metrics/InterestingMoments';
 
 const tallMetricRowStyle = { height: '450px' };
 
 const jitsiExpMetrics = (
-    <div
-        className = 'metric-row'
-        style = { tallMetricRowStyle }>
-        <EmotionsChart />
-    </div>
+    <>
+        <div
+            className = 'metric-row'
+            style = { tallMetricRowStyle }>
+            <InterestingMoments />
+        </div>
+        <div
+            className = 'metric-row'
+            style = { tallMetricRowStyle }>
+            <EmotionsChart />
+        </div>
+    </>
 );
 
 const DashboardPage = () => (
