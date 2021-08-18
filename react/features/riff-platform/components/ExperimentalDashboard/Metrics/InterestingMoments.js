@@ -41,6 +41,10 @@ const InterestingMoments = props => {
         const yAxis = chart.yAxes.push(new am4charts.CategoryAxis());
 
         yAxis.dataFields.category = 'userName';
+        xAxis.dateFormats.setKey('hour', 'h:mm a');
+        xAxis.dateFormats.setKey('minute', 'h:mm a');
+        xAxis.dateFormats.setKey('second', 'h:mm:ss a');
+        xAxis.dateFormats.setKey('millisecond', 'h:mm:ss SSS a');
 
         xAxis.renderer.minGridDistance = 40;
         xAxis.dataFields.category = 'time';
@@ -73,7 +77,7 @@ const InterestingMoments = props => {
         image.horizontalCenter = 'middle';
         image.verticalCenter = 'middle';
 
-        bullet.tooltipText = '{userName}, {time}: {value.workingValue.formatNumber(\'#.\')}';
+        bullet.tooltipText = 'Interesting moment at {time.formatDate("hh:mm:ss a")}';
         bullet.strokeWidth = 3;
 
         bullet.fill = am4core.color(Colors.riffViolet);
