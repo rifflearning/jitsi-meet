@@ -16,20 +16,31 @@ const InterestingMoments = props => {
     useEffect(() => {
         if (meeting) {
             API.fetchInterestingMoments(meeting.room).then(res => {
-                setInterestingMoments(res);
+                setInterestingMoments(res.map(m => {
+                    return {
+                        userName: m.userName,
+                        time: new Date(m.time)
+                    };
+                }));
             });
         }
     }, [ meeting ]);
 
     useLayoutEffect(() => {
+        if (interestingMoments.length === 0) {
+            return;
+        }
+
         const chart = am4core.create('interesting-moments-plot-div', am4charts.XYChart);
 
+        chart.data = interestingMoments;
         chart.maskBullets = false;
 
         const xAxis = chart.xAxes.push(new am4charts.DateAxis());
         const yAxis = chart.yAxes.push(new am4charts.CategoryAxis());
 
         yAxis.dataFields.category = 'userName';
+
         xAxis.renderer.minGridDistance = 40;
         xAxis.dataFields.category = 'time';
 
@@ -41,6 +52,9 @@ const InterestingMoments = props => {
         xAxis.renderer.ticks.template.disabled = true;
 
         const series = chart.series.push(new am4charts.ColumnSeries());
+
+        series.dateFormatter = new am4core.DateFormatter();
+        series.dateFormatter.dateFormat = 'hh:mm:ss';
 
         series.dataFields.categoryY = 'userName';
         series.dataFields.dateX = 'time';
@@ -72,8 +86,6 @@ const InterestingMoments = props => {
         const hoverState = bullet.states.create('hover');
 
         hoverState.properties.strokeOpacity = 1;
-
-        chart.data = interestingMoments;
 
         chart.scrollbarX = new am4core.Scrollbar();
         chart.scrollbarX.parent = chart.bottomAxesContainer;
