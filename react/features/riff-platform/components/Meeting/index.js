@@ -158,7 +158,8 @@ function Meeting({
             : meeting.roomId;
 
         // onclick Copy button copy meeting link + description, Beth's request
-        const description = meeting.description ? ` ${meeting.description}` : '';
+        // but not for the personal meeting room
+        const description = meeting.description && !meeting.isPersonal ? ` ${meeting.description}` : '';
 
         navigator.clipboard.writeText(`${window.location.origin}/${id}${description}`);
         setLinkCopied(true);

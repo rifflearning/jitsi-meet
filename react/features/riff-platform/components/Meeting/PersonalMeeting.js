@@ -62,10 +62,7 @@ function UserPersonalMeetingRoom({
     const handleLinkCopy = () => {
         const id = meeting.roomId;
 
-        // onclick Copy button copy meeting link + description, Beth's request
-        const description = meeting.description ? ` ${meeting.description}` : '';
-
-        navigator.clipboard.writeText(`${window.location.origin}/${id}${description}`);
+        navigator.clipboard.writeText(`${window.location.origin}/${id}`);
         setLinkCopied(true);
         setTimeout(() => setLinkCopied(false), 1000);
     };
