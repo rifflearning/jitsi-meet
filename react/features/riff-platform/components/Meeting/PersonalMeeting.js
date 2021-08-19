@@ -16,15 +16,9 @@ import { connect } from '../../../base/redux';
 import { getUserPersonalMeetingRoom } from '../../actions/personalMeeting';
 import * as ROUTES from '../../constants/routes';
 import Loader from '../Loader';
-import StyledPaper from '../StyledPaper';
 
-const useStyles = makeStyles(theme => {
+const useStyles = makeStyles(() => {
     return {
-        paper: {
-            marginTop: theme.spacing(4),
-            display: 'flex',
-            alignItems: 'center'
-        },
         meetingButton: {
             marginLeft: '10px'
         },
@@ -40,13 +34,11 @@ const errorMessage = err => (<Grid
     justify = 'center'
     xs = { 12 }><Typography color = 'error'>{err}</Typography></Grid>);
 
-
 function UserPersonalMeetingRoom({
     meeting = {},
     fetchPersonalMeeting,
     loading,
-    error,
-    title
+    error
 }) {
     const history = useHistory();
     const classes = useStyles();
@@ -57,21 +49,16 @@ function UserPersonalMeetingRoom({
         if (!meeting._id) {
             fetchPersonalMeeting();
         }
-    }, [ ]);
+    }, []);
 
     const handleLinkCopy = () => {
-        const id = meeting.roomId;
 
-        navigator.clipboard.writeText(`${window.location.origin}/${id}`);
+        navigator.clipboard.writeText(`${window.location.origin}/${meeting.roomId}`);
         setLinkCopied(true);
         setTimeout(() => setLinkCopied(false), 1000);
     };
 
-    const handleStartClick = () => {
-        const id = meeting.roomId;
-
-        return history.push(`${ROUTES.WAITING}/${id}`);
-    };
+    const handleStartClick = () => history.push(`${ROUTES.WAITING}/${meeting.roomId}`);
 
     const handleShowDetails = () => history.push(`${ROUTES.MEETINGS}/${meeting._id}`);
 
@@ -84,44 +71,42 @@ function UserPersonalMeetingRoom({
     }
 
     return (
-        <StyledPaper title = { title }>
+        <Grid
+            alignItems = 'center'
+            className = { classes.itemBox }
+            container = { true }
+            justify = 'space-between'>
+            <Grid
+                item = { true }>
+                <Typography>
+                    {meeting.name}
+                </Typography>
+            </Grid>
             <Grid
                 alignItems = 'center'
-                className = { classes.itemBox }
                 container = { true }
-                justify = 'space-between'>
-                <Grid
-                    item = { true }>
-                    <Typography>
-                        {meeting.name}
-                    </Typography>
-                </Grid>
-                <Grid
-                    alignItems = 'center'
-                    container = { true }
-                    item = { true }
-                    justify = 'flex-end'
-                    xs = { 6 }>
-                    <Button
-                        className = { classes.meetingButton }
-                        color = 'primary'
-                        onClick = { handleStartClick }
-                        variant = 'contained'>Start</Button>
-                    <Button
-                        className = { classes.meetingButton }
-                        color = { isLinkCopied ? 'default' : 'primary' }
-                        onClick = { handleLinkCopy }
-                        variant = { isLinkCopied ? 'text' : 'outlined' }>
-                        {isLinkCopied ? 'Copied!' : 'Copy link'}
-                    </Button>
-                    <Button
-                        className = { classes.meetingButton }
-                        onClick = { () => handleShowDetails(true) }>
-                                Details
-                    </Button>
-                </Grid>
+                item = { true }
+                justify = 'flex-end'
+                xs = { 6 }>
+                <Button
+                    className = { classes.meetingButton }
+                    color = 'primary'
+                    onClick = { handleStartClick }
+                    variant = 'contained'>Start</Button>
+                <Button
+                    className = { classes.meetingButton }
+                    color = { isLinkCopied ? 'default' : 'primary' }
+                    onClick = { handleLinkCopy }
+                    variant = { isLinkCopied ? 'text' : 'outlined' }>
+                    {isLinkCopied ? 'Copied!' : 'Copy link'}
+                </Button>
+                <Button
+                    className = { classes.meetingButton }
+                    onClick = { () => handleShowDetails(true) }>
+                        Details
+                </Button>
             </Grid>
-        </StyledPaper>
+        </Grid>
     );
 }
 
@@ -129,14 +114,13 @@ UserPersonalMeetingRoom.propTypes = {
     error: PropTypes.string,
     fetchPersonalMeeting: PropTypes.func,
     loading: PropTypes.bool,
-    meeting: PropTypes.object,
-    title: PropTypes.string
+    meeting: PropTypes.object
 };
 
 const mapStateToProps = state => {
     return {
-        loading: state['features/riff-platform'].meetings.loading,
-        error: state['features/riff-platform'].meetings.error,
+        loading: state['features/riff-platform'].personalMeeting.loading,
+        error: state['features/riff-platform'].personalMeeting.error,
         meeting: state['features/riff-platform'].personalMeeting.meeting
     };
 };

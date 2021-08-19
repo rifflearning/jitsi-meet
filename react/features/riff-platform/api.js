@@ -59,6 +59,7 @@ class ApiService {
     deleteMeetingsRecurring = roomId => this.fetchWithJwt(`/meetingsRecurring/${roomId}`, { method: 'delete' });
     updateMeeting = (id, meeting) => this.putWithJwt(`/meetings/${id}`, { meeting });
 
+
     joinMeeting = id => this.postWithJwt(`/meetings/${id}/join`);
 
     // emotions
@@ -79,8 +80,7 @@ class ApiService {
 
             user = { uid,
                 email,
-                displayName,
-                pmrId: '611399f8c74dcb269dca77dd' };
+                displayName };
         } catch (e) {
             console.error('Error in isAuth', e);
         }

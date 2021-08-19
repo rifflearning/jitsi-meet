@@ -60,14 +60,15 @@ const UserProfile = ({
                 </StyledPaper>
 
             </Grid>
-            {personalMeeting?._id && <Grid
-                item = { true }
-                xs = { 12 }>
-                <UserPersonalMeetingRoom
-                    meeting = { personalMeeting }
-                    showDetailsEnabled = { true }
-                    title = 'Personal Meeting Room' />
-            </Grid>
+            {personalMeeting?._id
+                && <Grid
+                    item = { true }
+                    xs = { 12 }>
+                    <StyledPaper title = 'Personal Meeting Room'>
+                        <UserPersonalMeetingRoom
+                            meeting = { personalMeeting } />
+                    </StyledPaper>
+                </Grid>
             }
             <Grid
                 item = { true }

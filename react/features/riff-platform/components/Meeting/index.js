@@ -269,7 +269,7 @@ function Meeting({
                                 sm = { 3 }
                                 xs = { 12 }>
                                 <Typography>
-                                Name
+                                    Name
                                 </Typography>
                             </Grid>
                             <Grid
@@ -293,7 +293,7 @@ function Meeting({
                                 sm = { 3 }
                                 xs = { 12 }>
                                 <Typography>
-                    Description
+                                    Description
                                 </Typography>
                             </Grid>
                             <Grid
@@ -318,7 +318,7 @@ function Meeting({
                                     sm = { 3 }
                                     xs = { 12 }>
                                     <Typography>
-                    Time
+                                        Time
                                     </Typography>
                                 </Grid>
                                 <Grid
@@ -358,7 +358,7 @@ function Meeting({
                                     sm = { 3 }
                                     xs = { 12 }>
                                     <Typography>
-                    Recurring meeting
+                                        Recurring meeting
                                     </Typography>
                                 </Grid>
                                 <Grid
@@ -439,7 +439,7 @@ function Meeting({
                                     sm = { 3 }
                                     xs = { 12 }>
                                     <Typography>
-                                Room Number
+                                        Room Number
                                     </Typography>
                                 </Grid>
                                 <Grid
@@ -491,12 +491,12 @@ function Meeting({
                                     color = 'default'
                                     onClick = { handleEditClick }
                                     variant = 'outlined'>
-                             Edit
+                                    Edit
                                 </Button>
                                 { !meeting.isPersonal && <Button
                                     className = { classes.meetingButton }
                                     onClick = { handleDeleteClick }>
-                                        Delete
+                                    Delete
                                 </Button> }
                                     </>
                             }
