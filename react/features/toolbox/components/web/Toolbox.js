@@ -893,16 +893,6 @@ class Toolbox extends Component<Props> {
     _onToolbarToggleRaiseHand: () => void;
 
     /**
-     * Marks current moment of conversation as interesting.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onToolbarClickInterestingMoment() {
-        this.props.dispatch(markInterestingMoment(this.props._meetingId));
-    }
-
-    /**
      * Creates an analytics toolbar event and dispatches an action for toggling
      * raise hand.
      *
@@ -915,6 +905,18 @@ class Toolbox extends Component<Props> {
             { enable: !this.props._raisedHand }));
 
         this._doToggleRaiseHand();
+    }
+
+    _onToolbarClickInterestingMoment: () => void;
+
+    /**
+     * Marks current moment of conversation as interesting.
+     *
+     * @private
+     * @returns {void}
+     */
+    _onToolbarClickInterestingMoment() {
+        this.props.dispatch(markInterestingMoment(this.props._meetingId));
     }
 
     _onToolbarToggleScreenshare: () => void;
