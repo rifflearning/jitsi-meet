@@ -28,7 +28,7 @@ const InterestingMoments = props => {
 
     useEffect(() => {
         if (meeting) {
-            API.fetchInterestingMoments(meeting.room).then(res => {
+            API.fetchInterestingMoments(meeting._id).then(res => {
                 setInterestingMoments(res.map(m => {
                     return {
                         userName: m.userName,
