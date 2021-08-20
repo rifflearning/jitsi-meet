@@ -26,7 +26,7 @@ export function getToolbarAdditionalButtons(width: number, isMobile: boolean): S
     case width >= WIDTH.FIT_9_ICONS: {
         buttons = isMobile
             ? [ 'chat', 'markmoment', /* 'tileview', */ 'raisehand', 'participants-pane', 'overflow' ]
-            : [ 'desktop', 'chat', 'markmoment', /* 'tileview', */, 'raisehand', 'participants-pane', 'overflow' ];
+            : [ 'desktop', 'chat', 'markmoment', /* 'tileview', */ 'raisehand', 'participants-pane', 'overflow' ];
         break;
     }
 
