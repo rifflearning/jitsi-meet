@@ -1,18 +1,30 @@
 import * as am4charts from '@amcharts/amcharts4/charts';
 import * as am4core from '@amcharts/amcharts4/core';
 import PropTypes from 'prop-types';
-import React, { useState, useLayoutEffect, useEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
+import { ScaleLoader } from 'react-spinners';
+
 
 import API from '../../../api';
 import ChartCard from '../ChartCard/ChartCard';
 import { Colors } from '../colorHelper';
 import { getSelectedMeeting } from '../utils';
 
+
+const interestingMomentsConfig = {
+    title: 'Interesting Moments (Experimental Feature)',
+    info: 'This shows a simple timeline of moments which were marked as interesting by participants',
+    empty: 'It doesn\'t look like anyone marked any moment as interesting'
+};
+
 const InterestingMoments = props => {
     const chartRef = useRef(null);
+    const [ isLoaded, setIsLoaded ] = useState(false);
     const [ interestingMoments, setInterestingMoments ] = useState([]);
+
     const { meeting } = props;
+    const config = interestingMomentsConfig;
 
     useEffect(() => {
         if (meeting) {
@@ -23,12 +35,14 @@ const InterestingMoments = props => {
                         time: new Date(m.time)
                     };
                 }));
-            });
+            })
+                .catch()
+                .finally(() => setIsLoaded(true));
         }
     }, [ meeting ]);
 
     useLayoutEffect(() => {
-        if (interestingMoments.length === 0) {
+        if (!isLoaded) {
             return;
         }
 
@@ -46,6 +60,9 @@ const InterestingMoments = props => {
         xAxis.dateFormats.setKey('second', 'h:mm:ss a');
         xAxis.dateFormats.setKey('millisecond', 'h:mm:ss SSS a');
 
+        xAxis.startTime = new Date(meeting.startTime).getTime();
+        xAxis.endTime = new Date(meeting.endTime).getTime();
+        xAxis.strictMinMax = true;
         xAxis.renderer.minGridDistance = 40;
         xAxis.dataFields.category = 'time';
 
@@ -64,9 +81,6 @@ const InterestingMoments = props => {
         series.dataFields.categoryY = 'userName';
         series.dataFields.dateX = 'time';
         series.columns.template.disabled = true;
-        series.sequencedInterpolation = true;
-
-        // series.defaultState.transitionDuration = 3000;
 
         const bullet = series.bullets.push(new am4charts.Bullet());
         const image = bullet.createChild(am4core.Image);
@@ -86,7 +100,6 @@ const InterestingMoments = props => {
 
         bullet.adapter.add('tooltipY', (tooltipY, target) => -target.radius + 1);
 
-
         bullet.hiddenState.properties.scale = 0.01;
         bullet.hiddenState.properties.opacity = 1;
 
@@ -101,14 +114,32 @@ const InterestingMoments = props => {
         return () => {
             chart.dispose();
         };
-    }, [ interestingMoments ]);
+    }, [ isLoaded, interestingMoments ]);
+
+    // eslint-disable-next-line react/no-multi-comp
+    const getChartContent = () => {
+        if (!isLoaded) {
+            return (<div className = 'loading-overlay'>
+                <ScaleLoader color = { Colors.lightRoyal } />
+            </div>);
+        }
+
+        if (interestingMoments.length === 0) {
+            return (
+                <div
+                    className = 'empty-graph-text'
+                    key = 'empty-text'>{config.empty}</div>);
+        }
+
+        return <div className = 'amcharts-graph-container interesting-moments-plot-div' />;
+    };
 
     return (
         <ChartCard
             chartCardId = { 'interesting-moments' }
-            chartInfo = { 'Interesting moments' }
-            title = { 'Interesting moments' }>
-            <div className = 'amcharts-graph-container interesting-moments-plot-div' />
+            chartInfo = { config.info }
+            title = { config.title }>
+            {getChartContent()}
         </ChartCard>
     );
 };
