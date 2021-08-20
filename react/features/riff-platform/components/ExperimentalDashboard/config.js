@@ -47,7 +47,8 @@ const GraphTypes = {
     GROUPED_INTERRUPTIONS: 'grouped_interruptions',
     TIMELINE: 'timeline',
     SPEAKING_TIME: 'speaking_time',
-    PARTICIPANT_SCORE: 'participant_score'
+    PARTICIPANT_SCORE: 'participant_score',
+    INTERESTING_MOMENTS: 'interesting_moments'
 };
 
 /**
@@ -174,6 +175,12 @@ const GraphConfigs = {
                + 'equal speaking time across all members is associated with higher creativity, '
                + 'more trust between group members, and better brainstorming.',
         empty: 'It doesn\'t look like anyone said anything during this meeting.'
+    },
+
+    [GraphTypes.INTERESTING_MOMENTS]: {
+        title: 'Interesting Moments (Experimental Feature)',
+        info: 'This shows a simple timeline of moments which were marked as interesting by participants',
+        empty: 'It doesn\'t look like anyone marked any moment as interesting'
     }
 };
 

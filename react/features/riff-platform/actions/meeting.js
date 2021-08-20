@@ -78,7 +78,7 @@ export function getMeetingById(meetingId) {
 export function markInterestingMoment(meetingId) {
     return async (dispatch, getState) => {
         try {
-            const { uid } = await getState()['features/riff-platform'].signIn.user;
+            const { uid } = getState()['features/riff-platform'].signIn.user;
 
             await api.postInterestingMoment(meetingId, uid, new Date().toISOString());
         } catch (error) {
