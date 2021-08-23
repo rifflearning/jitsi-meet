@@ -27,6 +27,8 @@ const InterestingMoments = props => {
     const config = interestingMomentsConfig;
 
     useEffect(() => {
+        console.log(meeting);
+
         if (meeting) {
             API.fetchInterestingMoments(meeting._id).then(res => {
                 setInterestingMoments(res.map(m => {
@@ -55,15 +57,26 @@ const InterestingMoments = props => {
         const yAxis = chart.yAxes.push(new am4charts.CategoryAxis());
 
         yAxis.dataFields.category = 'userName';
+
+        xAxis.baseInterval = { count: 1,
+            timeUnit: 'millisecond' };
+        xAxis.renderer.tooltipLocation = 0;
+        xAxis.cursorTooltipEnabled = true;
+        xAxis.tooltipDateFormat = 'h:mm:ss a';
+
         xAxis.dateFormats.setKey('hour', 'h:mm a');
         xAxis.dateFormats.setKey('minute', 'h:mm a');
         xAxis.dateFormats.setKey('second', 'h:mm:ss a');
         xAxis.dateFormats.setKey('millisecond', 'h:mm:ss SSS a');
+        xAxis.periodChangeDateFormats.setKey('hour', 'h:mm a');
+        xAxis.periodChangeDateFormats.setKey('minute', 'h:mm a');
+        xAxis.periodChangeDateFormats.setKey('second', 'h:mm:ss a');
+        xAxis.periodChangeDateFormats.setKey('millisecond', 'h:mm:ss SSS a');
 
         xAxis.startTime = new Date(meeting.startTime).getTime();
         xAxis.endTime = new Date(meeting.endTime).getTime();
         xAxis.strictMinMax = true;
-        xAxis.renderer.minGridDistance = 40;
+        xAxis.renderer.minGridDistance = 50;
         xAxis.dataFields.category = 'time';
 
         xAxis.renderer.grid.template.disabled = true;

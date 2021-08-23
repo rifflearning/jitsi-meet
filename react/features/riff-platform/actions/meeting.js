@@ -75,12 +75,12 @@ export function getMeetingById(meetingId) {
     };
 }
 
-export function markInterestingMoment(meetingId) {
+export function markInterestingMoment(meetingId, roomId) {
     return async (dispatch, getState) => {
         try {
             const { uid } = getState()['features/riff-platform'].signIn.user;
 
-            await api.postInterestingMoment(meetingId, uid, new Date().toISOString());
+            await api.postInterestingMoment(meetingId, roomId, uid, new Date().toISOString());
         } catch (error) {
             return { error };
         }
