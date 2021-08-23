@@ -402,8 +402,6 @@ class Toolbox extends Component<Props> {
         const rootClassNames = `new-toolbox ${_visible ? 'visible' : ''} ${
             _visibleButtons.length ? '' : 'no-buttons'} ${_chatOpen ? 'shift-right' : ''}`;
 
-        console.log(this.props._meeting);
-
         return (
             <div
                 className = { rootClassNames }
