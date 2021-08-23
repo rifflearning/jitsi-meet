@@ -248,6 +248,11 @@ type Props = {
      */
     _meetingId: String,
 
+    /*
+     * ID of room
+     */
+    _roomId: String,
+
     /**
      * Invoked to obtain translated strings.
      */
@@ -396,6 +401,8 @@ class Toolbox extends Component<Props> {
         const { _chatOpen, _visible, _visibleButtons } = this.props;
         const rootClassNames = `new-toolbox ${_visible ? 'visible' : ''} ${
             _visibleButtons.length ? '' : 'no-buttons'} ${_chatOpen ? 'shift-right' : ''}`;
+
+        console.log(this.props._meeting);
 
         return (
             <div
@@ -916,7 +923,7 @@ class Toolbox extends Component<Props> {
      * @returns {void}
      */
     _onToolbarClickInterestingMoment() {
-        this.props.dispatch(markInterestingMoment(this.props._meetingId));
+        this.props.dispatch(markInterestingMoment(this.props._meetingId, this.props._roomId));
     }
 
     _onToolbarToggleScreenshare: () => void;
@@ -1453,6 +1460,7 @@ function _mapStateToProps(state) {
     return {
         _chatOpen: state['features/chat'].isOpen,
         _meetingId: state['features/riff-platform'].meeting.meeting._id,
+        _roomId: state['features/riff-platform'].meeting.meeting.roomId,
         _clientWidth: clientWidth,
         _conference: conference,
         _desktopSharingEnabled: desktopSharingEnabled,
