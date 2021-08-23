@@ -22,7 +22,6 @@ const InterestingMoments = props => {
     const config = GraphConfigs.interesting_moments;
 
     useEffect(() => {
-        console.log(meeting);
 
         if (meeting) {
             API.fetchInterestingMoments(meeting._id).then(res => {
