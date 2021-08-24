@@ -36,6 +36,11 @@ SRC_PKG_FILES := \
 	lang                    \
 
 
+NOT_SRC_PKG_FILES := \
+	babel.config.js         \
+	webpack.config.js       \
+
+
 all: compile deploy clean
 
 compile: compile-load-test
@@ -134,6 +139,7 @@ source-package: source-package-version
 source-package-files: ## copy all files needed for distribution (built and static) to the source_package directory
 	mkdir -p source_package/jitsi-meet/css
 	cp -r $(SRC_PKG_FILES) source_package/jitsi-meet
+	cd source_package/jitsi-meet ; rm $(NOT_SRC_PKG_FILES)
 	cp css/all.css source_package/jitsi-meet/css
 
 source-package-version: ## add versioning to all.css and app.bundle.min.js imports in index.html
