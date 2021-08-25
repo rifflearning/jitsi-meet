@@ -253,6 +253,11 @@ type Props = {
      */
     _roomId: String,
 
+    /*
+    * Riff
+     */
+    _riff: Object,
+
     /**
      * Invoked to obtain translated strings.
      */
@@ -921,7 +926,7 @@ class Toolbox extends Component<Props> {
      * @returns {void}
      */
     _onToolbarClickInterestingMoment() {
-        this.props.dispatch(markInterestingMoment(this.props._meetingId, this.props._roomId));
+        this.props.dispatch(markInterestingMoment(this.props._roomId));
     }
 
     _onToolbarToggleScreenshare: () => void;
@@ -1459,6 +1464,7 @@ function _mapStateToProps(state) {
         _chatOpen: state['features/chat'].isOpen,
         _meetingId: state['features/riff-platform'].meeting.meeting._id,
         _roomId: state['features/riff-platform'].meeting.meeting.roomId,
+        _riff: state['features/riff-platform'].riff,
         _clientWidth: clientWidth,
         _conference: conference,
         _desktopSharingEnabled: desktopSharingEnabled,

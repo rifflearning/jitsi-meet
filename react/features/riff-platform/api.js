@@ -66,12 +66,13 @@ class ApiService {
     // fetchEmotions = mockFetchEmotions;
 
     // interesting moments
-    postInterestingMoment = (meetingId, roomId, submittedBy, time) =>
+    postInterestingMoment = (meetingId, submittedBy, time) => {
+        console.log('postInterestingMoment');
         this.postWithJwt(`/meetings/${meetingId}/markInteresting`, {
-            roomId,
             submittedBy,
             time
-        })
+        });
+    }
 
     fetchInterestingMoments = meetingId => this.fetchWithJwt(`/meetings/${meetingId}/interestingMoments`);
 
