@@ -543,7 +543,6 @@ const SchedulerForm = ({
                 ...personalMeetingData }
             : meetingData;
 
-        console.log('meetingInfo', meetingInfo);
         if (!isEditing) {
             if (isPersonalRoom && personalMeeting?._id) {
 
