@@ -13,9 +13,16 @@ const createCalendarEntry = (calendarId, event) => googleApi.get()
                 'calendarId': calendarId,
                 'resource': event
             }).then(e => {
-                console.log('event created', e);
+                if (e.status === 200) {
+                    const eventId = new URL(e.result.htmlLink).searchParams.get('eid');
+                    const eventUrl = `https://calendar.google.com/calendar/r/eventedit/${eventId}`;
 
-                return e.result;
+                    console.log('event created', e);
+
+                    window.open(eventUrl, '_blank').focus();
+
+                    return e.result;
+                }
             });
 
     });

@@ -22,6 +22,7 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogl
     const meetingUrl = `${window.location.origin}/${roomId}`;
 
     const event = {
+        // 'id': meeting._id,
         'summary': meeting.name,
         'location': meetingUrl,
         'description': `Click the following link to join the meeting: ${meetingUrl}`,
