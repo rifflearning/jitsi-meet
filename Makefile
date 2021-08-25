@@ -142,14 +142,18 @@ source-package-files: ## copy all files needed for distribution (built and stati
 	cd source_package/jitsi-meet ; rm $(NOT_SRC_PKG_FILES)
 	cp css/all.css source_package/jitsi-meet/css
 
-source-package-version: ## add versioning to all.css and app.bundle.min.js imports in index.html
+source-package-version: ## add versioning to all.css, app.bundle.min.js and other imports in index.html
 source-package-version: SHASUM_ALL_CSS = $(shell shasum ./css/all.css | cut -c -8)
 source-package-version: SHASUM_APP_BUNDLE = $(shell shasum ./libs/app.bundle.min.js | cut -c -8)
+source-package-version: SHASUM_LIB_JITSI_MEET = $(shell shasum ./libs/lib-jitsi-meet.min.js | cut -c -8)
+source-package-version: SHASUM_DO_EXTERNAL_CONNECT = $(shell shasum ./libs/do_external_connect.min.js | cut -c -8)
 source-package-version: source-package-files
 	@cd source_package/jitsi-meet ; \
 	echo "versioning all.css (v=$(SHASUM_ALL_CSS)) and app.bundle.min.js (v=$(SHASUM_APP_BUNDLE)) in index.html" ; \
 	sed -e 's/css\/all.css/&?v='$(SHASUM_ALL_CSS)'/' \
 		-e 's/\(app\.bundle\.min\.js\)?v=[0-9]\+/\1?v='$(SHASUM_APP_BUNDLE)'/' \
+		-e 's/\(lib-jitsi-meet\.min\.js\)?v=[0-9]\+/\1?v='$(SHASUM_LIB_JITSI_MEET)'/' \
+		-e 's/\(do_external_connect\.min\.js\)?v=[0-9]\+/\1?v='$(SHASUM_DO_EXTERNAL_CONNECT)'/' \
 		--in-place index.html
 
 dev-package: ## create package using working dir code and existing env settings for development deployment
