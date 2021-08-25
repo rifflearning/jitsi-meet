@@ -4,6 +4,7 @@ import {
     Button
 } from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -13,6 +14,34 @@ import { signIn } from '../../../calendar-sync';
 
 import createCalendarEntry from './googleCalendar';
 
+const reccurenceMap = {
+    'daily': 'DAILY',
+    'weekly': 'WEEKLY',
+    'monthly': 'MONTHLY',
+    'daysOfWeek': 'BYDAY'
+};
+
+function splitDate(date) {
+    const darray = new Array(); // 0-year,1-month,2-day
+
+    if (date.substr(2, 1) === '/') {
+        darray[1] = date.substr(0, 2);
+        darray[2] = date.substr(3, 2);
+        darray[0] = date.substr(6, 4);
+    } else if (date.substr(2, 1) === '.') {
+        darray[2] = date.substr(0, 2);
+        darray[1] = date.substr(3, 2);
+        darray[0] = date.substr(6, 4);
+    } else {
+        darray[0] = date.substr(0, 4);
+        darray[1] = date.substr(5, 2);
+        darray[2] = date.substr(8, 2);
+    }
+
+
+    // alert(darray[0] + "-" + darray[1] + "-" + darray[2]);
+    return darray;
+}
 
 function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogleApi }) {
 
@@ -20,6 +49,14 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogl
         ? `${meeting.roomId}-${multipleRoom}`
         : meeting.roomId;
     const meetingUrl = `${window.location.origin}/${roomId}`;
+
+    const recurrenceOptions = meeting?.recurrenceOptions?.options || null;
+
+    const udate = meeting?.dateEnd && splitDate(meeting.dateEnd);
+    const untilDate = meeting?.dateEnd && `${`0000${udate[0]}`.slice(-4) + `00${udate[1]}`.slice(-2) + `00${udate[2]}`.slice(-2)}T000000Z`;
+    const dailyRec = recurrenceOptions
+        ? `FREQ=${reccurenceMap[recurrenceOptions.recurrenceType]};INTERVAL=${recurrenceOptions.dailyInterval};UNTIL=${untilDate}`
+        : null;
 
     const event = {
         // 'id': meeting._id,
@@ -36,9 +73,9 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogl
             'timeZone': meeting.timezone
         },
 
-        // 'recurrence': [
-        //     'RRULE:FREQ=DAILY;COUNT=2'
-        // ],
+        'recurrence': [
+            `RRULE:${dailyRec}`
+        ],
         'attendees': [
 
             // { 'email': 'lpage@example.com' },
@@ -55,6 +92,8 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogl
         //     ]
         // }
     };
+
+    console.log('event', event);
 
     const onAddToCalendar = () => {
         createCalendarEntry('primary', event).then(res => {
@@ -78,6 +117,7 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogl
 }
 
 AddToGoogleCalendarButton.propTypes = {
+    attemptSignInToGoogleApi: PropTypes.func,
     meeting: PropTypes.object,
     multipleRoom: PropTypes.number
 };
