@@ -26,9 +26,13 @@ import { deleteMeeting,
     deleteMeetingsRecurring } from '../../actions/meetings';
 import * as ROUTES from '../../constants/routes';
 import { getNumberRangeArray, formatDurationTime } from '../../functions';
+import AddToGoogleCalendarButton from '../Calendar/AddToGoogleCalendarButton';
 import Loader from '../Loader';
 import { ConfirmationDialogRaw } from '../Meetings/Dialog';
 import StyledPaper from '../StyledPaper';
+
+window.config.enableCalendarIntegration = true;
+window.config.googleApiApplicationClientID = '387032831739-h6i4p8ou45j21ke8317dn7888d92ur45.apps.googleusercontent.com';
 
 const useStyles = makeStyles(theme => {
     return {
@@ -253,6 +257,16 @@ function Meeting({
                         item = { true }
                         spacing = { 4 }
                         xs = { 12 } >
+                        <Grid
+                            alignItems = 'center'
+                            className = { classes.container }
+                            container = { true }
+                            item = { true }
+                            justify = 'flex-end'>
+                            <AddToGoogleCalendarButton
+                                meeting = { meeting }
+                                multipleRoom = { multipleRoom } />
+                        </Grid>
                         <Grid
                             alignItems = 'center'
                             container = { true }
