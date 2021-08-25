@@ -21,27 +21,22 @@ const reccurenceMap = {
     'daysOfWeek': 'BYDAY'
 };
 
-function splitDate(date) {
-    const darray = new Array(); // 0-year,1-month,2-day
+const getRecurrenceRule = (options = {}) => {
+    const intervalPart = `${
+        options.recurrenceType === 'daily' ? `INTERVAL=${options.dailyInterval};` : ''
+    }`;
 
-    if (date.substr(2, 1) === '/') {
-        darray[1] = date.substr(0, 2);
-        darray[2] = date.substr(3, 2);
-        darray[0] = date.substr(6, 4);
-    } else if (date.substr(2, 1) === '.') {
-        darray[2] = date.substr(0, 2);
-        darray[1] = date.substr(3, 2);
-        darray[0] = date.substr(6, 4);
-    } else {
-        darray[0] = date.substr(0, 4);
-        darray[1] = date.substr(5, 2);
-        darray[2] = date.substr(8, 2);
-    }
+    // specified in RFC5545 https://datatracker.ietf.org/doc/html/rfc5545#section-3.8.5
+    const untilDate = `${moment(options.dateEnd).format('YYYYMMDDTHHmmss')}Z`;
 
+    const endDatePart = `${
+        options.dateEnd
+            ? `UNTIL=${untilDate};`
+            : ''
+    }`;
 
-    // alert(darray[0] + "-" + darray[1] + "-" + darray[2]);
-    return darray;
-}
+    return `RRULE:FREQ=${reccurenceMap[options.recurrenceType]};${intervalPart}${endDatePart}`;
+};
 
 function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogleApi }) {
 
@@ -51,13 +46,7 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogl
     const meetingUrl = `${window.location.origin}/${roomId}`;
 
     const recurrenceOptions = meeting?.recurrenceOptions?.options || null;
-
-    const udate = meeting?.dateEnd && splitDate(meeting.dateEnd);
-    const untilDate = meeting?.dateEnd && `${`0000${udate[0]}`.slice(-4) + `00${udate[1]}`.slice(-2) + `00${udate[2]}`.slice(-2)}T000000Z`;
-    const dailyRec = recurrenceOptions
-        ? `FREQ=${reccurenceMap[recurrenceOptions.recurrenceType]};INTERVAL=${recurrenceOptions.dailyInterval};UNTIL=${untilDate}`
-        : null;
-
+    
     const event = {
         // 'id': meeting._id,
         'summary': meeting.name,
@@ -74,7 +63,7 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogl
         },
 
         'recurrence': [
-            `RRULE:${dailyRec}`
+            recurrenceOptions && getRecurrenceRule(recurrenceOptions)
         ],
         'attendees': [
 
