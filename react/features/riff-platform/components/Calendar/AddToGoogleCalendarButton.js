@@ -88,7 +88,7 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogl
     const recurrenceOptions = meeting?.recurrenceOptions?.options || null;
 
     const event = {
-        // 'id': meeting._id,
+        'id': meeting.roomId,
         'summary': meeting.name,
         'location': meetingUrl,
         'description': `Click the following link to join the meeting: ${meetingUrl}`,
@@ -108,14 +108,7 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogl
     };
 
     const onAddToCalendar = () => {
-        createCalendarEntry('primary', event).then(res => {
-            if (!res) {
-                // refactor it
-                return attemptSignInToGoogleApi().then(() => createCalendarEntry('primary', event));
-            }
-
-            return res;
-        });
+        createCalendarEntry('primary', event);
     };
 
     return (
