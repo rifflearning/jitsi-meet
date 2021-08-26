@@ -14,28 +14,68 @@ import { signIn } from '../../../calendar-sync';
 
 import createCalendarEntry from './googleCalendar';
 
-const reccurenceMap = {
+const reccurenceTypeMap = {
     'daily': 'DAILY',
     'weekly': 'WEEKLY',
-    'monthly': 'MONTHLY',
-    'daysOfWeek': 'BYDAY'
+    'monthly': 'MONTHLY'
+};
+
+const daysOfWeekMap = {
+    'Sun': 'SU',
+    'Mon': 'MO',
+    'Tue': 'TU',
+    'Wed': 'WE',
+    'Thu': 'TH',
+    'Fri': 'FR',
+    'Sat': 'SA'
+};
+
+const dayPositionMap = {
+    'First': 1,
+    'Second': 2,
+    'Third': 3,
+    'Fourth': 4
 };
 
 const getRecurrenceRule = (options = {}) => {
-    const intervalPart = `${
+    const dailyIntervalRule = `${
         options.recurrenceType === 'daily' ? `INTERVAL=${options.dailyInterval};` : ''
     }`;
 
     // specified in RFC5545 https://datatracker.ietf.org/doc/html/rfc5545#section-3.8.5
     const untilDate = `${moment(options.dateEnd).format('YYYYMMDDTHHmmss')}Z`;
 
-    const endDatePart = `${
+    const endDateRule = `${
         options.dateEnd
             ? `UNTIL=${untilDate};`
             : ''
     }`;
 
-    return `RRULE:FREQ=${reccurenceMap[options.recurrenceType]};${intervalPart}${endDatePart}`;
+    const occurrenceRule = options.timesEnd ? `COUNT=${options.timesEnd};` : '';
+
+    // eslint-disable-next-line no-confusing-arrow
+    const formatedDaysOfWeekString = daysOfWeek => daysOfWeek.reduce((acc, val, i) => i === 0
+        ? daysOfWeekMap[val]
+        : `${acc},${daysOfWeekMap[val]}`,
+        '');
+
+    const weeklyRule = `${
+        options.recurrenceType === 'weekly'
+            ? options.daysOfWeek.length > 0
+                ? `BYDAY=${formatedDaysOfWeekString(options.daysOfWeek)};`
+                : ''
+            : ''
+    }`;
+
+    const monthlyRule = `${options.recurrenceType === 'monthly'
+        ? options.monthlyByDay
+            ? `INTERVAL=1;BYMONTHDAY=${options.monthlyByDay};`
+            : `INTERVAL=1;BYDAY=${dayPositionMap[options.monthlyByPosition]}${daysOfWeekMap[options.monthlyByWeekDay]};`
+        : ''
+    }`;
+
+    // eslint-disable-next-line max-len
+    return `RRULE:FREQ=${reccurenceTypeMap[options.recurrenceType]};${dailyIntervalRule}${weeklyRule}${monthlyRule}${endDateRule}${occurrenceRule}`;
 };
 
 function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogleApi }) {
@@ -46,7 +86,7 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogl
     const meetingUrl = `${window.location.origin}/${roomId}`;
 
     const recurrenceOptions = meeting?.recurrenceOptions?.options || null;
-    
+
     const event = {
         // 'id': meeting._id,
         'summary': meeting.name,
@@ -64,25 +104,8 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogl
 
         'recurrence': [
             recurrenceOptions && getRecurrenceRule(recurrenceOptions)
-        ],
-        'attendees': [
-
-            // { 'email': 'lpage@example.com' },
-            // { 'email': 'sbrin@example.com' }
         ]
-
-        // 'reminders': {
-        //     'useDefault': false,
-        //     'overrides': [
-        //         { 'method': 'email',
-        //             'minutes': 24 * 60 },
-        //         { 'method': 'popup',
-        //             'minutes': 10 }
-        //     ]
-        // }
     };
-
-    console.log('event', event);
 
     const onAddToCalendar = () => {
         createCalendarEntry('primary', event).then(res => {
@@ -110,7 +133,6 @@ AddToGoogleCalendarButton.propTypes = {
     meeting: PropTypes.object,
     multipleRoom: PropTypes.number
 };
-
 
 const mapStateToProps = () => {
     return {};
