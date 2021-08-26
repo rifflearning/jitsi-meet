@@ -243,10 +243,10 @@ type Props = {
      */
     dispatch: Function,
 
-    /**
-     * ID of current meeting in riff-jitsi-platform api-gateway
+    /*
+     * Check if user is anonymous
      */
-    _meetingId: String,
+    _isAnonymousUser: Boolean,
 
     /*
      * ID of room
@@ -404,6 +404,7 @@ class Toolbox extends Component<Props> {
      */
     render() {
         const { _chatOpen, _visible, _visibleButtons } = this.props;
+
         const rootClassNames = `new-toolbox ${_visible ? 'visible' : ''} ${
             _visibleButtons.length ? '' : 'no-buttons'} ${_chatOpen ? 'shift-right' : ''}`;
 
@@ -1276,23 +1277,23 @@ class Toolbox extends Component<Props> {
         }
 
         // HACK: _shouldShowButton doesn't want to show markmoment, despite defining it in all places
-        // if (!this.props._shouldShowButton('markmoment')) {
-        buttons.has('markmoment')
-            ? mainMenuAdditionalButtons.push(<ToolbarButton
-                accessibilityLabel = { t('toolbar.accessibilityLabel.markMoment') }
-                icon = { IconStar }
-                key = 'markmoment'
-                onClick = { this._onToolbarClickInterestingMoment }
-                toggled = { _raisedHand }
-                tooltip = { t('toolbar.markMoment') } />)
-            : overflowMenuAdditionalButtons.push(<OverflowMenuItem
-                accessibilityLabel = { t('toolbar.accessibilityLabel.markMoment') }
-                icon = { IconStar }
-                key = 'markmoment'
-                onClick = { this._onToolbarClickInterestingMoment }
-                text = { t('toolbar.markMoment') } />);
+        if (!this.props._isAnonymousUser) {
+            buttons.has('markmoment')
+                ? mainMenuAdditionalButtons.push(<ToolbarButton
+                    accessibilityLabel = { t('toolbar.accessibilityLabel.markMoment') }
+                    icon = { IconStar }
+                    key = 'markmoment'
+                    onClick = { this._onToolbarClickInterestingMoment }
+                    toggled = { _raisedHand }
+                    tooltip = { t('toolbar.markMoment') } />)
+                : overflowMenuAdditionalButtons.push(<OverflowMenuItem
+                    accessibilityLabel = { t('toolbar.accessibilityLabel.markMoment') }
+                    icon = { IconStar }
+                    key = 'markmoment'
+                    onClick = { this._onToolbarClickInterestingMoment }
+                    text = { t('toolbar.markMoment') } />);
 
-        // }
+        }
 
         if (this.props._shouldShowButton('participants-pane') || this.props._shouldShowButton('invite')) {
             buttons.has('participants-pane')
@@ -1462,6 +1463,7 @@ function _mapStateToProps(state) {
 
     return {
         _chatOpen: state['features/chat'].isOpen,
+        _isAnonymousUser: state['features/riff-platform'].signIn.user.isAnon,
         _meetingId: state['features/riff-platform'].meeting.meeting._id,
         _roomId: state['features/riff-platform'].meeting.meeting.roomId,
         _riff: state['features/riff-platform'].riff,
