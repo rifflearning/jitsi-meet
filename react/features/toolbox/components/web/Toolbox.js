@@ -85,7 +85,8 @@ import {
     setFullScreen,
     setOverflowMenuVisible,
     setToolbarHovered,
-    showToolbox
+    showToolbox,
+    showInterestingMomentMarkedNotification
 } from '../../actions';
 import { getToolbarAdditionalButtons, isToolboxVisible } from '../../functions';
 import DownloadButton from '../DownloadButton';
@@ -927,6 +928,7 @@ class Toolbox extends Component<Props> {
      * @returns {void}
      */
     _onToolbarClickInterestingMoment() {
+        this.props.dispatch(showInterestingMomentMarkedNotification());
         this.props.dispatch(markInterestingMoment(this.props._roomId));
     }
 
