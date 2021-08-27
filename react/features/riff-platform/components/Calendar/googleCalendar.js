@@ -65,7 +65,8 @@ const insertCalendarEntry = (calendarId, event) => googleApi.get()
                     } else {
                         createCalendarEntry(calendarId, event);
                     }
-                });
+                })
+                .catch(() => createCalendarEntry(calendarId, event));
         }
 
         getCalendarEntry(calendarId, event.id)
@@ -75,7 +76,8 @@ const insertCalendarEntry = (calendarId, event) => googleApi.get()
                 } else {
                     createCalendarEntry(calendarId, event);
                 }
-            });
+            })
+            .catch(() => createCalendarEntry(calendarId, event));
 
     });
 
