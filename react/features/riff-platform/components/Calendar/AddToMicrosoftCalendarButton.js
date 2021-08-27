@@ -8,7 +8,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import GoogleCalendarIcon from '../../../../../images/googleCalendar.svg';
+import OutlookCalendarIcon from '../../../../../images/outlookIcon.svg';
 import { connect } from '../../../base/redux';
 import { signIn } from '../../../calendar-sync';
 
@@ -116,8 +116,8 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogl
             color = 'default'
             // eslint-disable-next-line react/jsx-no-bind
             onClick = { onAddToCalendar }
-            startIcon = { <Icon><GoogleCalendarIcon /></Icon> }
-            variant = 'outlined'> Google Calendar</Button>
+            startIcon = { <Icon><OutlookCalendarIcon /></Icon> }
+            variant = 'outlined' >Outlook Calendar</Button>
     );
 }
 

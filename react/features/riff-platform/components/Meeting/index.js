@@ -27,6 +27,7 @@ import { deleteMeeting,
 import * as ROUTES from '../../constants/routes';
 import { getNumberRangeArray, formatDurationTime } from '../../functions';
 import AddToGoogleCalendarButton from '../Calendar/AddToGoogleCalendarButton';
+import AddToMsCalendarButton from '../Calendar/AddToMicrosoftCalendarButton';
 import Loader from '../Loader';
 import { ConfirmationDialogRaw } from '../Meetings/Dialog';
 import StyledPaper from '../StyledPaper';
@@ -265,16 +266,6 @@ function Meeting({
                         xs = { 12 } >
                         <Grid
                             alignItems = 'center'
-                            className = { classes.container }
-                            container = { true }
-                            item = { true }
-                            justify = 'flex-end'>
-                            <AddToGoogleCalendarButton
-                                meeting = { meeting }
-                                multipleRoom = { multipleRoom } />
-                        </Grid>
-                        <Grid
-                            alignItems = 'center'
                             container = { true }
                             item = { true }>
                             <Grid
@@ -386,6 +377,46 @@ function Meeting({
                                     <Typography>
                                         {getRecurrenceDesc(meeting?.recurrenceOptions?.options)}
                                     </Typography>
+                                </Grid>
+                            </Grid>
+                            <Divider className = { classes.infoDivider } />
+                        </>
+                        }
+                        {/* add a check if calendar integration is available */}
+                        {meeting
+                        && <>
+                            <Grid
+                                alignItems = 'center'
+                                container = { true }
+                                item = { true }>
+                                <Grid
+                                    item = { true }
+                                    md = { 2 }
+                                    sm = { 3 }
+                                    xs = { 12 }>
+                                    <Typography>
+                                     Add to calendar
+                                    </Typography>
+                                </Grid>
+                                <Grid
+                                    alignItems = 'center'
+                                    container = { true }
+                                    item = { true }
+                                    md = { 10 }
+                                    sm = { 8 }
+                                    spacing = { 2 }
+                                    xs = { 12 }>
+                                    <Grid item = { true }>
+                                        <AddToGoogleCalendarButton
+                                            meeting = { meeting }
+                                            multipleRoom = { multipleRoom } />
+                                    </Grid>
+                                    <Grid item = { true }>
+                                        <AddToMsCalendarButton
+                                            meeting = { meeting }
+                                            multipleRoom = { multipleRoom } />
+                                    </Grid>
+
                                 </Grid>
                             </Grid>
                             <Divider className = { classes.infoDivider } />
