@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-bind */
 /* global interfaceConfig */
-import { Button, Grid, Typography, makeStyles } from '@material-ui/core';
+import { Button, Grid, Typography, makeStyles, Box } from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
@@ -23,8 +23,10 @@ const useStyles = makeStyles(() => {
             fontSize: '1rem',
             marginTop: '10px',
             marginBottom: '10px'
+        },
+        boldText: {
+            fontWeight: 600
         }
-
     };
 });
 
@@ -88,7 +90,12 @@ const Settings = ({
                                 ? <Grid
                                     item = { true }>
                                     <Typography>
-                                    Currently accessing calendar for {googleProfileEmail}
+                                    Currently accessing calendar for
+                                        <Box
+                                            className = { classes.boldText }
+                                            display = 'inline'>
+                                            {` ${googleProfileEmail}`}
+                                        </Box>
                                     </Typography>
                                     <Typography
                                         color = 'textSecondary'
@@ -123,7 +130,12 @@ const Settings = ({
                                 ? <Grid
                                     item = { true }>
                                     <Typography>
-                                    Currently accessing calendar for {msProfileEmail};
+                                    Currently accessing calendar for
+                                        <Box
+                                            className = { classes.boldText }
+                                            display = 'inline'>
+                                            {` ${msProfileEmail}`}
+                                        </Box>
                                     </Typography>
                                     <Typography
                                         color = 'textSecondary'
