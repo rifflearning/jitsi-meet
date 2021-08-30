@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 
 import { ReducerRegistry } from '../../base/redux';
 
+import calendarSync from './calendarSync';
 import localRecording from './localRecording';
 import meeting from './meeting';
 import meetingMediator from './meetingMediator';
@@ -28,6 +29,7 @@ ReducerRegistry.register('features/riff-platform',
       localRecording,
       riffDataServer,
       metrics: metricsRedux.reducer,
-      personalMeeting
+      personalMeeting,
+      calendarSync
   })
 );

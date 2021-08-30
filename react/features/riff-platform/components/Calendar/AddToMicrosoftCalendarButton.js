@@ -18,7 +18,6 @@ import { createCalendarEntry } from './msCalendar';
 
 window.config.microsoftApiApplicationClientID = 'bc85555d-6216-4981-aa9f-ee1da895f660';
 
-
 const daysOfWeekMap = {
     'Sun': 'Sunday',
     'Mon': 'Monday',
@@ -91,8 +90,6 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, msSignIn, msToken, i
     const recurrenceOptions = meeting?.recurrenceOptions?.options || null;
 
     const reccurenceRule = recurrenceOptions ? getRecurrenceRule(meeting.dateStart, recurrenceOptions) : {};
-
-    console.log('reccurenceRule', reccurenceRule);
 
     const event = {
         'id': meeting.roomId,
