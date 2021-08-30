@@ -17,7 +17,7 @@
  *
  * ******************************************************************************/
 
-import { ChartCard, GraphDatasetTypes } from '@rifflearning/riff-metrics';
+import { ChartCard, GraphDatasetTypes, riffUtils } from '@rifflearning/riff-metrics';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -28,6 +28,8 @@ import { Colors } from '../colorHelper';
 import { RequestStatus, getSelectedMeeting, getMetricDataset, getDatasetStatus } from '../utils';
 
 import EmotionsGraph from './EmotionsGraph';
+
+const { Colors } = riffUtils.color;
 
 /* ******************************************************************************
  * EmotionsChart                                                           */ /**

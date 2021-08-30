@@ -21,7 +21,8 @@ import * as am4core from '@amcharts/amcharts4/core';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import {
     MeetingInfo,
-    MeetingList
+    MeetingList,
+    riffUtils,
 } from '@rifflearning/riff-metrics';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -29,7 +30,6 @@ import { connect } from 'react-redux';
 import { ScaleLoader } from 'react-spinners';
 
 import EmotionsChart from './Metrics/EmotionsChart';
-import { Colors } from './colorHelper';
 import { setWindowScrolling } from './functions';
 import {
     RequestStatus,
@@ -46,6 +46,8 @@ import {
 } from './utils';
 
 const logContext = 'Dashboard';
+
+const { Colors } = riffUtils.color;
 
 /* ******************************************************************************
 * DashboardView                                                              */ /**

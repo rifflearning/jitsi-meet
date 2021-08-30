@@ -3,12 +3,13 @@
 /* eslint-disable require-jsdoc */
 import * as am4charts from '@amcharts/amcharts4/charts';
 import * as am4core from '@amcharts/amcharts4/core';
+import { riffUtils } from '@rifflearning/riff-metrics';
 import * as d3 from 'd3-array';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useRef, useEffect, useState } from 'react';
 
-import { Colors } from '../colorHelper';
+const { Colors } = riffUtils.color;
 
 const formatTime = dt => new Date(dt).getTime();
 
