@@ -28,14 +28,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { ScaleLoader } from 'react-spinners';
 
-import Affirmations from './Metrics/Affirmations';
 import EmotionsChart from './Metrics/EmotionsChart';
-import Influence from './Metrics/Influence';
-import Interruptions from './Metrics/Interruptions';
-import SpeakingTime from './Metrics/SpeakingTime';
-import Timeline from './Metrics/TimelineChart';
 import { Colors } from './colorHelper';
-import { EventConfigs } from './config';
 import { setWindowScrolling } from './functions';
 import {
     RequestStatus,
@@ -98,21 +92,11 @@ class DashboardView extends React.Component {
 
     /** The graph type identifiers of the charts displayed on this dashboard */
     static graphTypes = [
-        Affirmations.graphType,
-        Influence.graphType,
-        Interruptions.graphType,
-        SpeakingTime.graphType,
-        Timeline.graphType
     ];
 
     /** The GraphDatasetTypes used by the charts displayed on this dashboard */
     static datasetTypes = new Set([
-        Affirmations.datasetType,
-        Influence.datasetType,
-        Interruptions.datasetType,
-        SpeakingTime.datasetType,
-        Timeline.datasetType,
-        ...Timeline.overlayEventTypes.map(et => EventConfigs[et].datasetType)
+        EmotionsChart.datasetType,
     ]);
 
     /* **************************************************************************
@@ -242,32 +226,7 @@ class DashboardView extends React.Component {
                                 <MeetingInfo />
                                 <div ref = { this.mainContent } />
                                 <div className = 'metrics-container'>
-                                    <div
-                                        className = 'metric-row'
-                                        style = { metricRowStyle }>
-                                        <div className = 'metric-container'>
-                                            <SpeakingTime />
-                                        </div>
-                                        <div className = 'metric-container'>
-                                            <Influence />
-                                        </div>
-                                    </div>
-                                    <div
-                                        className = 'metric-row'
-                                        style = { metricRowStyle }>
-                                        <div className = 'metric-container'>
-                                            <Interruptions />
-                                        </div>
-                                        <div className = 'metric-container'>
-                                            <Affirmations />
-                                        </div>
-                                    </div>
-                                    <div
-                                        className = 'metric-row'
-                                        style = { timelineRowStyle }>
-                                        <Timeline />
-                                    </div>
-                                    <div
+                                     <div
                                         className = 'metric-row'
                                         style = { timelineRowStyle }>
                                         <EmotionsChart />
