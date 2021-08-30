@@ -17,14 +17,13 @@
  *
  * ******************************************************************************/
 
-import { GraphDatasetTypes } from '@rifflearning/riff-metrics';
+import { ChartCard, GraphDatasetTypes } from '@rifflearning/riff-metrics';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { ScaleLoader } from 'react-spinners';
 
 import api from '../../../api';
-import ChartCard from '../ChartCard/ChartCard';
 import { Colors } from '../colorHelper';
 import { RequestStatus, getSelectedMeeting, getMetricDataset, getDatasetStatus } from '../utils';
 
