@@ -6,79 +6,82 @@ import {
 import Icon from '@material-ui/core/Icon';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import OutlookCalendarIcon from '../../../../../images/outlookIcon.svg';
 import { connect } from '../../../base/redux';
-import { signIn } from '../../../calendar-sync';
 
-import createCalendarEntry from './googleCalendar';
+// import { signIn } from '../../../calendar-sync';
+import { microsoftCalendarApi } from '../../../calendar-sync/web/microsoftCalendar';
 
-const reccurenceTypeMap = {
-    'daily': 'DAILY',
-    'weekly': 'WEEKLY',
-    'monthly': 'MONTHLY'
-};
+import { createCalendarEntry } from './msCalendar';
+
+window.config.microsoftApiApplicationClientID = 'bc85555d-6216-4981-aa9f-ee1da895f660';
+
 
 const daysOfWeekMap = {
-    'Sun': 'SU',
-    'Mon': 'MO',
-    'Tue': 'TU',
-    'Wed': 'WE',
-    'Thu': 'TH',
-    'Fri': 'FR',
-    'Sat': 'SA'
+    'Sun': 'Sunday',
+    'Mon': 'Monday',
+    'Tue': 'Tuesday',
+    'Wed': 'Wednesday',
+    'Thu': 'Thursday ',
+    'Fri': 'Friday',
+    'Sat': 'Saturday'
 };
 
-const dayPositionMap = {
-    'First': 1,
-    'Second': 2,
-    'Third': 3,
-    'Fourth': 4
-};
+const getRecurrenceRule = (meetingDateStart, options = {}) => {
+    const endDateRange = options.dateEnd
+        ? {
+            'type': 'endDate',
+            'startDate': `${moment(meetingDateStart).format('YYYY-MM-DD')}`,
+            'endDate': `${moment(options.dateEnd).format('YYYY-MM-DD')}`
+        } : {};
 
-const getRecurrenceRule = (options = {}) => {
-    const dailyIntervalRule = `${
-        options.recurrenceType === 'daily' ? `INTERVAL=${options.dailyInterval};` : ''
-    }`;
+    const occurrenceRule = options.timesEnd ? {
+        'type': 'numbered',
+        'startDate': `${moment(meetingDateStart).format('YYYY-MM-DD')}`,
+        'numberOfOccurrences': options.timesEnd
+    } : {};
 
-    // specified in RFC5545 https://datatracker.ietf.org/doc/html/rfc5545#section-3.8.5
-    const untilDate = `${moment(options.dateEnd).format('YYYYMMDDTHHmmss')}Z`;
+    const weeklyRule
+        = options.recurrenceType === 'weekly' && options.daysOfWeek.length > 0
+            ? { 'daysOfWeek': options.daysOfWeek.map(day => daysOfWeekMap[day]) }
+            : {};
 
-    const endDateRule = `${
-        options.dateEnd
-            ? `UNTIL=${untilDate};`
-            : ''
-    }`;
-
-    const occurrenceRule = options.timesEnd ? `COUNT=${options.timesEnd};` : '';
-
-    // eslint-disable-next-line no-confusing-arrow
-    const formatedDaysOfWeekString = daysOfWeek => daysOfWeek.reduce((acc, val, i) => i === 0
-        ? daysOfWeekMap[val]
-        : `${acc},${daysOfWeekMap[val]}`,
-        '');
-
-    const weeklyRule = `${
-        options.recurrenceType === 'weekly'
-            ? options.daysOfWeek.length > 0
-                ? `BYDAY=${formatedDaysOfWeekString(options.daysOfWeek)};`
-                : ''
-            : ''
-    }`;
-
-    const monthlyRule = `${options.recurrenceType === 'monthly'
+    const monthlyRule = options.recurrenceType === 'monthly'
         ? options.monthlyByDay
-            ? `INTERVAL=1;BYMONTHDAY=${options.monthlyByDay};`
-            : `INTERVAL=1;BYDAY=${dayPositionMap[options.monthlyByPosition]}${daysOfWeekMap[options.monthlyByWeekDay]};`
-        : ''
-    }`;
+            ? {
+                'type': 'absoluteMonthly',
+                'dayOfMonth': options.monthlyByDay
+            }
+            : {
+                'type': 'relativeMonthly',
+                'daysOfWeek': [ daysOfWeekMap[options.monthlyByWeekDay] ],
+                'index': options.monthlyByPosition
+            } : {};
 
-    // eslint-disable-next-line max-len
-    return `RRULE:FREQ=${reccurenceTypeMap[options.recurrenceType]};${dailyIntervalRule}${weeklyRule}${monthlyRule}${endDateRule}${occurrenceRule}`;
+    const mainPattern = {
+        'type': options.recurrenceType,
+        'interval': options.dailyInterval || 1
+    };
+    const reccurInfo = {
+        'recurrence': {
+            'pattern': {
+                ...mainPattern,
+                ...weeklyRule,
+                ...monthlyRule
+            },
+            'range': {
+                ...endDateRange,
+                ...occurrenceRule
+            }
+        }
+    };
+
+    return reccurInfo;
 };
 
-function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogleApi }) {
+function AddToGoogleCalendarButton({ meeting, multipleRoom, msSignIn, msToken, isSignedIn }) {
 
     const roomId = meeting.multipleRoomsQuantity
         ? `${meeting.roomId}-${multipleRoom}`
@@ -87,12 +90,20 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogl
 
     const recurrenceOptions = meeting?.recurrenceOptions?.options || null;
 
+    const reccurenceRule = recurrenceOptions ? getRecurrenceRule(meeting.dateStart, recurrenceOptions) : {};
+
+    console.log('reccurenceRule', reccurenceRule);
+
     const event = {
         'id': meeting.roomId,
-        'summary': meeting.name,
-        'location': meetingUrl,
-        'description': `Click the following link to join the meeting: ${meetingUrl}`,
-        'url': meeting.roomId,
+        'subject': meeting.name,
+        body: {
+            contentType: 'HTML',
+            content: `Click the following link to join the meeting: ${meetingUrl}`
+        },
+        location: {
+            displayName: meetingUrl
+        },
         'start': {
             'dateTime': meeting.dateStart,
             'timeZone': meeting.timezone
@@ -100,16 +111,20 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogl
         'end': {
             'dateTime': meeting.dateEnd,
             'timeZone': meeting.timezone
-        },
-
-        'recurrence': [
-            recurrenceOptions && getRecurrenceRule(recurrenceOptions)
-        ]
+        }
     };
 
     const onAddToCalendar = () => {
-        createCalendarEntry('primary', event);
+        isSignedIn().then(signedIn => {
+            if (signedIn) {
+                createCalendarEntry('1', { ...event,
+                    ...reccurenceRule }, msToken);
+            } else {
+                msSignIn();
+            }
+        });
     };
+
 
     return (
         <Button
@@ -122,18 +137,25 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogl
 }
 
 AddToGoogleCalendarButton.propTypes = {
-    attemptSignInToGoogleApi: PropTypes.func,
+    createCalendarEvent: PropTypes.func,
     meeting: PropTypes.object,
+    msSignIn: PropTypes.func,
     multipleRoom: PropTypes.number
 };
 
-const mapStateToProps = () => {
-    return {};
+const mapStateToProps = state => {
+    const calState = state['features/calendar-sync'] || {};
+    const msToken = calState.msAuthState && calState.msAuthState.accessToken;
+
+    return {
+        msToken
+    };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        attemptSignInToGoogleApi: () => dispatch(signIn('google'))
+        msSignIn: () => dispatch(microsoftCalendarApi.signIn()),
+        isSignedIn: () => dispatch(microsoftCalendarApi._isSignedIn())
     };
 };
 
