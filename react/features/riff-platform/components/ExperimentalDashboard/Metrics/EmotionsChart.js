@@ -25,7 +25,6 @@ import { connect } from 'react-redux';
 import { ScaleLoader } from 'react-spinners';
 
 import api from '../../../api';
-import { Colors } from '../colorHelper';
 import { RequestStatus, getSelectedMeeting, getMetricDataset, getDatasetStatus } from '../utils';
 
 import EmotionsGraph from './EmotionsGraph';
