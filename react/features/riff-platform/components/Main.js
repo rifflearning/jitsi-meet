@@ -75,7 +75,7 @@ function Meetings() {
                     path = { `${ROUTES.MEETINGS}/:meetingId` }>
                     <Meeting />
                 </Route>
-                <Route path = { `${ROUTES.MEETINGS}/:meetingId/edit` } >
+                <Route path = { `${ROUTES.MEETINGS}/:meetingId/edit` }>
                     <EditMeeting />
                 </Route>
             </Switch>

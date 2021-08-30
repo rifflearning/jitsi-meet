@@ -41,7 +41,7 @@ const getBollingerBands = (n, k, data) => {
 };
 
 const getUserSpikes = (bbData, userData) => {
-    const emotionsSike = [];
+    const emotionsSpike = [];
 
     userData.forEach(el => {
         const date = moment(el.timestamp).format('HH:mm:ss');
@@ -50,7 +50,7 @@ const getUserSpikes = (bbData, userData) => {
         if (sameTimeArr.length) {
             sameTimeArr.forEach(data => {
                 if (el.classification >= data.higth || el.classification <= data.low) {
-                    emotionsSike.push({
+                    emotionsSpike.push({
                         timestamp: el.timestamp,
                         classification: el.classification
                     });
@@ -59,7 +59,7 @@ const getUserSpikes = (bbData, userData) => {
         }
     });
 
-    return emotionsSike;
+    return emotionsSpike;
 };
 
 const getMinMax = arr => {
@@ -165,7 +165,7 @@ const createSpikesSerie = chart => {
 
     const bullet = emotionsSpikesSerie.bullets.push(new am4charts.Bullet());
 
-    // Add a circle user`s emotions spikes
+    // Add a circle to the user's emotions spikes
     const circle = bullet.createChild(am4core.Circle);
 
     circle.horizontalCenter = 'middle';
@@ -285,10 +285,10 @@ function EmotionsGraph({ data = [], participantId, startTime, endTime }) {
             upperBBSeries.fill = am4core.color(Colors.riffVioletMedium);
             upperBBSeries.name = 'higth';
 
-            // Add user`s emotions spikes series
+            // Add user's emotion spike series
             emotionSpikesSeries.current = createSpikesSerie(chartRef.current);
 
-            // Add user`s emotions series
+            // Add user's emotions series
             userSeries.current = createUserSeries(chartRef.current);
 
             // Add scrollbar
