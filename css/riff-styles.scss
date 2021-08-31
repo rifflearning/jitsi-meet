@@ -2,40 +2,6 @@ $violetColor: #775e80;
 
 html body {
   background-color: $defaultBackground;
-
-    #react #riff-dashboard-page-full {
-        background-color: $defaultBackground;
-        font-family: sans-serif;
-
-        h2 {
-            color: #ffffff;
-        }
-
-        .chart-card-container {
-                box-shadow: 0 1px 5px 0 rgba(#000000, 0.13);
-                background-color: #ffffff;
-        
-                .chart-card-title {
-                    line-height: 1.75;
-                    text-transform: uppercase;
-                    margin-bottom: 20px;
-                }        
-        
-            .loading-overlay {
-                background: #ffffff;
-            } 
-        
-            .empty-graph-text {
-                background: #ffffff;
-            }
-        
-            .amcharts-legend-container {
-                background: unset;
-            }
-        
-
-        }
-    }
 }
 
 .has-text-centered {
@@ -57,7 +23,7 @@ html body {
     .chart-card-info-small {
         box-sizing: border-box;
     }
-    
+
 
     &.closed {
        display: none;
@@ -115,7 +81,7 @@ body > .tooltip {
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 60%;
-    
+
     &.username-indicator-filmstrip-view {
         float: left !important;
 
@@ -142,7 +108,7 @@ body > .tooltip {
 }
 
 // Participant name by default always show on video container
-// in order to improve the user experience.  
+// in order to improve the user experience.
 .displayNameContainer {
   display: none;
 }
@@ -207,7 +173,7 @@ body > .tooltip {
     background: $primaryButtonBackground;
 }
 
-// chat overrides 
+// chat overrides
 .chat-input-container.populated #chat-input .send-button {
     background: $primaryButtonBackground;
 
@@ -225,7 +191,7 @@ body > .tooltip {
     }
 }
 
-// video quality dialog overrides 
+// video quality dialog overrides
 .video-quality-dialog .video-quality-dialog-contents .video-quality-dialog-label-container.active {
     color: $violetColor;
 
