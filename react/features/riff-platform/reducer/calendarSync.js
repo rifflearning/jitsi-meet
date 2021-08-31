@@ -13,7 +13,8 @@ const DEFAULT_GOOGLE_STATE = {
         googleAPIState: GOOGLE_API_STATES.NEEDS_LOADING,
         authorization: null,
         integrationReady: false,
-        error: null
+        error: null,
+        profileEmail: ''
     }
 };
 

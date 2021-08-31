@@ -127,6 +127,9 @@ export function signOut() {
             .then(() => googleApi.signOut())
             .then(() => {
                 dispatch({
+                    type: CALENDAR_CLEAR_GOOGLE_INTEGRATION
+                });
+                dispatch({
                     type: CALENDAR_SET_GOOGLE_API_STATE,
                     googleAPIState: GOOGLE_API_STATES.LOADED
                 });
@@ -173,11 +176,9 @@ export function bootstrapCalendarIntegration() {
                     .then(signedIn => {
                         console.log('signedIn', signedIn);
                         if (signedIn) {
+                            dispatch(updateGoogleEmailProfile());
+
                             return dispatch(setGoogleIntegrationReady());
-
-                            // return true;
-
-                            // dispatch(updateProfile(integrationType));
                         }
 
                         return dispatch(clearGoogleCalendarIntegration());
@@ -233,6 +234,26 @@ export function setGoogleIntegrationReady() {
 }
 
 /**
+ * Signals to get current profile data linked to the current calendar
+ * integration that is in use.
+ *
+ * @param {string} email - Profile email.
+ * @returns {Function}
+ */
+export function setCalendarProfileEmail(email) {
+    return {
+        type: CALENDAR_SET_GOOGLE_API_PROFILE,
+        profileEmail: email
+    };
+}
+
+// eslint-disable-next-line require-jsdoc
+export function updateGoogleEmailProfile() {
+    return dispatch => googleApi.getCurrentUserProfile()
+        .then(profile => dispatch(setCalendarProfileEmail(profile.getEmail())));
+}
+
+/**
  * Signals signing in to the specified calendar integration.
  *
  * @param {string} calendarType - The calendar integration which should be
@@ -246,7 +267,7 @@ export function googleSignIn() {
             .then(() => dispatch(signIn()))
             .then(() => dispatch(setGoogleIntegrationReady()))
 
-            // .then(() => dispatch(updateGoogleProfile()))
+             .then(() => dispatch(updateGoogleEmailProfile()))
             .catch(error => {
                 // TODO add logger
                 console.error(

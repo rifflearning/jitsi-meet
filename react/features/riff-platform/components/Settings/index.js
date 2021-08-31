@@ -8,6 +8,7 @@ import React, { useEffect } from 'react';
 import GoogleIcon from '../../../../../images/googleLogo.svg';
 import MicrosoftLogo from '../../../../../images/microsoftLogo.svg';
 import { connect } from '../../../base/redux';
+import { signOut, bootstrapCalendarIntegration, googleSignIn } from '../../actions/calendarSync';
 
 import StyledPaper from './../StyledPaper';
 
@@ -31,17 +32,24 @@ const useStyles = makeStyles(() => {
 });
 
 const Settings = ({
-    isConnectedToGoogleCalendar = true,
-    googleProfileEmail = 'uliana@gmail.com',
+    isConnectedToGoogleCalendar,
+    googleProfileEmail,
+    googleSignOut,
+    bootstrapGoogleCalendarIntegration,
+    googleCalendarSignIn,
     isConnectedToMsCalendar,
     msProfileEmail }) => {
 
     const classes = useStyles();
 
-    const onClickSignInGoogle = () => { };
-    const onClickDisconnectGoogle = () => {};
+    const onClickSignInGoogle = () => googleCalendarSignIn();
+    const onClickDisconnectGoogle = () => googleSignOut();
     const onClickSignInMicrosoft = () => {};
     const onClickDisconnectMicrosoft = () => {};
+
+    useEffect(() => {
+        bootstrapGoogleCalendarIntegration();
+    }, []);
 
 
     return (
@@ -169,22 +177,28 @@ const Settings = ({
 };
 
 Settings.propTypes = {
-
+    bootstrapGoogleCalendarIntegration: PropTypes.func,
+    googleCalendarSignIn: PropTypes.func,
+    googleProfileEmail: PropTypes.string,
+    googleSignOut: PropTypes.func,
+    isConnectedToGoogleCalendar: PropTypes.bool
 };
 
 const mapStateToProps = state => {
-    const calendarState = state['features/calendar-sync'] || {};
+    const googleCalendarState = state['features/riff-platform'].calendarSync.google || {};
 
     return {
-        isConnectedToGoogleCalendar: calendarState.integrationReady,
-        profileEmail: calendarState.profileEmail
+        isConnectedToGoogleCalendar: googleCalendarState.integrationReady,
+        googleProfileEmail: googleCalendarState.profileEmail
 
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-
+        googleSignOut: () => dispatch(signOut()),
+        bootstrapGoogleCalendarIntegration: () => dispatch(bootstrapCalendarIntegration()),
+        googleCalendarSignIn: () => dispatch(googleSignIn())
     };
 };
 
