@@ -1,95 +1,64 @@
-// @flow
 
+import { GOOGLE_API_STATES } from '../actions/calendarSync';
 import {
-    CLEAR_CALENDAR_INTEGRATION,
-    SET_CALENDAR_AUTH_STATE,
-    SET_CALENDAR_AUTHORIZATION,
-    SET_CALENDAR_ERROR,
-    SET_CALENDAR_EVENTS,
-    SET_CALENDAR_INTEGRATION,
-    SET_CALENDAR_PROFILE_EMAIL,
-    SET_LOADING_CALENDAR_EVENTS
-} from '../../calendar-sync/actionTypes';
+    CALENDAR_SET_GOOGLE_API_STATE,
+    CALENDAR_CLEAR_GOOGLE_INTEGRATION,
+    CALENDAR_SET_GOOGLE_ERROR,
+    CALENDAR_SET_GOOGLE_INTEGRATION,
+    CALENDAR_SET_GOOGLE_API_PROFILE
+} from '../constants/actionTypes';
 
-// import { PersistenceRegistry, ReducerRegistry, set } from '../base/redux';
-
-
-/**
- * The default state of the calendar feature.
- *
- * @type {Object}
- */
-const DEFAULT_STATE = {
-    authorization: undefined,
-    events: [],
-    integrationReady: false,
-    integrationType: undefined,
-    msAuthState: undefined
+const DEFAULT_GOOGLE_STATE = {
+    google: {
+        googleAPIState: GOOGLE_API_STATES.NEEDS_LOADING,
+        authorization: null,
+        integrationReady: false,
+        error: null
+    }
 };
 
-/**
- * Constant for the Redux subtree of the calendar feature.
- *
- * NOTE: This feature can be disabled and in that case, accessing this subtree
- * directly will return undefined and will need a bunch of repetitive type
- * checks in other features. Make sure you take care of those checks, or
- * consider using the {@code isCalendarEnabled} value to gate features if
- * needed.
- */
-const STORE_NAME = 'features/calendar-sync';
-
-// /**
-//  * NOTE: Never persist the authorization value as it's needed to remain a
-//  * runtime value to see if we need to re-request the calendar permission from
-//  * the user.
-//  */
-// PersistenceRegistry.register(STORE_NAME, {
-//     integrationType: true,
-//     msAuthState: true
-// });
-
-export default (state = {}, action) => {
+export default (state = DEFAULT_GOOGLE_STATE, action) => {
     switch (action.type) {
-    case CLEAR_CALENDAR_INTEGRATION:
-        return DEFAULT_STATE;
-
-    case SET_CALENDAR_AUTH_STATE: {
-        if (!action.msAuthState) {
-            // received request to delete the state
-            return { ...state,
-                msAuthState: undefined };
-        }
-
+    case CALENDAR_CLEAR_GOOGLE_INTEGRATION:
         return {
-            state,
-            msAuthState: {
-                ...state.msAuthState,
-                ...action.msAuthState
+            ...state,
+            google: DEFAULT_GOOGLE_STATE
+        };
+    case CALENDAR_SET_GOOGLE_API_STATE:
+        return {
+            ...state,
+            google: {
+                ...state.google,
+                googleAPIState: action.googleAPIState,
+                googleResponse: action.googleResponse
             }
         };
-    }
 
-    // case SET_CALENDAR_AUTHORIZATION:
-    //     return set(state, 'authorization', action.authorization);
+    case CALENDAR_SET_GOOGLE_ERROR:
+        return {
+            ...state,
+            google: {
+                ...state.google,
+                error: action.error
+            }
+        };
+    case CALENDAR_SET_GOOGLE_INTEGRATION:
+        return {
+            ...state,
+            google: {
+                ...state.google,
+                integrationReady: action.integrationReady
+            }
+        };
 
-    // case SET_CALENDAR_ERROR:
-    //     return set(state, 'error', action.error);
-
-    // case SET_CALENDAR_EVENTS:
-    //     return set(state, 'events', action.events);
-
-    // case SET_CALENDAR_INTEGRATION:
-    //     return {
-    //         ...state,
-    //         integrationReady: action.integrationReady,
-    //         integrationType: action.integrationType
-    //     };
-
-    // case SET_CALENDAR_PROFILE_EMAIL:
-    //     return set(state, 'profileEmail', action.email);
-
-    // case SET_LOADING_CALENDAR_EVENTS:
-    //     return set(state, 'isLoadingEvents', action.isLoadingEvents);
+    case CALENDAR_SET_GOOGLE_API_PROFILE:
+        return {
+            ...state,
+            google: {
+                ...state.google,
+                profileEmail: action.profileEmail
+            }
+        };
     }
 
     return state;

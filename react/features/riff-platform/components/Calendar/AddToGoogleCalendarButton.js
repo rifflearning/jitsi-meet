@@ -6,13 +6,11 @@ import {
 import Icon from '@material-ui/core/Icon';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import GoogleCalendarIcon from '../../../../../images/googleCalendar.svg';
 import { connect } from '../../../base/redux';
-import { signIn } from '../../../calendar-sync';
-
-import createCalendarEntry from './googleCalendar';
+import { insertCalendarEntry, bootstrapCalendarIntegration } from '../../actions/calendarSync';
 
 const reccurenceTypeMap = {
     'daily': 'DAILY',
@@ -78,7 +76,12 @@ const getRecurrenceRule = (options = {}) => {
     return `RRULE:FREQ=${reccurenceTypeMap[options.recurrenceType]};${dailyIntervalRule}${weeklyRule}${monthlyRule}${endDateRule}${occurrenceRule}`;
 };
 
-function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogleApi }) {
+function AddToGoogleCalendarButton({
+    meeting,
+    multipleRoom,
+    createCalendarEntry,
+    bootstrapGoogleCalendarIntegration
+}) {
 
     const roomId = meeting.multipleRoomsQuantity
         ? `${meeting.roomId}-${multipleRoom}`
@@ -107,6 +110,10 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogl
         ]
     };
 
+    useEffect(() => {
+        bootstrapGoogleCalendarIntegration();
+    }, []);
+
     const onAddToCalendar = () => {
         createCalendarEntry('primary', event);
     };
@@ -122,9 +129,11 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, attemptSignInToGoogl
 }
 
 AddToGoogleCalendarButton.propTypes = {
-    attemptSignInToGoogleApi: PropTypes.func,
+    bootstrapGoogleCalendarIntegration: PropTypes.func,
+    createCalendarEntry: PropTypes.func,
     meeting: PropTypes.object,
     multipleRoom: PropTypes.number
+
 };
 
 const mapStateToProps = () => {
@@ -133,7 +142,8 @@ const mapStateToProps = () => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        attemptSignInToGoogleApi: () => dispatch(signIn('google'))
+        createCalendarEntry: (calendarId, event) => dispatch(insertCalendarEntry('primary', event)),
+        bootstrapGoogleCalendarIntegration: () => dispatch(bootstrapCalendarIntegration())
     };
 };
 
