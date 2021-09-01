@@ -34,6 +34,9 @@ const useStyles = makeStyles(() => {
         },
         boldText: {
             fontWeight: 600
+        },
+        textPrimary: {
+            fontSize: '1rem'
         }
     };
 });
@@ -108,14 +111,14 @@ const Settings = ({
                             {isConnectedToGoogleCalendar
                                 ? <Grid
                                     item = { true }>
-                                    <Typography>
+                                    <Box className = { classes.textPrimary }>
                                     Currently accessing calendar for
                                         <Box
                                             className = { classes.boldText }
                                             display = 'inline'>
                                             {` ${googleProfileEmail}`}
                                         </Box>
-                                    </Typography>
+                                    </Box>
                                     <Typography
                                         color = 'textSecondary'
                                         variant = 'body2'>
@@ -148,14 +151,14 @@ const Settings = ({
                             {isConnectedToMsCalendar
                                 ? <Grid
                                     item = { true }>
-                                    <Typography>
+                                    <Box className = { classes.textPrimary }>
                                     Currently accessing calendar for
                                         <Box
                                             className = { classes.boldText }
                                             display = 'inline'>
                                             {` ${msProfileEmail}`}
                                         </Box>
-                                    </Typography>
+                                    </Box>
                                     <Typography
                                         color = 'textSecondary'
                                         variant = 'body2'>
