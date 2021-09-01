@@ -133,21 +133,17 @@ export function signIn() {
  *
  * @returns {function(Dispatch<any>): Promise<string | never>}
  */
-export function signOut() {
+export function googleSignOut() {
     return dispatch =>
         googleApi.get()
-            .then(() => googleApi.signOut())
+            .then(api =>
+                api.auth2
+                && api.auth2.getAuthInstance
+                && api.auth2.getAuthInstance()
+                && api.auth2.getAuthInstance().disconnect())
             .then(() => {
                 dispatch({
                     type: CALENDAR_CLEAR_GOOGLE_INTEGRATION
-                });
-                dispatch({
-                    type: CALENDAR_SET_GOOGLE_API_STATE,
-                    googleAPIState: GOOGLE_API_STATES.LOADED
-                });
-                dispatch({
-                    type: CALENDAR_SET_GOOGLE_API_PROFILE,
-                    profileEmail: ''
                 });
             });
 }
@@ -440,6 +436,14 @@ const MS_API_CONFIGURATION = {
     REDIRECT_URI: `${window.location.origin}/static/msredirect.html`
 };
 
+export const msCalendarSync = {
+    get() {
+        return JSON.parse(localStorage.getItem('msCalendarSync'));
+    },
+    set(data) {
+        return localStorage.setItem('msCalendarSync', JSON.stringify(data));
+    }
+};
 
 /**
  * Sends an action to update the current calendar api auth state in redux.
@@ -452,6 +456,9 @@ const MS_API_CONFIGURATION = {
  * }}
  */
 export function setMsCalendarAPIAuthState(newState) {
+    // fix it
+    newState && msCalendarSync.set(newState);
+
     return {
         type: CALENDAR_SET_MS_AUTH_STATE,
         msAuthState: newState
@@ -467,6 +474,8 @@ export function setMsCalendarAPIAuthState(newState) {
  * }}
  */
 export function clearMsCalendarIntegration() {
+    msCalendarSync.set({});
+
     return {
         type: CALENDAR_CLEAR_MS_INTEGRATION
     };
@@ -606,8 +615,6 @@ export function microsoftSignIn() {
             if (!tokenParts) {
                 signInDeferred.reject('Invalid token received');
 
-                // Promise.reject({ error: 'Invalid token received' });
-
                 return;
             }
             dispatch(setMsCalendarAPIAuthState({
@@ -643,6 +650,8 @@ export function microsoftIsSignedIn() {
         const isExpired = now > tokenExpires && !isNaN(tokenExpires);
 
         if (state.accessToken && isExpired) {
+            console.log('inside refresh');
+
             // token expired, let's refresh it
             return dispatch(refreshAuthToken())
                .then(() => true)
@@ -777,9 +786,16 @@ export function bootstrapMsCalendarIntegration() {
         if (!isMsCalendarEnabled(state)) {
             return Promise.reject();
         }
+        const msAuthState = msCalendarSync.get();
+
+        if (msAuthState?.accessToken) {
+            dispatch(setMsCalendarAPIAuthState(msAuthState));
+        }
+
         const {
             integrationReady
         } = state['features/riff-platform'].calendarSync.microsoft;
+
 
         return Promise.resolve()
             .then(() => {
@@ -818,8 +834,8 @@ export function updateMsEmailProfile() {
     };
 }
 
-export function msSignOut() {
-    return (dispatch, getState) => dispatch(clearGoogleCalendarIntegration());
+export function microsoftSignOut() {
+    return (dispatch, getState) => dispatch(clearMsCalendarIntegration());
 }
 
 
