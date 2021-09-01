@@ -566,8 +566,10 @@ export function microsoftSignIn() {
 
         const windowCloseCheck = setInterval(() => {
             if (popupAuthWindow && popupAuthWindow.closed) {
-                signInDeferred.reject(
-                        'Popup closed before completing auth.');
+                // signInDeferred.reject(
+                //         'Popup closed before completing auth.');
+                Promise.reject({ error:
+                    'Popup closed before completing auth.' });
                 popupAuthWindow = null;
                 window.removeEventListener('message', handleAuth);
                 clearInterval(windowCloseCheck);
@@ -603,9 +605,10 @@ export function microsoftSignIn() {
             if (!tokenParts) {
                 signInDeferred.reject('Invalid token received');
 
+                // Promise.reject({ error: 'Invalid token received' });
+
                 return;
             }
-
             dispatch(setMsCalendarAPIAuthState({
                 authState: undefined,
                 accessToken: tokenParts.accessToken,
@@ -614,8 +617,9 @@ export function microsoftSignIn() {
                 userDomainType: tokenParts.userDomainType,
                 userSigninName: tokenParts.userSigninName
             }));
+            dispatch(setMsIntegrationReady());
 
-            signInDeferred.resolve();
+            return signInDeferred.resolve();
         }
 
         window.addEventListener('message', handleAuth);
@@ -644,7 +648,7 @@ export function microsoftIsSignedIn() {
                .catch(() => false);
         }
 
-        return Promise.resolve(state.accessToken && !isExpired);
+        return Promise.resolve(Boolean(state.accessToken) && !isExpired);
     };
 }
 
@@ -700,51 +704,54 @@ function refreshAuthToken() {
     };
 }
 
-const checkMsAuth = token => {
-
-    if (!token) {
-        return Promise.reject({ error: ERRORS.AUTH_FAILED });
-    }
-
-    return Promise.resolve();
-};
-
-
 // eslint-disable-next-line require-jsdoc
 export function createMsCalendarEntry(calendarId, event) {
-    return (dispatch, getState) => {
-        const state
-        = getState()['features/riff-platform'].calendarSync.microsoft.msAuthState || {};
-        const token = state.accessToken;
+    return (dispatch, getState) =>
 
-        checkMsAuth(token)
-        .then(() => Promise.resolve(), error => {
+        dispatch(microsoftIsSignedIn())
+        .then(isSigned => {
+            console.log('isSigned 3', isSigned);
+            if (!isSigned) {
+                return Promise.reject({ error: ERRORS.AUTH_FAILED });
+            }
+
+            return Promise.resolve(isSigned);
+        })
+        .then(res => {
+            console.log('res', res);
+
+            return Promise.resolve();
+        }, error => {
+            console.log('err', error);
             if (error.error === ERRORS.AUTH_FAILED) {
                 return dispatch(microsoftSignIn());
             }
         })
-        .then(r => {
-            console.log('r', r);
-            const client = Client.init({
-                authProvider: done => done(null, token)
+            .then(() => {
+                const state
+                    = getState()['features/riff-platform'].calendarSync.microsoft.msAuthState || {};
+                const token = state.accessToken;
+            
+                const client = Client.init({
+                    authProvider: done => done(null, token)
+                });
+
+                return client
+                    .api('/me/events/')
+                    .post(event)
+                    .then(e => {
+
+                        console.log('created', e);
+                        if (e?.id) {
+
+                            const eventUrl = e.webLink;
+
+                            window.open(eventUrl, '_blank').focus();
+                        }
+                    });
             });
 
-            return client
-                        .api('/me/events/')
-                        .post(event)
-                        .then(res => {
 
-                            console.log('res', res);
-                            if (res?.id) {
-
-                                const eventUrl = res.webLink;
-
-                                window.open(eventUrl, '_blank').focus();
-                            }
-                        });
-        });
-
-    };
 }
 
 const isMsCalendarEnabled = state => {
@@ -808,6 +815,10 @@ export function updateMsEmailProfile() {
 
         return Promise.resolve(email);
     };
+}
+
+export function msSignOut() {
+    return dispatch(clearGoogleCalendarIntegration())
 }
 
 

@@ -79,7 +79,15 @@ const getRecurrenceRule = (meetingDateStart, options = {}) => {
     return reccurInfo;
 };
 
-function AddToGoogleCalendarButton({ meeting, multipleRoom, msSignIn, msToken, isSignedIn, createCalendarEntry, bootstrapCalendarIntegration }) {
+function AddToGoogleCalendarButton({
+    meeting,
+    multipleRoom,
+    msSignIn,
+    msToken,
+    isSignedIn,
+    createCalendarEntry,
+    bootstrapCalendarIntegration
+}) {
 
     const roomId = meeting.multipleRoomsQuantity
         ? `${meeting.roomId}-${multipleRoom}`
@@ -91,7 +99,7 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, msSignIn, msToken, i
     const reccurenceRule = recurrenceOptions ? getRecurrenceRule(meeting.dateStart, recurrenceOptions) : {};
 
     const event = {
-        'id': meeting.roomId,
+        'transactionId': meeting.roomId,
         'subject': meeting.name,
         body: {
             contentType: 'HTML',
@@ -116,7 +124,7 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, msSignIn, msToken, i
     []);
 
     const onAddToCalendar = () => createCalendarEntry('1', { ...event,
-        ...reccurenceRule }, msToken);
+        ...reccurenceRule });
 
     return (
         <Button
@@ -146,7 +154,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        createCalendarEntry: (calendarId, event) => dispatch(createMsCalendarEntry(calendarId, event)),,
+        createCalendarEntry: (calendarId, event) => dispatch(createMsCalendarEntry(calendarId, event)),
         bootstrapCalendarIntegration: () => dispatch(bootstrapMsCalendarIntegration())
     };
 };

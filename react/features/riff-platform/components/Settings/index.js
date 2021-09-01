@@ -8,7 +8,12 @@ import React, { useEffect } from 'react';
 import GoogleIcon from '../../../../../images/googleLogo.svg';
 import MicrosoftLogo from '../../../../../images/microsoftLogo.svg';
 import { connect } from '../../../base/redux';
-import { signOut, bootstrapCalendarIntegration, googleSignIn } from '../../actions/calendarSync';
+import { microsoftCalendarApi } from '../../../calendar-sync/web/microsoftCalendar';
+import { signOut, bootstrapCalendarIntegration, googleSignIn,
+    bootstrapMsCalendarIntegration,
+    microsoftSignIn,
+    microsoftSignOut
+ } from '../../actions/calendarSync';
 
 import StyledPaper from './../StyledPaper';
 
@@ -38,17 +43,21 @@ const Settings = ({
     bootstrapGoogleCalendarIntegration,
     googleCalendarSignIn,
     isConnectedToMsCalendar,
+    bootstrapMicrosftCalendarIntegration,
+    msCalendarSignIn,
+    msSignOut,
     msProfileEmail }) => {
 
     const classes = useStyles();
 
     const onClickSignInGoogle = () => googleCalendarSignIn();
     const onClickDisconnectGoogle = () => googleSignOut();
-    const onClickSignInMicrosoft = () => {};
-    const onClickDisconnectMicrosoft = () => {};
+    const onClickSignInMicrosoft = () => msCalendarSignIn();
+    const onClickDisconnectMicrosoft = () => msSignOut();
 
     useEffect(() => {
         bootstrapGoogleCalendarIntegration();
+        bootstrapMicrosftCalendarIntegration();
     }, []);
 
 
@@ -154,7 +163,7 @@ const Settings = ({
                                         className = { classes.button }
                                         color = 'default'
                                         onClick = { onClickDisconnectMicrosoft }
-                                        startIcon = { <Icon><GoogleIcon /></Icon> }
+                                        startIcon = { <Icon><MicrosoftLogo /></Icon> }
                                         variant = 'contained'> Disconnect </Button>
                                 </Grid> : <Grid
                                     item = { true }>
@@ -186,11 +195,13 @@ Settings.propTypes = {
 
 const mapStateToProps = state => {
     const googleCalendarState = state['features/riff-platform'].calendarSync.google || {};
+    const msCalendarState = state['features/riff-platform'].calendarSync.microsoft || {};
 
     return {
         isConnectedToGoogleCalendar: googleCalendarState.integrationReady,
-        googleProfileEmail: googleCalendarState.profileEmail
-
+        googleProfileEmail: googleCalendarState.profileEmail,
+        isConnectedToMsCalendar: msCalendarState.integrationReady,
+        msProfileEmail: msCalendarState.msAuthState.userSigninName
     };
 };
 
@@ -198,7 +209,10 @@ const mapDispatchToProps = dispatch => {
     return {
         googleSignOut: () => dispatch(signOut()),
         bootstrapGoogleCalendarIntegration: () => dispatch(bootstrapCalendarIntegration()),
-        googleCalendarSignIn: () => dispatch(googleSignIn())
+        googleCalendarSignIn: () => dispatch(googleSignIn()),
+        bootstrapMicrosftCalendarIntegration: () => dispatch(bootstrapMsCalendarIntegration()),
+        msCalendarSignIn: () => dispatch(microsoftSignIn()),
+        msSignOut: () => dispatch(microsoftSignOut())
     };
 };
 
