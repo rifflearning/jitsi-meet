@@ -4,10 +4,12 @@ import UIEvents from '../../../service/UI/UIEvents';
 import { getCurrentConference } from '../base/conference';
 import { setActiveModalId } from '../base/modal';
 import { MiddlewareRegistry, StateListenerRegistry } from '../base/redux';
+import { maybeExtractIdFromDisplayName } from '../riff-platform/functions';
 
 import { TOGGLE_DOCUMENT_EDITING } from './actionTypes';
 import { setDocumentEditingState, setDocumentUrl } from './actions';
 import { SHARE_DOCUMENT_VIEW_ID } from './constants';
+import { generateEtherpadUrl, generateSimulationUrl } from './functions';
 
 declare var APP: Object;
 
@@ -54,14 +56,19 @@ StateListenerRegistry.register(
     (conference, { dispatch, getState }, previousConference) => {
         if (conference) {
             conference.addCommandListener(ETHERPAD_COMMAND,
-                ({ value }) => {
+                ({ value: roomName }) => {
                     let url;
-                    const { etherpad_base: etherpadBase } = getState()['features/base/config'];
+                    const { etherpadBaseUrl, simulationUrl } = getState()['features/base/config'];
+                    const {
+                        displayName,
+                        id: userId
+                    } = maybeExtractIdFromDisplayName(APP.conference.getLocalDisplayName());
 
-                    if (etherpadBase) {
-                        const u = new URL(value, etherpadBase);
-
-                        url = u.toString();
+                    // simulation takes precedence over etherpad
+                    if (simulationUrl) {
+                        url = generateSimulationUrl(simulationUrl, roomName, displayName, userId);
+                    } else if (etherpadBaseUrl) {
+                        url = generateEtherpadUrl(etherpadBaseUrl, roomName, displayName);
                     }
 
                     dispatch(setDocumentUrl(url));

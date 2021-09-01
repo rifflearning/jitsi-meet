@@ -62,8 +62,8 @@ MiddlewareRegistry.register(store => next => action => {
             _storeTileViewStateAndClear(store);
         } else {
             _restoreTileViewState(store);
-            shouldUpdateAutoPin = true;
         }
+        shouldUpdateAutoPin = true;
         break;
 
     // Things to update when tile view state changes
