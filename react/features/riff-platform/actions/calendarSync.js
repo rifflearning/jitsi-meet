@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 /* eslint-disable no-unused-vars */
 import { Client } from '@microsoft/microsoft-graph-client';
 import base64js from 'base64-js';
@@ -731,7 +732,7 @@ export function createMsCalendarEntry(calendarId, event) {
                 const state
                     = getState()['features/riff-platform'].calendarSync.microsoft.msAuthState || {};
                 const token = state.accessToken;
-            
+
                 const client = Client.init({
                     authProvider: done => done(null, token)
                 });
@@ -818,7 +819,7 @@ export function updateMsEmailProfile() {
 }
 
 export function msSignOut() {
-    return dispatch(clearGoogleCalendarIntegration())
+    return (dispatch, getState) => dispatch(clearGoogleCalendarIntegration());
 }
 
 
