@@ -13,8 +13,7 @@ import { connect } from '../../../base/redux';
 
 // import { signIn } from '../../../calendar-sync';
 import { microsoftCalendarApi } from '../../../calendar-sync/web/microsoftCalendar';
-
-import { createCalendarEntry } from './msCalendar';
+import { bootstrapMsCalendarIntegration, createMsCalendarEntry } from '../../actions/calendarSync';
 
 window.config.microsoftApiApplicationClientID = 'bc85555d-6216-4981-aa9f-ee1da895f660';
 
@@ -80,7 +79,7 @@ const getRecurrenceRule = (meetingDateStart, options = {}) => {
     return reccurInfo;
 };
 
-function AddToGoogleCalendarButton({ meeting, multipleRoom, msSignIn, msToken, isSignedIn }) {
+function AddToGoogleCalendarButton({ meeting, multipleRoom, msSignIn, msToken, isSignedIn, createCalendarEntry, bootstrapCalendarIntegration }) {
 
     const roomId = meeting.multipleRoomsQuantity
         ? `${meeting.roomId}-${multipleRoom}`
@@ -111,17 +110,13 @@ function AddToGoogleCalendarButton({ meeting, multipleRoom, msSignIn, msToken, i
         }
     };
 
-    const onAddToCalendar = () => {
-        isSignedIn().then(signedIn => {
-            if (signedIn) {
-                createCalendarEntry('1', { ...event,
-                    ...reccurenceRule }, msToken);
-            } else {
-                msSignIn();
-            }
-        });
-    };
+    useEffect(() => {
+        bootstrapCalendarIntegration();
+    },
+    []);
 
+    const onAddToCalendar = () => createCalendarEntry('1', { ...event,
+        ...reccurenceRule }, msToken);
 
     return (
         <Button
@@ -151,8 +146,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        msSignIn: () => dispatch(microsoftCalendarApi.signIn()),
-        isSignedIn: () => dispatch(microsoftCalendarApi._isSignedIn())
+        createCalendarEntry: (calendarId, event) => dispatch(createMsCalendarEntry(calendarId, event)),,
+        bootstrapCalendarIntegration: () => dispatch(bootstrapMsCalendarIntegration())
     };
 };
 
