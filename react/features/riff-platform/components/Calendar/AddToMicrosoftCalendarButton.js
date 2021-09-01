@@ -1,8 +1,6 @@
 /* eslint-disable require-jsdoc */
 
-import {
-    Button
-} from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -10,10 +8,8 @@ import React, { useEffect } from 'react';
 
 import OutlookCalendarIcon from '../../../../../images/outlookIcon.svg';
 import { connect } from '../../../base/redux';
-
-// import { signIn } from '../../../calendar-sync';
-import { microsoftCalendarApi } from '../../../calendar-sync/web/microsoftCalendar';
 import { bootstrapMsCalendarIntegration, createMsCalendarEntry } from '../../actions/calendarSync';
+import { isMsCalendarEnabled } from '../../calendarSyncFunctions';
 
 window.config.microsoftApiApplicationClientID = 'bc85555d-6216-4981-aa9f-ee1da895f660';
 
@@ -82,12 +78,14 @@ const getRecurrenceRule = (meetingDateStart, options = {}) => {
 function AddToGoogleCalendarButton({
     meeting,
     multipleRoom,
-    msSignIn,
-    msToken,
-    isSignedIn,
+    isMsCalendarIntegartionEnabled,
     createCalendarEntry,
     bootstrapCalendarIntegration
 }) {
+
+    if (!isMsCalendarIntegartionEnabled) {
+        return null;
+    }
 
     const roomId = meeting.multipleRoomsQuantity
         ? `${meeting.roomId}-${multipleRoom}`
@@ -121,10 +119,12 @@ function AddToGoogleCalendarButton({
     useEffect(() => {
         bootstrapCalendarIntegration();
     },
-    []);
+        []);
 
-    const onAddToCalendar = () => createCalendarEntry('1', { ...event,
-        ...reccurenceRule });
+    const onAddToCalendar = () => createCalendarEntry('1', {
+        ...event,
+        ...reccurenceRule
+    });
 
     return (
         <Button
@@ -137,18 +137,17 @@ function AddToGoogleCalendarButton({
 }
 
 AddToGoogleCalendarButton.propTypes = {
-    createCalendarEvent: PropTypes.func,
+    bootstrapCalendarIntegration: PropTypes.func,
+    createCalendarEntry: PropTypes.func,
+    isMsCalendarIntegartionEnabled: PropTypes.bool,
     meeting: PropTypes.object,
-    msSignIn: PropTypes.func,
     multipleRoom: PropTypes.number
 };
 
 const mapStateToProps = state => {
-    const calState = state['features/calendar-sync'] || {};
-    const msToken = calState.msAuthState && calState.msAuthState.accessToken;
 
     return {
-        msToken
+        isMsCalendarIntegartionEnabled: isMsCalendarEnabled(state)
     };
 };
 

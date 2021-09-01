@@ -1,5 +1,4 @@
 
-import { GOOGLE_API_STATES } from '../actions/calendarSync';
 import {
     CALENDAR_SET_GOOGLE_API_STATE,
     CALENDAR_CLEAR_GOOGLE_INTEGRATION,
@@ -9,18 +8,19 @@ import {
     CALENDAR_SET_MS_AUTH_STATE,
     CALENDAR_SET_MS_INTEGRATION
 } from '../constants/actionTypes';
+import { GOOGLE_API_STATES } from '../constants/calendarSync';
 
 const DEFAULT_GOOGLE_STATE = {
     google: {
         googleAPIState: GOOGLE_API_STATES.NEEDS_LOADING,
-        authorization: null,
         integrationReady: false,
         error: null,
         profileEmail: ''
     },
     microsoft: {
         integrationReady: false,
-        msAuthState: {}
+        msAuthState: {},
+        error: null
     }
 };
 
@@ -68,7 +68,6 @@ export default (state = DEFAULT_GOOGLE_STATE, action) => {
         };
     case CALENDAR_SET_MS_AUTH_STATE: {
         if (!action.msAuthState) {
-            // received request to delete the state
             return {
                 ...state,
                 microsoft: {

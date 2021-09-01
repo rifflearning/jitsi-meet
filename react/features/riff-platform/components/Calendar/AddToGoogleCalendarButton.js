@@ -11,6 +11,10 @@ import React, { useEffect } from 'react';
 import GoogleCalendarIcon from '../../../../../images/googleCalendar.svg';
 import { connect } from '../../../base/redux';
 import { insertCalendarEntry, bootstrapCalendarIntegration } from '../../actions/calendarSync';
+import { isGoogleCalendarEnabled } from '../../calendarSyncFunctions';
+
+window.config.enableCalendarIntegration = true;
+window.config.googleApiApplicationClientID = '387032831739-h6i4p8ou45j21ke8317dn7888d92ur45.apps.googleusercontent.com';
 
 const reccurenceTypeMap = {
     'daily': 'DAILY',
@@ -80,8 +84,13 @@ function AddToGoogleCalendarButton({
     meeting,
     multipleRoom,
     createCalendarEntry,
-    bootstrapGoogleCalendarIntegration
+    bootstrapGoogleCalendarIntegration,
+    isGoogleCalendarIntegrationEnabled
 }) {
+
+    if (!isGoogleCalendarIntegrationEnabled) {
+        return null;
+    }
 
     const roomId = meeting.multipleRoomsQuantity
         ? `${meeting.roomId}-${multipleRoom}`
@@ -131,13 +140,16 @@ function AddToGoogleCalendarButton({
 AddToGoogleCalendarButton.propTypes = {
     bootstrapGoogleCalendarIntegration: PropTypes.func,
     createCalendarEntry: PropTypes.func,
+    isGoogleCalendarIntegrationEnabled: PropTypes.bool,
     meeting: PropTypes.object,
     multipleRoom: PropTypes.number
 
 };
 
-const mapStateToProps = () => {
-    return {};
+const mapStateToProps = state => {
+    return {
+        isGoogleCalendarIntegrationEnabled: isGoogleCalendarEnabled(state)
+    };
 };
 
 const mapDispatchToProps = dispatch => {

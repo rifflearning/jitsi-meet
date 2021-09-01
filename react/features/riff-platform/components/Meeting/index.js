@@ -24,6 +24,7 @@ import { connect } from '../../../base/redux';
 import { getMeetingById, meetingReset } from '../../actions/meeting';
 import { deleteMeeting,
     deleteMeetingsRecurring } from '../../actions/meetings';
+import { isGoogleCalendarEnabled, isMsCalendarEnabled } from '../../calendarSyncFunctions';
 import * as ROUTES from '../../constants/routes';
 import { getNumberRangeArray, formatDurationTime } from '../../functions';
 import AddToGoogleCalendarButton from '../Calendar/AddToGoogleCalendarButton';
@@ -31,9 +32,6 @@ import AddToMsCalendarButton from '../Calendar/AddToMicrosoftCalendarButton';
 import Loader from '../Loader';
 import { ConfirmationDialogRaw } from '../Meetings/Dialog';
 import StyledPaper from '../StyledPaper';
-
-window.config.enableCalendarIntegration = true;
-window.config.googleApiApplicationClientID = '387032831739-h6i4p8ou45j21ke8317dn7888d92ur45.apps.googleusercontent.com';
 
 const useStyles = makeStyles(theme => {
     return {
@@ -135,7 +133,8 @@ function Meeting({
     removeMeetingsRecurring,
     userId,
     error,
-    deleteLoading
+    deleteLoading,
+    isCalendarEnabled
 }) {
 
     const history = useHistory();
@@ -382,8 +381,7 @@ function Meeting({
                             <Divider className = { classes.infoDivider } />
                         </>
                         }
-                        {/* add a check if calendar integration is available */}
-                        {meeting
+                        {isCalendarEnabled
                         && <>
                             <Grid
                                 alignItems = 'center'
@@ -568,6 +566,7 @@ Meeting.propTypes = {
     deleteLoading: PropTypes.bool,
     error: PropTypes.string,
     fetchMeeting: PropTypes.func,
+    isCalendarEnabled: PropTypes.bool,
     loading: PropTypes.bool,
     meeting: PropTypes.object,
     removeMeeting: PropTypes.func,
@@ -582,7 +581,8 @@ const mapStateToProps = state => {
         meeting: state['features/riff-platform'].meeting.meeting,
         userId: state['features/riff-platform'].signIn.user?.uid,
         error: state['features/riff-platform'].meeting.error,
-        deleteLoading: state['features/riff-platform'].meetings.deleteLoading
+        deleteLoading: state['features/riff-platform'].meetings.deleteLoading,
+        isCalendarEnabled: isGoogleCalendarEnabled(state) && isMsCalendarEnabled(state)
     };
 };
 

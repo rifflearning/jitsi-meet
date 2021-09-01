@@ -192,10 +192,15 @@ const Settings = ({
 
 Settings.propTypes = {
     bootstrapGoogleCalendarIntegration: PropTypes.func,
+    bootstrapMicrosftCalendarIntegration: PropTypes.func,
     googleCalendarSignIn: PropTypes.func,
     googleCalendarSignOut: PropTypes.func,
     googleProfileEmail: PropTypes.string,
-    isConnectedToGoogleCalendar: PropTypes.bool
+    isConnectedToGoogleCalendar: PropTypes.bool,
+    isConnectedToMsCalendar: PropTypes.bool,
+    msCalendarSignIn: PropTypes.func,
+    msProfileEmail: PropTypes.string,
+    msSignOut: PropTypes.func
 };
 
 const mapStateToProps = state => {
