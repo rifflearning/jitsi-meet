@@ -28,7 +28,8 @@ const GraphDatasetTypes = {
     AFFIRMATIONS: 'affirmations',
     UTTERANCE_TIMELINE: 'utterance_timeline',
     MEETINGS: 'meetings',
-    MEETING_STATS: 'meeting_stats'
+    MEETING_STATS: 'meeting_stats',
+    INTERESTING_MOMENTS: 'interesting_moments'
 };
 
 /**
@@ -62,7 +63,8 @@ const EventTypes = {
     MY_INTERRUPTIONS: 'my_interruptions',
     THEIR_INTERRUPTIONS: 'their_interruptions',
     MY_AFFIRMATIONS: 'my_affirmations',
-    THEIR_AFFIRMATIONS: 'their_affirmations'
+    THEIR_AFFIRMATIONS: 'their_affirmations',
+    INTERESTING_MOMENTS: 'interesting_moments'
 };
 
 
@@ -370,6 +372,30 @@ const EventConfigs = {
         getTargetParticipant(uttPair) {
             return uttPair[0].participant;
         }, // interrupted (you)
+        getEventTime(uttPair) {
+            return uttPair[1].startTime;
+        }, // time of interrupting utterance
+        getTimelineTooltip({ source, eventTime }) {
+            return `${source} interrupted you at: ${eventTime}`;
+        }
+    },
+
+    [EventTypes.INTERESTING_MOMENTS]: {
+        datasetType: GraphDatasetTypes.INTERESTING_MOMENTS,
+        whatIsCounted: 'Interesting moments',
+        legendLabel: 'Interesting moments',
+        color: Colors.lightPurple,
+        getEventCounts: getEventCountsFn('key1'), // in interruption relations key2 interrupts key1
+        getCountTooltip() {
+            return '{participant} marked moment as interesting: {valueY}';
+        },
+        eventsFilter: (relatedUtterances, uid) => relatedUtterances.filter(uttPair => uttPair[0].participant === uid),
+        getSourceParticipant(uttPair) {
+            return uttPair[1].participant;
+        },
+        getTargetParticipant(uttPair) {
+            return uttPair[0].participant;
+        },
         getEventTime(uttPair) {
             return uttPair[1].startTime;
         }, // time of interrupting utterance

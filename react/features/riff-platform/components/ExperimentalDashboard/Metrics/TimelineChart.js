@@ -50,6 +50,7 @@ import {
 
 import SpeakingTime from './SpeakingTime';
 
+
 const logContext = 'Timeline';
 
 /* ******************************************************************************
@@ -354,6 +355,16 @@ class TimelineChart extends React.Component {
      */
     addEventsData(participantNames) {
         for (const eventSeries of this.eventsSeries) {
+            if (eventSeries.eventType === EventTypes.INTERESTING_MOMENTS) {
+                eventSeries.noData = false;
+                eventSeries.show();
+
+                console.log('InterestingMoments', eventSeries.data);
+
+                // eslint-disable-next-line no-continue
+                continue;
+            }
+
             const eventType = eventSeries.eventType;
             const eventConfig = EventConfigs[eventType];
             const baseEventDatum = {
@@ -387,6 +398,8 @@ class TimelineChart extends React.Component {
                     })
                 };
             });
+
+            console.log('eventSeriesData:', eventSeries.data);
         }
     }
 
@@ -406,7 +419,81 @@ class TimelineChart extends React.Component {
         // chart.series is NOT an array, push method only takes 1 argument
         eventsSeries.forEach(eventSeries => chart.series.push(eventSeries));
 
+        // push interestingMoments temporarily
+        eventsSeries.push(this.createInterestingMomentsSeries());
+        chart.series.push(this.createInterestingMomentsSeries());
+
         return eventsSeries;
+    }
+
+    /**
+     * Temporarily create separate series for interesting moments
+     *
+     * @returns {*}
+     */
+    createInterestingMomentsSeries() {
+        const series = new am4charts.LineSeries();
+
+        series.dataFields.categoryY = 'name';
+        series.dataFields.dateX = 'dateTime';
+        series.name = 'Interesting Moments';
+        series.eventType = EventTypes.INTERESTING_MOMENTS;
+        series.strokeWidth = 0;
+
+        // for legend color
+        series.fill = EventConfigs[EventTypes.INTERESTING_MOMENTS].color;
+
+        const bullet = series.bullets.push(new am4charts.Bullet());
+        const image = bullet.createChild(am4core.Image);
+
+        image.href = 'https://www.amcharts.com/lib/images/star.svg';
+        image.width = 20;
+        image.height = 20;
+        image.horizontalCenter = 'middle';
+        image.verticalCenter = 'middle';
+
+        bullet.tooltipText = '{userName} highlighted moment at {dateTime.formatDate("hh:mm:ss a")}';
+        bullet.strokeWidth = 3;
+        bullet.marginLeft = 10;
+        bullet.marginBottom = 10;
+
+        series.cursorTooltipEnabled = true;
+
+        // use the color property defined for each event type
+        series.bullets.template.propertyFields.fill = 'color';
+
+        // use mock data
+        const mockData = [ { 'time': '2021-08-27T13:01:15.719Z',
+            'userName': 'Nickolas Kyrylyuk' },
+        { 'time': '2021-08-27T13:02:15.719Z',
+            'userName': 'Nickolas Kyrylyuk' },
+        { 'time': '2021-08-27T13:03:15.719Z',
+            'userName': 'Nickolas Kyrylyuk' },
+        { 'time': '2021-08-27T13:05:40.719Z',
+            'userName': 'Uliana' },
+        { 'time': '2021-08-27T13:06:37.719Z',
+            'userName': 'David Potter' },
+        { 'time': '2021-08-27T13:06:40.719Z',
+            'userName': 'Shashaank' },
+        { 'time': '2021-08-27T13:10:15.719Z',
+            'userName': 'Shashaank' },
+        { 'time': '2021-08-27T13:18:15.719Z',
+            'userName': 'Mike Jay Lippert' },
+        { 'time': '2021-08-27T13:20:15.719Z',
+            'userName': 'Mike Jay Lippert' },
+        { 'time': '2021-08-27T13:21:15.719Z',
+            'userName': 'Alex H' }
+        ].map(e => {
+            return {
+                name: 'Interesting Moments',
+                userName: e.userName,
+                dateTime: new Date(e.time)
+            };
+        });
+
+        series.data = mockData;
+
+        return series;
     }
 
     /* ******************************************************************************
@@ -529,12 +616,15 @@ class TimelineChart extends React.Component {
         const eventCategories = eventTypes.map(eventType => EventConfigs[eventType].whatIsCounted);
 
         yAxisCategories.push(...eventCategories);
+        yAxisCategories.push('Interesting Moments');
 
         const categoryAxisData = yAxisCategories.map(categoryY => {
             return {
                 categoryY
             };
         });
+
+        console.log(categoryAxisData);
 
         logger.debug(`${logContext}.generateYAxisCategories:`, { categoryAxisData });
 
