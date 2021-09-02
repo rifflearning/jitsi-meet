@@ -381,7 +381,7 @@ function Meeting({
                             <Divider className = { classes.infoDivider } />
                         </>
                         }
-                        {isCalendarEnabled
+                        {isCalendarEnabled && !meeting.isPersonal
                         && <>
                             <Grid
                                 alignItems = 'center'
