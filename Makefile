@@ -126,9 +126,10 @@ deploy-local:
 deploy-aws: ## deploy a dev build based on the current state of the working directory to AWS
 deploy-aws: AWS_NAME := ${shell bash -c 'source .env ; echo $$AWS_NAME'}#' cmt to fix vim formatting
 deploy-aws: PEM_PATH := ${shell bash -c 'source .env ; echo $$PEM_PATH'}#' cmt to fix vim formatting
+deploy-aws: GIT_USER := ${shell git config --get user.name}
 deploy-aws: dev-package
 	scp -i $(PEM_PATH) rifflearning-jitsi-meet-dev.tar.bz2 $(AWS_NAME):/home/ubuntu/tmp
-	ssh -i $(PEM_PATH) $(AWS_NAME) bin/install-riff-jitsi.sh tmp/rifflearning-jitsi-meet-dev.tar.bz2
+	ssh -i $(PEM_PATH) $(AWS_NAME) 'bin/install-riff-jitsi.sh tmp/rifflearning-jitsi-meet-dev.tar.bz2 "$(GIT_USER)"'
 
 .NOTPARALLEL:
 dev: deploy-init deploy-css deploy-rnnoise-binary deploy-lib-jitsi-meet deploy-meet-models deploy-libflac deploy-olm deploy-tflite
