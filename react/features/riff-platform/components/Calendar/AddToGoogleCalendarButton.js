@@ -103,7 +103,7 @@ function AddToGoogleCalendarButton({
         'id': meeting.roomId,
         'summary': meeting.name,
         'location': meetingUrl,
-        'description': `Click the following link to join the meeting: ${meetingUrl}`,
+        'description': meeting.description || `Click the following link to join the meeting: ${meetingUrl}`,
         'url': meeting.roomId,
         'start': {
             'dateTime': meeting.dateStart,

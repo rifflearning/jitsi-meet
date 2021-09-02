@@ -101,7 +101,7 @@ function AddToGoogleCalendarButton({
         'subject': meeting.name,
         body: {
             contentType: 'HTML',
-            content: `Click the following link to join the meeting: ${meetingUrl}`
+            content: meeting.description || `Click the following link to join the meeting: ${meetingUrl}`
         },
         location: {
             displayName: meetingUrl
