@@ -112,7 +112,7 @@ const Settings = ({
                                 ? <Grid
                                     item = { true }>
                                     <Box className = { classes.textPrimary }>
-                                    Currently accessing calendar for
+                                    Currently accessing Google Calendar for
                                         <Box
                                             className = { classes.boldText }
                                             display = 'inline'>
@@ -152,7 +152,7 @@ const Settings = ({
                                 ? <Grid
                                     item = { true }>
                                     <Box className = { classes.textPrimary }>
-                                    Currently accessing calendar for
+                                    Currently accessing Outlook Calendar for
                                         <Box
                                             className = { classes.boldText }
                                             display = 'inline'>

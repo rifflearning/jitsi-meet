@@ -1,13 +1,11 @@
 export const GOOGLE_API_STATES = {
     // The state in which the Google API still needs to be loaded.
-
     NEEDS_LOADING: 0,
 
     // The state in which the Google API is loaded and ready for use.
     LOADED: 1,
 
     // The state in which a user has been logged in through the Google API.
-
     SIGNED_IN: 2
 };
 
@@ -18,8 +16,8 @@ export const ERRORS = {
 export const GOOGLE_EDIT_LINK = 'https://calendar.google.com/calendar/r/eventedit';
 
 export const MS_API_CONFIGURATION = {
-    // The URL to use when authenticating using Microsoft API.
 
+    // The URL to use when authenticating using Microsoft API.
     AUTH_ENDPOINT:
         'https://login.microsoftonline.com/common/oauth2/v2.0/authorize?',
 
