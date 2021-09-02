@@ -6,7 +6,6 @@ import googleApi from '../google-api/googleApi.web';
 import {
     GOOGLE_EDIT_LINK,
     MS_API_CONFIGURATION
-
 } from './constants/calendarSync';
 
 export const isGoogleCalendarEnabled = state => {
@@ -32,7 +31,7 @@ export const updateGoogleCalendarEntry = (calendarId, event) => googleApi.get()
         }
 
         return googleApi._getGoogleApiClient()
-            .client.calendar.events.patch({
+            .client.calendar.events.update({
                 'calendarId': calendarId,
                 'eventId': event.id,
                 'resource': event
@@ -71,6 +70,7 @@ export const createGoogleCalendarEntry = (calendarId, event) => googleApi.get()
                 });
         });
 
+// Sets microsoft auth data to localStorage
 export const msCalendarSync = {
     get() {
         return JSON.parse(localStorage.getItem('msCalendarSync'));

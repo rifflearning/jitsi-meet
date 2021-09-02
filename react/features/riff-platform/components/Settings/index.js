@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable react/jsx-no-bind */
 /* global interfaceConfig */
 import { Button, Grid, Typography, makeStyles, Box } from '@material-ui/core';

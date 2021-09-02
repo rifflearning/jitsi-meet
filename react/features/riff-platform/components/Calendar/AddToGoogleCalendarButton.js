@@ -154,7 +154,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        createCalendarEntry: (calendarId, event) => dispatch(insertCalendarEntry('primary', event)),
+        createCalendarEntry: (calendarId, event) => dispatch(insertCalendarEntry(calendarId, event)),
         bootstrapGoogleCalendarIntegration: () => dispatch(bootstrapCalendarIntegration())
     };
 };

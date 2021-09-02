@@ -6,11 +6,12 @@ import {
     CALENDAR_SET_GOOGLE_INTEGRATION,
     CALENDAR_SET_GOOGLE_API_PROFILE,
     CALENDAR_SET_MS_AUTH_STATE,
-    CALENDAR_SET_MS_INTEGRATION
+    CALENDAR_SET_MS_INTEGRATION,
+    CALENDAR_CLEAR_MS_INTEGRATION
 } from '../constants/actionTypes';
 import { GOOGLE_API_STATES } from '../constants/calendarSync';
 
-const DEFAULT_GOOGLE_STATE = {
+const DEFAULT_STATE = {
     google: {
         googleAPIState: GOOGLE_API_STATES.NEEDS_LOADING,
         integrationReady: false,
@@ -24,20 +25,19 @@ const DEFAULT_GOOGLE_STATE = {
     }
 };
 
-export default (state = DEFAULT_GOOGLE_STATE, action) => {
+export default (state = DEFAULT_STATE, action) => {
     switch (action.type) {
     case CALENDAR_CLEAR_GOOGLE_INTEGRATION:
         return {
             ...state,
-            google: DEFAULT_GOOGLE_STATE
+            google: DEFAULT_STATE.google
         };
     case CALENDAR_SET_GOOGLE_API_STATE:
         return {
             ...state,
             google: {
                 ...state.google,
-                googleAPIState: action.googleAPIState,
-                googleResponse: action.googleResponse
+                googleAPIState: action.googleAPIState
             }
         };
 
@@ -71,6 +71,7 @@ export default (state = DEFAULT_GOOGLE_STATE, action) => {
             return {
                 ...state,
                 microsoft: {
+                    ...state.microsoft,
                     msAuthState: {}
                 }
             };
@@ -81,6 +82,7 @@ export default (state = DEFAULT_GOOGLE_STATE, action) => {
             microsoft: {
                 ...state.microsoft,
                 msAuthState: {
+                    ...state.microsoft.msAuthState,
                     ...action.msAuthState
                 }
             }
@@ -93,6 +95,12 @@ export default (state = DEFAULT_GOOGLE_STATE, action) => {
                 ...state.microsoft,
                 integrationReady: action.integrationReady
             }
+        };
+    }
+    case CALENDAR_CLEAR_MS_INTEGRATION: {
+        return {
+            ...state,
+            microsoft: DEFAULT_STATE.microsoft
         };
     }
     }

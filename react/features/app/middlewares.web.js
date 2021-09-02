@@ -16,5 +16,6 @@ import '../shared-video/middleware';
 import '../talk-while-muted/middleware';
 import '../virtual-background/middleware';
 import '../riff-platform/components/LocalRecorder/middleware';
+import '../riff-platform/components/Calendar/middleware';
 
 import './middlewares.any';

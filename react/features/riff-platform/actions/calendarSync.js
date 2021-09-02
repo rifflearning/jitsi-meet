@@ -5,7 +5,6 @@ import { createDeferred } from '../../../../modules/util/helpers';
 import googleApi from '../../google-api/googleApi.web';
 import {
     isGoogleCalendarEnabled,
-    getGoogleCalendarEntry,
     updateGoogleCalendarEntry,
     createGoogleCalendarEntry,
     msCalendarSync,
@@ -36,17 +35,15 @@ import {
  * Sets the current Google API state.
  *
  * @param {number} googleAPIState - The state to be set.
- * @param {Object} googleResponse - The last response from Google.
  * @returns {{
  *     type: CALENDAR_SET_GOOGLE_API_STATE,
  *     googleAPIState: number
  * }}
  */
-export function setGoogleAPIState(googleAPIState, googleResponse) {
+function setGoogleAPIState(googleAPIState) {
     return {
         type: CALENDAR_SET_GOOGLE_API_STATE,
-        googleAPIState,
-        googleResponse
+        googleAPIState
     };
 }
 
@@ -57,7 +54,7 @@ export function setGoogleAPIState(googleAPIState, googleResponse) {
  *     type: CALENDAR_CLEAR_GOOGLE_INTEGRATION
  * }}
  */
-export function clearGoogleCalendarIntegration() {
+function clearGoogleCalendarIntegration() {
     return {
         type: CALENDAR_CLEAR_GOOGLE_INTEGRATION
     };
@@ -72,7 +69,7 @@ export function clearGoogleCalendarIntegration() {
  *     error: Object
  * }}
  */
-export function setGoogleCalendarError(error) {
+function setGoogleCalendarError(error) {
     return {
         type: CALENDAR_SET_GOOGLE_ERROR,
         error
@@ -87,7 +84,7 @@ export function setGoogleCalendarError(error) {
  *      integrationReady: boolean,
  * }}
  */
-export function setGoogleIntegrationReady() {
+function setGoogleIntegrationReady() {
     return {
         type: CALENDAR_SET_GOOGLE_INTEGRATION,
         integrationReady: true
@@ -103,7 +100,7 @@ export function setGoogleIntegrationReady() {
  *      profileEmail: string,
  * }}
  */
-export function setGoogleCalendarProfileEmail(email) {
+function setGoogleCalendarProfileEmail(email) {
     return {
         type: CALENDAR_SET_GOOGLE_API_PROFILE,
         profileEmail: email
@@ -149,7 +146,7 @@ export function googleSignOut() {
  *
  * @returns {Function}
  */
-export function loadGoogleAPI() {
+function loadGoogleAPI() {
     return (dispatch, getState) =>
         googleApi.get()
             .then(() => {
@@ -227,7 +224,7 @@ export function bootstrapCalendarIntegration() {
  *
  * @returns {Function}
  */
-export function updateGoogleEmailProfile() {
+function updateGoogleEmailProfile() {
     return dispatch => googleApi.getCurrentUserProfile()
         .then(profile => dispatch(setGoogleCalendarProfileEmail(profile.getEmail())));
 }
@@ -289,17 +286,20 @@ export function insertCalendarEntry(calendarId, event) {
 
                 dispatch(setGoogleCalendarError(error));
             })
-            .then(() => getGoogleCalendarEntry(calendarId, event.id))
-            .then(calendarEvent => {
-                if (calendarEvent) {
-                    return updateGoogleCalendarEntry(calendarId, event);
-                }
-                createGoogleCalendarEntry(calendarId, event);
+            .then(() => createGoogleCalendarEntry(calendarId, event))
+            .then(() => {
                 dispatch(setGoogleCalendarError());
-            }, error => {
-                console.error('Event not found', error);
 
-                createGoogleCalendarEntry(calendarId, event);
+                return Promise.resolve();
+            }, error => {
+                console.log(error.result?.error?.message);
+
+                // https://developers.google.com/calendar/api/guides/errors#409_the_requested_identifier_already_exists
+                // Error code when instance with the given ID already exists in the googlestorage.
+                // in this case update event
+                if (error.status === 409) {
+                    updateGoogleCalendarEntry(calendarId, event);
+                }
             });
 }
 
@@ -308,14 +308,11 @@ export function insertCalendarEntry(calendarId, event) {
  *
  * @param {number} newState - The new microsoft auth state.
  * @returns {{
- *     type: SET_CALENDAR_AUTH_STATE,
+ *     type: CALENDAR_SET_MS_AUTH_STATE,
  *     msAuthState: Object
  * }}
  */
 function setMsCalendarAPIAuthState(newState) {
-    // refactor it
-    newState && msCalendarSync.set(newState);
-
     return {
         type: CALENDAR_SET_MS_AUTH_STATE,
         msAuthState: newState
@@ -330,8 +327,6 @@ function setMsCalendarAPIAuthState(newState) {
  * }}
  */
 function clearMsCalendarIntegration() {
-    msCalendarSync.set({});
-
     return {
         type: CALENDAR_CLEAR_MS_INTEGRATION
     };
@@ -357,7 +352,7 @@ function setMsCalendarError(error) {
  * Sets the calendar the integration is ready to be used.
  *
  * @returns {{
- *      type: CALENDAR_SET_GOOGLE_INTEGRATION,
+ *      type: CALENDAR_SET_MS_INTEGRATION,
  *      integrationReady: boolean,
  * }}
  */
@@ -553,13 +548,12 @@ function refreshAuthToken() {
 }
 
 /**
- * Creates microsoft calendar event.
+ * Creates microsoft calendar event for current user's calendar.
  *
- * @param {string} calendarId - User's calendar id (default 'primary').
  * @param {Object} event - Meeting event.
  * @returns {Promise}
  */
-export function createMsCalendarEntry(calendarId, event) {
+export function createMsCalendarEntry(event) {
     return (dispatch, getState) =>
 
         dispatch(microsoftIsSignedIn())
@@ -633,7 +627,7 @@ export function bootstrapMsCalendarIntegration() {
                             return dispatch(setMsIntegrationReady());
                         }
 
-                        return dispatch(clearMsCalendarIntegration());
+                        // return dispatch(clearMsCalendarIntegration());
 
                     });
             });

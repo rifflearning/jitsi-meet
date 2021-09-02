@@ -75,7 +75,7 @@ const getRecurrenceRule = (meetingDateStart, options = {}) => {
     return reccurInfo;
 };
 
-function AddToGoogleCalendarButton({
+function AddToMsCalendarButton({
     meeting,
     multipleRoom,
     isMsCalendarIntegartionEnabled,
@@ -118,10 +118,9 @@ function AddToGoogleCalendarButton({
 
     useEffect(() => {
         bootstrapCalendarIntegration();
-    },
-        []);
+    }, []);
 
-    const onAddToCalendar = () => createCalendarEntry('1', {
+    const onAddToCalendar = () => createCalendarEntry({
         ...event,
         ...reccurenceRule
     });
@@ -136,7 +135,7 @@ function AddToGoogleCalendarButton({
     );
 }
 
-AddToGoogleCalendarButton.propTypes = {
+AddToMsCalendarButton.propTypes = {
     bootstrapCalendarIntegration: PropTypes.func,
     createCalendarEntry: PropTypes.func,
     isMsCalendarIntegartionEnabled: PropTypes.bool,
@@ -153,9 +152,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        createCalendarEntry: (calendarId, event) => dispatch(createMsCalendarEntry(calendarId, event)),
+        createCalendarEntry: event => dispatch(createMsCalendarEntry(event)),
         bootstrapCalendarIntegration: () => dispatch(bootstrapMsCalendarIntegration())
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddToGoogleCalendarButton);
+export default connect(mapStateToProps, mapDispatchToProps)(AddToMsCalendarButton);
