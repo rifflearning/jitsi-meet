@@ -37,6 +37,14 @@ const useStyles = makeStyles(() => {
         },
         textPrimary: {
             fontSize: '1rem'
+        },
+        box: {
+            margin: '20px',
+            padding: '16px',
+            backgroundColor: '#555555',
+            borderRadius: '4px',
+            boxShadow: '5px 5px 9px -5px rgba(0, 0, 0, 0.37)'
+
         }
     };
 });
@@ -83,9 +91,9 @@ const Settings = ({
                         alignItems = 'center'
                         container = { true }
                         item = { true }
-                        spacing = { 4 }
                         xs = { 12 } >
                         <Grid
+                            className = { classes.box }
                             container = { true }
                             direction = 'column'
                             item = { true }
@@ -104,6 +112,7 @@ const Settings = ({
                             </Typography>
                         </Grid>
                         <Grid
+                            className = { classes.box }
                             container = { true }
                             direction = 'column'
                             item = { true }
@@ -144,6 +153,7 @@ const Settings = ({
                                 </Grid>}
                         </Grid>
                         <Grid
+                            className = { classes.box }
                             container = { true }
                             direction = 'column'
                             item = { true }
