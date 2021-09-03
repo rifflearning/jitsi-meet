@@ -104,7 +104,7 @@ StateListenerRegistry.register(
 function _restoreTileViewState({ dispatch, getState }) {
     const { tileViewEnabled } = getState()['features/video-layout'];
 
-    if (tileViewEnabled === undefined && previousTileViewEnabled !== undefined) {
+    if (!tileViewEnabled && previousTileViewEnabled) {
         dispatch(setTileView(previousTileViewEnabled));
     }
 
@@ -120,8 +120,8 @@ function _restoreTileViewState({ dispatch, getState }) {
 function _storeTileViewStateAndClear({ dispatch, getState }) {
     const { tileViewEnabled } = getState()['features/video-layout'];
 
-    if (tileViewEnabled !== undefined) {
+    if (!tileViewEnabled) {
         previousTileViewEnabled = tileViewEnabled;
-        dispatch(setTileView(undefined));
+        dispatch(setTileView(false));
     }
 }

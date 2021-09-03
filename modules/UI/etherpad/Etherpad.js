@@ -2,6 +2,7 @@
 
 import { getSharedDocumentUrl, setDocumentEditingState } from '../../../react/features/etherpad';
 import { getToolboxHeight } from '../../../react/features/toolbox/functions.web';
+import { setTileView } from '../../../react/features/video-layout';
 import Filmstrip from '../videolayout/Filmstrip';
 import LargeContainer from '../videolayout/LargeContainer';
 import VideoLayout from '../videolayout/VideoLayout';
@@ -233,5 +234,9 @@ export default class EtherpadManager {
             ETHERPAD_CONTAINER_TYPE, !isVisible);
 
         APP.store.dispatch(setDocumentEditingState(!isVisible));
+
+        // we need to disable tile view when we're enabling etherpad,
+        // and vice versa. note that 'isVisible' refers to visibilty before the toggle
+        APP.store.dispatch(setTileView(isVisible));
     }
 }

@@ -29,9 +29,16 @@ export function selectParticipantInLargeVideo(participant: ?string) {
     return (dispatch: Dispatch<any>, getState: Function) => {
         const state = getState();
         const participantId = participant ?? _electParticipantInLargeVideo(state);
+        const isDocumentOpen = state['features/etherpad'].editing;
         const largeVideo = state['features/large-video'];
         const remoteScreenShares = state['features/video-layout'].remoteScreenShares;
         let latestScreenshareParticipantId;
+
+        // if the user is editing an etherpad document, we don't want to interrupt
+        // TODO - not sure if this is the right place for this
+        if (isDocumentOpen) {
+            return;
+        }
 
         if (remoteScreenShares && remoteScreenShares.length) {
             latestScreenshareParticipantId = remoteScreenShares[remoteScreenShares.length - 1];
