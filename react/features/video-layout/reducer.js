@@ -17,12 +17,10 @@ const DEFAULT_STATE = {
      * Note: undefined means that the user hasn't requested anything in particular yet, so
      * we use our auto switching rules.
      *
-     * Default to true
-     *
      * @public
      * @type {boolean}
      */
-    tileViewEnabled: true
+    tileViewEnabled: undefined
 };
 
 const STORE_NAME = 'features/video-layout';
