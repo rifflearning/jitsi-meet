@@ -1,15 +1,15 @@
 import * as am4charts from '@amcharts/amcharts4/charts';
 import * as am4core from '@amcharts/amcharts4/core';
+import { ChartCard, riffUtils } from '@rifflearning/riff-metrics';
 import PropTypes from 'prop-types';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { ScaleLoader } from 'react-spinners';
 
-
 import API from '../../../api';
-import ChartCard from '../ChartCard/ChartCard';
-import { Colors } from '../colorHelper';
 import { getSelectedMeeting } from '../utils';
+
+const { Colors } = riffUtils.color;
 
 
 const interestingMomentsConfig = {
