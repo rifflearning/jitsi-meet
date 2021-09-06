@@ -96,6 +96,11 @@ function AddToMsCalendarButton({
 
     const reccurenceRule = recurrenceOptions ? getRecurrenceRule(meeting.dateStart, recurrenceOptions) : {};
 
+    const dateNow = moment().toISOString();
+    const endDateFromNow = moment()
+        .add(1, 'hours')
+        .toISOString();
+
     const event = {
         'transactionId': meeting.roomId,
         'subject': meeting.name,
@@ -107,11 +112,11 @@ function AddToMsCalendarButton({
             displayName: meetingUrl
         },
         'start': {
-            'dateTime': meeting.dateStart,
+            'dateTime': meeting.dateStart || dateNow,
             'timeZone': meeting.timezone
         },
         'end': {
-            'dateTime': meeting.dateEnd,
+            'dateTime': meeting.dateEnd || endDateFromNow,
             'timeZone': meeting.timezone
         },
         'singleValueExtendedProperties': [

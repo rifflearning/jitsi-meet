@@ -99,6 +99,11 @@ function AddToGoogleCalendarButton({
 
     const recurrenceOptions = meeting?.recurrenceOptions?.options || null;
 
+    const dateNow = moment().toISOString();
+    const endDateFromNow = moment()
+        .add(1, 'hours')
+        .toISOString();
+
     const event = {
         'id': meeting.roomId,
         'summary': meeting.name,
@@ -106,11 +111,11 @@ function AddToGoogleCalendarButton({
         'description': meeting.description || `Click the following link to join the meeting: ${meetingUrl}`,
         'url': meeting.roomId,
         'start': {
-            'dateTime': meeting.dateStart,
+            'dateTime': meeting.dateStart || dateNow,
             'timeZone': meeting.timezone
         },
         'end': {
-            'dateTime': meeting.dateEnd,
+            'dateTime': meeting.dateEnd || endDateFromNow,
             'timeZone': meeting.timezone
         },
 
