@@ -579,6 +579,7 @@ export function createMsCalendarEntry(event) {
                 });
 
                 return client
+
                     .api('/me/events/')
                     .post(event)
                     .then(e => {
@@ -587,6 +588,30 @@ export function createMsCalendarEntry(event) {
 
                             window.open(eventUrl, '_blank').focus();
                         }
+                    }, () =>
+                        client
+                            .api('/me/events')
+                            .filter(`singleValueExtendedProperties/Any(ep: ep/id eq '${event.singleValueExtendedProperties[0].id}' and ep/value eq '${event.singleValueExtendedProperties[0].value}')`)
+                            .get()
+                    )
+                    .then(res => {
+                        const createdEvent = res?.value[0];
+
+                        if (createdEvent?.transactionId === event.transactionId) {
+                            return client
+                                .api(`/me/events/${createdEvent.id}`)
+                                .update(event);
+                        }
+                    })
+                    .then(e => {
+                        if (e?.id) {
+                            const eventUrl = e.webLink;
+
+                            window.open(eventUrl, '_blank').focus();
+                        }
+                    })
+                    .catch(error => {
+                        console.log('error', error);
                     });
             });
 }

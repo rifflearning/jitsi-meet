@@ -113,7 +113,13 @@ function AddToMsCalendarButton({
         'end': {
             'dateTime': meeting.dateEnd,
             'timeZone': meeting.timezone
-        }
+        },
+        'singleValueExtendedProperties': [
+            {
+                'id': 'String {66f5a359-4659-4830-9070-00040ec6ac6e} Name id',
+                'value': meeting.roomId
+            }
+        ]
     };
 
     useEffect(() => {
