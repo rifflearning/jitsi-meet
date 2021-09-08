@@ -32,7 +32,6 @@ import AllMeetings from './Meetings';
 import Profile from './Profile';
 import ResetPassword from './ResetPassword';
 import Scheduler from './Scheduler';
-import Settings from './Settings';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import Verify from './Verify';
@@ -134,9 +133,6 @@ class Main extends React.Component {
                     <ExperimentalDashboard />
                 </Route>
                 }
-                <Route path = { ROUTES.SETTINGS } >
-                    <Settings />
-                </Route>
                 <Route
                     path = { ROUTES.MEETINGS }
                     component = { Meetings } />

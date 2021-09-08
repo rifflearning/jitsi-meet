@@ -75,123 +75,111 @@ const Settings = ({
 
 
     return (
-        <Grid
-            container = { true }
-            spacing = { 3 }>
+
+        <StyledPaper>
             <Grid
+                alignItems = 'center'
                 container = { true }
                 item = { true }
-                justify = 'flex-end'
-                xs = { 12 } />
-            <Grid
-                item = { true }
-                xs = { 12 }>
-                <StyledPaper>
-                    <Grid
-                        alignItems = 'center'
-                        container = { true }
-                        item = { true }
-                        xs = { 12 } >
-                        <Grid
-                            container = { true }
-                            direction = 'column'
-                            item = { true }
-                            justify = 'center'>
-                            <Typography>
-                                Schedule and manage your calendars events from {interfaceConfig.APP_NAME}
-                            </Typography>
+                xs = { 12 } >
+                <Grid
+                    container = { true }
+                    direction = 'column'
+                    item = { true }
+                    justify = 'center'>
+                    <Typography>
+                        Schedule and manage your calendars events from {interfaceConfig.APP_NAME}
+                    </Typography>
+                    <Typography
+                        color = 'textSecondary'
+                        variant = 'body2'>
+                        The {interfaceConfig.APP_NAME} calendar integration is used to securely access your calendar.
+                    </Typography>
+                </Grid>
+                <Grid
+                    className = { classes.box }
+                    container = { true }
+                    direction = 'column'
+                    item = { true }
+                    justify = 'flex-start'>
+                    {isConnectedToGoogleCalendar
+                        ? <Grid
+                            item = { true }>
+                            <Box className = { classes.textPrimary }>
+                                Currently accessing Google Calendar for
+                                <Box
+                                    className = { classes.boldText }
+                                    display = 'inline'>
+                                    {` ${googleProfileEmail}`}
+                                </Box>
+                            </Box>
                             <Typography
                                 color = 'textSecondary'
                                 variant = 'body2'>
-                                The {interfaceConfig.APP_NAME} calendar integration is used to securely access your calendar.
+                                Click the Disconnect button below to stop accessing calendar
                             </Typography>
-                        </Grid>
-                        <Grid
-                            className = { classes.box }
-                            container = { true }
-                            direction = 'column'
-                            item = { true }
-                            justify = 'flex-start'>
-                            {isConnectedToGoogleCalendar
-                                ? <Grid
-                                    item = { true }>
-                                    <Box className = { classes.textPrimary }>
-                                    Currently accessing Google Calendar for
-                                        <Box
-                                            className = { classes.boldText }
-                                            display = 'inline'>
-                                            {` ${googleProfileEmail}`}
-                                        </Box>
-                                    </Box>
-                                    <Typography
-                                        color = 'textSecondary'
-                                        variant = 'body2'>
-                                        Click the Disconnect button below to stop accessing calendar
-                                    </Typography>
-                                    <Button
-                                        className = { classes.button }
-                                        color = 'default'
-                                        onClick = { onClickDisconnectGoogle }
-                                        startIcon = { <Icon><GoogleIcon /></Icon> }
-                                        variant = 'contained'> Disconnect </Button>
-                                </Grid> : <Grid
-                                    item = { true }>
-                                    <Typography>
-                                        Connect to the Google Calendar
-                                    </Typography>
-                                    <Button
-                                        className = { classes.button }
-                                        color = 'default'
-                                        onClick = { onClickSignInGoogle }
-                                        startIcon = { <Icon><GoogleIcon /></Icon> }
-                                        variant = 'contained'> Sign in with Google</Button>
-                                </Grid>}
-                        </Grid>
-                        <Grid
-                            className = { classes.box }
-                            container = { true }
-                            direction = 'column'
-                            item = { true }
-                            justify = 'flex-start'>
-                            {isConnectedToMsCalendar
-                                ? <Grid
-                                    item = { true }>
-                                    <Box className = { classes.textPrimary }>
-                                    Currently accessing Outlook Calendar for
-                                        <Box
-                                            className = { classes.boldText }
-                                            display = 'inline'>
-                                            {` ${msProfileEmail}`}
-                                        </Box>
-                                    </Box>
-                                    <Typography
-                                        color = 'textSecondary'
-                                        variant = 'body2'>
-                                        Click the Disconnect button below to stop accessing calendar
-                                    </Typography>
-                                    <Button
-                                        className = { classes.button }
-                                        color = 'default'
-                                        onClick = { onClickDisconnectMicrosoft }
-                                        startIcon = { <Icon><MicrosoftLogo /></Icon> }
-                                        variant = 'contained'> Disconnect </Button>
-                                </Grid> : <Grid
-                                    item = { true }>
-                                    <Typography>
-                                    Connect to the Outlook Calendar
-                                    </Typography>
-                                    <Button
-                                        className = { classes.button }
-                                        color = 'default'
-                                        onClick = { onClickSignInMicrosoft }
-                                        startIcon = { <Icon><MicrosoftLogo /></Icon> }
-                                        variant = 'contained'>Sign in with Microsoft</Button>
-                                </Grid>}
-                        </Grid>
-                    </Grid>
-                </StyledPaper>
+                            <Button
+                                className = { classes.button }
+                                color = 'default'
+                                onClick = { onClickDisconnectGoogle }
+                                startIcon = { <Icon><GoogleIcon /></Icon> }
+                                variant = 'contained'> Disconnect </Button>
+                        </Grid> : <Grid
+                            item = { true }>
+                            <Typography>
+                                Connect to the Google Calendar
+                            </Typography>
+                            <Button
+                                className = { classes.button }
+                                color = 'default'
+                                onClick = { onClickSignInGoogle }
+                                startIcon = { <Icon><GoogleIcon /></Icon> }
+                                variant = 'contained'> Sign in with Google</Button>
+                        </Grid>}
+                </Grid>
+                <Grid
+                    className = { classes.box }
+                    container = { true }
+                    direction = 'column'
+                    item = { true }
+                    justify = 'flex-start'>
+                    {isConnectedToMsCalendar
+                        ? <Grid
+                            item = { true }>
+                            <Box className = { classes.textPrimary }>
+                                Currently accessing Outlook Calendar for
+                                <Box
+                                    className = { classes.boldText }
+                                    display = 'inline'>
+                                    {` ${msProfileEmail}`}
+                                </Box>
+                            </Box>
+                            <Typography
+                                color = 'textSecondary'
+                                variant = 'body2'>
+                                Click the Disconnect button below to stop accessing calendar
+                            </Typography>
+                            <Button
+                                className = { classes.button }
+                                color = 'default'
+                                onClick = { onClickDisconnectMicrosoft }
+                                startIcon = { <Icon><MicrosoftLogo /></Icon> }
+                                variant = 'contained'> Disconnect </Button>
+                        </Grid> : <Grid
+                            item = { true }>
+                            <Typography>
+                                Connect to the Outlook Calendar
+                            </Typography>
+                            <Button
+                                className = { classes.button }
+                                color = 'default'
+                                onClick = { onClickSignInMicrosoft }
+                                startIcon = { <Icon><MicrosoftLogo /></Icon> }
+                                variant = 'contained'>Sign in with Microsoft</Button>
+                        </Grid>}
+                </Grid>
             </Grid>
-        </Grid>
+        </StyledPaper>
     );
 };
 
