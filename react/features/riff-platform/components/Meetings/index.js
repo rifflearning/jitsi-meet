@@ -2,9 +2,10 @@
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable react/jsx-no-bind */
 
-import { Button, Grid, Box, makeStyles } from '@material-ui/core';
+import { IconButton, Grid, Box, makeStyles } from '@material-ui/core';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
+import AddIcon from '@material-ui/icons/Add';
 import PropTypes from 'prop-types';
 import React, { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router';
@@ -23,6 +24,13 @@ const useStyles = makeStyles(() => {
     return {
         tab: {
             color: '#ffffff'
+        },
+        addButton: {
+            backgroundColor: '#93759e',
+            boxShadow: '0px 2px 4px -1px rgb(0 0 0 / 20%)',
+            '&:hover': {
+                backgroundColor: 'rgb(102, 81, 110)'
+            }
         }
     };
 });
@@ -123,12 +131,12 @@ function Meetings({
                         </Box>
                     </Grid>
                     <Grid item = { true }>
-                        <Button
-                            color = 'primary'
-                            onClick = { handleScheduleClick }
-                            variant = 'outlined'>
-                        Schedule a meeting
-                        </Button>
+                        <IconButton
+                            className = { classes.addButton }
+                            color = 'default'
+                            onClick = { handleScheduleClick }>
+                            <AddIcon />
+                        </IconButton>
                     </Grid>
                 </Grid>
                 {loading
