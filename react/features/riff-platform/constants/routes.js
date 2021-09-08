@@ -13,6 +13,5 @@ export const SCHEDULE = '/schedule';
 export const WAITING = '/waiting';
 export const DASHBOARD = '/dashboard';
 export const EXPERIMENTAL_DASHBOARD = '/experimental-dashboard';
-export const SETTINGS = '/settings';
 
 export const MEETINGS_HARVARD = '/meetings-negotiations';

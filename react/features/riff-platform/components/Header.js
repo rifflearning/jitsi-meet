@@ -1,14 +1,13 @@
 /* eslint-disable react/jsx-sort-props */
 /* eslint-disable react/jsx-no-bind */
 
-import { Button, makeStyles } from '@material-ui/core';
+import { Avatar, Button, makeStyles } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import MenuIcon from '@material-ui/icons/Menu';
-import SettingsIcon from '@material-ui/icons/Settings';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -113,9 +112,9 @@ const Header = ({ handleSidebarOpen, isOpen, user, doLogout }) => {
                         {isSidebarEnabled
                             && <IconButton
                                 color = 'inherit'
-                                onClick = { () => history.push(ROUTES.SETTINGS) }>
-                                <SettingsIcon
-                                    alt = 'settings'
+                                onClick = { () => history.push(ROUTES.PROFILE) }>
+                                <Avatar
+                                    alt = 'Me'
                                     src = '' />
                             </IconButton>
                         }

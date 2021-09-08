@@ -17,8 +17,7 @@ import {
     microsoftSignIn,
     microsoftSignOut
 } from '../../actions/calendarSync';
-
-import StyledPaper from './../StyledPaper';
+import StyledPaper from '../StyledPaper';
 
 const useStyles = makeStyles(() => {
     return {
@@ -40,8 +39,8 @@ const useStyles = makeStyles(() => {
             fontSize: '1rem'
         },
         box: {
-            margin: '20px',
-            padding: '16px',
+            margin: '20px 0 20px 0',
+            padding: '10px',
             backgroundColor: '#555555',
             borderRadius: '4px',
             boxShadow: '5px 5px 9px -5px rgba(0, 0, 0, 0.37)'
@@ -87,22 +86,17 @@ const Settings = ({
             <Grid
                 item = { true }
                 xs = { 12 }>
-                <StyledPaper title = 'Settings' >
+                <StyledPaper>
                     <Grid
                         alignItems = 'center'
                         container = { true }
                         item = { true }
                         xs = { 12 } >
                         <Grid
-                            className = { classes.box }
                             container = { true }
                             direction = 'column'
                             item = { true }
                             justify = 'center'>
-                            <Typography
-                                className = { classes.subtitle }>
-                                Calendar Sync
-                            </Typography>
                             <Typography>
                                 Schedule and manage your calendars events from {interfaceConfig.APP_NAME}
                             </Typography>
