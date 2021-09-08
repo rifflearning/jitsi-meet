@@ -27,25 +27,18 @@ import { connect } from 'react-redux';
 import { ScaleLoader } from 'react-spinners';
 import { createSelector } from 'reselect';
 
+import api from '../../../api';
 import ChartCard from '../ChartCard/ChartCard';
+import { Colors, getColorMap } from '../colorHelper';
+import { EventConfigs, EventTypes, GraphConfigs } from '../config';
+import { formatDuration, getDurationInSeconds } from '../functions';
 import {
-    Colors,
-    getColorMap
-} from '../colorHelper';
-import {
-    GraphConfigs, EventTypes, EventConfigs
-} from '../config';
-import {
-    formatDuration,
-    getDurationInSeconds
-} from '../functions';
-import {
-    RequestStatus,
-    metricGraphLoaded,
-    getSelectedMeeting,
-    getMetricDataset,
     getDatasetStatus,
-    logger
+    getMetricDataset,
+    getSelectedMeeting,
+    logger,
+    metricGraphLoaded,
+    RequestStatus
 } from '../utils';
 
 import SpeakingTime from './SpeakingTime';
@@ -153,9 +146,14 @@ class TimelineChart extends React.Component {
             currentProps: this.props
         });
 
+        console.log('componentDidUpdate', this.props.meeting?._id);
+
+
         // If one of the dataset's previous status was 'loading',
         // and all of the dataset's current status is 'loaded', then draw graph
         if (allAreLoaded && this.state.updatedAt === prevState.updatedAt) {
+            console.log('this.drawGraph()');
+
             this.drawGraph();
         }
     }
@@ -356,10 +354,22 @@ class TimelineChart extends React.Component {
     addEventsData(participantNames) {
         for (const eventSeries of this.eventsSeries) {
             if (eventSeries.eventType === EventTypes.INTERESTING_MOMENTS) {
-                eventSeries.noData = false;
-                eventSeries.show();
+                api.fetchInterestingMoments(this.props.meeting._id).then(res => {
+                    const interestingMomentsIndex = this.chart.series.values
+                        .findIndex(s => s.eventType === EventTypes.INTERESTING_MOMENTS);
 
-                console.log('InterestingMoments', eventSeries.data);
+                    this.chart.series.values[interestingMomentsIndex].data = res.map(e => {
+                        return {
+                            name: 'Interesting Moments',
+                            userName: e.userName,
+                            dateTime: new Date(e.time)
+                        };
+                    });
+
+                    eventSeries.noData = false;
+                    eventSeries.show();
+
+                });
 
                 // eslint-disable-next-line no-continue
                 continue;
@@ -398,8 +408,6 @@ class TimelineChart extends React.Component {
                     })
                 };
             });
-
-            console.log('eventSeriesData:', eventSeries.data);
         }
     }
 
@@ -461,37 +469,6 @@ class TimelineChart extends React.Component {
 
         // use the color property defined for each event type
         series.bullets.template.propertyFields.fill = 'color';
-
-        // use mock data
-        const mockData = [ { 'time': '2021-08-27T13:01:15.719Z',
-            'userName': 'Nickolas Kyrylyuk' },
-        { 'time': '2021-08-27T13:02:15.719Z',
-            'userName': 'Nickolas Kyrylyuk' },
-        { 'time': '2021-08-27T13:03:15.719Z',
-            'userName': 'Nickolas Kyrylyuk' },
-        { 'time': '2021-08-27T13:05:40.719Z',
-            'userName': 'Uliana' },
-        { 'time': '2021-08-27T13:06:37.719Z',
-            'userName': 'David Potter' },
-        { 'time': '2021-08-27T13:06:40.719Z',
-            'userName': 'Shashaank' },
-        { 'time': '2021-08-27T13:10:15.719Z',
-            'userName': 'Shashaank' },
-        { 'time': '2021-08-27T13:18:15.719Z',
-            'userName': 'Mike Jay Lippert' },
-        { 'time': '2021-08-27T13:20:15.719Z',
-            'userName': 'Mike Jay Lippert' },
-        { 'time': '2021-08-27T13:21:15.719Z',
-            'userName': 'Alex H' }
-        ].map(e => {
-            return {
-                name: 'Interesting Moments',
-                userName: e.userName,
-                dateTime: new Date(e.time)
-            };
-        });
-
-        series.data = mockData;
 
         return series;
     }
@@ -623,8 +600,6 @@ class TimelineChart extends React.Component {
                 categoryY
             };
         });
-
-        console.log(categoryAxisData);
 
         logger.debug(`${logContext}.generateYAxisCategories:`, { categoryAxisData });
 
