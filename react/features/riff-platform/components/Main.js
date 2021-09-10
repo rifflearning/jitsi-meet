@@ -36,6 +36,7 @@ import SignIn from './SignIn';
 import SignUp from './SignUp';
 import Verify from './Verify';
 import Waiting from './Waiting';
+import CreateMeeting from './CreateMeeting';
 
 const styles = theme => {
     return {
@@ -143,7 +144,7 @@ class Main extends React.Component {
                     component = { () => <AllMeetings isGroup = { true } /> } />
                 }
                 <Route path = { ROUTES.SCHEDULE } >
-                    <Scheduler />
+                    <CreateMeeting />
                 </Route>
                 <Redirect to = { ROUTES.PROFILE } />
             </Switch>
