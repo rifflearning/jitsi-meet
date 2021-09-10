@@ -46,3 +46,15 @@ export function getUserPersonalMeetingRoom() {
         return meeting;
     };
 }
+
+export function createPersonalMeetingRoom() {
+    return async dispatch => {
+        console.log('creating');
+    };
+}
+
+export function updatePersonalMeetingRoom() {
+    return async dispatch => {
+        console.log('updating');
+    };
+}

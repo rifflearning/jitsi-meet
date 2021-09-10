@@ -14,8 +14,8 @@ import * as LIST_TYPES from '../constants/meetingsListTypes';
 import { groupMeetingsByDays } from '../functions';
 
 import CalendarSync from './Calendar/CalendarSync';
-import UserPersonalMeetingRoom from './Meeting/PersonalMeeting';
 import MeetingsTable from './Meetings/MeetingsTable';
+import UserPersonalMeetingRoom from './PersonalMeetingRoom/PersonalMeeting';
 import StyledPaper from './StyledPaper';
 
 const useStyles = makeStyles(() => {
