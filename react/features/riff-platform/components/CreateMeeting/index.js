@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 
 import { connect } from '../../../base/redux';
 import { getUserPersonalMeetingRoom } from '../../actions/personalMeeting';
-import PersonalMeeting from '../PersonalMeetingRoom/PersonalMeetingDetails';
+import PersonalMeeting from '../PersonalMeetingRoom/PersonalMeeting';
 import Scheduler from '../Scheduler';
 import TabPanel from '../TabPanel';
 
@@ -72,7 +72,6 @@ const CreateMeeting = ({
                         xs = { 12 }>
                         <PersonalMeeting
                             error = { error }
-                            isPersonal = { true }
                             loading = { loading }
                             meeting = { personalMeeting } />
                     </Grid>

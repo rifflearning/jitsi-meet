@@ -8,13 +8,9 @@ import {
     Typography,
     Box,
     Divider,
-    makeStyles,
-    MenuItem,
-    TextField
+    makeStyles
 } from '@material-ui/core';
 import { CheckCircleOutline, HighlightOffOutlined } from '@material-ui/icons';
-import moment from 'moment';
-import momentTZ from 'moment-timezone';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router';
@@ -29,19 +25,9 @@ import * as ROUTES from '../../constants/routes';
 import AddToGoogleCalendarButton from '../Calendar/AddToGoogleCalendarButton';
 import AddToMsCalendarButton from '../Calendar/AddToMicrosoftCalendarButton';
 import Loader from '../Loader';
-import StyledPaper from '../StyledPaper';
 
-import CreatePersonalMeeting from './CreatePersonalMeeting';
-import EditPersonalMeeting from './EditPersonalMeeting';
-import NoPersonalMeeting from './NoPersonalMeeting';
-
-const useStyles = makeStyles(theme => {
+const useStyles = makeStyles(() => {
     return {
-        paper: {
-            marginTop: theme.spacing(4),
-            display: 'flex',
-            alignItems: 'center'
-        },
         meetingButton: {
             marginLeft: '10px',
             marginTop: '10px'
@@ -63,15 +49,14 @@ const useStyles = makeStyles(theme => {
 function PersonalMeetingDetails({
     meeting = {},
     loading,
-    isCalendarEnabled
+    isCalendarEnabled,
+    handleEditClick
 }) {
 
     const history = useHistory();
     const classes = useStyles();
 
     const [ isLinkCopied, setLinkCopied ] = useState(false);
-    const [ isEditing, setIsEditing ] = useState(false);
-    const [ isCreating, setIsCreating ] = useState(false);
 
     const handleLinkCopy = () => {
         navigator.clipboard.writeText(`${window.location.origin}/${meeting.roomId}`);
@@ -81,15 +66,6 @@ function PersonalMeetingDetails({
 
     const handleStartClick = () => history.push(`${ROUTES.WAITING}/${meeting.roomId}`);
 
-    const handleEditClick = () => setIsEditing(true);
-
-    const handleCreateClick = () => setIsCreating(true);
-
-    const onFinishEdit = () => setIsEditing(false);
-
-    const onFinishCreate = () => setIsCreating(false);
-
-
     const defineIcon = {
         true: <CheckCircleOutline />,
         false: <HighlightOffOutlined />
@@ -98,70 +74,65 @@ function PersonalMeetingDetails({
     if (loading) {
         return <Loader />;
     }
+    console.log('meeting', meeting)
 
     return (
-        meeting._id
-            ? isEditing
-                ? <EditPersonalMeeting
-                    meeting = { meeting }
-                    onCancelEdit = { onFinishEdit }
-                    onSuccessEdit = { onFinishEdit } />
-                : <StyledPaper><Grid
-                    alignItems = 'center'
-                    className = { classes.container }
-                    container = { true }
+        <Grid
+            alignItems = 'center'
+            className = { classes.container }
+            container = { true }
+            item = { true }
+            spacing = { 4 }
+            xs = { 12 } >
+            <Grid
+                alignItems = 'center'
+                container = { true }
+                item = { true }>
+                <Grid
                     item = { true }
-                    spacing = { 4 }
-                    xs = { 12 } >
-                    <Grid
-                        alignItems = 'center'
-                        container = { true }
-                        item = { true }>
-                        <Grid
-                            item = { true }
-                            md = { 2 }
-                            sm = { 3 }
-                            xs = { 12 }>
-                            <Typography>
+                    md = { 2 }
+                    sm = { 3 }
+                    xs = { 12 }>
+                    <Typography>
                         Name
-                            </Typography>
-                        </Grid>
-                        <Grid
-                            item = { true }
-                            md = { 10 }
-                            sm = { 8 }
-                            xs = { 12 } >
-                            <Typography>
-                                {meeting.name}
-                            </Typography>
-                        </Grid>
-                    </Grid>
-                    <Divider className = { classes.infoDivider } />
-                    <Grid
-                        alignItems = 'center'
-                        container = { true }
-                        item = { true }>
-                        <Grid
-                            item = { true }
-                            md = { 2 }
-                            sm = { 3 }
-                            xs = { 12 }>
-                            <Typography>
+                    </Typography>
+                </Grid>
+                <Grid
+                    item = { true }
+                    md = { 10 }
+                    sm = { 8 }
+                    xs = { 12 } >
+                    <Typography>
+                        {meeting.name}
+                    </Typography>
+                </Grid>
+            </Grid>
+            <Divider className = { classes.infoDivider } />
+            <Grid
+                alignItems = 'center'
+                container = { true }
+                item = { true }>
+                <Grid
+                    item = { true }
+                    md = { 2 }
+                    sm = { 3 }
+                    xs = { 12 }>
+                    <Typography>
                         Description
-                            </Typography>
-                        </Grid>
-                        <Grid
-                            item = { true }
-                            md = { 10 }
-                            sm = { 8 }
-                            xs = { 12 }>
-                            <Typography>
-                                {meeting.description}
-                            </Typography>
-                        </Grid>
-                    </Grid>
-                    <Divider className = { classes.infoDivider } />
-                    {isCalendarEnabled
+                    </Typography>
+                </Grid>
+                <Grid
+                    item = { true }
+                    md = { 10 }
+                    sm = { 8 }
+                    xs = { 12 }>
+                    <Typography>
+                        {meeting.description}
+                    </Typography>
+                </Grid>
+            </Grid>
+            <Divider className = { classes.infoDivider } />
+            {isCalendarEnabled
                 && <>
                     <Grid
                         alignItems = 'center'
@@ -197,96 +168,84 @@ function PersonalMeetingDetails({
                     </Grid>
                     <Divider className = { classes.infoDivider } />
                 </>
-                    }
+            }
+            <Grid
+                alignItems = 'center'
+                container = { true }
+                item = { true }>
+                <Grid
+                    item = { true }
+                    md = { 2 }
+                    sm = { 3 }
+                    xs = { 12 }>
+                    <Typography>
+                        Meeting Options
+                    </Typography>
+                </Grid>
+                <Grid
+                    alignItems = 'center'
+                    className = { classes.rightColumn }
+                    container = { true }
+                    direction = 'column'
+                    item = { true }
+                    md = { 10 }
+                    sm = { 8 }
+                    spacing = { 2 }
+                    xs = { 12 }>
                     <Grid
-                        alignItems = 'center'
                         container = { true }
                         item = { true }>
-                        <Grid
-                            item = { true }
-                            md = { 2 }
-                            sm = { 3 }
-                            xs = { 12 }>
-                            <Typography>
-                        Meeting Options
-                            </Typography>
-                        </Grid>
-                        <Grid
-                            alignItems = 'center'
-                            className = { classes.rightColumn }
-                            container = { true }
-                            direction = 'column'
-                            item = { true }
-                            md = { 10 }
-                            sm = { 8 }
-                            spacing = { 2 }
-                            xs = { 12 }>
-                            <Grid
-                                container = { true }
-                                item = { true }>
-                                <Box pr = { 1 }>{defineIcon[meeting.waitForHost]}</Box>
-                                <Typography>
+                        <Box pr = { 1 }>{defineIcon[meeting.waitForHost]}</Box>
+                        <Typography>
                             Wait for a host of the meeting
-                                </Typography>
-                            </Grid>
-                            <Grid
-                                container = { true }
-                                item = { true }>
-                                <Box pr = { 1 }>{defineIcon[meeting.allowAnonymous]}</Box>
-                                <Typography>
-                            Allow guest users
-                                </Typography>
-                            </Grid>
-                        </Grid>
+                        </Typography>
                     </Grid>
-                    <Divider className = { classes.infoDivider } />
                     <Grid
-                        alignItems = 'center'
                         container = { true }
-                        item = { true }
-                        spacing = { 3 }>
-
-                        <Button
-                            className = { classes.meetingButton }
-                            color = 'primary'
-                            onClick = { handleStartClick }
-                            variant = 'contained'>Start</Button>
-                        <Button
-                            className = { classes.meetingButton }
-                            color = { isLinkCopied ? 'default' : 'primary' }
-                            onClick = { handleLinkCopy }
-                            variant = { isLinkCopied ? 'text' : 'outlined' }>
-                            {isLinkCopied ? 'Copied!' : 'Copy link'}
-                        </Button>
-                        <Button
-                            className = { classes.meetingButton }
-                            color = 'default'
-                            onClick = { handleEditClick }
-                            variant = 'outlined'>
-                    Edit
-                        </Button>
+                        item = { true }>
+                        <Box pr = { 1 }>{defineIcon[meeting.allowAnonymous]}</Box>
+                        <Typography>
+                            Allow guest users
+                        </Typography>
                     </Grid>
                 </Grid>
-                </StyledPaper>
-            : isCreating
-                ? <CreatePersonalMeeting
-                    onCancelCreate = { onFinishCreate }
-                    onSuccessCreate = { onFinishCreate } />
-                : <NoPersonalMeeting handleCreateRoom = { handleCreateClick } />
+            </Grid>
+            <Divider className = { classes.infoDivider } />
+            <Grid
+                alignItems = 'center'
+                container = { true }
+                item = { true }
+                spacing = { 3 }>
+
+                <Button
+                    className = { classes.meetingButton }
+                    color = 'primary'
+                    onClick = { handleStartClick }
+                    variant = 'contained'>Start</Button>
+                <Button
+                    className = { classes.meetingButton }
+                    color = { isLinkCopied ? 'default' : 'primary' }
+                    onClick = { handleLinkCopy }
+                    variant = { isLinkCopied ? 'text' : 'outlined' }>
+                    {isLinkCopied ? 'Copied!' : 'Copy link'}
+                </Button>
+                <Button
+                    className = { classes.meetingButton }
+                    color = 'default'
+                    onClick = { () => handleEditClick() }
+                    variant = 'outlined'>
+                    Edit
+                </Button>
+            </Grid>
+        </Grid>
     );
 }
 
 PersonalMeetingDetails.propTypes = {
-    deleteLoading: PropTypes.bool,
-    error: PropTypes.string,
+    handleEditClick: PropTypes.func,
     isCalendarEnabled: PropTypes.bool,
-    isPersonal: PropTypes.bool,
     loading: PropTypes.bool,
-    meeting: PropTypes.object,
-    removeMeeting: PropTypes.func,
-    removeMeetingsRecurring: PropTypes.func,
-    roomNumber: PropTypes.number,
-    userId: PropTypes.string
+    meeting: PropTypes.object
 };
 
 const mapStateToProps = state => {
@@ -295,11 +254,4 @@ const mapStateToProps = state => {
     };
 };
 
-const mapDispatchToProps = dispatch => {
-    return {
-        removeMeeting: id => dispatch(deleteMeeting(id)),
-        removeMeetingsRecurring: roomId => dispatch(deleteMeetingsRecurring(roomId))
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(PersonalMeetingDetails);
+export default connect(mapStateToProps)(PersonalMeetingDetails);

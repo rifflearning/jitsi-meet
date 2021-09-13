@@ -5,10 +5,13 @@
 import { Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
+import { useHistory } from 'react-router';
 import { useParams } from 'react-router-dom';
 
 import { connect } from '../../../base/redux';
 import { getMeetingById, meetingReset } from '../../actions/meeting';
+import * as ROUTES from '../../constants/routes';
+import PersonalMeeting from '../PersonalMeetingRoom/PersonalMeetingDetails';
 import StyledPaper from '../StyledPaper';
 
 import Meeting from './Meeting';
@@ -20,7 +23,7 @@ function MeetingDetails({
     loading,
     error
 }) {
-
+    const history = useHistory();
     const { meetingId } = useParams();
     const roomNumber = meetingId?.split('-')[1];
 
@@ -32,6 +35,7 @@ function MeetingDetails({
         }
     }, [ meetingId ]);
 
+    const handleEditClick = () => history.push(`${ROUTES.MEETINGS}/${meeting._id}/edit`);
 
     return (
         <Grid
@@ -41,11 +45,18 @@ function MeetingDetails({
                 item = { true }
                 xs = { 12 }>
                 <StyledPaper title = 'Meeting information'>
-                    <Meeting
-                        error = { error }
-                        loading = { loading }
-                        meeting = { meeting }
-                        roomNumber = { roomNumber } />
+                    {meeting?.isPersonal
+                        ? <PersonalMeeting
+                            error = { error }
+                            handleEditClick = { handleEditClick }
+                            loading = { loading }
+                            meeting = { meeting } />
+                        : <Meeting
+                            error = { error }
+                            loading = { loading }
+                            meeting = { meeting }
+                            roomNumber = { roomNumber } />
+                    }
                 </StyledPaper>
             </Grid>
         </Grid>
