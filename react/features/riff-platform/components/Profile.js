@@ -48,7 +48,7 @@ const UserProfile = ({
     const groupedMeetings = groupMeetingsByDays(meetingsLists);
 
     // eslint-disable-next-line max-len
-    const noMeetingDataText = 'The user doesn`t have any upcoming meetings today. To schedule a new meeting click SCHEDULE A MEETING';
+    const noMeetingDataText = 'The user doesn`t have any upcoming meetings today. To create a new meeting click CREATE A MEETING';
 
     return (
         <Grid

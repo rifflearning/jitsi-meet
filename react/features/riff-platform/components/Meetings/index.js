@@ -80,7 +80,7 @@ function Meetings({
 
     const classes = useStyles();
     const history = useHistory();
-    const handleScheduleClick = useCallback(() => history.push(ROUTES.SCHEDULE), [ history ]);
+    const handleScheduleClick = useCallback(() => history.push(ROUTES.CREATE), [ history ]);
 
     useEffect(() => {
         if (isGroup) {
@@ -93,7 +93,7 @@ function Meetings({
     const groupedMeetings = groupMeetingsByDays(meetingsLists);
 
     // eslint-disable-next-line max-len
-    const noMeetingDataText = `There are no ${meetingsListType} meetings. To schedule a new meeting click SCHEDULE A MEETING`;
+    const noMeetingDataText = `There are no ${meetingsListType} meetings. To create a new meeting click CREATE A MEETING`;
 
     const meetingsTabContent = Object.keys(groupedMeetings).length
         ? (<MeetingsList

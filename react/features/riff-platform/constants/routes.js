@@ -9,7 +9,7 @@ export const MEETING_ENDED = '/meetingEnded';
 
 export const PROFILE = '/';
 export const MEETINGS = '/meetings';
-export const SCHEDULE = '/schedule';
+export const CREATE = '/create';
 export const WAITING = '/waiting';
 export const DASHBOARD = '/dashboard';
 export const EXPERIMENTAL_DASHBOARD = '/experimental-dashboard';

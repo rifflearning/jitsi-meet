@@ -143,7 +143,7 @@ class Main extends React.Component {
                     // eslint-disable-next-line react/jsx-no-bind
                     component = { () => <AllMeetings isGroup = { true } /> } />
                 }
-                <Route path = { ROUTES.SCHEDULE } >
+                <Route path = { ROUTES.CREATE } >
                     <CreateMeeting />
                 </Route>
                 <Redirect to = { ROUTES.PROFILE } />

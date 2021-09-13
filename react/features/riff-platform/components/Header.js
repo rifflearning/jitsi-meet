@@ -91,7 +91,7 @@ const Header = ({ handleSidebarOpen, isOpen, user, doLogout }) => {
                     <div
                         style = { style }>
                         {isSidebarEnabled
-                            && <Button onClick = { () => history.push(ROUTES.SCHEDULE) }>Schedule a meeting</Button>}
+                            && <Button onClick = { () => history.push(ROUTES.CREATE) }>Create a meeting</Button>}
                         {/* <Button onClick={() => history.push(ROUTES.WAITING)}>Host a meeting</Button> */}
                         {!isSidebarEnabled
                             && <>
