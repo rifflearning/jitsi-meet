@@ -16,8 +16,8 @@ import * as ROUTES from '../../constants/routes';
 import { groupMeetingsByDays } from '../../functions';
 import Loader from '../Loader';
 import StyledPaper from '../StyledPaper';
+import TabPanel from '../TabPanel';
 
-import MeetingTabPanel from './MeetingTabPanel';
 import MeetingsTable from './MeetingsTable';
 
 const useStyles = makeStyles(() => {
@@ -146,16 +146,16 @@ function Meetings({
                         item = { true }
                         justify = 'center'
                         xs = { 12 }>
-                        <MeetingTabPanel
+                        <TabPanel
                             index = { 0 }
                             value = { meetingListTypeMap[meetingsListType] }>
                             { meetingsTabContent }
-                        </MeetingTabPanel>
-                        <MeetingTabPanel
+                        </TabPanel>
+                        <TabPanel
                             index = { 1 }
                             value = { meetingListTypeMap[meetingsListType] }>
                             { meetingsTabContent }
-                        </MeetingTabPanel>
+                        </TabPanel>
                     </Grid>}
             </Grid>
         </Grid>

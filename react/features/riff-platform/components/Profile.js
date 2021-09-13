@@ -17,6 +17,7 @@ import CalendarSync from './Calendar/CalendarSync';
 import MeetingsTable from './Meetings/MeetingsTable';
 import UserPersonalMeetingRoom from './PersonalMeetingRoom/PersonalMeetingRow';
 import StyledPaper from './StyledPaper';
+import TabPanel from './TabPanel';
 
 const useStyles = makeStyles(() => {
     return {
@@ -25,28 +26,6 @@ const useStyles = makeStyles(() => {
         }
     };
 });
-
-const ProfileTabPanel = ({ children, value, index }) => (
-    <div
-        aria-labelledby = { `profile-tab-${index}` }
-        hidden = { value !== index }
-        id = { `profile-tabpanel-${index}` }
-        style = {{ color: '#ffffff',
-            width: '100%' }}>
-        {value === index && (
-            <Box pt = { 2 }>
-                {children}
-            </Box>
-        )}
-    </div>
-);
-
-ProfileTabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired
-};
-
 
 const UserProfile = ({
     doLogout,
@@ -112,7 +91,7 @@ const UserProfile = ({
                     container = { true }
                     item = { true }
                     justify = 'center'>
-                    <ProfileTabPanel
+                    <TabPanel
                         index = { 0 }
                         value = { selectedTab }>
                         <Grid
@@ -152,12 +131,12 @@ const UserProfile = ({
                                 </StyledPaper>
                             </Grid>
                         </Grid>
-                    </ProfileTabPanel>
-                    <ProfileTabPanel
+                    </TabPanel>
+                    <TabPanel
                         index = { 1 }
                         value = { selectedTab } >
                         <CalendarSync />
-                    </ProfileTabPanel>
+                    </TabPanel>
                 </Grid>
             </Grid>
         </Grid>

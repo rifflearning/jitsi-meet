@@ -2,31 +2,40 @@
 /* eslint-disable react-native/no-color-literals */
 /* eslint-disable require-jsdoc */
 
-import Box from '@material-ui/core/Box';
+import { Box, makeStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-function MeetingTabPanel({ children, value, index }) {
+const useStyles = makeStyles(() => {
+    return {
+        tab: {
+            color: '#ffffff',
+            width: '100%'
+        }
+    };
+});
+
+const TabPanel = ({ children, value, index }) => {
+    const classes = useStyles();
+
     return (
-        <div
-            aria-labelledby = { `meeting-tab-${index}` }
+        <Box
+            className = { classes.tab }
             hidden = { value !== index }
-            id = { `meeting-tabpanel-${index}` }
-            style = {{ color: '#ffffff',
-                width: '100%' }}>
+            id = { `tabpanel-${index}` }>
             {value === index && (
                 <Box pt = { 2 }>
                     {children}
                 </Box>
             )}
-        </div>
+        </Box>
     );
-}
+};
 
-MeetingTabPanel.propTypes = {
+TabPanel.propTypes = {
     children: PropTypes.node,
     index: PropTypes.any.isRequired,
     value: PropTypes.any.isRequired
 };
 
-export default MeetingTabPanel;
+export default TabPanel;
