@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 
 import { connect } from '../../../base/redux';
 import { getUserPersonalMeetingRoom } from '../../actions/personalMeeting';
-import Meeting from '../Meeting/Meeting';
+import PersonalMeeting from '../PersonalMeetingRoom/PersonalMeetingDetails';
 import Scheduler from '../Scheduler';
 import StyledPaper from '../StyledPaper';
 
@@ -36,7 +36,7 @@ const CreateMeeting = ({
                 value = { selectedValue }>
                 <FormControlLabel
                     control = { <Radio /> }
-                    label = 'Personal Room'
+                    label = 'Use Personal Meeting Room'
                     value = 'personalRoom' />
                 <FormControlLabel
                     control = { <Radio /> }
@@ -49,12 +49,11 @@ const CreateMeeting = ({
                     ? <Grid
                         item = { true }
                         xs = { 12 }>
-                        <StyledPaper>
-                            <Meeting
-                                error = { error }
-                                loading = { loading }
-                                meeting = { personalMeeting } />
-                        </StyledPaper>
+                        <PersonalMeeting
+                            error = { error }
+                            isPersonal = { true }
+                            loading = { loading }
+                            meeting = { personalMeeting } />
                     </Grid>
                     : <Scheduler />
                 }

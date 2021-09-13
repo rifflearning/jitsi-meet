@@ -15,7 +15,7 @@ import { groupMeetingsByDays } from '../functions';
 
 import CalendarSync from './Calendar/CalendarSync';
 import MeetingsTable from './Meetings/MeetingsTable';
-import UserPersonalMeetingRoom from './PersonalMeetingRoom/PersonalMeeting';
+import UserPersonalMeetingRoom from './PersonalMeetingRoom/PersonalMeetingRow';
 import StyledPaper from './StyledPaper';
 
 const useStyles = makeStyles(() => {

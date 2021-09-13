@@ -31,6 +31,7 @@ import AddToGoogleCalendarButton from '../Calendar/AddToGoogleCalendarButton';
 import AddToMsCalendarButton from '../Calendar/AddToMicrosoftCalendarButton';
 import Loader from '../Loader';
 import { ConfirmationDialogRaw } from '../Meetings/Dialog';
+import CreatePersonalMeeting from '../PersonalMeetingRoom/CreatePersonalMeeting';
 
 const useStyles = makeStyles(theme => {
     return {
@@ -128,7 +129,8 @@ function Meeting({
     userId,
     error,
     deleteLoading,
-    isCalendarEnabled
+    isCalendarEnabled,
+    isPersonal
 }) {
 
     const history = useHistory();
@@ -226,8 +228,12 @@ function Meeting({
     if (loading) {
         return <Loader />;
     }
+    console.log('error', error);
+    if (!meeting._id && error) {
+        if (isPersonal) {
+            return <CreatePersonalMeeting />;
+        }
 
-    if (error) {
         return errorMessage(error);
     }
 
@@ -539,6 +545,7 @@ Meeting.propTypes = {
     deleteLoading: PropTypes.bool,
     error: PropTypes.string,
     isCalendarEnabled: PropTypes.bool,
+    isPersonal: PropTypes.bool,
     loading: PropTypes.bool,
     meeting: PropTypes.object,
     removeMeeting: PropTypes.func,

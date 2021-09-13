@@ -10,27 +10,28 @@ import StyledPaper from '../StyledPaper';
 
 import PersonalMeetingForm from './PersonalMeetingForm';
 
-const CreatePersonalMeeting = ({ onCancelCreate, onSuccessCreate }) => (
+const EditPesonalMeeting = ({ meeting, onSuccessEdit, onCancelEdit }) => (
     <Grid
         container = { true }
         spacing = { 3 }>
         <Grid
             item = { true }
             xs = { 12 }>
-            <StyledPaper title = 'Create personal meeting room'>
+            <StyledPaper title = 'Edit personal meeting room'>
                 <PersonalMeetingForm
-                    isEditing = { false }
-                    onCancel = { onCancelCreate }
-                    onSuccess = { onSuccessCreate } />
+                    isEditing = { true }
+                    meeting = { meeting }
+                    onCancel = { onCancelEdit }
+                    onSuccess = { onSuccessEdit } />
             </StyledPaper>
         </Grid>
     </Grid>
 );
 
-CreatePersonalMeeting.propTypes = {
+EditPesonalMeeting.propTypes = {
     meeting: PropTypes.object,
-    onCancelCreate: PropTypes.func,
-    onSuccessCreate: PropTypes.func
+    onCancelEdit: PropTypes.func,
+    onSuccessEdit: PropTypes.func
 };
 
-export default CreatePersonalMeeting;
+export default EditPesonalMeeting;

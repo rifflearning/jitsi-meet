@@ -2,7 +2,7 @@
 import api from '../api';
 import * as actionTypes from '../constants/actionTypes';
 import * as LIST_TYPES from '../constants/meetingsListTypes';
-
+import * as ROUTES from '../constants/routes' 
 
 function personalMeetingRequest() {
     return {
@@ -47,14 +47,78 @@ export function getUserPersonalMeetingRoom() {
     };
 }
 
-export function createPersonalMeetingRoom() {
-    return async dispatch => {
-        console.log('creating');
+function createPersonalMeetingRequest() {
+    return {
+        type: actionTypes.PERSONAL_MEETING_REQUEST
     };
 }
 
-export function updatePersonalMeetingRoom() {
+function createPersonalMeetingSuccess(meeting) {
+    return {
+        type: actionTypes.PERSONAL_MEETING_SUCCESS,
+        meeting
+    };
+}
+
+function createPersonalMeetingFailure(error) {
+    return {
+        type: actionTypes.PERSONAL_MEETING_FAILURE,
+        error
+    };
+}
+
+export function createPersonalMeetingRoom(meeting, callback) {
     return async dispatch => {
-        console.log('updating');
+        dispatch(createPersonalMeetingRequest());
+
+        try {
+            const res = await api.scheduleMeeting(meeting);
+
+            dispatch(createPersonalMeetingSuccess(res));
+            if (callback) {
+
+                callback();
+            }
+        } catch (e) {
+            dispatch(createPersonalMeetingFailure(e.message));
+        }
+    };
+}
+
+function updatePersonalMeetingRequest() {
+    return {
+        type: actionTypes.PERSONAL_MEETING_REQUEST
+    };
+}
+
+function updatePersonalMeetingSuccess(meeting) {
+    return {
+        type: actionTypes.PERSONAL_MEETING_SUCCESS,
+        meeting
+    };
+}
+
+function updatePersonalMeetingFailure(error) {
+    return {
+        type: actionTypes.PERSONAL_MEETING_FAILURE,
+        error
+    };
+}
+
+export function updatePersonalMeetingRoom(id, meeting, callback) {
+    return async dispatch => {
+        dispatch(updatePersonalMeetingRequest());
+
+        try {
+            const res = await api.updateMeeting(id, meeting);
+
+            dispatch(updatePersonalMeetingSuccess(res));
+            if (callback) {
+
+                callback();
+            }
+        } catch (e) {
+            dispatch(updatePersonalMeetingFailure(e.message));
+        }
     };
 }

@@ -765,7 +765,7 @@ const SchedulerForm = ({
             <Grid
                 container
                 spacing = { 1 }>
-                <Grid
+                {/* <Grid
                     container>
                     {!isEditing && !meeting?.isPersonal && <Grid
                         item
@@ -788,7 +788,7 @@ const SchedulerForm = ({
                         </>
                     </Grid>
                     }
-                </Grid>
+                </Grid> */}
                 <Grid
                     item
                     xs = { 12 }

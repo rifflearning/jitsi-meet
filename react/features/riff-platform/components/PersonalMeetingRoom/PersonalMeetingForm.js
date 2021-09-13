@@ -13,11 +13,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router';
 
 import { connect } from '../../../base/redux';
 import { createPersonalMeetingRoom, updatePersonalMeetingRoom } from '../../actions/personalMeeting';
-import * as ROUTES from '../../constants/routes';
 
 const useStyles = makeStyles(theme => {
     return {
@@ -49,20 +47,22 @@ const PersonalMeetingForm = ({
     createMeeting,
     updateError,
     updateLoading,
-    updateMeeting
+    updateMeeting,
+    onSuccess,
+    onCancel
 }) => {
 
-    const defaultMeetingName = `${user.displayName}'s Personal Meeting Room`;
+    const defaultMeetingName = `${user.displayName}'s Meeting`;
+    const defaultMeetingDesc = `${user.displayName}'s Personal Meeting Room`;
 
     const [ name, setName ] = useState(defaultMeetingName);
-    const [ description, setDescription ] = useState('');
+    const [ description, setDescription ] = useState(defaultMeetingDesc);
     const [ allowAnonymous, setAllowAnonymous ] = useState(true);
     const [ waitForHost, setWaitForHost ] = useState(true);
 
     const [ nameError, setNameError ] = useState('');
 
     const classes = useStyles();
-    const history = useHistory();
 
     const isNameValid = () => Boolean(name.length);
 
@@ -79,7 +79,7 @@ const PersonalMeetingForm = ({
         return isValid;
     };
 
-    const redirectTo = () => history.push(`${ROUTES.PESONAL_MEETING}`);
+    const successCallback = () => onSuccess();
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -103,10 +103,10 @@ const PersonalMeetingForm = ({
         };
 
         if (!isEditing) {
-            return createMeeting(personalMeetingData, redirectTo);
+            return createMeeting(personalMeetingData, successCallback);
         } else if (isEditing) {
             return updateMeeting(meeting._id, { roomId: meeting.roomId,
-                ...personalMeetingData }, redirectTo);
+                ...personalMeetingData }, successCallback);
         }
     };
 
@@ -210,7 +210,7 @@ const PersonalMeetingForm = ({
                     <Button
                         variant = 'outlined'
                         className = { classes.submit }
-                        onClick = { () => history.goBack() }>
+                        onClick = { () => onCancel() }>
                         Cancel
                     </Button>
                 </Grid>
@@ -222,8 +222,6 @@ const PersonalMeetingForm = ({
                 className = { classes.formAlert }
                 severity = 'error'
                 variant = 'outlined'>{ createError || (isEditing && updateError)}</Alert> }
-
-
         </form>
     );
 };
@@ -234,6 +232,8 @@ PersonalMeetingForm.propTypes = {
     createMeeting: PropTypes.func,
     isEditing: PropTypes.bool,
     meeting: PropTypes.object,
+    onCancel: PropTypes.func,
+    onSuccess: PropTypes.func,
     updateError: PropTypes.string,
     updateLoading: PropTypes.bool,
     updateMeeting: PropTypes.func,
@@ -251,8 +251,8 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
     return {
-        createMeeting: (meeting, history) => dispatch(createPersonalMeetingRoom(meeting, history)),
-        updateMeeting: (id, meeting, history) => dispatch(updatePersonalMeetingRoom(id, meeting, history))
+        createMeeting: (meeting, callback) => dispatch(createPersonalMeetingRoom(meeting, callback)),
+        updateMeeting: (id, meeting, callback) => dispatch(updatePersonalMeetingRoom(id, meeting, callback))
     };
 };
 
