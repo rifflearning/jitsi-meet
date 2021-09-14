@@ -13,11 +13,9 @@ import {
     TextField,
     Typography,
     Radio,
-    Switch,
-    Tooltip
+    Switch
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import InfoIcon from '@material-ui/icons/Info';
 import { Autocomplete } from '@material-ui/lab';
 import Alert from '@material-ui/lab/Alert';
 import {
@@ -33,7 +31,6 @@ import 'moment-recur';
 import { useHistory } from 'react-router';
 
 import { connect } from '../../../base/redux';
-import { getUserPersonalMeetingRoom } from '../../actions/personalMeeting';
 import { schedule,
     updateSchedule,
     updateScheduleRecurring,
@@ -84,12 +81,6 @@ const useStyles = makeStyles(theme => {
             '&:read-only': {
                 color: '#ffffff'
             }
-        },
-        labelWithTooltip: {
-            marginRight: '5px'
-        },
-        infoIcon: {
-            fontSize: '1rem'
         }
     };
 });
@@ -296,10 +287,7 @@ const SchedulerForm = ({
     updateError,
     updateLoading,
     isAnon,
-    doLogout,
-    userName,
-    fetchPersonalMeeting,
-    personalMeeting
+    doLogout
 }) => {
     const classes = useStyles();
     const localUserTimezone = momentTZ.tz.guess();
@@ -343,7 +331,6 @@ const SchedulerForm = ({
     const [ multipleRooms, setmultipleRooms ] = useState(2);
 
     const [ changesMadeByUserActions, setChangesMadeByUserActions ] = useState(false);
-    const [ isPersonalRoom, setIsPersonalRoom ] = useState(false);
 
     const history = useHistory();
 
@@ -364,7 +351,7 @@ const SchedulerForm = ({
 
     useEffect(() => {
         if (meeting && isEditing) {
-            setIsPersonalRoom(Boolean(meeting.isPersonal));
+
             setname(meeting.name);
 
             const meetingData = isEditAllMeetingsRecurring ? meeting.recurrenceOptions?.defaultOptions : meeting;
@@ -374,21 +361,20 @@ const SchedulerForm = ({
             setForbidNewParticipantsAfterDateEnd(meetingData.forbidNewParticipantsAfterDateEnd);
             setWaitForHost(meetingData.waitForHost);
             setAllowAnonymous(meetingData.allowAnonymous);
-            if (!meeting.isPersonal) {
-                if (meetingData.multipleRoomsQuantity) {
-                    setisMultipleRooms(true);
-                    setmultipleRooms(meetingData.multipleRoomsQuantity);
-                }
 
-                const { durationH, durationM } = getMeetingDuration({ dateStart: meetingData.dateStart,
-                    dateEnd: meetingData.dateEnd });
-
-                setHours(durationH);
-                setMinutes(durationM);
-
-                setdate(momentTZ.tz(meetingData.dateStart, meetingTimezone));
-                setTimezone(meetingTimezone);
+            if (meetingData.multipleRoomsQuantity) {
+                setisMultipleRooms(true);
+                setmultipleRooms(meetingData.multipleRoomsQuantity);
             }
+
+            const { durationH, durationM } = getMeetingDuration({ dateStart: meetingData.dateStart,
+                dateEnd: meetingData.dateEnd });
+
+            setHours(durationH);
+            setMinutes(durationM);
+
+            setdate(momentTZ.tz(meetingData.dateStart, meetingTimezone));
+            setTimezone(meetingTimezone);
 
             const meetingRecurrenceOptions = meeting.recurrenceOptions?.options;
 
@@ -528,29 +514,8 @@ const SchedulerForm = ({
             multipleRoomsQuantity: isMultipleRooms ? multipleRooms : null
         };
 
-        const personalMeetingData = {
-            dateStart: null,
-            dateEnd: null,
-            isPersonal: true,
-            forbidNewParticipantsAfterDateEnd: false,
-            multipleRoomsQuantity: null,
-            recurrenceOptions: null,
-            recurrenceValues: null
-        };
-
-        const meetingInfo = isPersonalRoom
-            ? { ...meetingData,
-                ...personalMeetingData }
-            : meetingData;
-
         if (!isEditing) {
-            if (isPersonalRoom && personalMeeting?._id) {
-
-                return updateScheduleMeeting(personalMeeting._id, { roomId: personalMeeting.roomId,
-                    ...meetingInfo }, history);
-            }
-
-            return scheduleMeeting(meetingInfo, history);
+            return scheduleMeeting(meetingData, history);
         } else if (isEditing) {
             if (isEditAllMeetingsRecurring) {
                 return updateScheduleMeetingsRecurring(meeting.roomId,
@@ -571,7 +536,7 @@ const SchedulerForm = ({
             }
 
             return updateScheduleMeeting(meeting._id, { roomId: meeting.roomId,
-                ...meetingInfo }, history);
+                ...meetingData }, history);
 
         }
     };
@@ -729,33 +694,6 @@ const SchedulerForm = ({
 
     const timeZonesList = momentTZ.tz.names();
 
-    useEffect(() => {
-        if (!isEditing) {
-            fetchPersonalMeeting();
-        }
-    }, [ ]);
-
-    useEffect(() => {
-        if (!isEditing) {
-            if (isPersonalRoom && !personalMeeting?._id) {
-                setname(`${userName}'s Meeting`);
-                setdescription(`${userName}'s Personal Meeting Room`);
-                setWaitForHost(true);
-                setAllowAnonymous(true);
-            } else if (isPersonalRoom && personalMeeting?._id) {
-                setname(personalMeeting.name);
-                setdescription(personalMeeting.description);
-                setWaitForHost(personalMeeting.waitForHost);
-                setAllowAnonymous(personalMeeting.allowAnonymous);
-            } else if (!isPersonalRoom) {
-                setname('');
-                setdescription('');
-                setWaitForHost(false);
-                setAllowAnonymous(true);
-            }
-        }
-    }, [ personalMeeting, isPersonalRoom ]);
-
     return (
         <form
             className = { classes.form }
@@ -765,30 +703,6 @@ const SchedulerForm = ({
             <Grid
                 container
                 spacing = { 1 }>
-                {/* <Grid
-                    container>
-                    {!isEditing && !meeting?.isPersonal && <Grid
-                        item
-                        xs = { 12 }>
-                            <>
-                                <FormControlLabel
-                                    // eslint-disable-next-line max-len
-                                    label = { personalMeeting?._id ? 'Use Personal Meeting Room' : 'Personalize your meeting' }
-                                    className = { classes.labelWithTooltip }
-                                    control = { <Checkbox
-                                        name = 'usePersonalRoom'
-                                        checked = { isPersonalRoom }
-                                        onChange = { e => setIsPersonalRoom(e.target.checked) } />
-                                    } />
-                                <Tooltip
-                                    title = 'Use this to meet anytime'
-                                    placement = 'right-start'>
-                                    <InfoIcon className = { classes.infoIcon } />
-                                </Tooltip>
-                        </>
-                    </Grid>
-                    }
-                </Grid> */}
                 <Grid
                     item
                     xs = { 12 }
@@ -827,8 +741,8 @@ const SchedulerForm = ({
                         onChange = { e => setdescription(e.target.value) } />
                 </Grid>
             </Grid>
-            { !isPersonalRoom
-            && <Grid
+
+            <Grid
                 container
                 alignItems = 'center'
                 spacing = { 2 }>
@@ -895,6 +809,7 @@ const SchedulerForm = ({
                         </Grid>
                     </MuiPickersUtilsProvider>
                 </Grid>
+
                 <Grid
                     item
                     xs = { 12 }
@@ -974,282 +889,159 @@ const SchedulerForm = ({
                                 margin = 'normal' />) } />
                     </Grid>
                 </Grid>
-            </Grid> }
-            {!isPersonalRoom
-                && <>
+            </Grid>
+
+            <Grid
+                container
+                spacing = { 2 }>
+                <Grid
+                    item
+                    sm = { 12 }
+                    md = { 6 }>
+                    <FormControlLabel
+                        label = 'Recurring meeting'
+                        control = { <Switch
+                            name = 'recurringMeeting'
+                            checked = { recurringMeeting }
+                            onChange = { e => {
+                                setChangesMadeByUserActions(true);
+                                setRecurringMeeting(e.target.checked);
+                            } }
+                            disabled = { isEditOneOccurrence } />
+                        } />
+                </Grid>
+                {recurringMeeting && <Grid
+                    item
+                    sm = { 12 }
+                    md = { 6 }>
+                    <Typography> {recurrenceDesc()} </Typography>
+                </Grid>
+                }
+            </Grid>
+            {recurringMeeting && !isEditOneOccurrence
+                && <Grid
+                    container
+                    alignItems = 'center'
+                    spacing = { 2 }>
+                    <Grid
+                        item
+                        xs = { 12 }
+                        sm = { 3 }
+                        md = { 2 }>
+                        <Typography>
+                            Recurrence
+                        </Typography>
+                    </Grid>
+                    <Grid
+                        item
+                        xs = { 12 }
+                        sm = { 8 }
+                        md = { 10 }>
+
+                        <TextField
+                            id = 'recurrence-type'
+                            select
+                            value = { recurrenceType }
+                            onChange = { e => {
+                                setChangesMadeByUserActions(true);
+                                setRecurrenceType(e.target.value);
+                            } }>
+                            {recurrenceTypeArray.map(el => (<MenuItem
+                                key = { el }
+                                value = { el }>{recurrenceTypeMap[el]}</MenuItem>))}
+                        </TextField>
+                    </Grid>
+                    <Grid
+                        item
+                        xs = { 12 }
+                        sm = { 3 }
+                        md = { 2 }>
+                        <Typography>
+                            Repeat every
+                        </Typography>
+                    </Grid>
+
                     <Grid
                         container
-                        spacing = { 2 }>
-                        <Grid
-                            item
-                            sm = { 12 }
-                            md = { 6 }>
-                            <FormControlLabel
-                                label = 'Recurring meeting'
-                                control = { <Switch
-                                    name = 'recurringMeeting'
-                                    checked = { recurringMeeting }
-                                    onChange = { e => {
-                                        setChangesMadeByUserActions(true);
-                                        setRecurringMeeting(e.target.checked);
-                                    } }
-                                    disabled = { isEditOneOccurrence } />
-                                } />
-                        </Grid>
-                        {recurringMeeting && <Grid
-                            item
-                            sm = { 12 }
-                            md = { 6 }>
-                            <Typography> {recurrenceDesc()} </Typography>
-                        </Grid>
-                        }
-                    </Grid>
-                    {recurringMeeting && !isEditOneOccurrence
-                        && <Grid
-                            container
-                            alignItems = 'center'
-                            spacing = { 2 }>
-                            <Grid
-                                item
-                                xs = { 12 }
-                                sm = { 3 }
-                                md = { 2 }>
-                                <Typography>
-                                    Recurrence
-                                </Typography>
-                            </Grid>
-                            <Grid
-                                item
-                                xs = { 12 }
-                                sm = { 8 }
-                                md = { 10 }>
-
+                        item
+                        xs = { 12 }
+                        sm = { 8 }
+                        md = { 10 }
+                        spacing = { 1 }>
+                        {recurrenceType === 'daily'
+                            && <Grid item>
                                 <TextField
-                                    id = 'recurrence-type'
+                                    id = 'recurrence-interval'
                                     select
-                                    value = { recurrenceType }
+                                    SelectProps = {{ MenuProps }}
+                                    label = { repeatIntervalMap[recurrenceType].label }
+                                    value = { recurrenceInterval }
                                     onChange = { e => {
                                         setChangesMadeByUserActions(true);
-                                        setRecurrenceType(e.target.value);
+                                        setRecurrenceInterval(e.target.value);
                                     } }>
-                                    {recurrenceTypeArray.map(el => (<MenuItem
+                                    {repeatIntervalMap.daily.interval.map(el => (<MenuItem
                                         key = { el }
-                                        value = { el }>{recurrenceTypeMap[el]}</MenuItem>))}
+                                        value = { el }>{el}</MenuItem>))}
                                 </TextField>
                             </Grid>
-                            <Grid
-                                item
-                                xs = { 12 }
-                                sm = { 3 }
-                                md = { 2 }>
-                                <Typography>
-                                    Repeat every
-                                </Typography>
+                        }
+
+                        {recurrenceType === 'weekly'
+                            && <Grid item>
+                                {daysOfWeekArray.map(el => (<FormControlLabel
+                                    key = { el }
+                                    label = { el }
+                                    control = { <Checkbox
+                                        name = { el }
+                                        checked = { daysOfWeek[el] }
+                                        disabled = { daysOfWeek[el] && selectedNumberDaysOfWeek.length === 1 }
+                                        onChange = { e => setDaysOfWeek({
+                                            ...daysOfWeek,
+                                            [e.target.name]: e.target.checked
+                                        }) } />
+                                    } />))}
                             </Grid>
+                        }
 
-                            <Grid
-                                container
-                                item
-                                xs = { 12 }
-                                sm = { 8 }
-                                md = { 10 }
-                                spacing = { 1 }>
-                                {recurrenceType === 'daily'
-                                    && <Grid item>
-                                        <TextField
-                                            id = 'recurrence-interval'
-                                            select
-                                            SelectProps = {{ MenuProps }}
-                                            label = { repeatIntervalMap[recurrenceType].label }
-                                            value = { recurrenceInterval }
-                                            onChange = { e => {
-                                                setChangesMadeByUserActions(true);
-                                                setRecurrenceInterval(e.target.value);
-                                            } }>
-                                            {repeatIntervalMap.daily.interval.map(el => (<MenuItem
-                                                key = { el }
-                                                value = { el }>{el}</MenuItem>))}
-                                        </TextField>
-                                    </Grid>
-                                }
-
-                                {recurrenceType === 'weekly'
-                                    && <Grid item>
-                                        {daysOfWeekArray.map(el => (<FormControlLabel
-                                            key = { el }
-                                            label = { el }
-                                            control = { <Checkbox
-                                                name = { el }
-                                                checked = { daysOfWeek[el] }
-                                                disabled = { daysOfWeek[el] && selectedNumberDaysOfWeek.length === 1 }
-                                                onChange = { e => setDaysOfWeek({
-                                                    ...daysOfWeek,
-                                                    [e.target.name]: e.target.checked
-                                                }) } />
-                                            } />))}
-                                    </Grid>
-                                }
-
-                                {recurrenceType === 'monthly'
-                                    && <>
-                                        <Grid
-                                            container
-                                            item
-                                            alignItems = 'center'
-                                            spacing = { 1 }>
-                                            <Grid item>
-                                                <FormControlLabel
-                                                    label = 'Day'
-                                                    control = { <Radio
-                                                        name = 'monthlyBy'
-                                                        value = 'monthlyByDay'
-                                                        checked = { monthlyBy === 'monthlyByDay' }
-                                                        onChange = { e => setMonthlyBy(e.target.value) } />
-                                                    } />
-                                            </Grid>
-                                            <Grid item>
-                                                <TextField
-                                                    id = 'monthly-by-day'
-                                                    select
-                                                    SelectProps = {{ MenuProps }}
-                                                    disabled = { monthlyBy !== 'monthlyByDay' }
-                                                    value = { monthlyByDay }
-                                                    onChange = { e => setMonthlyByDay(e.target.value) }>
-                                                    {repeatIntervalMap.monthly.interval.map(el => (<MenuItem
-                                                        key = { el }
-                                                        value = { el }>{el}</MenuItem>))}
-                                                </TextField>
-                                            </Grid>
-                                            <Grid item>
-                                                <Typography>of the month</Typography>
-                                            </Grid>
-                                        </Grid>
-
-                                        <Grid
-                                            item
-                                            xs = { 12 }>
-                                            <Typography>
-                                                or
-                                            </Typography>
-                                        </Grid>
-                                        <Grid
-                                            container
-                                            item
-                                            alignItems = 'center'
-                                            spacing = { 1 }>
-                                            <Grid item>
-                                                <FormControlLabel
-                                                    label = 'The'
-                                                    control = { <Radio
-                                                        name = 'monthlyBy'
-                                                        value = 'monthlyByWeekDay'
-                                                        checked = { monthlyBy === 'monthlyByWeekDay' }
-                                                        onChange = { e => setMonthlyBy(e.target.value) } />
-                                                    } />
-                                            </Grid>
-                                            <Grid item>
-                                                <TextField
-                                                    id = 'monthly-by-week-index'
-                                                    select
-                                                    margin = 'normal'
-                                                    disabled = { monthlyBy !== 'monthlyByWeekDay' }
-                                                    value = { monthlyByPosition }
-                                                    onChange = { e => setMonthlyByPosition(e.target.value) }>
-                                                    {monthlyByPositionArray.map(el => (<MenuItem
-                                                        key = { el }
-                                                        value = { el }>{el}</MenuItem>))}
-                                                </TextField>
-                                            </Grid>
-                                            <Grid item>
-                                                <TextField
-                                                    id = 'monthly-by-week-day'
-                                                    select
-                                                    margin = 'normal'
-                                                    disabled = { monthlyBy !== 'monthlyByWeekDay' }
-                                                    value = { monthlyByWeekDay }
-                                                    onChange = { e => setMonthlyByWeekDay(e.target.value) }>
-                                                    {daysOfWeekArray.map(el => (<MenuItem
-                                                        key = { el }
-                                                        value = { el }>{el}</MenuItem>))}
-                                                </TextField>
-                                            </Grid>
-                                            <Grid item>
-                                                <Typography>of the month</Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </>
-                                }
-                            </Grid>
-
-                            <Grid
-                                item
-                                xs = { 12 }
-                                sm = { 3 }
-                                md = { 2 }>
-                                <Typography>
-                                    End date
-                                </Typography>
-                            </Grid>
-                            <Grid
-                                container
-                                item
-                                alignItems = 'center'
-                                xs = { 12 }
-                                sm = { 8 }
-                                md = { 10 }
-                                spacing = { 1 }>
+                        {recurrenceType === 'monthly'
+                            && <>
                                 <Grid
                                     container
                                     item
                                     alignItems = 'center'
-                                    xs = { 12 }
                                     spacing = { 1 }>
                                     <Grid item>
                                         <FormControlLabel
-                                            label = 'By'
+                                            label = 'Day'
                                             control = { <Radio
-                                                name = 'endDate'
-                                                value = 'endDateTime'
-                                                checked = { endDateBy === 'endDateTime' }
-                                                onChange = { e => {
-                                                    setChangesMadeByUserActions(true);
-                                                    setEndDateBy(e.target.value);
-                                                } } />
+                                                name = 'monthlyBy'
+                                                value = 'monthlyByDay'
+                                                checked = { monthlyBy === 'monthlyByDay' }
+                                                onChange = { e => setMonthlyBy(e.target.value) } />
                                             } />
                                     </Grid>
                                     <Grid item>
-                                        <MuiPickersUtilsProvider utils = { MomentUtils }>
-                                            <KeyboardDatePicker
-                                                autoOk
-                                                disableToolbar
-                                                variant = 'inline'
-                                                format = 'MM/DD/YYYY'
-                                                margin = 'normal'
-                                                id = 'date-picker-inline'
-                                                disabled = { endDateBy !== 'endDateTime' }
-                                                maxDate = { endDateBy === 'endDateTime'
-                                                    ? recurrenceMaxEndDate[recurrenceType]
-                                                    : undefined }
-                                                minDate = { endDateBy === 'endDateTime' ? date : undefined }
-                                                label = 'End Date'
-                                                value = { endDate || date }
-                                                onChange = { d => setEndDate(d) }
-                                                InputProps = {{
-                                                    readOnly: true,
-                                                    classes: {
-                                                        input: classes.datePickerInput
-                                                    }
-                                                }}
-                                                KeyboardButtonProps = {{
-                                                    'aria-label': 'change date'
-                                                }} />
-                                        </MuiPickersUtilsProvider>
+                                        <TextField
+                                            id = 'monthly-by-day'
+                                            select
+                                            SelectProps = {{ MenuProps }}
+                                            disabled = { monthlyBy !== 'monthlyByDay' }
+                                            value = { monthlyByDay }
+                                            onChange = { e => setMonthlyByDay(e.target.value) }>
+                                            {repeatIntervalMap.monthly.interval.map(el => (<MenuItem
+                                                key = { el }
+                                                value = { el }>{el}</MenuItem>))}
+                                        </TextField>
+                                    </Grid>
+                                    <Grid item>
+                                        <Typography>of the month</Typography>
                                     </Grid>
                                 </Grid>
 
                                 <Grid
                                     item
-                                    sm = { 12 }>
+                                    xs = { 12 }>
                                     <Typography>
                                         or
                                     </Typography>
@@ -1257,37 +1049,157 @@ const SchedulerForm = ({
                                 <Grid
                                     container
                                     item
-                                    spacing = { 1 }
-                                    alignItems = 'center'>
+                                    alignItems = 'center'
+                                    spacing = { 1 }>
                                     <Grid item>
                                         <FormControlLabel
-                                            label = 'After'
+                                            label = 'The'
                                             control = { <Radio
-                                                name = 'endDate'
-                                                value = 'endTimes'
-                                                checked = { endDateBy === 'endTimes' }
-                                                onChange = { e => setEndDateBy(e.target.value) } />
+                                                name = 'monthlyBy'
+                                                value = 'monthlyByWeekDay'
+                                                checked = { monthlyBy === 'monthlyByWeekDay' }
+                                                onChange = { e => setMonthlyBy(e.target.value) } />
                                             } />
                                     </Grid>
-                                    <TextField
-                                        id = 'end-times'
-                                        select
-                                        margin = 'normal'
-                                        label = 'Occurrences'
-                                        SelectProps = {{ MenuProps }}
-                                        disabled = { endDateBy !== 'endTimes' }
-                                        value = { endTimes }
-                                        onChange = { e => setEndTimes(e.target.value) }>
-                                        {recurrenceIntervalArray.map(el => (<MenuItem
-                                            key = { el }
-                                            value = { el }>{el}</MenuItem>))}
-                                    </TextField>
+                                    <Grid item>
+                                        <TextField
+                                            id = 'monthly-by-week-index'
+                                            select
+                                            margin = 'normal'
+                                            disabled = { monthlyBy !== 'monthlyByWeekDay' }
+                                            value = { monthlyByPosition }
+                                            onChange = { e => setMonthlyByPosition(e.target.value) }>
+                                            {monthlyByPositionArray.map(el => (<MenuItem
+                                                key = { el }
+                                                value = { el }>{el}</MenuItem>))}
+                                        </TextField>
+                                    </Grid>
+                                    <Grid item>
+                                        <TextField
+                                            id = 'monthly-by-week-day'
+                                            select
+                                            margin = 'normal'
+                                            disabled = { monthlyBy !== 'monthlyByWeekDay' }
+                                            value = { monthlyByWeekDay }
+                                            onChange = { e => setMonthlyByWeekDay(e.target.value) }>
+                                            {daysOfWeekArray.map(el => (<MenuItem
+                                                key = { el }
+                                                value = { el }>{el}</MenuItem>))}
+                                        </TextField>
+                                    </Grid>
+                                    <Grid item>
+                                        <Typography>of the month</Typography>
+                                    </Grid>
                                 </Grid>
+                            </>
+                        }
+                    </Grid>
+
+                    <Grid
+                        item
+                        xs = { 12 }
+                        sm = { 3 }
+                        md = { 2 }>
+                        <Typography>
+                            End date
+                        </Typography>
+                    </Grid>
+                    <Grid
+                        container
+                        item
+                        alignItems = 'center'
+                        xs = { 12 }
+                        sm = { 8 }
+                        md = { 10 }
+                        spacing = { 1 }>
+                        <Grid
+                            container
+                            item
+                            alignItems = 'center'
+                            xs = { 12 }
+                            spacing = { 1 }>
+                            <Grid item>
+                                <FormControlLabel
+                                    label = 'By'
+                                    control = { <Radio
+                                        name = 'endDate'
+                                        value = 'endDateTime'
+                                        checked = { endDateBy === 'endDateTime' }
+                                        onChange = { e => {
+                                            setChangesMadeByUserActions(true);
+                                            setEndDateBy(e.target.value);
+                                        } } />
+                                    } />
+                            </Grid>
+                            <Grid item>
+                                <MuiPickersUtilsProvider utils = { MomentUtils }>
+                                    <KeyboardDatePicker
+                                        autoOk
+                                        disableToolbar
+                                        variant = 'inline'
+                                        format = 'MM/DD/YYYY'
+                                        margin = 'normal'
+                                        id = 'date-picker-inline'
+                                        disabled = { endDateBy !== 'endDateTime' }
+                                        maxDate = { endDateBy === 'endDateTime'
+                                            ? recurrenceMaxEndDate[recurrenceType]
+                                            : undefined }
+                                        minDate = { endDateBy === 'endDateTime' ? date : undefined }
+                                        label = 'End Date'
+                                        value = { endDate || date }
+                                        onChange = { d => setEndDate(d) }
+                                        InputProps = {{ readOnly: true,
+                                            classes: {
+                                                input: classes.datePickerInput
+                                            }
+                                        }}
+                                        KeyboardButtonProps = {{
+                                            'aria-label': 'change date'
+                                        }} />
+                                </MuiPickersUtilsProvider>
                             </Grid>
                         </Grid>
-                    }
-                </>
+
+                        <Grid
+                            item
+                            sm = { 12 }>
+                            <Typography>
+                                or
+                            </Typography>
+                        </Grid>
+                        <Grid
+                            container
+                            item
+                            spacing = { 1 }
+                            alignItems = 'center'>
+                            <Grid item>
+                                <FormControlLabel
+                                    label = 'After'
+                                    control = { <Radio
+                                        name = 'endDate'
+                                        value = 'endTimes'
+                                        checked = { endDateBy === 'endTimes' }
+                                        onChange = { e => setEndDateBy(e.target.value) } />
+                                    } />
+                            </Grid>
+                            <TextField
+                                id = 'end-times'
+                                select
+                                margin = 'normal'
+                                label = 'Occurrences'
+                                SelectProps = {{ MenuProps }}
+                                disabled = { endDateBy !== 'endTimes' }
+                                value = { endTimes }
+                                onChange = { e => setEndTimes(e.target.value) }>
+                                {recurrenceIntervalArray.map(el => (<MenuItem
+                                    key = { el }
+                                    value = { el }>{el}</MenuItem>))}
+                            </TextField>
+                        </Grid>
+                    </Grid>
+                </Grid>
             }
+
             <Grid
                 container
                 spacing = { 1 }>
@@ -1314,50 +1226,48 @@ const SchedulerForm = ({
                             onChange = { e => setWaitForHost(e.target.checked) } />
                         } />
                 </Grid>
-                {!isPersonalRoom
-                    && <>
-                        <Grid
-                            item
-                            xs = { 12 }>
-                            <FormControlLabel
-                                label = 'Forbid new participants after the meeting is over'
-                                control = { <Checkbox
-                                    name = 'forbidNewParticipantsAfterDateEnd'
-                                    checked = { forbidNewParticipantsAfterDateEnd }
-                                    onChange = { e => setForbidNewParticipantsAfterDateEnd(e.target.checked) } />
-                                } />
+
+                <Grid
+                    item
+                    xs = { 12 }>
+                    <FormControlLabel
+                        label = 'Forbid new participants after the meeting is over'
+                        control = { <Checkbox
+                            name = 'forbidNewParticipantsAfterDateEnd'
+                            checked = { forbidNewParticipantsAfterDateEnd }
+                            onChange = { e => setForbidNewParticipantsAfterDateEnd(e.target.checked) } />
+                        } />
+                </Grid>
+
+                <Grid
+                    container
+                    spacing = { 2 }>
+                    <Grid
+                        item
+                        xs = { 12 }>
+                        <FormControlLabel
+                            label = 'Multiple rooms in one meeting'
+                            control = { <Switch
+                                name = 'isMultipleRooms'
+                                checked = { isMultipleRooms }
+                                onChange = { e => setisMultipleRooms(e.target.checked) } />
+                            } />
+                    </Grid>
+                    {isMultipleRooms
+                        && <Grid item>
+                            <TextField
+                                id = 'multipleRooms'
+                                select
+                                label = 'Quantity'
+                                value = { multipleRooms }
+                                onChange = { e => setmultipleRooms(e.target.value) }>
+                                {multipleMeetingArray.map(el => (<MenuItem
+                                    key = { el }
+                                    value = { el }>{ el }</MenuItem>))}
+                            </TextField>
                         </Grid>
-                        <Grid
-                            container
-                            spacing = { 2 }>
-                            <Grid
-                                item
-                                xs = { 12 }>
-                                <FormControlLabel
-                                    label = 'Multiple rooms in one meeting'
-                                    control = { <Switch
-                                        name = 'isMultipleRooms'
-                                        checked = { isMultipleRooms }
-                                        onChange = { e => setisMultipleRooms(e.target.checked) } />
-                                    } />
-                            </Grid>
-                            {isMultipleRooms
-                                && <Grid item>
-                                    <TextField
-                                        id = 'multipleRooms'
-                                        select
-                                        label = 'Quantity'
-                                        value = { multipleRooms }
-                                        onChange = { e => setmultipleRooms(e.target.value) }>
-                                        {multipleMeetingArray.map(el => (<MenuItem
-                                            key = { el }
-                                            value = { el }>{el}</MenuItem>))}
-                                    </TextField>
-                                </Grid>
-                            }
-                        </Grid>
-                    </>
-                }
+                    }
+                </Grid>
             </Grid>
 
             <Typography color = 'error'>
@@ -1391,7 +1301,7 @@ const SchedulerForm = ({
                         variant = 'outlined'
                         className = { classes.submit }
                         onClick = { () => history.goBack() }>
-                        Cancel
+            Cancel
                     </Button>
                 </Grid>
             </Grid>
@@ -1416,8 +1326,7 @@ SchedulerForm.propTypes = {
     updateScheduleMeeting: PropTypes.func,
     updateScheduleMeetingRecurringSingleOccurrence: PropTypes.func,
     updateScheduleMeetingsRecurring: PropTypes.func,
-    userId: PropTypes.string,
-    userName: PropTypes.string
+    userId: PropTypes.string
 };
 
 const mapStateToProps = state => {
@@ -1427,9 +1336,7 @@ const mapStateToProps = state => {
         loading: state['features/riff-platform'].scheduler.loading,
         error: state['features/riff-platform'].scheduler.error,
         updateError: state['features/riff-platform'].scheduler.updateError,
-        updateLoading: state['features/riff-platform'].scheduler.updateLoading,
-        userName: state['features/riff-platform'].signIn.user?.displayName,
-        personalMeeting: state['features/riff-platform'].personalMeeting.meeting
+        updateLoading: state['features/riff-platform'].scheduler.updateLoading
     };
 };
 
@@ -1441,8 +1348,7 @@ const mapDispatchToProps = dispatch => {
         updateScheduleMeetingsRecurring: (roomId, meeting, history) =>
             dispatch(updateScheduleRecurring(roomId, meeting, history)),
         updateScheduleMeetingRecurringSingleOccurrence: (roomId, id, meeting, history) =>
-            dispatch(updateScheduleRecurringSingleOccurrence(roomId, id, meeting, history)),
-        fetchPersonalMeeting: () => dispatch(getUserPersonalMeetingRoom())
+            dispatch(updateScheduleRecurringSingleOccurrence(roomId, id, meeting, history))
     };
 };
 

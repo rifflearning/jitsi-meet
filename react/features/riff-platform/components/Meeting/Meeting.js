@@ -31,7 +31,6 @@ import AddToGoogleCalendarButton from '../Calendar/AddToGoogleCalendarButton';
 import AddToMsCalendarButton from '../Calendar/AddToMicrosoftCalendarButton';
 import Loader from '../Loader';
 import { ConfirmationDialogRaw } from '../Meetings/Dialog';
-import CreatePersonalMeeting from '../PersonalMeetingRoom/CreatePersonalMeeting';
 
 const useStyles = makeStyles(theme => {
     return {
@@ -129,8 +128,7 @@ function Meeting({
     userId,
     error,
     deleteLoading,
-    isCalendarEnabled,
-    isPersonal
+    isCalendarEnabled
 }) {
 
     const history = useHistory();
@@ -228,12 +226,8 @@ function Meeting({
     if (loading) {
         return <Loader />;
     }
-    console.log('error', error);
-    if (!meeting._id && error) {
-        if (isPersonal) {
-            return <CreatePersonalMeeting />;
-        }
 
+    if (!meeting._id && error) {
         return errorMessage(error);
     }
 
@@ -293,45 +287,42 @@ function Meeting({
                 </Grid>
             </Grid>
             <Divider className = { classes.infoDivider } />
-            {!meeting.isPersonal && <>
+            <Grid
+                alignItems = 'center'
+                container = { true }
+                item = { true }>
+                <Grid
+                    item = { true }
+                    md = { 2 }
+                    sm = { 3 }
+                    xs = { 12 }>
+                    <Typography>
+                        Time
+                    </Typography>
+                </Grid>
                 <Grid
                     alignItems = 'center'
                     container = { true }
-                    item = { true }>
-                    <Grid
-                        item = { true }
-                        md = { 2 }
-                        sm = { 3 }
-                        xs = { 12 }>
+                    item = { true }
+                    md = { 10 }
+                    sm = { 8 }
+                    spacing = { 2 }
+                    xs = { 12 }>
+                    <Grid container = { true }>
                         <Typography>
-                            Time
+                            {getFormattedDate(meeting.dateStart, meeting.dateEnd, meeting.timezone)}
                         </Typography>
                     </Grid>
-                    <Grid
-                        alignItems = 'center'
-                        container = { true }
-                        item = { true }
-                        md = { 10 }
-                        sm = { 8 }
-                        spacing = { 2 }
-                        xs = { 12 }>
-                        <Grid container = { true }>
-                            <Typography>
-                                {getFormattedDate(meeting.dateStart, meeting.dateEnd, meeting.timezone)}
+                    {meeting?.timezone && localUserTimezone !== meeting?.timezone
+                        && <Grid container = { true }>
+                            <Typography
+                                className = { classes.meetingTimezone }>
+                                {timezoneTimeInfo}
                             </Typography>
-                        </Grid>
-                        {meeting?.timezone && localUserTimezone !== meeting?.timezone
-                            && <Grid container = { true }>
-                                <Typography
-                                    className = { classes.meetingTimezone }>
-                                    {timezoneTimeInfo}
-                                </Typography>
-                            </Grid>}
-                    </Grid>
+                        </Grid>}
                 </Grid>
-                <Divider className = { classes.infoDivider } />
-            </>
-            }
+            </Grid>
+            <Divider className = { classes.infoDivider } />
             {meeting.recurrenceOptions
                 && <>
                     <Grid
@@ -433,14 +424,14 @@ function Meeting({
                             Wait for a host of the meeting
                         </Typography>
                     </Grid>
-                    {!meeting.isPersonal && <Grid
+                    <Grid
                         container = { true }
                         item = { true }>
                         <Box pr = { 1 }>{defineIcon[meeting.forbidNewParticipantsAfterDateEnd]}</Box>
                         <Typography>
                             Forbid new participants after the meeting is over
                         </Typography>
-                    </Grid>}
+                    </Grid>
                     <Grid
                         container = { true }
                         item = { true }>
@@ -518,11 +509,11 @@ function Meeting({
                             variant = 'outlined'>
                             Edit
                         </Button>
-                        {!meeting.isPersonal && <Button
+                        <Button
                             className = { classes.meetingButton }
                             onClick = { handleDeleteClick }>
                             Delete
-                        </Button>}
+                        </Button>
                     </>
                 }
                 <ConfirmationDialogRaw
@@ -545,7 +536,6 @@ Meeting.propTypes = {
     deleteLoading: PropTypes.bool,
     error: PropTypes.string,
     isCalendarEnabled: PropTypes.bool,
-    isPersonal: PropTypes.bool,
     loading: PropTypes.bool,
     meeting: PropTypes.object,
     removeMeeting: PropTypes.func,
