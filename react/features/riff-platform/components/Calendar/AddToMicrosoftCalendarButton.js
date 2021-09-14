@@ -113,11 +113,11 @@ function AddToMsCalendarButton({
         },
         'start': {
             'dateTime': meeting.dateStart || dateNow,
-            'timeZone': meeting.timezone
+            'timeZone': meeting.timezone || 'UTC'
         },
         'end': {
             'dateTime': meeting.dateEnd || endDateFromNow,
-            'timeZone': meeting.timezone
+            'timeZone': meeting.timezone || 'UTC'
         },
         'singleValueExtendedProperties': [
             {
