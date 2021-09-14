@@ -95,7 +95,11 @@ export function markInterestingMoment(roomId) {
 
             const meetingId = meetings[0]._id;
 
-            await api.postInterestingMoment(meetingId, uid, time);
+            await app.service('moments').create({
+                meetingId,
+                participantId: uid,
+                time
+            });
         } catch (error) {
             return { error };
         }

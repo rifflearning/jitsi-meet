@@ -1,0 +1,48 @@
+/* eslint-disable require-jsdoc */
+import api from '../api';
+import * as actionTypes from '../constants/actionTypes';
+import * as LIST_TYPES from '../constants/meetingsListTypes';
+
+
+function personalMeetingRequest() {
+    return {
+        type: actionTypes.PERSONAL_MEETING_REQUEST
+    };
+}
+
+function personalMeetingSuccess(meeting) {
+    return {
+        type: actionTypes.PERSONAL_MEETING_SUCCESS,
+        meeting
+    };
+}
+
+function personalMeetingFailure(error) {
+    return {
+        type: actionTypes.PERSONAL_MEETING_FAILURE,
+        error
+    };
+}
+
+export function getUserPersonalMeetingRoom() {
+    return async dispatch => {
+        dispatch(personalMeetingRequest());
+        let meeting = null;
+
+        try {
+            const res = await api.fetchMeetings(LIST_TYPES.PERSONAL);
+
+            if (res.length) {
+                meeting = res[0];
+                dispatch(personalMeetingSuccess(meeting));
+            } else {
+                dispatch(personalMeetingFailure('No personal meeting'));
+            }
+        } catch (error) {
+            dispatch(personalMeetingFailure('No personal meeting'));
+            console.error('Error in getUserPersonalMeetingRoom', error);
+        }
+
+        return meeting;
+    };
+}
