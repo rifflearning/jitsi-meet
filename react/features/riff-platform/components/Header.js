@@ -12,7 +12,6 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useHistory } from 'react-router';
-import VideoCallIcon from '@material-ui/icons/VideoCall';
 
 import { connect } from '../../base/redux';
 import { logout } from '../actions/signIn';
@@ -94,7 +93,6 @@ const Header = ({ handleSidebarOpen, isOpen, user, doLogout }) => {
                         {isSidebarEnabled
                             && <Button
                                 onClick = { () => history.push(ROUTES.CREATE) }
-                                startIcon = { <VideoCallIcon /> }
                                 variant = 'outlined'>Create a meeting</Button>}
                         {/* <Button onClick={() => history.push(ROUTES.WAITING)}>Host a meeting</Button> */}
                         {!isSidebarEnabled

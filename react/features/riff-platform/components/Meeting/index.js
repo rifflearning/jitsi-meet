@@ -44,20 +44,23 @@ function MeetingDetails({
             <Grid
                 item = { true }
                 xs = { 12 }>
-                <StyledPaper title = 'Meeting information'>
-                    {meeting?.isPersonal
-                        ? <PersonalMeeting
+
+                {meeting?.isPersonal
+                    ? <StyledPaper title = 'Personal Meeting information'>
+                        <PersonalMeeting
                             error = { error }
                             handleEditClick = { handleEditClick }
                             loading = { loading }
                             meeting = { meeting } />
-                        : <Meeting
+                    </StyledPaper>
+                    : <StyledPaper title = 'Meeting information'>
+                        <Meeting
                             error = { error }
                             loading = { loading }
                             meeting = { meeting }
                             roomNumber = { roomNumber } />
-                    }
-                </StyledPaper>
+                    </StyledPaper>
+                }
             </Grid>
         </Grid>
     );
