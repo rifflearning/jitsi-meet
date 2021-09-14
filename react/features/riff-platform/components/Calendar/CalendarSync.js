@@ -40,7 +40,7 @@ const useStyles = makeStyles(() => {
         },
         box: {
             margin: '20px 0 20px 0',
-            padding: '10px',
+            padding: '15px',
             backgroundColor: '#555555',
             borderRadius: '4px',
             boxShadow: '5px 5px 9px -5px rgba(0, 0, 0, 0.37)'
@@ -93,7 +93,7 @@ const Settings = ({
                     <Typography
                         color = 'textSecondary'
                         variant = 'body2'>
-                        The {interfaceConfig.APP_NAME} calendar integration is used to securely access your calendar.
+                        The {interfaceConfig.APP_NAME} calendar integration is used to securely access your calendar
                     </Typography>
                 </Grid>
                 <Grid
@@ -113,11 +113,6 @@ const Settings = ({
                                     {` ${googleProfileEmail}`}
                                 </Box>
                             </Box>
-                            <Typography
-                                color = 'textSecondary'
-                                variant = 'body2'>
-                                Click the Disconnect button below to stop accessing calendar
-                            </Typography>
                             <Button
                                 className = { classes.button }
                                 color = 'default'
@@ -154,11 +149,6 @@ const Settings = ({
                                     {` ${msProfileEmail}`}
                                 </Box>
                             </Box>
-                            <Typography
-                                color = 'textSecondary'
-                                variant = 'body2'>
-                                Click the Disconnect button below to stop accessing calendar
-                            </Typography>
                             <Button
                                 className = { classes.button }
                                 color = 'default'

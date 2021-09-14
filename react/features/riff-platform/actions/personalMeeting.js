@@ -2,7 +2,6 @@
 import api from '../api';
 import * as actionTypes from '../constants/actionTypes';
 import * as LIST_TYPES from '../constants/meetingsListTypes';
-import * as ROUTES from '../constants/routes' 
 
 function personalMeetingRequest() {
     return {

@@ -74,7 +74,6 @@ function PersonalMeetingDetails({
     if (loading) {
         return <Loader />;
     }
-    console.log('meeting', meeting)
 
     return (
         <Grid

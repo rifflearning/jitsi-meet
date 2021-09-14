@@ -18,7 +18,6 @@ function PersonalMeeting({
     const [ isEditing, setIsEditing ] = useState(false);
     const [ isCreating, setIsCreating ] = useState(false);
 
-
     const handleEditClick = () => setIsEditing(true);
 
     const handleCreateClick = () => setIsCreating(true);
