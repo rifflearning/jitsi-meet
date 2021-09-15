@@ -90,6 +90,49 @@ make dev
 ```
 ---
 ## Customization and deployment to AWS
+
+### Deployment to Riff AWS development test instance
+
+The instance should have been created and initialized as a Riff production riffremote site.
+
+You will need to have the ssh key for that instance. For example you may have the ssh key
+stored locally on your machine as `~/.ssh/riffdev_1_useast2_key.pem`.
+
+You will also need to know the Public IP address of the instance or the DNS name. Currently
+you alway use the `ubuntu` user to connect to those instances.
+
+You will need the following 2 definitions in the `.env` file:
+
+```
+AWS_NAME=ubuntu@dev-jitsi.riffplatform.com
+PEM_PATH=~/.ssh/riffdev_1_useast2_key.pem
+```
+
+These are example values. The example for `AWS_NAME` assumes that you are using the known DNS
+name for the instance, in this case `dev-jitsi.riffplatform.com`. And the value of `PEM_PATH`
+is to the ssh key discussed as an example above.
+
+It is recommended that you actually put these values in the file `env-dev` and make `.env` link to
+that file. This allows relinking `.env` to a file with different values without losing your settings.
+`env-dev` has been added to `.gitignore` so you won't accidentally commit it. It should not be committed
+because different developers will need different values in this file.
+
+```
+ln -f -s env-dev .env
+```
+
+Once these values are set correctly in your `.env` file you can package and deploy the source in
+the working directory with the `deploy-aws` Makefile target.
+
+```
+make deploy-aws
+```
+
+This will build the current sources into a deployment package named `rifflearning-jitsi-meet-dev.tar.bz2`,
+copy it to the instance, and unpackage it there.
+
+---
+### Outdated deployment docs that have not been updated yet (still has useful information)
 In order to customize *jitsi-meet* with riff theme, all features and set up a new enviroment please follow next steps:
 
 1. Install Jitsi-Meet to aws with [official guide](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-quickstart).

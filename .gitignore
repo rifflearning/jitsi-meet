@@ -18,6 +18,7 @@ Pods/
 # OSX
 #
 .DS_Store
+*.icloud
 
 # Xcode
 #
@@ -86,8 +87,9 @@ android/app/google-services.json
 ios/app/dropbox.key
 ios/app/GoogleService-Info.plist
 
-# .env variables for firebase, riff, client aws deployment
+# .env variables for riff, client aws deployment
 .env
+env-dev
 temp-deploy-aws
 temp-deploy-aws.zip
 .vscode

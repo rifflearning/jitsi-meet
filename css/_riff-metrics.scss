@@ -7,10 +7,27 @@
     $meeting-info-details-color: #ffffffcc,
 );
 
-.amcharts-legend-container .legend-item .label {
-    background: unset;
+.dashboard-header-container .header {
+    color: white;
 }
 
-.empty-graph-text {
-    color: #4a4a4a;
+.meeting-info-component {
+    .meeting-details {
+        h2 {
+            font-size: 16px;
+            margin-top: 0;
+            color: inherit;
+        }
+    }
+}
+
+.dashboard-view-component {
+    font-family: sans-serif;
+    // TODO: these changes are not needed visually -mjl 2021-08-30
+    .chart-card-container {
+        .chart-card-title {
+            line-height: 1.75;
+            margin-bottom: 20px;
+        }
+    }
 }

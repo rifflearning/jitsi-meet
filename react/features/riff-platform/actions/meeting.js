@@ -117,8 +117,11 @@ export function checkIsMeetingAllowed(meetingId) {
 
             if (!meeting) return meetingError(errorTypes.NO_MEETING);
 
+            const isPersonal = meeting.isPersonal;
+
             // is time to meeting left less than 5 minutes
-            if (timeToMeeting(meeting) > 5 * 60 * 1000) return meetingError(errorTypes.NOT_A_MEETING_TIME);
+            // eslint-disable-next-line max-len
+            if (timeToMeeting(meeting) > 5 * 60 * 1000 && !isPersonal) return meetingError(errorTypes.NOT_A_MEETING_TIME);
 
             const isHost = meeting.createdBy === myUid;
 

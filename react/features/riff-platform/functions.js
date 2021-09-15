@@ -64,6 +64,18 @@ export const jwt = {
     }
 };
 
+export const ltiUserInfo = {
+    get() {
+        return localStorage.getItem('lti-data');
+    },
+    set(data) {
+        localStorage.setItem('lti-data', JSON.stringify(data));
+    },
+    remove() {
+        localStorage.removeItem('lti-data');
+    }
+};
+
 /**
  * Groups meetingsLists to object: {Today: meetingList, [otherDate]: meetingList ...}.
  *
