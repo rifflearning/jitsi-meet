@@ -91,7 +91,7 @@ StateListenerRegistry.register(
         if (conference !== previousConference) {
             // conference changed, left or failed...
             // Clear tile view state.
-            dispatch(setTileView(true));
+            dispatch(setTileView());
         }
     });
 
