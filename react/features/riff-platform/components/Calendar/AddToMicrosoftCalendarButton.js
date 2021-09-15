@@ -101,8 +101,12 @@ function AddToMsCalendarButton({
         .add(1, 'hours')
         .toISOString();
 
+    const eventId = meeting.multipleRoomsQuantity
+        ? `${meeting.roomId}${multipleRoom}`
+        : meeting.roomId;
+
     const event = {
-        'transactionId': meeting.roomId,
+        'transactionId': eventId,
         'subject': meeting.name,
         body: {
             contentType: 'HTML',
@@ -122,7 +126,7 @@ function AddToMsCalendarButton({
         'singleValueExtendedProperties': [
             {
                 'id': 'String {66f5a359-4659-4830-9070-00040ec6ac6e} Name id',
-                'value': meeting.roomId
+                'value': eventId
             }
         ]
     };

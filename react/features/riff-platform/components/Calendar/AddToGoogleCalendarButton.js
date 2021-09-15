@@ -104,12 +104,16 @@ function AddToGoogleCalendarButton({
         .add(1, 'hours')
         .toISOString();
 
+    const eventId = meeting.multipleRoomsQuantity
+        ? `${meeting.roomId}${multipleRoom}`
+        : meeting.roomId;
+
     const event = {
-        'id': meeting.roomId,
+        'id': eventId,
         'summary': meeting.name,
         'location': meetingUrl,
         'description': meeting.description || `Click the following link to join the meeting: ${meetingUrl}`,
-        'url': meeting.roomId,
+        'url': eventId,
         'start': {
             'dateTime': meeting.dateStart || dateNow,
             'timeZone': meeting.timezone
