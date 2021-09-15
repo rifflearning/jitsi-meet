@@ -11,7 +11,7 @@ const NoPersonalMeeting = ({ handleCreateRoom }) => (
         <Grid
             item = { true }>
             <Typography>
-                You don`t have a personal meeting room.
+                You don`t have a personal meeting room
             </Typography>
         </Grid>
         <Grid

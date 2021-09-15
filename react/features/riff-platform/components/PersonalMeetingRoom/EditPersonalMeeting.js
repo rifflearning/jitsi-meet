@@ -17,7 +17,7 @@ const EditPesonalMeeting = ({ meeting, onSuccessEdit, onCancelEdit }) => (
         <Grid
             item = { true }
             xs = { 12 }>
-            <StyledPaper title = 'Edit personal meeting room'>
+            <StyledPaper title = 'Edit Personal Meeting Room'>
                 <PersonalMeetingForm
                     isEditing = { true }
                     meeting = { meeting }

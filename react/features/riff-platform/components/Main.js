@@ -21,6 +21,7 @@ import * as actionTypes from '../constants/actionTypes';
 import * as ROUTES from '../constants/routes';
 import { app as riffdataApp } from '../libs/riffdata-client';
 
+import CreateMeeting from './CreateMeeting';
 import Dashboard from './Dashboard';
 import EditMeeting from './EditMeeting';
 import ExperimentalDashboard from './ExperimentalDashboard';
@@ -31,12 +32,10 @@ import MeetingEndedPage from './MeetingEndedPage';
 import AllMeetings from './Meetings';
 import Profile from './Profile';
 import ResetPassword from './ResetPassword';
-import Scheduler from './Scheduler';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import Verify from './Verify';
 import Waiting from './Waiting';
-import CreateMeeting from './CreateMeeting';
 
 const styles = theme => {
     return {

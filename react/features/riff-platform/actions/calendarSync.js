@@ -292,7 +292,6 @@ export function insertCalendarEntry(calendarId, event) {
 
                 return Promise.resolve();
             }, error => {
-                console.log(error.result?.error?.message);
 
                 // https://developers.google.com/calendar/api/guides/errors#409_the_requested_identifier_already_exists
                 // Error code when instance with the given ID already exists in the googlestorage.
@@ -483,7 +482,6 @@ function microsoftIsSignedIn() {
         const isExpired = now > tokenExpires && !isNaN(tokenExpires);
 
         if (state.accessToken && isExpired) {
-            console.log('inside refresh');
 
             // token expired, let's refresh it
             return dispatch(refreshAuthToken())
@@ -591,6 +589,7 @@ export function createMsCalendarEntry(event) {
                     }, () =>
                         client
                             .api('/me/events')
+                            // eslint-disable-next-line max-len
                             .filter(`singleValueExtendedProperties/Any(ep: ep/id eq '${event.singleValueExtendedProperties[0].id}' and ep/value eq '${event.singleValueExtendedProperties[0].value}')`)
                             .get()
                     )
@@ -611,7 +610,7 @@ export function createMsCalendarEntry(event) {
                         }
                     })
                     .catch(error => {
-                        console.log('error', error);
+                        console.error('error', error);
                     });
             });
 }

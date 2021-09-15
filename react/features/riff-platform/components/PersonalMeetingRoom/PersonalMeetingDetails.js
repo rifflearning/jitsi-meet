@@ -16,10 +16,6 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 
 import { connect } from '../../../base/redux';
-import {
-    deleteMeeting,
-    deleteMeetingsRecurring
-} from '../../actions/meetings';
 import { isGoogleCalendarEnabled, isMsCalendarEnabled } from '../../calendarSyncFunctions';
 import * as ROUTES from '../../constants/routes';
 import AddToGoogleCalendarButton from '../Calendar/AddToGoogleCalendarButton';

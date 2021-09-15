@@ -17,7 +17,7 @@ const CreatePersonalMeeting = ({ onCancelCreate, onSuccessCreate }) => (
         <Grid
             item = { true }
             xs = { 12 }>
-            <StyledPaper title = 'Create personal meeting room'>
+            <StyledPaper title = 'Create Personal Meeting Room'>
                 <PersonalMeetingForm
                     isEditing = { false }
                     onCancel = { onCancelCreate }

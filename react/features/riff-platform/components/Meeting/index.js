@@ -46,7 +46,7 @@ function MeetingDetails({
                 xs = { 12 }>
 
                 {meeting?.isPersonal
-                    ? <StyledPaper title = 'Personal Meeting information'>
+                    ? <StyledPaper title = 'Personal Meeting Room information'>
                         <PersonalMeeting
                             error = { error }
                             handleEditClick = { handleEditClick }
