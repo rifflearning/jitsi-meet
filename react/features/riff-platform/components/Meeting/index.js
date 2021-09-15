@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 /* eslint-disable require-jsdoc */
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable react/jsx-no-bind */
@@ -11,7 +12,6 @@ import { useParams } from 'react-router-dom';
 import { connect } from '../../../base/redux';
 import { getMeetingById, meetingReset } from '../../actions/meeting';
 import * as ROUTES from '../../constants/routes';
-import PersonalMeeting from '../PersonalMeetingRoom/PersonalMeetingDetails';
 import StyledPaper from '../StyledPaper';
 
 import Meeting from './Meeting';
@@ -25,7 +25,7 @@ function MeetingDetails({
 }) {
     const history = useHistory();
     const { meetingId } = useParams();
-    const roomNumber = meetingId?.split('-')[1];
+    const roomNumber = parseInt(meetingId?.split('-')[1]);
 
     useEffect(() => () => resetMeeting(), []);
 
@@ -44,23 +44,17 @@ function MeetingDetails({
             <Grid
                 item = { true }
                 xs = { 12 }>
-
-                {meeting?.isPersonal
-                    ? <StyledPaper title = 'Personal Meeting Room information'>
-                        <PersonalMeeting
-                            error = { error }
-                            handleEditClick = { handleEditClick }
-                            loading = { loading }
-                            meeting = { meeting } />
-                    </StyledPaper>
-                    : <StyledPaper title = 'Meeting information'>
-                        <Meeting
-                            error = { error }
-                            loading = { loading }
-                            meeting = { meeting }
-                            roomNumber = { roomNumber } />
-                    </StyledPaper>
-                }
+                <StyledPaper
+                    title = { meeting?.isPersonal
+                        ? 'Personal Meeting Room information'
+                        : 'Meeting information' }>
+                    <Meeting
+                        error = { error }
+                        loading = { loading }
+                        meeting = { meeting }
+                        roomNumber = { roomNumber }
+                        { ...meeting?.isPersonal ? { onEditClick: handleEditClick } : {} } />
+                </StyledPaper>
             </Grid>
         </Grid>
     );

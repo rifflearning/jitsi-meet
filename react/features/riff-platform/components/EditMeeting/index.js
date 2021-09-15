@@ -51,10 +51,12 @@ const EditMeeting = ({ resetMeeting, fetchMeetingById, meetingError, meetingLoad
                 item = { true }
                 xs = { 12 }>
                 {meeting?.isPersonal
-                    ? <EditPesonalMeeting
-                        meeting = { meeting }
-                        onCancelEdit = { onSuccessEdit }
-                        onSuccessEdit = { onSuccessEdit } />
+                    ? <StyledPaper title = 'Edit Personal Meeting Room'>
+                        <EditPesonalMeeting
+                            meeting = { meeting }
+                            onCancelEdit = { onSuccessEdit }
+                            onSuccessEdit = { onSuccessEdit } />
+                    </StyledPaper>
                     : <StyledPaper title = 'Edit a meeting'>
                         <SchedulerForm
                             isEditing = { true }

@@ -3,12 +3,12 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
+import MeetingDetails from '../Meeting/Meeting';
 import StyledPaper from '../StyledPaper';
 
 import CreatePersonalMeeting from './CreatePersonalMeeting';
 import EditPersonalMeeting from './EditPersonalMeeting';
 import NoPersonalMeeting from './NoPersonalMeeting';
-import PersonalMeetingDetails from './PersonalMeetingDetails';
 
 function PersonalMeeting({
     meeting = {},
@@ -18,33 +18,29 @@ function PersonalMeeting({
     const [ isEditing, setIsEditing ] = useState(false);
     const [ isCreating, setIsCreating ] = useState(false);
 
-    const handleEditClick = () => setIsEditing(true);
-
-    const handleCreateClick = () => setIsCreating(true);
-
-    const onFinishEdit = () => setIsEditing(false);
-
-    const onFinishCreate = () => setIsCreating(false);
-
     return (
         meeting._id
             ? isEditing
-                ? <EditPersonalMeeting
-                    meeting = { meeting }
-                    onCancelEdit = { onFinishEdit }
-                    onSuccessEdit = { onFinishEdit } />
+                ? <StyledPaper title = 'Edit Personal Meeting Room'>
+                    <EditPersonalMeeting
+                        meeting = { meeting }
+                        onCancelEdit = { () => setIsEditing(false) }
+                        onSuccessEdit = { () => setIsEditing(false) } />
+                </StyledPaper>
                 : <StyledPaper>
-                    <PersonalMeetingDetails
-                        handleEditClick = { handleEditClick }
+                    <MeetingDetails
                         loading = { loading }
-                        meeting = { meeting } />
+                        meeting = { meeting }
+                        onEditClick = { () => setIsEditing(true) } />
                 </StyledPaper>
             : isCreating
-                ? <CreatePersonalMeeting
-                    onCancelCreate = { onFinishCreate }
-                    onSuccessCreate = { onFinishCreate } />
+                ? <StyledPaper title = 'Create Personal Meeting Room'>
+                    <CreatePersonalMeeting
+                        onCancelCreate = { () => setIsCreating(false) }
+                        onSuccessCreate = { () => setIsCreating(false) } />
+                </StyledPaper>
                 : <StyledPaper>
-                    <NoPersonalMeeting handleCreateRoom = { handleCreateClick } />
+                    <NoPersonalMeeting handleCreateRoom = { () => setIsCreating(true) } />
                 </StyledPaper>
     );
 }
