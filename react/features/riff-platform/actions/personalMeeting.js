@@ -109,14 +109,13 @@ export function updatePersonalMeetingRoom(id, meeting, callback) {
         dispatch(updatePersonalMeetingRequest());
 
         try {
-            // const res = await api.updateMeeting(id, meeting);
+            const res = await api.updateMeeting(id, meeting);
 
-            // dispatch(updatePersonalMeetingSuccess(res));
-            // if (callback) {
+            dispatch(updatePersonalMeetingSuccess(res));
+            if (callback) {
 
-            //     callback();
-            // }
-            dispatch(updatePersonalMeetingFailure('error'));
+                callback();
+            }
         } catch (e) {
             dispatch(updatePersonalMeetingFailure(e.message));
         }
