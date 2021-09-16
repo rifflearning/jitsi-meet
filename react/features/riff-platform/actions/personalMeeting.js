@@ -48,20 +48,20 @@ export function getUserPersonalMeetingRoom() {
 
 function createPersonalMeetingRequest() {
     return {
-        type: actionTypes.PERSONAL_MEETING_REQUEST
+        type: actionTypes.CREATE_PERSONAL_MEETING_REQUEST
     };
 }
 
 function createPersonalMeetingSuccess(meeting) {
     return {
-        type: actionTypes.PERSONAL_MEETING_SUCCESS,
+        type: actionTypes.CREATE_PERSONAL_MEETING_SUCCESS,
         meeting
     };
 }
 
 function createPersonalMeetingFailure(error) {
     return {
-        type: actionTypes.PERSONAL_MEETING_FAILURE,
+        type: actionTypes.CREATE_PERSONAL_MEETING_FAILURE,
         error
     };
 }
@@ -86,20 +86,20 @@ export function createPersonalMeetingRoom(meeting, callback) {
 
 function updatePersonalMeetingRequest() {
     return {
-        type: actionTypes.PERSONAL_MEETING_REQUEST
+        type: actionTypes.UPDATE_PERSONAL_MEETING_REQUEST
     };
 }
 
 function updatePersonalMeetingSuccess(meeting) {
     return {
-        type: actionTypes.PERSONAL_MEETING_SUCCESS,
+        type: actionTypes.UPDATE_PERSONAL_MEETING_SUCCESS,
         meeting
     };
 }
 
 function updatePersonalMeetingFailure(error) {
     return {
-        type: actionTypes.PERSONAL_MEETING_FAILURE,
+        type: actionTypes.UPDATE_PERSONAL_MEETING_FAILURE,
         error
     };
 }
@@ -109,15 +109,22 @@ export function updatePersonalMeetingRoom(id, meeting, callback) {
         dispatch(updatePersonalMeetingRequest());
 
         try {
-            const res = await api.updateMeeting(id, meeting);
+            // const res = await api.updateMeeting(id, meeting);
 
-            dispatch(updatePersonalMeetingSuccess(res));
-            if (callback) {
+            // dispatch(updatePersonalMeetingSuccess(res));
+            // if (callback) {
 
-                callback();
-            }
+            //     callback();
+            // }
+            dispatch(updatePersonalMeetingFailure('error'));
         } catch (e) {
             dispatch(updatePersonalMeetingFailure(e.message));
         }
+    };
+}
+
+export function personalMeetingReset() {
+    return {
+        type: actionTypes.PERSONAL_MEETING_RESET
     };
 }

@@ -15,7 +15,11 @@ import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 
 import { connect } from '../../../base/redux';
-import { createPersonalMeetingRoom, updatePersonalMeetingRoom } from '../../actions/personalMeeting';
+import {
+    personalMeetingReset,
+    createPersonalMeetingRoom,
+    updatePersonalMeetingRoom
+} from '../../actions/personalMeeting';
 
 const useStyles = makeStyles(theme => {
     return {
@@ -49,7 +53,8 @@ const PersonalMeetingForm = ({
     updateLoading,
     updateMeeting,
     onSuccess,
-    onCancel
+    onCancel,
+    resetMeeting
 }) => {
 
     const defaultMeetingName = `${user.displayName}'s Meeting`;
@@ -63,6 +68,8 @@ const PersonalMeetingForm = ({
     const [ nameError, setNameError ] = useState('');
 
     const classes = useStyles();
+
+    useEffect(() => () => resetMeeting(), []);
 
     const isNameValid = () => Boolean(name.length);
 
@@ -234,6 +241,7 @@ PersonalMeetingForm.propTypes = {
     meeting: PropTypes.object,
     onCancel: PropTypes.func,
     onSuccess: PropTypes.func,
+    resetMeeting: PropTypes.func,
     updateError: PropTypes.string,
     updateLoading: PropTypes.bool,
     updateMeeting: PropTypes.func,
@@ -243,16 +251,17 @@ PersonalMeetingForm.propTypes = {
 const mapStateToProps = state => {
     return {
         user: state['features/riff-platform'].signIn.user,
-        createLoading: state['features/riff-platform'].scheduler.loading,
-        createError: state['features/riff-platform'].scheduler.error,
-        updateError: state['features/riff-platform'].scheduler.updateError,
-        updateLoading: state['features/riff-platform'].scheduler.updateLoading
+        createLoading: state['features/riff-platform'].personalMeeting.createLoading,
+        createError: state['features/riff-platform'].personalMeeting.createError,
+        updateError: state['features/riff-platform'].personalMeeting.updateError,
+        updateLoading: state['features/riff-platform'].personalMeeting.updateLoading
     };
 };
 const mapDispatchToProps = dispatch => {
     return {
         createMeeting: (meeting, callback) => dispatch(createPersonalMeetingRoom(meeting, callback)),
-        updateMeeting: (id, meeting, callback) => dispatch(updatePersonalMeetingRoom(id, meeting, callback))
+        updateMeeting: (id, meeting, callback) => dispatch(updatePersonalMeetingRoom(id, meeting, callback)),
+        resetMeeting: () => dispatch(personalMeetingReset())
     };
 };
 

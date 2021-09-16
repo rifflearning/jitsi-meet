@@ -49,7 +49,7 @@ const useStyles = makeStyles(() => {
     };
 });
 
-const Settings = ({
+const CalendarSync = ({
     isConnectedToGoogleCalendar,
     googleProfileEmail,
     googleCalendarSignOut,
@@ -173,7 +173,7 @@ const Settings = ({
     );
 };
 
-Settings.propTypes = {
+CalendarSync.propTypes = {
     bootstrapGoogleCalendarIntegration: PropTypes.func,
     bootstrapMicrosftCalendarIntegration: PropTypes.func,
     googleCalendarSignIn: PropTypes.func,
@@ -209,4 +209,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Settings);
+export default connect(mapStateToProps, mapDispatchToProps)(CalendarSync);

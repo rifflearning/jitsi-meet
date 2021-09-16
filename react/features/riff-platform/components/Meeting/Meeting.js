@@ -113,20 +113,12 @@ const getRecurrenceDesc = (recurring = {}) => {
     return `${intervalPart}${daysOfWeekPart}${daysOfMonthPart}${endDatePart}${occurrencePart}`;
 };
 
-const errorMessage = err => (<Grid
-    container = { true }
-    item = { true }
-    justify = 'center'
-    xs = { 12 }><Typography color = 'error'>{err}</Typography></Grid>);
-
 function Meeting({
     meeting = {},
     roomNumber,
-    loading,
     removeMeeting,
     removeMeetingsRecurring,
     userId,
-    error,
     deleteLoading,
     isCalendarEnabled,
     onEditClick
@@ -226,14 +218,6 @@ function Meeting({
     ${momentTZ.tz(meeting.dateEnd, meeting.timezone).format('HH:mm')}, 
     ${isSameDay ? '' : `${momentTZ.tz(meeting.dateStart, meeting.timezone).format('MMM DD')},`}
      ${meeting.timezone}`;
-
-    if (loading) {
-        return <Loader />;
-    }
-
-    if (!meeting._id && error) {
-        return errorMessage(error);
-    }
 
     return (
         <Grid
@@ -551,9 +535,7 @@ function Meeting({
 
 Meeting.propTypes = {
     deleteLoading: PropTypes.bool,
-    error: PropTypes.string,
     isCalendarEnabled: PropTypes.bool,
-    loading: PropTypes.bool,
     meeting: PropTypes.object,
     onEditClick: PropTypes.func,
     removeMeeting: PropTypes.func,

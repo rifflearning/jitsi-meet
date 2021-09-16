@@ -3,7 +3,7 @@
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable react/jsx-no-bind */
 
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router';
@@ -11,10 +11,18 @@ import { useParams } from 'react-router-dom';
 
 import { connect } from '../../../base/redux';
 import { getMeetingById, meetingReset } from '../../actions/meeting';
+import { personalMeetingReset } from '../../actions/personalMeeting';
 import * as ROUTES from '../../constants/routes';
+import Loader from '../Loader';
 import StyledPaper from '../StyledPaper';
 
 import Meeting from './Meeting';
+
+const errorMessage = err => (<Grid
+    container = { true }
+    item = { true }
+    justify = 'center'
+    xs = { 12 }><Typography color = 'error'>{err}</Typography></Grid>);
 
 function MeetingDetails({
     meeting = {},
@@ -37,6 +45,14 @@ function MeetingDetails({
 
     const handleEditClick = () => history.push(`${ROUTES.MEETINGS}/${meeting._id}/edit`);
 
+    if (loading) {
+        return <Loader />;
+    }
+
+    if (!meeting._id && error) {
+        return errorMessage(error);
+    }
+
     return (
         <Grid
             container = { true }
@@ -49,8 +65,6 @@ function MeetingDetails({
                         ? 'Personal Meeting Room information'
                         : 'Meeting information' }>
                     <Meeting
-                        error = { error }
-                        loading = { loading }
                         meeting = { meeting }
                         roomNumber = { roomNumber }
                         { ...meeting?.isPersonal ? { onEditClick: handleEditClick } : {} } />
@@ -79,7 +93,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         fetchMeeting: id => dispatch(getMeetingById(id)),
-        resetMeeting: () => dispatch(meetingReset())
+        resetMeeting: () => {
+            dispatch(meetingReset());
+            dispatch(personalMeetingReset());
+        }
     };
 };
 
