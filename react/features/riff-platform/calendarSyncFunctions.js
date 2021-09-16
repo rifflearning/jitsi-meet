@@ -1,3 +1,5 @@
+/* global process */
+
 import base64js from 'base64-js';
 
 import { parseStandardURIString, parseURLParams } from '../base/util';
@@ -8,14 +10,8 @@ import {
     MS_API_CONFIGURATION
 } from './constants/calendarSync';
 
-export const isGoogleCalendarEnabled = state => {
-    const {
-        enableCalendarIntegration,
-        googleApiApplicationClientID
-    } = state['features/base/config'] || {};
-
-    return Boolean(enableCalendarIntegration && googleApiApplicationClientID);
-};
+export const isGoogleCalendarEnabled = () =>
+    Boolean(process.env.ENABLE_CALENDAR_INTEGRATION && process.env.GOOGLE_API_APP_CLIENT_ID);
 
 export const getGoogleCalendarEntry = (calendarId, eventId) => googleApi._getGoogleApiClient()
     .client.calendar.events.get({
@@ -80,14 +76,8 @@ export const msCalendarSync = {
     }
 };
 
-export const isMsCalendarEnabled = state => {
-    const {
-        enableCalendarIntegration,
-        microsoftApiApplicationClientID
-    } = state['features/base/config'] || {};
-
-    return Boolean(enableCalendarIntegration && microsoftApiApplicationClientID);
-};
+export const isMsCalendarEnabled = () =>
+    Boolean(process.env.ENABLE_CALENDAR_INTEGRATION && process.env.MICROSOFT_API_APP_CLIENT_ID);
 
 /**
  * Constructs and returns the URL to use for renewing an auth token.
