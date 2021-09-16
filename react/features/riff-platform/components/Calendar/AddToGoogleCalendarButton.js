@@ -13,9 +13,6 @@ import { connect } from '../../../base/redux';
 import { insertCalendarEntry, bootstrapCalendarIntegration } from '../../actions/calendarSync';
 import { isGoogleCalendarEnabled } from '../../calendarSyncFunctions';
 
-window.config.enableCalendarIntegration = true;
-window.config.googleApiApplicationClientID = '387032831739-h6i4p8ou45j21ke8317dn7888d92ur45.apps.googleusercontent.com';
-
 const reccurenceTypeMap = {
     'daily': 'DAILY',
     'weekly': 'WEEKLY',

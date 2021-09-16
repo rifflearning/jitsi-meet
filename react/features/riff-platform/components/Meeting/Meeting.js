@@ -29,7 +29,6 @@ import * as ROUTES from '../../constants/routes';
 import { getNumberRangeArray, formatDurationTime } from '../../functions';
 import AddToGoogleCalendarButton from '../Calendar/AddToGoogleCalendarButton';
 import AddToMsCalendarButton from '../Calendar/AddToMicrosoftCalendarButton';
-import Loader from '../Loader';
 import { ConfirmationDialogRaw } from '../Meetings/Dialog';
 
 const useStyles = makeStyles(() => {

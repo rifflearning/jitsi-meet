@@ -11,8 +11,6 @@ import { connect } from '../../../base/redux';
 import { bootstrapMsCalendarIntegration, createMsCalendarEntry } from '../../actions/calendarSync';
 import { isMsCalendarEnabled } from '../../calendarSyncFunctions';
 
-window.config.microsoftApiApplicationClientID = 'bc85555d-6216-4981-aa9f-ee1da895f660';
-
 const daysOfWeekMap = {
     'Sun': 'Sunday',
     'Mon': 'Monday',
