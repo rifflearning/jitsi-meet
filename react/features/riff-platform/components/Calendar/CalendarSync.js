@@ -17,7 +17,9 @@ import {
     microsoftSignIn,
     microsoftSignOut
 } from '../../actions/calendarSync';
+import { isGoogleCalendarEnabled, isMsCalendarEnabled } from '../../calendarSyncFunctions';
 import StyledPaper from '../StyledPaper';
+
 
 const useStyles = makeStyles(() => {
     return {
@@ -63,6 +65,9 @@ const CalendarSync = ({
 
     const classes = useStyles();
 
+    const isGoogleCalendarIntegrationEnabled = isGoogleCalendarEnabled();
+    const isMsCalendarIntegartionEnabled = isMsCalendarEnabled();
+
     const onClickSignInGoogle = () => googleCalendarSignIn();
     const onClickDisconnectGoogle = () => googleCalendarSignOut();
     const onClickSignInMicrosoft = () => msCalendarSignIn();
@@ -96,78 +101,82 @@ const CalendarSync = ({
                         The {interfaceConfig.APP_NAME} calendar integration is used to securely access your calendar
                     </Typography>
                 </Grid>
-                <Grid
-                    className = { classes.box }
-                    container = { true }
-                    direction = 'column'
-                    item = { true }
-                    justify = 'flex-start'>
-                    {isConnectedToGoogleCalendar
-                        ? <Grid
-                            item = { true }>
-                            <Box className = { classes.textPrimary }>
-                                Currently accessing Google Calendar for
-                                <Box
-                                    className = { classes.boldText }
-                                    display = 'inline'>
-                                    {` ${googleProfileEmail}`}
+                {isGoogleCalendarIntegrationEnabled
+                    && <Grid
+                        className = { classes.box }
+                        container = { true }
+                        direction = 'column'
+                        item = { true }
+                        justify = 'flex-start'>
+                        {isConnectedToGoogleCalendar
+                            ? <Grid
+                                item = { true }>
+                                <Box className = { classes.textPrimary }>
+                                    Currently accessing Google Calendar for
+                                    <Box
+                                        className = { classes.boldText }
+                                        display = 'inline'>
+                                        {` ${googleProfileEmail}`}
+                                    </Box>
                                 </Box>
-                            </Box>
-                            <Button
-                                className = { classes.button }
-                                color = 'default'
-                                onClick = { onClickDisconnectGoogle }
-                                startIcon = { <Icon><GoogleIcon /></Icon> }
-                                variant = 'contained'> Disconnect </Button>
-                        </Grid> : <Grid
-                            item = { true }>
-                            <Typography>
-                                Connect to the Google Calendar
-                            </Typography>
-                            <Button
-                                className = { classes.button }
-                                color = 'default'
-                                onClick = { onClickSignInGoogle }
-                                startIcon = { <Icon><GoogleIcon /></Icon> }
-                                variant = 'contained'> Sign in with Google</Button>
-                        </Grid>}
-                </Grid>
-                <Grid
-                    className = { classes.box }
-                    container = { true }
-                    direction = 'column'
-                    item = { true }
-                    justify = 'flex-start'>
-                    {isConnectedToMsCalendar
-                        ? <Grid
-                            item = { true }>
-                            <Box className = { classes.textPrimary }>
-                                Currently accessing Outlook Calendar for
-                                <Box
-                                    className = { classes.boldText }
-                                    display = 'inline'>
-                                    {` ${msProfileEmail}`}
+                                <Button
+                                    className = { classes.button }
+                                    color = 'default'
+                                    onClick = { onClickDisconnectGoogle }
+                                    startIcon = { <Icon><GoogleIcon /></Icon> }
+                                    variant = 'contained'> Disconnect </Button>
+                            </Grid> : <Grid
+                                item = { true }>
+                                <Typography>
+                                    Connect to the Google Calendar
+                                </Typography>
+                                <Button
+                                    className = { classes.button }
+                                    color = 'default'
+                                    onClick = { onClickSignInGoogle }
+                                    startIcon = { <Icon><GoogleIcon /></Icon> }
+                                    variant = 'contained'> Sign in with Google</Button>
+                            </Grid>}
+                    </Grid>
+                }
+                {isMsCalendarIntegartionEnabled
+                    && <Grid
+                        className = { classes.box }
+                        container = { true }
+                        direction = 'column'
+                        item = { true }
+                        justify = 'flex-start'>
+                        {isConnectedToMsCalendar
+                            ? <Grid
+                                item = { true }>
+                                <Box className = { classes.textPrimary }>
+                                    Currently accessing Outlook Calendar for
+                                    <Box
+                                        className = { classes.boldText }
+                                        display = 'inline'>
+                                        {` ${msProfileEmail}`}
+                                    </Box>
                                 </Box>
-                            </Box>
-                            <Button
-                                className = { classes.button }
-                                color = 'default'
-                                onClick = { onClickDisconnectMicrosoft }
-                                startIcon = { <Icon><MicrosoftLogo /></Icon> }
-                                variant = 'contained'> Disconnect </Button>
-                        </Grid> : <Grid
-                            item = { true }>
-                            <Typography>
-                                Connect to the Outlook Calendar
-                            </Typography>
-                            <Button
-                                className = { classes.button }
-                                color = 'default'
-                                onClick = { onClickSignInMicrosoft }
-                                startIcon = { <Icon><MicrosoftLogo /></Icon> }
-                                variant = 'contained'>Sign in with Microsoft</Button>
-                        </Grid>}
-                </Grid>
+                                <Button
+                                    className = { classes.button }
+                                    color = 'default'
+                                    onClick = { onClickDisconnectMicrosoft }
+                                    startIcon = { <Icon><MicrosoftLogo /></Icon> }
+                                    variant = 'contained'> Disconnect </Button>
+                            </Grid> : <Grid
+                                item = { true }>
+                                <Typography>
+                                    Connect to the Outlook Calendar
+                                </Typography>
+                                <Button
+                                    className = { classes.button }
+                                    color = 'default'
+                                    onClick = { onClickSignInMicrosoft }
+                                    startIcon = { <Icon><MicrosoftLogo /></Icon> }
+                                    variant = 'contained'>Sign in with Microsoft</Button>
+                            </Grid>}
+                    </Grid>
+                }
             </Grid>
         </StyledPaper>
     );

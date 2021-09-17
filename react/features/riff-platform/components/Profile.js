@@ -13,6 +13,7 @@ import { logout } from '../actions/signIn';
 import * as LIST_TYPES from '../constants/meetingsListTypes';
 import { groupMeetingsByDays } from '../functions';
 
+import { isGoogleCalendarEnabled, isMsCalendarEnabled } from './../calendarSyncFunctions';
 import CalendarSync from './Calendar/CalendarSync';
 import MeetingsTable from './Meetings/MeetingsTable';
 import UserPersonalMeetingRoom from './PersonalMeetingRoom/PersonalMeetingRow';
@@ -50,6 +51,10 @@ const UserProfile = ({
     // eslint-disable-next-line max-len
     const noMeetingDataText = 'The user doesn`t have any upcoming meetings today. To create a new meeting click CREATE A MEETING';
 
+
+    const isGoogleCalendarIntegrationEnabled = isGoogleCalendarEnabled();
+    const isMsCalendarIntegartionEnabled = isMsCalendarEnabled();
+
     return (
         <Grid
             container = { true }
@@ -73,9 +78,11 @@ const UserProfile = ({
                                 <Tab
                                     className = { classes.tab }
                                     label = 'Main Info' />
-                                <Tab
-                                    className = { classes.tab }
-                                    label = 'Calendar Sync' />
+                                {(isGoogleCalendarIntegrationEnabled || isMsCalendarIntegartionEnabled)
+                                    && <Tab
+                                        className = { classes.tab }
+                                        label = 'Calendar Sync' />
+                                }
                             </Tabs>
                         </Box>
                     </Grid>
@@ -132,11 +139,13 @@ const UserProfile = ({
                             </Grid>
                         </Grid>
                     </TabPanel>
-                    <TabPanel
-                        index = { 1 }
-                        value = { selectedTab } >
-                        <CalendarSync />
-                    </TabPanel>
+                    {(isGoogleCalendarIntegrationEnabled || isMsCalendarIntegartionEnabled)
+                        && <TabPanel
+                            index = { 1 }
+                            value = { selectedTab } >
+                            <CalendarSync />
+                        </TabPanel>
+                    }
                 </Grid>
             </Grid>
         </Grid>

@@ -11,7 +11,7 @@ import {
 } from './constants/calendarSync';
 
 export const isGoogleCalendarEnabled = () =>
-    Boolean(process.env.ENABLE_CALENDAR_INTEGRATION && process.env.GOOGLE_API_APP_CLIENT_ID);
+    Boolean(process.env.ENABLE_CALENDAR_INTEGRATION === 'true' && process.env.GOOGLE_API_APP_CLIENT_ID);
 
 export const getGoogleCalendarEntry = (calendarId, eventId) => googleApi._getGoogleApiClient()
     .client.calendar.events.get({
@@ -77,7 +77,7 @@ export const msCalendarSync = {
 };
 
 export const isMsCalendarEnabled = () =>
-    Boolean(process.env.ENABLE_CALENDAR_INTEGRATION && process.env.MICROSOFT_API_APP_CLIENT_ID);
+    Boolean(process.env.ENABLE_CALENDAR_INTEGRATION === 'true' && process.env.MICROSOFT_API_APP_CLIENT_ID);
 
 /**
  * Constructs and returns the URL to use for renewing an auth token.

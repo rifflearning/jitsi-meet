@@ -76,10 +76,11 @@ const getRecurrenceRule = (meetingDateStart, options = {}) => {
 function AddToMsCalendarButton({
     meeting,
     multipleRoom,
-    isMsCalendarIntegartionEnabled,
     createCalendarEntry,
     bootstrapCalendarIntegration
 }) {
+
+    const isMsCalendarIntegartionEnabled = isMsCalendarEnabled();
 
     if (!isMsCalendarIntegartionEnabled) {
         return null;
@@ -151,16 +152,13 @@ function AddToMsCalendarButton({
 AddToMsCalendarButton.propTypes = {
     bootstrapCalendarIntegration: PropTypes.func,
     createCalendarEntry: PropTypes.func,
-    isMsCalendarIntegartionEnabled: PropTypes.bool,
     meeting: PropTypes.object,
     multipleRoom: PropTypes.number
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = () => {
 
-    return {
-        isMsCalendarIntegartionEnabled: isMsCalendarEnabled(state)
-    };
+    return { };
 };
 
 const mapDispatchToProps = dispatch => {

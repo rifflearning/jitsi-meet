@@ -81,9 +81,10 @@ function AddToGoogleCalendarButton({
     meeting,
     multipleRoom,
     createCalendarEntry,
-    bootstrapGoogleCalendarIntegration,
-    isGoogleCalendarIntegrationEnabled
+    bootstrapGoogleCalendarIntegration
 }) {
+
+    const isGoogleCalendarIntegrationEnabled = isGoogleCalendarEnabled();
 
     if (!isGoogleCalendarIntegrationEnabled) {
         return null;
@@ -146,16 +147,13 @@ function AddToGoogleCalendarButton({
 AddToGoogleCalendarButton.propTypes = {
     bootstrapGoogleCalendarIntegration: PropTypes.func,
     createCalendarEntry: PropTypes.func,
-    isGoogleCalendarIntegrationEnabled: PropTypes.bool,
     meeting: PropTypes.object,
     multipleRoom: PropTypes.number
 
 };
 
-const mapStateToProps = state => {
-    return {
-        isGoogleCalendarIntegrationEnabled: isGoogleCalendarEnabled(state)
-    };
+const mapStateToProps = () => {
+    return { };
 };
 
 const mapDispatchToProps = dispatch => {

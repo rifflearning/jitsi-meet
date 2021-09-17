@@ -155,7 +155,8 @@ function loadGoogleAPI() {
                 if (getState()['features/riff-platform'].calendarSync.google.googleAPIState
                     === GOOGLE_API_STATES.NEEDS_LOADING) {
                     return googleApi.initializeClient(
-                        process.env.GOOGLE_API_APP_CLIENT_ID, false, process.env.ENABLE_CALENDAR_INTEGRATION);
+                        // eslint-disable-next-line max-len
+                        process.env.GOOGLE_API_APP_CLIENT_ID, false, process.env.ENABLE_CALENDAR_INTEGRATION === 'true');
                 }
 
                 return Promise.resolve();
