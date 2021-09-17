@@ -119,7 +119,6 @@ function Meeting({
     removeMeetingsRecurring,
     userId,
     deleteLoading,
-    isCalendarEnabled,
     onEditClick
 }) {
 
@@ -217,6 +216,8 @@ function Meeting({
     ${momentTZ.tz(meeting.dateEnd, meeting.timezone).format('HH:mm')}, 
     ${isSameDay ? '' : `${momentTZ.tz(meeting.dateStart, meeting.timezone).format('MMM DD')},`}
      ${meeting.timezone}`;
+
+     const isCalendarEnabled = isGoogleCalendarEnabled() || isMsCalendarEnabled();
 
     return (
         <Grid
@@ -534,7 +535,6 @@ function Meeting({
 
 Meeting.propTypes = {
     deleteLoading: PropTypes.bool,
-    isCalendarEnabled: PropTypes.bool,
     meeting: PropTypes.object,
     onEditClick: PropTypes.func,
     removeMeeting: PropTypes.func,
@@ -546,8 +546,7 @@ Meeting.propTypes = {
 const mapStateToProps = state => {
     return {
         userId: state['features/riff-platform'].signIn.user?.uid,
-        deleteLoading: state['features/riff-platform'].meetings.deleteLoading,
-        isCalendarEnabled: isGoogleCalendarEnabled(state) && isMsCalendarEnabled(state)
+        deleteLoading: state['features/riff-platform'].meetings.deleteLoading
     };
 };
 
