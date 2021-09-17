@@ -392,10 +392,9 @@ export function microsoftSignIn() {
 
         dispatch(setMsCalendarAPIAuthState(guids));
 
-        const { microsoftApiApplicationClientID }
-            = getState()['features/base/config'];
+
         const authUrl = getAuthUrl(
-            microsoftApiApplicationClientID,
+            process.env.MICROSOFT_API_APP_CLIENT_ID,
             guids.authState,
             guids.authNonce);
         const h = 600;
@@ -440,7 +439,7 @@ export function microsoftSignIn() {
 
             const params = getParamsFromHash(data.url);
             const tokenParts = getValidatedTokenParts(
-                params, guids, microsoftApiApplicationClientID);
+                params, guids, process.env.MICROSOFT_API_APP_CLIENT_ID);
 
             if (!tokenParts) {
                 signInDeferred.reject('Invalid token received');
@@ -499,13 +498,12 @@ function microsoftIsSignedIn() {
  */
 function refreshAuthToken() {
     return (dispatch, getState) => {
-        const { microsoftApiApplicationClientID }
-            = getState()['features/base/config'];
+
         const { msAuthState = {} }
             = getState()['features/riff-platform'].calendarSync.microsoft || {};
 
         const refreshAuthUrl = getAuthRefreshUrl(
-            microsoftApiApplicationClientID,
+            process.env.MICROSOFT_API_APP_CLIENT_ID,
             msAuthState.userDomainType,
             msAuthState.userSigninName);
 
