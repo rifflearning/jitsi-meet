@@ -65,18 +65,6 @@ class ApiService {
 
     // fetchEmotions = mockFetchEmotions;
 
-    // interesting moments
-    postInterestingMoment = (meetingId, submittedBy, time) => {
-        console.log('postInterestingMoment');
-        this.postWithJwt(`/meetings/${meetingId}/markInteresting`, {
-            submittedBy,
-            time
-        });
-    }
-
-    fetchInterestingMoments = meetingId => this.fetchWithJwt(`/meetings/${meetingId}/interestingMoments`);
-
-
     // helper, returns userObj if authenticated, otherwise null
     isAuth = async () => {
         let user = null;
