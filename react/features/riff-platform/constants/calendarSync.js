@@ -36,3 +36,8 @@ export const MS_API_CONFIGURATION = {
     // authentication.
     REDIRECT_URI: `${window.location.origin}/static/msredirect.html`
 };
+
+export const CALENDARS = {
+    GOOGLE: 'google',
+    MS: 'ms'
+};

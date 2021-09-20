@@ -20,15 +20,19 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 
 import { connect } from '../../../base/redux';
+import { insertCalendarEntry, createMsCalendarEntry } from '../../actions/calendarSync';
 import {
     deleteMeeting,
     deleteMeetingsRecurring
 } from '../../actions/meetings';
 import { isGoogleCalendarEnabled, isMsCalendarEnabled } from '../../calendarSyncFunctions';
+import { CALENDARS } from '../../constants/calendarSync';
 import * as ROUTES from '../../constants/routes';
 import { getNumberRangeArray, formatDurationTime } from '../../functions';
 import AddToGoogleCalendarButton from '../Calendar/AddToGoogleCalendarButton';
 import AddToMsCalendarButton from '../Calendar/AddToMicrosoftCalendarButton';
+import TrustDialog from '../Calendar/TrustDialog';
+import { getCalendarEvent } from '../Calendar/helpers';
 import { ConfirmationDialogRaw } from '../Meetings/Dialog';
 
 const useStyles = makeStyles(() => {
@@ -119,7 +123,10 @@ function Meeting({
     removeMeetingsRecurring,
     userId,
     deleteLoading,
-    onEditClick
+    onEditClick,
+    createCalendarEntry,
+    googleCalendarIntegrationReady,
+    msCalendarIntegrationReady
 }) {
 
     const history = useHistory();
@@ -129,6 +136,8 @@ function Meeting({
     const [ isLinkCopied, setLinkCopied ] = useState(false);
     const [ isOpenDeleteDialog, setisOpenDeleteDialog ] = useState(false);
     const [ isOpenEditDialog, setIsOpenEditDialog ] = useState(false);
+    const [ isOpenTrustDialg, setIsOpenTrustDialog ] = useState(false);
+    const [ selectedCalendar, setSelectedCalendar ] = useState(CALENDARS.GOOGLE);
 
     const handleLinkCopy = () => {
         const id = meeting.multipleRoomsQuantity
@@ -217,65 +226,104 @@ function Meeting({
     ${isSameDay ? '' : `${momentTZ.tz(meeting.dateStart, meeting.timezone).format('MMM DD')},`}
      ${meeting.timezone}`;
 
-     const isCalendarEnabled = isGoogleCalendarEnabled() || isMsCalendarEnabled();
+    const isCalendarEnabled = isGoogleCalendarEnabled() || isMsCalendarEnabled();
+
+    const beforeSignInToCalendar = () => {
+        setIsOpenTrustDialog(true);
+    };
+
+    const getEvent = () => getCalendarEvent({
+        meeting,
+        multipleRoom,
+        calendar: selectedCalendar
+    });
+
+    const addToGoogleCalendar = () => {
+        setSelectedCalendar(CALENDARS.GOOGLE);
+        if (!googleCalendarIntegrationReady) {
+            return beforeSignInToCalendar();
+        }
+
+        return createCalendarEntry(CALENDARS.GOOGLE, getEvent());
+    };
+
+    const addToMSCalendar = () => {
+        setSelectedCalendar(CALENDARS.MS);
+        if (!msCalendarIntegrationReady) {
+            return beforeSignInToCalendar();
+        }
+
+        return createCalendarEntry(CALENDARS.MS, getEvent());
+    };
+
+    const handleCloseDialog = () => {
+        setIsOpenTrustDialog(false);
+    };
+
+    const handleContinueAddToCalendar = () => {
+
+        setIsOpenTrustDialog(false);
+        createCalendarEntry(selectedCalendar, getEvent());
+    };
 
     return (
-        <Grid
-            alignItems = 'center'
-            container = { true }
-            item = { true }
-            xs = { 12 } >
+        <>
             <Grid
                 alignItems = 'center'
-                className = { classes.box }
                 container = { true }
-                item = { true }>
+                item = { true }
+                xs = { 12 } >
                 <Grid
-                    item = { true }
-                    md = { 2 }
-                    sm = { 3 }
-                    xs = { 12 }>
-                    <Typography>
+                    alignItems = 'center'
+                    className = { classes.box }
+                    container = { true }
+                    item = { true }>
+                    <Grid
+                        item = { true }
+                        md = { 2 }
+                        sm = { 3 }
+                        xs = { 12 }>
+                        <Typography>
                         Name
-                    </Typography>
+                        </Typography>
+                    </Grid>
+                    <Grid
+                        item = { true }
+                        md = { 10 }
+                        sm = { 8 }
+                        xs = { 12 } >
+                        <Typography>
+                            {meeting.name}
+                        </Typography>
+                    </Grid>
                 </Grid>
+                <Divider className = { classes.infoDivider } />
                 <Grid
-                    item = { true }
-                    md = { 10 }
-                    sm = { 8 }
-                    xs = { 12 } >
-                    <Typography>
-                        {meeting.name}
-                    </Typography>
-                </Grid>
-            </Grid>
-            <Divider className = { classes.infoDivider } />
-            <Grid
-                alignItems = 'center'
-                className = { classes.box }
-                container = { true }
-                item = { true }>
-                <Grid
-                    item = { true }
-                    md = { 2 }
-                    sm = { 3 }
-                    xs = { 12 }>
-                    <Typography>
+                    alignItems = 'center'
+                    className = { classes.box }
+                    container = { true }
+                    item = { true }>
+                    <Grid
+                        item = { true }
+                        md = { 2 }
+                        sm = { 3 }
+                        xs = { 12 }>
+                        <Typography>
                         Description
-                    </Typography>
+                        </Typography>
+                    </Grid>
+                    <Grid
+                        item = { true }
+                        md = { 10 }
+                        sm = { 8 }
+                        xs = { 12 }>
+                        <Typography>
+                            {meeting.description}
+                        </Typography>
+                    </Grid>
                 </Grid>
-                <Grid
-                    item = { true }
-                    md = { 10 }
-                    sm = { 8 }
-                    xs = { 12 }>
-                    <Typography>
-                        {meeting.description}
-                    </Typography>
-                </Grid>
-            </Grid>
-            <Divider className = { classes.infoDivider } />
-            {!meeting?.isPersonal
+                <Divider className = { classes.infoDivider } />
+                {!meeting?.isPersonal
             && <>
                 <Grid
                     alignItems = 'center'
@@ -348,8 +396,8 @@ function Meeting({
 
                 }
             </>
-            }
-            {isCalendarEnabled
+                }
+                {isCalendarEnabled
                 && <>
                     <Grid
                         alignItems = 'center'
@@ -376,52 +424,54 @@ function Meeting({
                             <Grid item = { true }>
                                 <AddToGoogleCalendarButton
                                     meeting = { meeting }
-                                    multipleRoom = { multipleRoom } />
+                                    multipleRoom = { multipleRoom }
+                                    onAddToCalendar = { addToGoogleCalendar } />
                             </Grid>
                             <Grid item = { true }>
                                 <AddToMsCalendarButton
                                     meeting = { meeting }
-                                    multipleRoom = { multipleRoom } />
+                                    multipleRoom = { multipleRoom }
+                                    onAddToCalendar = { addToMSCalendar } />
                             </Grid>
 
                         </Grid>
                     </Grid>
                     <Divider className = { classes.infoDivider } />
                 </>
-            }
-            <Grid
-                alignItems = 'center'
-                className = { classes.box }
-                container = { true }
-                item = { true }>
-                <Grid
-                    item = { true }
-                    md = { 2 }
-                    sm = { 3 }
-                    xs = { 12 }>
-                    <Typography>
-                        Meeting Options
-                    </Typography>
-                </Grid>
+                }
                 <Grid
                     alignItems = 'center'
-                    className = { classes.rightColumn }
+                    className = { classes.box }
                     container = { true }
-                    direction = 'column'
-                    item = { true }
-                    md = { 10 }
-                    sm = { 8 }
-                    spacing = { 2 }
-                    xs = { 12 }>
+                    item = { true }>
                     <Grid
-                        container = { true }
-                        item = { true }>
-                        <Box pr = { 1 }>{defineIcon[meeting.waitForHost]}</Box>
+                        item = { true }
+                        md = { 2 }
+                        sm = { 3 }
+                        xs = { 12 }>
                         <Typography>
-                            Wait for a host of the meeting
+                        Meeting Options
                         </Typography>
                     </Grid>
-                    {!meeting?.isPersonal
+                    <Grid
+                        alignItems = 'center'
+                        className = { classes.rightColumn }
+                        container = { true }
+                        direction = 'column'
+                        item = { true }
+                        md = { 10 }
+                        sm = { 8 }
+                        spacing = { 2 }
+                        xs = { 12 }>
+                        <Grid
+                            container = { true }
+                            item = { true }>
+                            <Box pr = { 1 }>{defineIcon[meeting.waitForHost]}</Box>
+                            <Typography>
+                            Wait for a host of the meeting
+                            </Typography>
+                        </Grid>
+                        {!meeting?.isPersonal
                     && <Grid
                         container = { true }
                         item = { true }>
@@ -430,19 +480,19 @@ function Meeting({
                             Forbid new participants after the meeting is over
                         </Typography>
                     </Grid>
-                    }
-                    <Grid
-                        container = { true }
-                        item = { true }>
-                        <Box pr = { 1 }>{defineIcon[meeting.allowAnonymous]}</Box>
-                        <Typography>
+                        }
+                        <Grid
+                            container = { true }
+                            item = { true }>
+                            <Box pr = { 1 }>{defineIcon[meeting.allowAnonymous]}</Box>
+                            <Typography>
                             Allow guest users
-                        </Typography>
+                            </Typography>
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
-            <Divider className = { classes.infoDivider } />
-            {meeting.multipleRoomsQuantity
+                <Divider className = { classes.infoDivider } />
+                {meeting.multipleRoomsQuantity
                 && <>
                     <Grid
                         alignItems = 'center'
@@ -481,25 +531,25 @@ function Meeting({
                     </Grid>
                     <Divider className = { classes.infoDivider } />
                 </>
-            }
-            <Grid
-                alignItems = 'center'
-                className = { classes.box }
-                container = { true }
-                item = { true }>
-                <Button
-                    className = { classes.meetingButton }
-                    color = 'primary'
-                    onClick = { handleStartClick }
-                    variant = 'contained'>Start</Button>
-                <Button
-                    className = { classes.meetingButton }
-                    color = { isLinkCopied ? 'default' : 'primary' }
-                    onClick = { handleLinkCopy }
-                    variant = { isLinkCopied ? 'text' : 'outlined' }>
-                    {isLinkCopied ? 'Copied!' : 'Copy link'}
-                </Button>
-                {isMeetingcreatedByCurrentUser
+                }
+                <Grid
+                    alignItems = 'center'
+                    className = { classes.box }
+                    container = { true }
+                    item = { true }>
+                    <Button
+                        className = { classes.meetingButton }
+                        color = 'primary'
+                        onClick = { handleStartClick }
+                        variant = 'contained'>Start</Button>
+                    <Button
+                        className = { classes.meetingButton }
+                        color = { isLinkCopied ? 'default' : 'primary' }
+                        onClick = { handleLinkCopy }
+                        variant = { isLinkCopied ? 'text' : 'outlined' }>
+                        {isLinkCopied ? 'Copied!' : 'Copy link'}
+                    </Button>
+                    {isMeetingcreatedByCurrentUser
                     && <>
                         <Button
                             className = { classes.meetingButton }
@@ -516,26 +566,35 @@ function Meeting({
                         </Button>
                         }
                     </>
-                }
-                <ConfirmationDialogRaw
-                    disabled = { deleteLoading }
-                    onClose = { onDeleteDialogClose }
-                    open = { isOpenDeleteDialog }
-                    title = 'Delete meeting?'
-                    value = { dialogDeleteValues } />
-                <ConfirmationDialogRaw
-                    onClose = { onEditDialogClose }
-                    open = { isOpenEditDialog }
-                    title = 'Edit meeting'
-                    value = { dialogEditValues } />
+                    }
+                    <ConfirmationDialogRaw
+                        disabled = { deleteLoading }
+                        onClose = { onDeleteDialogClose }
+                        open = { isOpenDeleteDialog }
+                        title = 'Delete meeting?'
+                        value = { dialogDeleteValues } />
+                    <ConfirmationDialogRaw
+                        onClose = { onEditDialogClose }
+                        open = { isOpenEditDialog }
+                        title = 'Edit meeting'
+                        value = { dialogEditValues } />
+                </Grid>
             </Grid>
-        </Grid>
+            {isOpenTrustDialg
+            && <TrustDialog
+                handleCancel = { handleCloseDialog }
+                handleContinue = { handleContinueAddToCalendar }
+                isOpen = { isOpenTrustDialg } />
+            }
+        </>
     );
 }
 
 Meeting.propTypes = {
+    createCalendarEntry: PropTypes.func,
     deleteLoading: PropTypes.bool,
     meeting: PropTypes.object,
+    msCalendarIntegrationReady: PropTypes.bool,
     onEditClick: PropTypes.func,
     removeMeeting: PropTypes.func,
     removeMeetingsRecurring: PropTypes.func,
@@ -546,12 +605,18 @@ Meeting.propTypes = {
 const mapStateToProps = state => {
     return {
         userId: state['features/riff-platform'].signIn.user?.uid,
-        deleteLoading: state['features/riff-platform'].meetings.deleteLoading
+        deleteLoading: state['features/riff-platform'].meetings.deleteLoading,
+        googleCalendarIntegrationReady: state['features/riff-platform'].calendarSync.google.integrationReady,
+        msCalendarIntegrationReady: state['features/riff-platform'].calendarSync.microsoft.integrationReady
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
+        createCalendarEntry: (calendar, event) =>
+            dispatch(calendar === CALENDARS.GOOGLE
+                ? insertCalendarEntry('primary', event)
+                : createMsCalendarEntry(event)),
         removeMeeting: id => dispatch(deleteMeeting(id)),
         removeMeetingsRecurring: roomId => dispatch(deleteMeetingsRecurring(roomId))
     };

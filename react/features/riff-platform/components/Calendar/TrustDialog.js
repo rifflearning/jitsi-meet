@@ -13,6 +13,7 @@ import {
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
+// it is a temporary decision until calendar logic will be moved to api-gateway
 const TrustDialog = ({ isOpen, handleContinue, handleCancel }) => {
     const [ isMyComputer, setIsMyComputer ] = useState(true);
 

@@ -18,6 +18,7 @@ import {
     microsoftSignOut
 } from '../../actions/calendarSync';
 import { isGoogleCalendarEnabled, isMsCalendarEnabled } from '../../calendarSyncFunctions';
+import { CALENDARS } from '../../constants/calendarSync';
 import StyledPaper from '../StyledPaper';
 
 import TrustDialog from './TrustDialog';
@@ -52,11 +53,6 @@ const useStyles = makeStyles(() => {
     };
 });
 
-const CALENDARS = {
-    GOOGLE: 'google',
-    MS: 'ms'
-};
-
 const CalendarSync = ({
     isConnectedToGoogleCalendar,
     googleProfileEmail,
@@ -85,8 +81,8 @@ const CalendarSync = ({
     const onClickDisconnectMicrosoft = () => msSignOut();
 
     useEffect(() => {
-        bootstrapGoogleCalendarIntegration();
-        bootstrapMicrosftCalendarIntegration();
+        isGoogleCalendarIntegrationEnabled && bootstrapGoogleCalendarIntegration();
+        isMsCalendarIntegartionEnabled && bootstrapMicrosftCalendarIntegration();
     }, []);
 
     const handleCloseDialog = () => {
