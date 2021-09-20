@@ -1,23 +1,22 @@
 /* eslint-disable max-len */
 /* @flow */
 
-import { APP_WILL_UNMOUNT } from '../../../base/app/actionTypes';
-import { CONFERENCE_JOINED, CONFERENCE_WILL_LEAVE } from '../../../base/conference/actionTypes';
-import { openDialog, hideDialog } from '../../../base/dialog/actions';
-import { i18next } from '../../../base/i18n';
-import { MEDIA_TYPE } from '../../../base/media';
-import { SET_AUDIO_MUTED } from '../../../base/media/actionTypes';
-import { PARTICIPANT_JOINED, PARTICIPANT_LEFT } from '../../../base/participants/actionTypes';
-import { MiddlewareRegistry } from '../../../base/redux';
-import { SETTINGS_UPDATED } from '../../../base/settings/actionTypes';
-import { TRACK_ADDED } from '../../../base/tracks/actionTypes';
-import { showNotification } from '../../../notifications/actions';
-import { VIDEO_PLAYER_PARTICIPANT_NAME, YOUTUBE_PLAYER_PARTICIPANT_NAME } from '../../../shared-video/constants';
-import { locRecordingEngaged, locRecordingStats, setSharedVideoId } from '../../actions/localRecording';
-
-import DownloadInfoDialog from './DownloadInfoDialog';
-import { recordingController } from './LocalRecorderController';
-import { createUserAudioTrack } from './helpers';
+import { APP_WILL_UNMOUNT } from '../../base/app/actionTypes';
+import { CONFERENCE_JOINED, CONFERENCE_WILL_LEAVE } from '../../base/conference/actionTypes';
+import { openDialog, hideDialog } from '../../base/dialog/actions';
+import { i18next } from '../../base/i18n';
+import { MEDIA_TYPE } from '../../base/media';
+import { SET_AUDIO_MUTED } from '../../base/media/actionTypes';
+import { PARTICIPANT_JOINED, PARTICIPANT_LEFT } from '../../base/participants/actionTypes';
+import { MiddlewareRegistry } from '../../base/redux';
+import { SETTINGS_UPDATED } from '../../base/settings/actionTypes';
+import { TRACK_ADDED } from '../../base/tracks/actionTypes';
+import { showNotification } from '../../notifications/actions';
+import { VIDEO_PLAYER_PARTICIPANT_NAME, YOUTUBE_PLAYER_PARTICIPANT_NAME } from '../../shared-video/constants';
+import { locRecordingEngaged, locRecordingStats, setSharedVideoId } from '../actions/localRecording';
+import DownloadInfoDialog from '../components/LocalRecorder/DownloadInfoDialog';
+import { recordingController } from '../components/LocalRecorder/LocalRecorderController';
+import { createUserAudioTrack } from '../components/LocalRecorder/helpers';
 
 declare var APP: Object;
 declare var interfaceConfig: Object;
