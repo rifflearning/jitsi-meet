@@ -33,7 +33,7 @@ const useStyles = makeStyles(() => {
             lineHeight: '32px',
             textTransform: 'none',
             padding: '1px',
-            width: '260px',
+            width: '223px',
             height: '41px',
             marginTop: '15px',
 
@@ -55,7 +55,7 @@ const useStyles = makeStyles(() => {
             textTransform: 'none',
             padding: '12px',
             height: '41px',
-            width: '260px',
+            width: '223px',
             marginTop: '15px',
 
             '& .MuiButton-startIcon-121': {
