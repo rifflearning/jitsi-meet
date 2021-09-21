@@ -1,6 +1,7 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable react/jsx-no-bind */
+/* global interfaceConfig */
 
 import {
     Button,
@@ -28,7 +29,7 @@ import {
 import { isGoogleCalendarEnabled, isMsCalendarEnabled } from '../../calendarSyncFunctions';
 import { CALENDARS } from '../../constants/calendarSync';
 import * as ROUTES from '../../constants/routes';
-import { getNumberRangeArray, formatDurationTime } from '../../functions';
+import { getNumberRangeArray, formatDurationTime, trustThisComputer } from '../../functions';
 import AddToGoogleCalendarButton from '../Calendar/AddToGoogleCalendarButton';
 import AddToMsCalendarButton from '../Calendar/AddToMicrosoftCalendarButton';
 import { getCalendarEvent } from '../Calendar/helpers';
@@ -60,6 +61,9 @@ const useStyles = makeStyles(() => {
         },
         box: {
             margin: '16px 0 16px 0'
+        },
+        untrustText: {
+            fontSize: '0.8rem'
         }
     };
 });
@@ -233,6 +237,8 @@ function Meeting({
 
     const addToMSCalendar = () => createCalendarEntry(CALENDARS.MS, getEvent(CALENDARS.MS));
 
+    const notTrustedComputer = trustThisComputer.get() === 'false';
+
     return (
         <Grid
             alignItems = 'center'
@@ -399,7 +405,19 @@ function Meeting({
                                     multipleRoom = { multipleRoom }
                                     onAddToCalendar = { addToMSCalendar } />
                             </Grid>
-
+                            {notTrustedComputer
+                            && <Grid
+                                item = { true }
+                                xs = { 12 }>
+                                <Typography
+                                    className = { classes.untrustText }
+                                    color = 'textSecondary'
+                                    variant = 'body2'>
+                                    {`The ${interfaceConfig.APP_NAME} will ask you to 
+                                    sign in to the calendar every time until you untrust this computer`}
+                                </Typography>
+                            </Grid>
+                            }
                         </Grid>
                     </Grid>
                     <Divider className = { classes.infoDivider } />
