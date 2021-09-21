@@ -23,9 +23,46 @@ import StyledPaper from '../StyledPaper';
 
 const useStyles = makeStyles(() => {
     return {
-        button: {
-            width: '245px',
-            marginTop: '15px'
+        googleButton: {
+            backgroundColor: '#ffffff',
+            color: 'rgba(0, 0, 0, 0.60)',
+            borderRadius: '2px',
+            fontFamily: 'Roboto, arial, sans-serif',
+            fontSize: '14px',
+            fontWeight: 600,
+            lineHeight: '32px',
+            padding: '1px',
+            width: '260px',
+            height: '41px',
+            marginTop: '15px',
+
+            '& .material-icons': {
+                margin: '8px',
+                height: '18px',
+                width: '18px'
+            }
+        },
+        msButton: {
+            backgroundColor: '#ffffff',
+            color: 'rgba(0, 0, 0, 0.60)',
+            border: '1px #8c8c8c',
+            boxSizing: 'border-box',
+            fontFamily: 'Segoe UI, arial, sans-serif',
+            fontSize: '15px',
+            fontWeight: 600,
+            lineHeight: '41px',
+            padding: '12px',
+            height: '41px',
+            width: '260px',
+            marginTop: '15px',
+
+            '& .MuiButton-startIcon-121': {
+                margin: '0',
+                display: 'inline-block',
+                width: '21px',
+                height: '21px',
+                marginRight: '12px'
+            }
         },
         subtitle: {
             color: '#ffffff',
@@ -119,7 +156,7 @@ const CalendarSync = ({
                                         </Box>
                                     </Box>
                                     <Button
-                                        className = { classes.button }
+                                        className = { classes.googleButton }
                                         color = 'default'
                                         onClick = { onClickDisconnectGoogle }
                                         startIcon = { <Icon><GoogleIcon /></Icon> }
@@ -130,7 +167,7 @@ const CalendarSync = ({
                                         Connect to the Google Calendar
                                     </Typography>
                                     <Button
-                                        className = { classes.button }
+                                        className = { classes.googleButton }
                                         color = 'default'
                                         onClick = { () => onClickSign(CALENDARS.GOOGLE) }
                                         startIcon = { <Icon><GoogleIcon /></Icon> }
@@ -157,7 +194,7 @@ const CalendarSync = ({
                                         </Box>
                                     </Box>
                                     <Button
-                                        className = { classes.button }
+                                        className = { classes.msButton }
                                         color = 'default'
                                         onClick = { onClickDisconnectMicrosoft }
                                         startIcon = { <Icon><MicrosoftLogo /></Icon> }
@@ -168,7 +205,7 @@ const CalendarSync = ({
                                         Connect to the Outlook Calendar
                                     </Typography>
                                     <Button
-                                        className = { classes.button }
+                                        className = { classes.msButton }
                                         color = 'default'
                                         onClick = { () => onClickSign(CALENDARS.MS) }
                                         startIcon = { <Icon><MicrosoftLogo /></Icon> }
