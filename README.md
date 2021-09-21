@@ -74,6 +74,9 @@ API_GATEWAY=https://dev-jitsi.riffplatform.com/api-gateway
 
 
 ### Avaliable optional features flags:
+# ENABLE_CALENDAR_INTEGRATION=true # enables calendar integration
+# GOOGLE_API_APP_CLIENT_ID=xxxxx.apps.googleusercontent.com # google api Client ID 
+# MICROSOFT_API_APP_CLIENT_ID=00000000-0000-0000-0000-000000000000 # microsoft api Client ID
 # ENABLE_EXPERIMENTAL_METRICS=true
 # DISABLE_GROUPS=true
 # DISABLE_EMOTIONS_CHART=true
