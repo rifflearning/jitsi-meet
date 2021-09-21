@@ -256,7 +256,7 @@ export function googleSignIn() {
  * @returns {Promise}
  */
 export function insertCalendarEntry(calendarId, event) {
-    const notTrustedComputer = trustThisComputer.get() === 'false';
+    const notTrustedComputer = trustThisComputer.get() !== 'true';
 
     return dispatch =>
         googleApi.get()
@@ -580,7 +580,7 @@ export function createMsCalendarEntry(event) {
                     authProvider: done => done(null, token)
                 });
 
-                const notTrustedComputer = trustThisComputer.get() === 'false';
+                const notTrustedComputer = trustThisComputer.get() !== 'true';
 
                 return client
 

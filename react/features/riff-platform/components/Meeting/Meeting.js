@@ -237,7 +237,7 @@ function Meeting({
 
     const addToMSCalendar = () => createCalendarEntry(CALENDARS.MS, getEvent(CALENDARS.MS));
 
-    const notTrustedComputer = trustThisComputer.get() === 'false';
+    const notTrustedComputer = trustThisComputer.get() !== 'true';
 
     return (
         <Grid

@@ -6,6 +6,7 @@ import {
 } from '../actions/calendarSync';
 import { msCalendarSync } from '../calendarSyncFunctions';
 import { CALENDAR_CLEAR_MS_INTEGRATION, CALENDAR_SET_MS_AUTH_STATE, LOGOUT } from '../constants/actionTypes';
+import { trustThisComputer } from '../functions';
 
 // eslint-disable-next-line no-unused-vars
 MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
@@ -21,6 +22,7 @@ MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
     case LOGOUT:
         dispatch(googleSignOut());
         dispatch(microsoftSignOut());
+        trustThisComputer.remove();
     }
 
     return result;

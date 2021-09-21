@@ -53,7 +53,7 @@ const UserProfile = ({
 
     const isGoogleCalendarIntegrationEnabled = isGoogleCalendarEnabled();
     const isMsCalendarIntegartionEnabled = isMsCalendarEnabled();
-    const notTrustedComputer = trustThisComputer.get() === 'false';
+    const notTrustedComputer = trustThisComputer.get() !== 'true';
 
     return (
         <Grid
