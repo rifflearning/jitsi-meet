@@ -1,4 +1,5 @@
 // @flow
+/* global process */
 
 import React, { Component } from 'react';
 
@@ -1278,8 +1279,9 @@ class Toolbox extends Component<Props> {
                     text = { t(`toolbar.${_raisedHand ? 'lowerYourHand' : 'raiseYourHand'}`) } />);
         }
 
-        // HACK: _shouldShowButton doesn't want to show markmoment, despite defining it in all places
-        if (!this.props._isAnonymousUser) {
+        console.log('SHOW_INTERESTING_MOMENTS_BUTTON ->', typeof process.env.SHOW_INTERESTING_MOMENTS_BUTTON);
+
+        if (!this.props._isAnonymousUser && process.env.SHOW_INTERESTING_MOMENTS_BUTTON === 'true') {
             buttons.has('markmoment')
                 ? mainMenuAdditionalButtons.push(<ToolbarButton
                     accessibilityLabel = { t('toolbar.accessibilityLabel.markMoment') }
