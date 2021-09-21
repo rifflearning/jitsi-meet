@@ -1,5 +1,7 @@
 local get_room_by_name_and_subdomain = module:require 'util'.get_room_by_name_and_subdomain;
 local is_healthcheck_room = module:require 'util'.is_healthcheck_room;
+local internal_room_jid_match_rewrite = module:require "util".internal_room_jid_match_rewrite;
+local room_jid_match_rewrite = module:require "util".room_jid_match_rewrite;
 local json = require 'util.json';
 local st = require 'util.stanza';
 
@@ -30,7 +32,7 @@ function notify_occupants_enable(jid, enable, room, actorJid, mediaType)
     local body_json = {};
     body_json.type = 'av_moderation';
     body_json.enabled = enable;
-    body_json.room = room.jid;
+    body_json.room = internal_room_jid_match_rewrite(room.jid);
     body_json.actor = actorJid;
     body_json.mediaType = mediaType;
     local body_json_str = json.encode(body_json);
@@ -52,7 +54,7 @@ end
 function notify_whitelist_change(jid, moderators, room, mediaType)
     local body_json = {};
     body_json.type = 'av_moderation';
-    body_json.room = room.jid;
+    body_json.room = internal_room_jid_match_rewrite(room.jid);
     body_json.whitelists = room.av_moderation;
     local moderators_body_json_str = json.encode(body_json);
     body_json.whitelists = nil;
@@ -132,14 +134,16 @@ function on_message(event)
                     module:log('warn', 'Concurrent moderator enable/disable request or something is out of sync');
                     return true;
                 else
-                    room.av_moderation = {};
-                    room.av_moderation_actors = {};
+                    if not room.av_moderation then
+                        room.av_moderation = {};
+                        room.av_moderation_actors = {};
+                    end
                     room.av_moderation[mediaType] = {};
                     room.av_moderation_actors[mediaType] = occupant.nick;
                 end
             else
                 enabled = false;
-                if not room.av_moderation or not room.av_moderation[mediaType] then
+                if not room.av_moderation then
                     module:log('warn', 'Concurrent moderator enable/disable request or something is out of sync');
                     return true;
                 else
@@ -147,10 +151,10 @@ function on_message(event)
                     room.av_moderation_actors[mediaType] = nil;
 
                     -- clears room.av_moderation if empty
-                    local is_empty = false;
+                    local is_empty = true;
                     for key,_ in pairs(room.av_moderation) do
                         if room.av_moderation[key] then
-                            is_empty = true;
+                            is_empty = false;
                         end
                     end
                     if is_empty then
@@ -166,8 +170,7 @@ function on_message(event)
             local occupant_jid = moderation_command.attr.jidToWhitelist;
             -- check if jid is in the room, if so add it to whitelist
             -- inform all moderators and admins and the jid
-            local occupant_to_add = room:get_occupant_by_nick(occupant_jid);
-
+            local occupant_to_add = room:get_occupant_by_nick(room_jid_match_rewrite(occupant_jid));
             if not occupant_to_add then
                 module:log('warn', 'No occupant %s found for %s', occupant_jid, room.jid);
                 return false;
