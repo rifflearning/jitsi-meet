@@ -5,7 +5,6 @@
 import api from '../api';
 import * as actionTypes from '../constants/actionTypes';
 import * as errorTypes from '../constants/errorTypes';
-import { app } from '../libs/riffdata-client';
 
 function meetingRequest() {
     return {
@@ -73,36 +72,6 @@ export function getMeetingById(meetingId) {
         }
 
         return meeting;
-    };
-}
-
-export function markInterestingMoment(roomId) {
-    return async (dispatch, getState) => {
-        try {
-            console.log('markInterestingMoment');
-
-            const { uid } = getState()['features/riff-platform'].signIn.user;
-            const time = new Date().toISOString();
-            const meetings = await app.service('meetings')
-                .find({
-                    query: {
-                        active: true,
-                        room: roomId
-                    }
-                });
-
-            console.log('fetchedMeetings: ', meetings);
-
-            const meetingId = meetings[0]._id;
-
-            await app.service('moments').create({
-                meetingId,
-                participantId: uid,
-                time
-            });
-        } catch (error) {
-            return { error };
-        }
     };
 }
 

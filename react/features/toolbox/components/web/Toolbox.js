@@ -53,7 +53,6 @@ import {
     LiveStreamButton,
     RecordButton
 } from '../../../recording';
-import { markInterestingMoment } from '../../../riff-platform/actions/meeting';
 import MeetingMediatorButton from '../../../riff-platform/components/DraggableMeetingMediator/MeetingMediatorButton';
 import RiffLocalRecordingButton from '../../../riff-platform/components/LocalRecorder/LocalRecordingButton';
 import { isScreenAudioShared, isScreenAudioSupported } from '../../../screen-share/';
@@ -89,6 +88,7 @@ import {
     showInterestingMomentMarkedNotification
 } from '../../actions';
 import { getToolbarAdditionalButtons, isToolboxVisible } from '../../functions';
+import { markInterestingMoment } from '../../functions.web';
 import DownloadButton from '../DownloadButton';
 import HangupButton from '../HangupButton';
 import HelpButton from '../HelpButton';
@@ -255,9 +255,9 @@ type Props = {
     _roomId: String,
 
     /*
-    * Riff
+     * Id of the current user
      */
-    _riff: Object,
+    _participantId: String,
 
     /**
      * Invoked to obtain translated strings.
@@ -929,7 +929,7 @@ class Toolbox extends Component<Props> {
      */
     _onToolbarClickInterestingMoment() {
         this.props.dispatch(showInterestingMomentMarkedNotification());
-        this.props.dispatch(markInterestingMoment(this.props._roomId));
+        markInterestingMoment(this.props._participantId, this.props._roomId);
     }
 
     _onToolbarToggleScreenshare: () => void;
@@ -1466,9 +1466,8 @@ function _mapStateToProps(state) {
     return {
         _chatOpen: state['features/chat'].isOpen,
         _isAnonymousUser: state['features/riff-platform'].signIn.user.isAnon,
-        _meetingId: state['features/riff-platform'].meeting.meeting._id,
         _roomId: state['features/riff-platform'].meeting.meeting.roomId,
-        _riff: state['features/riff-platform'].riff,
+        _participantId: state['features/riff-platform'].signIn.user.uid,
         _clientWidth: clientWidth,
         _conference: conference,
         _desktopSharingEnabled: desktopSharingEnabled,
