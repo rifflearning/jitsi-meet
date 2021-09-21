@@ -4,7 +4,7 @@
 import { Button, Grid, Typography, makeStyles, Box } from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import GoogleIcon from '../../../../../images/googleLogo.svg';
 import MicrosoftLogo from '../../../../../images/microsoftLogo.svg';
@@ -20,8 +20,6 @@ import {
 import { isGoogleCalendarEnabled, isMsCalendarEnabled } from '../../calendarSyncFunctions';
 import { CALENDARS } from '../../constants/calendarSync';
 import StyledPaper from '../StyledPaper';
-
-import TrustDialog from './TrustDialog';
 
 const useStyles = makeStyles(() => {
     return {
@@ -65,8 +63,6 @@ const CalendarSync = ({
     msSignOut,
     msProfileEmail }) => {
 
-    const [ isOpenTrustDialg, setIsOpenTrustDialog ] = useState(false);
-    const [ selectedCalendar, setSelectedCalendar ] = useState(CALENDARS.GOOGLE);
 
     const classes = useStyles();
 
@@ -74,8 +70,11 @@ const CalendarSync = ({
     const isMsCalendarIntegartionEnabled = isMsCalendarEnabled();
 
     const onClickSign = calendar => {
-        setSelectedCalendar(calendar);
-        setIsOpenTrustDialog(true);
+        if (calendar === CALENDARS.GOOGLE) {
+            return googleCalendarSignIn();
+        } else if (calendar === CALENDARS.MS) {
+            msCalendarSignIn();
+        }
     };
     const onClickDisconnectGoogle = () => googleCalendarSignOut();
     const onClickDisconnectMicrosoft = () => msSignOut();
@@ -85,51 +84,23 @@ const CalendarSync = ({
         isMsCalendarIntegartionEnabled && bootstrapMicrosftCalendarIntegration();
     }, []);
 
-    const handleCloseDialog = () => {
-        setIsOpenTrustDialog(false);
-    };
-
-    const handleContinueSingIn = () => {
-        setIsOpenTrustDialog(false);
-        if (selectedCalendar === CALENDARS.GOOGLE) {
-            return googleCalendarSignIn();
-        } else if (selectedCalendar === CALENDARS.MS) {
-            msCalendarSignIn();
-        }
-    };
-
-    window.onbeforeunload = function() {
-        const clearStorageAfterSessionFinished = sessionStorage.getItem('clearStorage') === 'true';
-
-        if (clearStorageAfterSessionFinished) {
-            googleCalendarSignOut();
-            msSignOut();
-        }
-    };
-
     return (
-        <>
-            <StyledPaper>
+        <StyledPaper>
+            <Grid
+                alignItems = 'center'
+                container = { true }
+                item = { true }
+                xs = { 12 } >
                 <Grid
-                    alignItems = 'center'
                     container = { true }
+                    direction = 'column'
                     item = { true }
-                    xs = { 12 } >
-                    <Grid
-                        container = { true }
-                        direction = 'column'
-                        item = { true }
-                        justify = 'center'>
-                        <Typography>
-                            Schedule and manage your calendars events from {interfaceConfig.APP_NAME}
-                        </Typography>
-                        <Typography
-                            color = 'textSecondary'
-                            variant = 'body2'>
-                            The {interfaceConfig.APP_NAME} calendar integration is used to securely access your calendar
-                        </Typography>
-                    </Grid>
-                    {isGoogleCalendarIntegrationEnabled
+                    justify = 'center'>
+                    <Typography>
+                            Schedule your calendars events from {interfaceConfig.APP_NAME}
+                    </Typography>
+                </Grid>
+                {isGoogleCalendarIntegrationEnabled
                         && <Grid
                             className = { classes.box }
                             container = { true }
@@ -166,8 +137,8 @@ const CalendarSync = ({
                                         variant = 'contained'> Sign in with Google</Button>
                                 </Grid>}
                         </Grid>
-                    }
-                    {isMsCalendarIntegartionEnabled
+                }
+                {isMsCalendarIntegartionEnabled
                         && <Grid
                             className = { classes.box }
                             container = { true }
@@ -204,16 +175,9 @@ const CalendarSync = ({
                                         variant = 'contained'>Sign in with Microsoft</Button>
                                 </Grid>}
                         </Grid>
-                    }
-                </Grid>
-            </StyledPaper>
-            {isOpenTrustDialg
-                && <TrustDialog
-                    handleCancel = { handleCloseDialog }
-                    handleContinue = { handleContinueSingIn }
-                    isOpen = { isOpenTrustDialg } />
-            }
-        </>
+                }
+            </Grid>
+        </StyledPaper>
     );
 };
 

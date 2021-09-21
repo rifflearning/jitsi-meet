@@ -207,3 +207,15 @@ export function checkMeetingSingleOccurrenceDate({ meetingId, meeting, meetingsR
 export function getNumberRangeArray(start, end, step = 1) {
     return [ ...Array(Math.floor((end - start) / step) + 1) ].map((_, i) => start + (i * step));
 }
+
+export const trustThisComputer = {
+    get() {
+        return localStorage.getItem('trust-computer');
+    },
+    set(value) {
+        localStorage.setItem('trust-computer', value);
+    },
+    remove() {
+        localStorage.removeItem('trust-computer');
+    }
+};

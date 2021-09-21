@@ -11,7 +11,7 @@ import { getMeetings } from '../actions/meetings';
 import { getUserPersonalMeetingRoom } from '../actions/personalMeeting';
 import { logout } from '../actions/signIn';
 import * as LIST_TYPES from '../constants/meetingsListTypes';
-import { groupMeetingsByDays } from '../functions';
+import { groupMeetingsByDays, trustThisComputer } from '../functions';
 
 import { isGoogleCalendarEnabled, isMsCalendarEnabled } from './../calendarSyncFunctions';
 import CalendarSync from './Calendar/CalendarSync';
@@ -53,6 +53,7 @@ const UserProfile = ({
 
     const isGoogleCalendarIntegrationEnabled = isGoogleCalendarEnabled();
     const isMsCalendarIntegartionEnabled = isMsCalendarEnabled();
+    const notTrustedComputer = trustThisComputer.get() === 'false';
 
     return (
         <Grid
@@ -77,7 +78,7 @@ const UserProfile = ({
                                 <Tab
                                     className = { classes.tab }
                                     label = 'Main Info' />
-                                {(isGoogleCalendarIntegrationEnabled || isMsCalendarIntegartionEnabled)
+                                {((isGoogleCalendarIntegrationEnabled || isMsCalendarIntegartionEnabled) && !notTrustedComputer)
                                     && <Tab
                                         className = { classes.tab }
                                         label = 'Calendar Sync' />
@@ -138,7 +139,7 @@ const UserProfile = ({
                             </Grid>
                         </Grid>
                     </TabPanel>
-                    {(isGoogleCalendarIntegrationEnabled || isMsCalendarIntegartionEnabled)
+                    {((isGoogleCalendarIntegrationEnabled || isMsCalendarIntegartionEnabled) && !notTrustedComputer)
                         && <TabPanel
                             index = { 1 }
                             value = { selectedTab } >

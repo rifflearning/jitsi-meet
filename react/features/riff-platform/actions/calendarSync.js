@@ -31,6 +31,7 @@ import {
     GOOGLE_API_STATES,
     ERRORS
 } from '../constants/calendarSync';
+import { trustThisComputer } from '../functions';
 
 /**
  * Sets the current Google API state.
@@ -258,6 +259,8 @@ export function googleSignIn() {
  * @returns {Promise}
  */
 export function insertCalendarEntry(calendarId, event) {
+    const notTrustedComputer = trustThisComputer.get() === 'false';
+
     return dispatch =>
         googleApi.get()
             .then(() => googleApi.isSignedIn())
@@ -287,6 +290,9 @@ export function insertCalendarEntry(calendarId, event) {
             .then(() => createGoogleCalendarEntry(calendarId, event))
             .then(() => {
                 dispatch(setGoogleCalendarError());
+                if (notTrustedComputer) {
+                    googleSignOut();
+                }
 
                 return Promise.resolve();
             }, error => {
@@ -297,7 +303,12 @@ export function insertCalendarEntry(calendarId, event) {
                 if (error.status === 409) {
                     updateGoogleCalendarEntry(calendarId, event);
                 }
-            });
+            })
+            .then(() => {
+                if (notTrustedComputer) {
+                    dispatch(googleSignOut());
+                }
+            }, error => console.error('error', error));
 }
 
 /**
@@ -572,6 +583,8 @@ export function createMsCalendarEntry(event) {
                     authProvider: done => done(null, token)
                 });
 
+                const notTrustedComputer = trustThisComputer.get() === 'false';
+
                 return client
 
                     .api('/me/events/')
@@ -581,6 +594,9 @@ export function createMsCalendarEntry(event) {
                             const eventUrl = e.webLink;
 
                             window.open(eventUrl, '_blank').focus();
+                        }
+                        if (notTrustedComputer) {
+                            dispatch(microsoftSignOut());
                         }
                     }, () =>
                         client
@@ -603,6 +619,9 @@ export function createMsCalendarEntry(event) {
                             const eventUrl = e.webLink;
 
                             window.open(eventUrl, '_blank').focus();
+                        }
+                        if (notTrustedComputer) {
+                            dispatch(microsoftSignOut());
                         }
                     })
                     .catch(error => {

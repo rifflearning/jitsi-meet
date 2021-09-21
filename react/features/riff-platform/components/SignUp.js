@@ -21,6 +21,7 @@ import { Link as LinkTo, useHistory } from 'react-router-dom';
 import { connect } from '../../base/redux';
 import { signUp } from '../actions/signUp';
 import * as ROUTES from '../constants/routes';
+import { trustThisComputer } from '../functions';
 
 const useStyles = makeStyles(theme => {
     return {
@@ -53,6 +54,7 @@ const SignUp = ({ doRegister, signUpError, signingUp }) => {
     const [ password, setPassword ] = useState('');
     const [ password2, setPassword2 ] = useState('');
     const [ policy, setPolicy ] = useState(false);
+    const [ trustComputer, setTrustComputer ] = useState(true);
 
     const [ nameError, setNameError ] = useState('');
     const [ emailError, setEmailError ] = useState('');
@@ -65,6 +67,7 @@ const SignUp = ({ doRegister, signUpError, signingUp }) => {
     const onChangePassword = e => setPassword(e.target.value);
     const onChangePassword2 = e => setPassword2(e.target.value);
     const onChangePolicy = e => setPolicy(e.target.checked);
+    const onChangeTrustComputer = e => setTrustComputer(e.target.checked);
 
     const isNameValid = () => Boolean(name.length);
     // eslint-disable-next-line max-len
@@ -116,6 +119,10 @@ const SignUp = ({ doRegister, signUpError, signingUp }) => {
         if (!isFormValid()) {
             return;
         }
+
+        // mark computer/browser as trusted
+        trustThisComputer.set(trustComputer);
+
         doRegister({
             name,
             email,
@@ -217,6 +224,17 @@ const SignUp = ({ doRegister, signUpError, signingUp }) => {
                         <Grid
                             item
                             xs = { 12 }>
+                            <FormControl
+                                component = 'fieldset'
+                                className = { classes.formControl }>
+                                <FormControlLabel
+                                    control = { <Checkbox
+                                        checked = { trustComputer }
+                                        color = 'primary'
+                                        onChange = { onChangeTrustComputer }
+                                        value = 'trustComputer' /> }
+                                    label = 'Trust this computer' />
+                            </FormControl>
                             <FormControl
                                 required
                                 error = { Boolean(policyError) }
