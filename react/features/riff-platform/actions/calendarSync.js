@@ -172,12 +172,12 @@ function loadGoogleAPI() {
 }
 
 /**
- * Sets the initial state of calendar integration by loading third party APIs
+ * Sets the initial state of google calendar integration by loading third party APIs
  * and filling out any data that needs to be fetched.
  *
  * @returns {Function}
  */
-export function bootstrapCalendarIntegration() {
+export function bootstrapGoogleCalendarIntegration() {
     return (dispatch, getState) => {
         const state = getState();
 
@@ -186,15 +186,12 @@ export function bootstrapCalendarIntegration() {
         }
 
         const {
-            googleApiApplicationClientID
-        } = state['features/base/config'];
-        const {
             integrationReady
         } = state['features/riff-platform'].calendarSync.google;
 
         return Promise.resolve()
             .then(() => {
-                if (googleApiApplicationClientID) {
+                if (process.env.GOOGLE_API_APP_CLIENT_ID) {
                     return dispatch(loadGoogleAPI());
                 }
             })

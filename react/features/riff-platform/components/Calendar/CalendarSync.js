@@ -11,7 +11,7 @@ import MicrosoftLogo from '../../../../../images/microsoftLogo.svg';
 import { connect } from '../../../base/redux';
 import {
     googleSignOut,
-    bootstrapCalendarIntegration,
+    bootstrapGoogleCalendarIntegration,
     googleSignIn,
     bootstrapMsCalendarIntegration,
     microsoftSignIn,
@@ -55,10 +55,10 @@ const CalendarSync = ({
     isConnectedToGoogleCalendar,
     googleProfileEmail,
     googleCalendarSignOut,
-    bootstrapGoogleCalendarIntegration,
+    bootstrapCalendarIntegrationGoogle,
     googleCalendarSignIn,
     isConnectedToMsCalendar,
-    bootstrapMicrosftCalendarIntegration,
+    bootstrapCalendarIntegrationMs,
     msCalendarSignIn,
     msSignOut,
     msProfileEmail }) => {
@@ -80,8 +80,8 @@ const CalendarSync = ({
     const onClickDisconnectMicrosoft = () => msSignOut();
 
     useEffect(() => {
-        isGoogleCalendarIntegrationEnabled && bootstrapGoogleCalendarIntegration();
-        isMsCalendarIntegartionEnabled && bootstrapMicrosftCalendarIntegration();
+        isGoogleCalendarIntegrationEnabled && bootstrapCalendarIntegrationGoogle();
+        isMsCalendarIntegartionEnabled && bootstrapCalendarIntegrationMs();
     }, []);
 
     return (
@@ -182,8 +182,8 @@ const CalendarSync = ({
 };
 
 CalendarSync.propTypes = {
-    bootstrapGoogleCalendarIntegration: PropTypes.func,
-    bootstrapMicrosftCalendarIntegration: PropTypes.func,
+    bootstrapCalendarIntegrationGoogle: PropTypes.func,
+    bootstrapCalendarIntegrationMs: PropTypes.func,
     googleCalendarSignIn: PropTypes.func,
     googleCalendarSignOut: PropTypes.func,
     googleProfileEmail: PropTypes.string,
@@ -209,9 +209,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         googleCalendarSignOut: () => dispatch(googleSignOut()),
-        bootstrapGoogleCalendarIntegration: () => dispatch(bootstrapCalendarIntegration()),
+        bootstrapCalendarIntegrationGoogle: () => dispatch(bootstrapGoogleCalendarIntegration()),
         googleCalendarSignIn: () => dispatch(googleSignIn()),
-        bootstrapMicrosftCalendarIntegration: () => dispatch(bootstrapMsCalendarIntegration()),
+        bootstrapCalendarIntegrationMs: () => dispatch(bootstrapMsCalendarIntegration()),
         msCalendarSignIn: () => dispatch(microsoftSignIn()),
         msSignOut: () => dispatch(microsoftSignOut())
     };
