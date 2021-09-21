@@ -9,12 +9,12 @@ import React, { useEffect } from 'react';
 
 import GoogleCalendarIcon from '../../../../../images/googleCalendar.svg';
 import { connect } from '../../../base/redux';
-import { bootstrapCalendarIntegration } from '../../actions/calendarSync';
+import { bootstrapGoogleCalendarIntegration } from '../../actions/calendarSync';
 import { isGoogleCalendarEnabled } from '../../calendarSyncFunctions';
 
 function AddToGoogleCalendarButton({
     onAddToCalendar,
-    bootstrapGoogleCalendarIntegration
+    bootstrapCalendarIntegration
 }) {
 
     const isGoogleCalendarIntegrationEnabled = isGoogleCalendarEnabled();
@@ -24,7 +24,7 @@ function AddToGoogleCalendarButton({
     }
 
     useEffect(() => {
-        bootstrapGoogleCalendarIntegration();
+        bootstrapCalendarIntegration();
     }, []);
 
 
@@ -39,7 +39,7 @@ function AddToGoogleCalendarButton({
 }
 
 AddToGoogleCalendarButton.propTypes = {
-    bootstrapGoogleCalendarIntegration: PropTypes.func,
+    bootstrapCalendarIntegration: PropTypes.func,
     onAddToCalendar: PropTypes.func
 
 };
@@ -50,7 +50,7 @@ const mapStateToProps = () => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        bootstrapGoogleCalendarIntegration: () => dispatch(bootstrapCalendarIntegration())
+        bootstrapCalendarIntegration: () => dispatch(bootstrapGoogleCalendarIntegration())
     };
 };
 
