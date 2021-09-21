@@ -153,7 +153,7 @@ export function isVideoMuteButtonDisabled(state: Object) {
  * @param {string} roomId - Id of the room.
  * @returns {(function(*, *): Promise<{error: *}|undefined>)|*}
  */
-export async function markInterestingMoment(participantId: string, roomId: string) {
+export async function markInterestingMoment(participantId: String, roomId: String) {
     try {
         const time = new Date().toISOString();
         const meetings = await app.service('meetings')
