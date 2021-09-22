@@ -78,7 +78,8 @@ const UserProfile = ({
                                 <Tab
                                     className = { classes.tab }
                                     label = 'Main Info' />
-                                {((isGoogleCalendarIntegrationEnabled || isMsCalendarIntegartionEnabled) && !notTrustedComputer)
+                                {((isGoogleCalendarIntegrationEnabled || isMsCalendarIntegartionEnabled)
+                                    && !notTrustedComputer)
                                     && <Tab
                                         className = { classes.tab }
                                         label = 'Calendar Sync' />
