@@ -1,6 +1,4 @@
 // @flow
-/* global process */
-
 import React, { Component } from 'react';
 
 import {
@@ -1279,9 +1277,7 @@ class Toolbox extends Component<Props> {
                     text = { t(`toolbar.${_raisedHand ? 'lowerYourHand' : 'raiseYourHand'}`) } />);
         }
 
-        console.log('SHOW_INTERESTING_MOMENTS_BUTTON ->', typeof process.env.SHOW_INTERESTING_MOMENTS_BUTTON);
-
-        if (!this.props._isAnonymousUser && process.env.SHOW_INTERESTING_MOMENTS_BUTTON === 'true') {
+        if (!this.props._isAnonymousUser && this.props._shouldShowButton('markmoment')) {
             buttons.has('markmoment')
                 ? mainMenuAdditionalButtons.push(<ToolbarButton
                     accessibilityLabel = { t('toolbar.accessibilityLabel.markMoment') }
