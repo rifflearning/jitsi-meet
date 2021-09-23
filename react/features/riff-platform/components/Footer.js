@@ -24,7 +24,7 @@ export default () => (<div style = { styles.container }>
         variant = 'body2'>
         <Link
             color = 'inherit'
-            href = 'https://riffanalytics.ai'
+            href= 'https://riffanalytics.ai/contact/'
             target = '_blank'>
             Contact us
         </Link>
@@ -34,7 +34,7 @@ export default () => (<div style = { styles.container }>
         variant = 'body2'>
         <Link
             color = 'inherit'
-            href = 'https://riffanalytics.ai'
+            href= 'https://riffanalytics.ai/privacy-policy/'
             target = '_blank'>
             Privacy Policy
         </Link>
