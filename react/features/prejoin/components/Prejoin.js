@@ -15,8 +15,6 @@ import { getLocalJitsiVideoTrack } from '../../base/tracks';
 import { maybeExtractIdFromDisplayName } from '../../riff-dashboard-page/functions';
 import { updateName } from '../../riff-platform/actions/signIn';
 import { previousLocationRoomName } from '../../riff-platform/functions';
-import { isButtonEnabled } from '../../toolbox/functions.web';
-
 import {
     joinConference as joinConferenceAction,
     joinConferenceWithoutAudio as joinConferenceWithoutAudioAction,
@@ -333,8 +331,7 @@ class Prejoin extends Component<Props, State> {
             t,
             videoTrack,
             isAnon,
-            doUpdateName,
-            visibleButtons
+            doUpdateName
         } = this.props;
 
         const { _closeDialog, _onDropdownClose, _onJoinButtonClick, _onJoinKeyPress, _showDialogKeyPress,
@@ -369,7 +366,7 @@ class Prejoin extends Component<Props, State> {
                         } }
                         onSubmit = { joinConference }
                         placeHolder = { t('dialog.enterDisplayName') }
-                        value = { name } />
+                        value = { displayName } />
 
                     {showError && <div
                         className = 'prejoin-error'
@@ -409,10 +406,10 @@ class Prejoin extends Component<Props, State> {
                             onClose = { _onDropdownClose }>
                             <ActionButton
                                 OptionsIcon = { showJoinByPhoneButtons ? IconArrowUp : IconArrowDown }
-                                disabled = { joinButtonDisabled || (isAnon && !displayName) }
                                 ariaDropDownLabel = { t('prejoin.joinWithoutAudio') }
                                 ariaLabel = { t('prejoin.joinMeeting') }
                                 ariaPressed = { showJoinByPhoneButtons }
+                                disabled = { joinButtonDisabled || (isAnon && !displayName) }
                                 hasOptions = { true }
                                 onClick = { _onJoinButtonClick }
                                 onKeyPress = { _onJoinKeyPress }
@@ -424,20 +421,20 @@ class Prejoin extends Component<Props, State> {
                                 {isAnon ? 'Join as a guest' : `${t('prejoin.joinMeeting')}`}
                             </ActionButton>
                         </InlineDialog>
-                        {isAnon
-                            && <><div className='prejoin-preview-login-anon-text'>or</div>
+                    </div>
+                    {isAnon
+                            && <><div className = 'prejoin-preview-login-anon-text'>or</div>
                                 <ActionButton
-                                    className='prejoin-preview-login-anon-btn'
-                                    disabled={joinButtonDisabled}
-                                    onClick={() => {
+                                    className = 'prejoin-preview-login-anon-btn'
+                                    disabled = { joinButtonDisabled }
+                                    onClick = { () => {
                                         previousLocationRoomName.set(window.location.pathname);
                                         window.location.href = '/app/login'
-                                            ;
-                                    }}
-                                    type='primary'>
+                                        ;
+                                    } }
+                                    type = 'primary'>
                                     Login
                                 </ActionButton></>}
-                    </div>
                 </div>
                 { showDialog && (
                     <JoinByPhoneDialog
