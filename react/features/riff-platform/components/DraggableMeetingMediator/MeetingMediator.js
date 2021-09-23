@@ -160,15 +160,13 @@ class MeetingMediator extends React.Component {
 }
 
 const mapStateToProps = state => {
+    const localParticipantName = state['features/base/participants'].local?.name;
+    const remoteParticipants = state['features/base/participants'].sortedRemoteParticipants;
+    const allParticipantName = [ localParticipantName, ...Array.from(remoteParticipants.values()) ];
+
     return {
         uid: state['features/riff-platform'].signIn.user?.uid, // getUserId(state),
-        riffParticipants: state['features/base/participants'].map((p, i) => {
-            if (i === 0) {
-                return state['features/riff-platform'].signIn.user?.uid;
-            }
-
-            return maybeExtractIdFromDisplayName(p.name).firebaseId;
-        }),
+        riffParticipants: allParticipantName.map(p => maybeExtractIdFromDisplayName(p).firebaseId),
         webRtcRoom: state['features/riff-platform'].meeting.meeting?.roomId
     };
 };
