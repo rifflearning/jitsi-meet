@@ -3,7 +3,7 @@
 import { getGravatarURL } from '@jitsi/js-utils/avatar';
 import type { Store } from 'redux';
 
-import { maybeExtractIdFromDisplayName } from '../../riff-dashboard-page/functions';
+import { maybeExtractIdFromDisplayName } from '../../riff-platform/functions';
 import { JitsiParticipantConnectionStatus } from '../lib-jitsi-meet';
 import { MEDIA_TYPE, shouldRenderVideoTrack } from '../media';
 import { toState } from '../redux';

@@ -10,7 +10,7 @@ import {
     getParticipantDisplayName
 } from '../base/participants';
 import { MiddlewareRegistry, StateListenerRegistry } from '../base/redux';
-import { maybeExtractIdFromDisplayName } from '../riff-dashboard-page/functions';
+import { maybeExtractIdFromDisplayName } from '../riff-platform/functions';
 
 import {
     clearNotifications,

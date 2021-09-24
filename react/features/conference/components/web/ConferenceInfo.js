@@ -7,10 +7,9 @@ import { getParticipantCount } from '../../../base/participants/functions';
 import { connect } from '../../../base/redux';
 import { E2EELabel } from '../../../e2ee';
 import { LocalRecordingLabel } from '../../../local-recording';
-import { RecordingLabel } from '../../../recording';
+import { RecordingLabel, getSessionStatusToShow } from '../../../recording';
 import RiffLocalRecordingLabel from '../../../riff-platform/components/LocalRecorder/LocalRecordingLabel';
 import MultipleRoomsNameDropdown from '../../../riff-platform/components/Meeting/MultipleRoomsMeetingNameDropdown';
-import { getSessionStatusToShow } from '../../../recording';
 import { isToolboxVisible } from '../../../toolbox/functions.web';
 import { TranscribingLabel } from '../../../transcribing';
 import { VideoQualityLabel } from '../../../video-quality';
@@ -66,7 +65,7 @@ type Props = {
      */
      _isMultipleRoomsQuantity: boolean,
 
-    /** 
+    /**
      * Whether or not the recording label is visible.
      */
     _recordingLabel: boolean
@@ -121,7 +120,7 @@ function ConferenceInfo(props: Props) {
                     className = 'subject-details-container'
                     id = 'subject-details-container'>
                     {
-                    !_hideConferenceNameAndTimer
+                        !_hideConferenceNameAndTimer
                         && <div className = 'subject-info'>
                             {_isMultipleRoomsQuantity
                                 ? <MultipleRoomsNameDropdown />

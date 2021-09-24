@@ -131,6 +131,7 @@ import {
 import { disableReceiver, stopReceiver } from './react/features/remote-control';
 import { startRiffServices } from './react/features/riff-platform/actions/jitsiActions';
 import { stopLocalRecordingHandling } from './react/features/riff-platform/components/LocalRecorder/helpers';
+import { maybeExtractIdFromDisplayName } from './react/features/riff-platform/functions';
 import { setScreenAudioShareState, isScreenAudioShared } from './react/features/screen-share/';
 import { toggleScreenshotCaptureEffect } from './react/features/screenshot-capture';
 import { AudioMixerEffect } from './react/features/stream-effects/audio-mixer/AudioMixerEffect';
@@ -1208,7 +1209,7 @@ export default {
         const displayName = getDisplayName(id);
 
         if (displayName) {
-            return displayName;
+            return maybeExtractIdFromDisplayName(displayName).didisplayName;
         }
         if (APP.conference.isLocalId(id)) {
             return APP.translation.generateTranslationHTML(

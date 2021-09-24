@@ -2,7 +2,7 @@
 
 import React, { PureComponent } from 'react';
 
-import { maybeExtractIdFromDisplayName } from '../../../riff-dashboard-page/functions';
+import { maybeExtractIdFromDisplayName } from '../../../riff-platform/functions';
 import { getParticipantById } from '../../participants';
 import { connect } from '../../redux';
 import { getAvatarColor, getInitials } from '../functions';

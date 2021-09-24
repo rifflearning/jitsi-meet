@@ -12,7 +12,7 @@ import {
 import { AbstractDialogTab } from '../../../base/dialog';
 import type { Props as AbstractDialogTabProps } from '../../../base/dialog';
 import { translate } from '../../../base/i18n';
-import { maybeExtractIdFromDisplayName } from '../../../riff-dashboard-page/functions';
+import { maybeExtractIdFromDisplayName } from '../../../riff-platform/functions';
 import { openLogoutDialog } from '../../actions';
 
 declare var APP: Object;
@@ -115,7 +115,7 @@ class ProfileTab extends AbstractDialogTab<Props> {
             t
         } = this.props;
 
-        const { firebaseIdWithSeparator, displayName: nameWithoutUid } = maybeExtractIdFromDisplayName(displayName);
+        const { idWithSeparator, displayName: nameWithoutUid } = maybeExtractIdFromDisplayName(displayName);
 
         return (
             <div>
@@ -127,15 +127,11 @@ class ProfileTab extends AbstractDialogTab<Props> {
                             disabled = { true }
                             id = 'setDisplayName'
                             label = { t('profile.setDisplayNameLabel') }
-
                             // eslint-disable-next-line react/jsx-no-bind
-                            // TODO
-                            // onChange = {
-                            //     ({ target: { value } }) =>
-                            //         super._onChange({ displayName: `${firebaseIdWithSeparator}${value}` })
-                            // }
-
-                            onChange = { this._onDisplayNameChange }
+                            onChange = {
+                                ({ target: { value } }) =>
+                                    super._onChange({ displayName: `${idWithSeparator}${value}` })
+                            }
                             placeholder = { t('settings.name') }
                             shouldFitContainer = { true }
                             type = 'text'

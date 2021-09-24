@@ -12,9 +12,8 @@ import { ActionButton, InputField, PreMeetingScreen, ToggleButton } from '../../
 import { connect } from '../../base/redux';
 import { getDisplayName, updateSettings } from '../../base/settings';
 import { getLocalJitsiVideoTrack } from '../../base/tracks';
-import { maybeExtractIdFromDisplayName } from '../../riff-dashboard-page/functions';
 import { updateName } from '../../riff-platform/actions/signIn';
-import { previousLocationRoomName } from '../../riff-platform/functions';
+import { maybeExtractIdFromDisplayName, previousLocationRoomName } from '../../riff-platform/functions';
 import {
     joinConference as joinConferenceAction,
     joinConferenceWithoutAudio as joinConferenceWithoutAudioAction,
@@ -338,7 +337,7 @@ class Prejoin extends Component<Props, State> {
             _onJoinConferenceWithoutAudioKeyPress, _onOptionsClick, _setName, _showDialog } = this;
         const { showJoinByPhoneButtons, showError } = this.state;
 
-        const { firebaseIdWithSeparator, displayName } = maybeExtractIdFromDisplayName(name);
+        const { idWithSeparator, displayName } = maybeExtractIdFromDisplayName(name);
 
         const joinButtonDisabled = this.props.showErrorOnJoin;
 
@@ -361,7 +360,7 @@ class Prejoin extends Component<Props, State> {
                             if (isAnon) {
                                 doUpdateName(value);
 
-                                return _setName(`${firebaseIdWithSeparator}${value}`);
+                                return _setName(`${idWithSeparator}${value}`);
                             }
                         } }
                         onSubmit = { joinConference }

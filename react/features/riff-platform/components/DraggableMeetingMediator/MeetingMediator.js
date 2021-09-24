@@ -25,7 +25,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { maybeExtractIdFromDisplayName } from '../../../riff-dashboard-page/functions';
+import { maybeExtractIdFromDisplayName } from '../../functions';
 import Mediator from '../../libs/charts';
 import { app } from '../../libs/riffdata-client';
 
@@ -166,7 +166,7 @@ const mapStateToProps = state => {
 
     return {
         uid: state['features/riff-platform'].signIn.user?.uid, // getUserId(state),
-        riffParticipants: allParticipantName.map(p => maybeExtractIdFromDisplayName(p).firebaseId),
+        riffParticipants: allParticipantName.map(p => maybeExtractIdFromDisplayName(p).id),
         webRtcRoom: state['features/riff-platform'].meeting.meeting?.roomId
     };
 };

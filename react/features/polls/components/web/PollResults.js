@@ -2,9 +2,9 @@
 
 import React from 'react';
 
+import { maybeExtractIdFromDisplayName } from '../../../riff-platform/functions';
 import AbstractPollResults from '../AbstractPollResults';
 import type { AbstractProps } from '../AbstractPollResults';
-import { maybeExtractIdFromDisplayName } from '../../../riff-dashboard-page/functions';
 
 
 /**

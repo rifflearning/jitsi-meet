@@ -3,9 +3,10 @@
 import _ from 'lodash';
 import React from 'react';
 
+// import { getConferenceNameForTitle } from '../../../base/conference';
+
 import VideoLayout from '../../../../../modules/UI/videolayout/VideoLayout';
 import AudioModerationNotifications from '../../../av-moderation/components/AudioModerationNotifications';
-import { getConferenceNameForTitle } from '../../../base/conference';
 import { connect, disconnect } from '../../../base/connection';
 import { translate } from '../../../base/i18n';
 import { connect as reactReduxConnect } from '../../../base/redux';
@@ -18,8 +19,8 @@ import { KnockingParticipantList, LobbyScreen } from '../../../lobby';
 import { getIsLobbyVisible } from '../../../lobby/functions';
 import { ParticipantsPane } from '../../../participants-pane/components/web';
 import { getParticipantsPaneOpen } from '../../../participants-pane/functions';
-import DraggableMeetingMediator from '../../../riff-platform/components/DraggableMeetingMediator';
 import { Prejoin, isPrejoinPageVisible, isPrejoinPageLoading } from '../../../prejoin';
+import DraggableMeetingMediator from '../../../riff-platform/components/DraggableMeetingMediator';
 import { fullScreenChanged, showToolbox } from '../../../toolbox/actions.web';
 import { Toolbox } from '../../../toolbox/components/web';
 import { LAYOUTS, getCurrentLayout } from '../../../video-layout';
@@ -380,7 +381,6 @@ function _mapStateToProps(state) {
         _layoutClassName: LAYOUT_CLASSNAMES[getCurrentLayout(state)],
         _roomName: state['features/riff-platform']?.meeting?.meeting?.name,
         _mouseMoveCallbackInterval: mouseMoveCallbackInterval,
-        _roomName: getConferenceNameForTitle(state),
         _showLobby: getIsLobbyVisible(state),
         _showPrejoin: isPrejoinPageVisible(state) || isPrejoinPageLoading(state)
     };
