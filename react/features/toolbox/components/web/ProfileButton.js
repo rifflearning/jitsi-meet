@@ -5,6 +5,7 @@ import { translate } from '../../../base/i18n';
 import { getLocalParticipant } from '../../../base/participants';
 import { connect } from '../../../base/redux';
 import { AbstractButton, type AbstractButtonProps } from '../../../base/toolbox/components';
+import { maybeExtractIdFromDisplayName } from '../../../riff-platform/functions';
 import { openSettingsDialog, SETTINGS_TABS } from '../../../settings';
 
 import ProfileButtonAvatar from './ProfileButtonAvatar';
@@ -47,7 +48,7 @@ class ProfileButton extends AbstractButton<Props, *> {
         let displayName;
 
         if (_localParticipant && _localParticipant.name) {
-            displayName = _localParticipant.name;
+            displayName = maybeExtractIdFromDisplayName(_localParticipant.name).displayName;
         } else {
             displayName = interfaceConfig.DEFAULT_LOCAL_DISPLAY_NAME;
         }
