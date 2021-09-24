@@ -6,7 +6,7 @@ import { Avatar } from '../../../base/avatar';
 import { translate } from '../../../base/i18n';
 import { getLocalParticipant } from '../../../base/participants';
 import { connect } from '../../../base/redux';
-import { maybeExtractIdFromDisplayName } from '../../../riff-dashboard-page/functions';
+import { maybeExtractIdFromDisplayName } from '../../../riff-platform/functions';
 
 declare var interfaceConfig: Object;
 

@@ -41,7 +41,7 @@ const DraggableMeetingMediator = ({ displayName, webRtcPeers, isOpen, toggleMedi
                 <MeetingMediator
                     displayName = { displayName }
                     isEnabled = { true }
-                    webRtcPeers = { webRtcPeers } />
+                    webRtcPeers = { webRtcPeers || [] } />
             </div>
         </Draggable>
     );
@@ -65,18 +65,16 @@ DraggableMeetingMediator.propTypes = {
  * @returns {Props}
  */
 function _mapStateToProps(state) {
+    const localParticipantName = state['features/base/participants'].local?.name;
+    const remoteParticipants = state['features/base/participants'].sortedRemoteParticipants;
+    const allParticipantName = [ localParticipantName, ...Array.from(remoteParticipants.values()) ];
+
     return {
         displayName: state['features/riff-platform'].signIn.user?.displayName || '',
         isAnon: state['features/riff-platform'].signIn.user?.isAnon,
         isOpen: state['features/riff-platform'].meetingMediator.isOpen,
-        webRtcPeers: state['features/base/participants'].map((p, i) => {
-            if (i === 0) {
-                const { uid, displayName } = state['features/riff-platform'].signIn.user || {};
-
-                return { nick: `${uid}|${displayName}` };
-            }
-
-            return { nick: p.name };
+        webRtcPeers: allParticipantName.map(p => {
+            return { nick: p };
         })
     };
 }
