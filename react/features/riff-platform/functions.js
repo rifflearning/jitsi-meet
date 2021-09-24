@@ -209,10 +209,11 @@ export function getNumberRangeArray(start, end, step = 1) {
 }
 
 /**
- * Groups meetingsLists to object: {Today: meetingList, [otherDate]: meetingList ...}.
+ * Returns object from string: {id: string, displayName: string, idWithSeparator: string }.
  *
  * @param {Array} displayNameMaybeWithId - Display name maybe with riff Id.
- * @returns {Object} - Returns object of id, display name and id with separator.
+ * @returns {Object} - Returns object of id, display name and id with separator:
+ * {id: string, displayName: string, idWithSeparator: string }.
  */
 export function maybeExtractIdFromDisplayName(displayNameMaybeWithId) {
     if (typeof displayNameMaybeWithId !== 'string') {
