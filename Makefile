@@ -123,8 +123,13 @@ deploy-css:
 deploy-local:
 	([ ! -x deploy-local.sh ] || ./deploy-local.sh)
 
-deploy-aws: all
-	sh ./deploy-aws.sh
+deploy-aws: ## deploy a dev build based on the current state of the working directory to AWS
+deploy-aws: AWS_NAME := ${shell bash -c 'source .env ; echo $$AWS_NAME'}#' cmt to fix vim formatting
+deploy-aws: PEM_PATH := ${shell bash -c 'source .env ; echo $$PEM_PATH'}#' cmt to fix vim formatting
+deploy-aws: GIT_USER := ${shell git config --get user.name}
+deploy-aws: dev-package
+	scp -i $(PEM_PATH) rifflearning-jitsi-meet-dev.tar.bz2 $(AWS_NAME):/home/ubuntu/tmp
+	ssh -i $(PEM_PATH) $(AWS_NAME) 'bin/install-riff-jitsi.sh tmp/rifflearning-jitsi-meet-dev.tar.bz2 "$(GIT_USER)"'
 
 .NOTPARALLEL:
 dev: deploy-init deploy-css deploy-rnnoise-binary deploy-lib-jitsi-meet deploy-meet-models deploy-libflac deploy-olm deploy-tflite
@@ -165,6 +170,10 @@ dev-package:
 api-gateway-package: ## create package using api-gateway env settings (users and their meetings are handled by the api-gateway)
 	ln -fs env-api-gateway .env
 	$(MAKE) all source-package ENV=api-gateway
+
+api-gateway-exp-metrics-package: ## create package using api-gateway-exp-metrics env settings (users and their meetings are handled by the api-gateway and experimental metrics tab is available)
+	ln -fs env-api-gateway-exp-metrics .env
+	$(MAKE) all source-package ENV=api-gateway-exp-metrics
 
 api-gateway-no-mm-package: ## create package using api-gateway-no-mm env settings (hide meeting mediator)
 	ln -fs env-api-gateway-no-mm .env
