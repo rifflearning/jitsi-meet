@@ -211,6 +211,13 @@ export function bootstrapGoogleCalendarIntegration() {
                         return dispatch(clearGoogleCalendarIntegration());
 
                     });
+            })
+            .catch(error => {
+                console.error(
+                    'Error occurred while signing into google calendar',
+                    error);
+
+                return Promise.reject(error);
             });
     };
 }
@@ -239,9 +246,8 @@ export function googleSignIn() {
 
             .then(() => dispatch(updateGoogleEmailProfile()))
             .catch(error => {
-                // TODO add logger
                 console.error(
-                    'Error occurred while signing into calendar integration',
+                    'Error occurred while signing into google calendar',
                     error);
 
                 return Promise.reject(error);
@@ -663,9 +669,15 @@ export function bootstrapMsCalendarIntegration() {
                             return dispatch(setMsIntegrationReady());
                         }
 
-                        // return dispatch(clearMsCalendarIntegration());
-
+                        return dispatch(clearMsCalendarIntegration());
                     });
+            })
+            .catch(error => {
+                console.error(
+                    'Error occurred while signing into ms calendar',
+                    error);
+
+                return Promise.reject(error);
             });
     };
 }
