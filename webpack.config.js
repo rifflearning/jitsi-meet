@@ -204,18 +204,7 @@ const config = {
         alias: {
 
             jquery: `jquery/dist/jquery${minimize ? '.min' : ''}.js`,
-            'focus-visible': 'focus-visible/dist/focus-visible.min.js',
-
-            // aliases for imports in riff components
-            Images: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'assets'),
-            Components: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'components'),
-            components: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'components'),
-            Redux: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'redux'),
-            Actions: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'redux', 'actions'),
-            Selectors: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'redux', 'selectors'),
-            RiffUtils: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'libs', 'utils'),
-            libs: p.resolve(__dirname, 'react/features/riff-dashboard-page', 'src', 'libs')
-
+            'focus-visible': 'focus-visible/dist/focus-visible.min.js'
         },
         aliasFields: [
             'browser'
