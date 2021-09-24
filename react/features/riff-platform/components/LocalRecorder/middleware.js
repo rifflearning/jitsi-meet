@@ -44,9 +44,8 @@ MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
 
     switch (action.type) {
     case CONFERENCE_JOINED: {
-        const enableRiffLocalRecording = (config.toolbarButtons
-            && config.toolbarButtons.includes('rifflocalrecording'))
-            || interfaceConfig.TOOLBAR_BUTTONS.includes('rifflocalrecording');
+        const enableRiffLocalRecording = config.toolbarButtons
+            && config.toolbarButtons.includes('rifflocalrecording');
         const isLocalRecordingEnabled = Boolean(
             enableRiffLocalRecording
             && typeof APP === 'object'

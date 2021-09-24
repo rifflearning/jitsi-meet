@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { toggleDialog } from '../../../base/dialog/actions';
+import { isMobileBrowser } from '../../../base/environment/utils';
 import { IconRec } from '../../../base/icons';
 import { connect } from '../../../base/redux';
 import ToolboxItem from '../../../base/toolbox/components/ToolboxItem.web';
@@ -14,6 +15,12 @@ const LocalRecordingButton = ({ toggleLocalRecordingDialog, showLabel, isEngaged
 
     const doToggleLocalRecordingDialog = () => toggleLocalRecordingDialog();
     const doStopLocalRecording = () => recordingController.stopRecording();
+
+    const isMobile = isMobileBrowser();
+
+    if (isMobile) {
+        return null;
+    }
 
     return (
         <ToolboxItem
