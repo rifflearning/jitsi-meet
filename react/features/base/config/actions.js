@@ -121,6 +121,7 @@ export function setConfig(config: Object = {}) {
                 config,
                 window.interfaceConfig,
                 window.loggingConfig,
+                window.riffConfig,
                 locationURL);
 
         dispatch({
