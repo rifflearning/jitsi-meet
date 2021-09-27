@@ -39,12 +39,14 @@ import {
     conferenceWillJoin,
     conferenceWillLeave,
     dataChannelOpened,
+    getConferenceOptions,
     kickedOut,
     lockStateChanged,
     onStartMutedPolicyChanged,
     p2pStatusChanged,
     sendLocalParticipant
 } from './react/features/base/conference';
+import { getReplaceParticipant } from './react/features/base/config/functions';
 import {
     checkAndNotifyForNewDevice,
     getAvailableDevices,
@@ -54,6 +56,7 @@ import {
     setAudioOutputDeviceId,
     updateDeviceList
 } from './react/features/base/devices';
+import { isIosMobileBrowser } from './react/features/base/environment/utils';
 import {
     browser,
     isFatalJitsiConnectionError,
@@ -110,7 +113,6 @@ import {
     trackRemoved
 } from './react/features/base/tracks';
 import { downloadJSON } from './react/features/base/util/downloadJSON';
-import { getConferenceOptions } from './react/features/conference/functions';
 import { showDesktopPicker } from './react/features/desktop-picker';
 import { appendSuffix } from './react/features/display-name';
 import {
@@ -129,10 +131,12 @@ import {
 import { disableReceiver, stopReceiver } from './react/features/remote-control';
 import { startRiffServices } from './react/features/riff-platform/actions/jitsiActions';
 import { stopLocalRecordingHandling } from './react/features/riff-platform/components/LocalRecorder/helpers';
+import { maybeExtractIdFromDisplayName } from './react/features/riff-platform/functions';
 import { setScreenAudioShareState, isScreenAudioShared } from './react/features/screen-share/';
 import { toggleScreenshotCaptureEffect } from './react/features/screenshot-capture';
 import { AudioMixerEffect } from './react/features/stream-effects/audio-mixer/AudioMixerEffect';
 import { createPresenterEffect } from './react/features/stream-effects/presenter';
+import { createRnnoiseProcessor } from './react/features/stream-effects/rnnoise';
 import { endpointMessageReceived } from './react/features/subtitles';
 import UIEvents from './service/UI/UIEvents';
 
@@ -306,10 +310,13 @@ class ConferenceConnector {
 
         // not enough rights to create conference
         case JitsiConferenceErrors.AUTHENTICATION_REQUIRED: {
+
+            const replaceParticipant = getReplaceParticipant(APP.store.getState());
+
             // Schedule reconnect to check if someone else created the room.
             this.reconnectTimeout = setTimeout(() => {
                 APP.store.dispatch(conferenceWillJoin(room));
-                room.join();
+                room.join(null, replaceParticipant);
             }, 5000);
 
             const { password }
@@ -395,8 +402,10 @@ class ConferenceConnector {
      *
      */
     connect() {
+        const replaceParticipant = getReplaceParticipant(APP.store.getState());
+
         // the local storage overrides here and in connection.js can be used by jibri
-        room.join(jitsiLocalStorage.getItem('xmpp_conference_password_override'));
+        room.join(jitsiLocalStorage.getItem('xmpp_conference_password_override'), replaceParticipant);
     }
 }
 
@@ -831,7 +840,13 @@ export default {
         this._initDeviceList(true);
 
         if (initialOptions.startWithAudioMuted) {
-            localTracks = localTracks.filter(track => track.getType() !== MEDIA_TYPE.AUDIO);
+            // Always add the audio track to the peer connection and then mute the track on mobile Safari
+            // because of a known issue where audio playout doesn't happen if the user joins audio and video muted.
+            if (isIosMobileBrowser()) {
+                this.muteAudio(true, true);
+            } else {
+                localTracks = localTracks.filter(track => track.getType() !== MEDIA_TYPE.AUDIO);
+            }
         }
 
         return this.startConference(con, localTracks);
@@ -1194,7 +1209,7 @@ export default {
         const displayName = getDisplayName(id);
 
         if (displayName) {
-            return displayName;
+            return maybeExtractIdFromDisplayName(displayName).didisplayName;
         }
         if (APP.conference.isLocalId(id)) {
             return APP.translation.generateTranslationHTML(
@@ -1319,8 +1334,8 @@ export default {
 
         APP.store.dispatch(conferenceWillJoin(room));
 
-        // Filter out the tracks that are muted.
-        const tracks = localTracks.filter(track => !track.isMuted());
+        // Filter out the tracks that are muted (except on mobile Safari).
+        const tracks = isIosMobileBrowser() ? localTracks : localTracks.filter(track => !track.isMuted());
 
         this._setLocalAudioVideoStreams(tracks);
         this._room = room; // FIXME do not use this
@@ -1355,7 +1370,11 @@ export default {
     },
 
     _getConferenceOptions() {
-        return getConferenceOptions(APP.store.getState());
+        const options = getConferenceOptions(APP.store.getState());
+
+        options.createVADProcessor = createRnnoiseProcessor;
+
+        return options;
     },
 
     /**
@@ -1866,7 +1885,6 @@ export default {
                     await this.useVideoStream(desktopVideoStream);
                 }
 
-
                 if (this._desktopAudioStream) {
                     // If there is a localAudio stream, mix in the desktop audio stream captured by the screen sharing
                     // api.
@@ -2108,7 +2126,7 @@ export default {
 
         room.on(
             JitsiConferenceEvents.DOMINANT_SPEAKER_CHANGED,
-            id => APP.store.dispatch(dominantSpeakerChanged(id, room)));
+            (dominant, previous) => APP.store.dispatch(dominantSpeakerChanged(dominant, previous, room)));
 
         room.on(
             JitsiConferenceEvents.CONFERENCE_CREATED_TIMESTAMP,
@@ -2179,7 +2197,24 @@ export default {
             JitsiConferenceEvents.LOCK_STATE_CHANGED,
             (...args) => APP.store.dispatch(lockStateChanged(room, ...args)));
 
-        room.on(JitsiConferenceEvents.KICKED, participant => {
+        room.on(JitsiConferenceEvents.KICKED, (participant, reason, isReplaced) => {
+            if (isReplaced) {
+                // this event triggers when the local participant is kicked, `participant`
+                // is the kicker. In replace participant case, kicker is undefined,
+                // as the server initiated it. We mark in store the local participant
+                // as being replaced based on jwt.
+                const localParticipant = getLocalParticipant(APP.store.getState());
+
+                APP.store.dispatch(participantUpdated({
+                    conference: room,
+                    id: localParticipant.id,
+                    isReplaced
+                }));
+
+                // we send readyToClose when kicked participant is replace so that
+                // embedding app can choose to dispose the iframe API on the handler.
+                APP.API.notifyReadyToClose();
+            }
             APP.store.dispatch(kickedOut(room, participant));
         });
 
@@ -2246,7 +2281,9 @@ export default {
 
             // Remove the tracks from the peerconnection.
             for (const track of localTracks) {
-                if (audioMuted && track.jitsiTrack?.getType() === MEDIA_TYPE.AUDIO) {
+                // Always add the track on mobile Safari because of a known issue where audio playout doesn't happen
+                // if the user joins audio and video muted.
+                if (audioMuted && track.jitsiTrack?.getType() === MEDIA_TYPE.AUDIO && !isIosMobileBrowser()) {
                     promises.push(this.useAudioStream(null));
                 }
                 if (videoMuted && track.jitsiTrack?.getType() === MEDIA_TYPE.VIDEO) {
@@ -2452,8 +2489,8 @@ export default {
         });
 
         APP.UI.addListener(
-            UIEvents.TOGGLE_SCREENSHARING, audioOnly => {
-                this.toggleScreenSharing(undefined, { audioOnly });
+            UIEvents.TOGGLE_SCREENSHARING, ({ enabled, audioOnly }) => {
+                this.toggleScreenSharing(enabled, { audioOnly });
             }
         );
     },

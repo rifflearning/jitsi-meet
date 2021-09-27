@@ -49,7 +49,9 @@ type Props = {
     /**
      * Externally provided value.
      */
-    value?: string
+    value?: string,
+    id?: string,
+    autoComplete?: string
 };
 
 type State = {
@@ -119,9 +121,11 @@ export default class InputField extends PureComponent<Props, State> {
     render() {
         return (
             <input
-                autoFocus = { Boolean(this.props.autofocus) }
+                autoComplete = { this.props.autoComplete }
+                autoFocus = { this.props.autoFocus }
                 className = { `field ${this.state.focused ? 'focused' : ''} ${this.props.className || ''}` }
                 data-testid = { this.props.testId ? this.props.testId : undefined }
+                id = { this.props.id }
                 onBlur = { this._onBlur }
                 onChange = { this._onChange }
                 onFocus = { this._onFocus }

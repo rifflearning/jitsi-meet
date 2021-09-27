@@ -14,5 +14,4 @@ load-test/*
 # remaining JavaScript source code.
 !.eslintrc.js
 
-react/features/riff-dashboard-page/*
 modules/recorder/capturer/*
