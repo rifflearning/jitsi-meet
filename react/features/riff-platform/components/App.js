@@ -1,4 +1,4 @@
-/* global process */
+/* global riffConfig */
 /* eslint-disable react/jsx-sort-props */
 /* eslint-disable react/jsx-no-bind */
 
@@ -34,7 +34,7 @@ const App = ({ user }) => {
         setIsOpen(false);
     };
 
-    if (process.env.MATTERMOST_EMBEDDED_ONLY === 'true') {
+    if (riffConfig.embeddedAccessOnly) {
         return (<div className = { classes.root }>
             <CssBaseline />
             <MeetingEndedPage />

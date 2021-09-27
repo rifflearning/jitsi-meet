@@ -59,6 +59,8 @@ export function getRecordingSharingUrl(state: Object) {
     return state['features/base/config'].recordingSharingUrl;
 }
 
+/* eslint-disable max-params, jsdoc/require-description-complete-sentence */
+
 /**
  * Overrides JSON properties in {@code config} and
  * {@code interfaceConfig} Objects with the values from {@code newConfig}.
@@ -91,8 +93,12 @@ export function getRecordingSharingUrl(state: Object) {
  * @returns {void}
  */
 export function overrideConfigJSON(
-        config: ?Object, interfaceConfig: ?Object, loggingConfig: ?Object, riffConfig: ?Object,
-        json: Object) {
+        config: ?Object,
+        interfaceConfig: ?Object,
+        loggingConfig: ?Object,
+        riffConfig: ?Object,
+        json: Object
+) {
     for (const configName of Object.keys(json)) {
         let configObj;
 

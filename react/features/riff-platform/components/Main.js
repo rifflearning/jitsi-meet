@@ -1,5 +1,5 @@
 /* eslint-disable require-jsdoc */
-/* global process */
+/* global riffConfig */
 /* eslint-disable react/jsx-boolean-value */
 /* eslint-disable react/jsx-sort-props */
 /* eslint-disable react/no-multi-comp */
@@ -127,7 +127,7 @@ class Main extends React.Component {
                     path = { ROUTES.DASHBOARD } >
                     <Dashboard />
                 </Route>
-                {process.env.ENABLE_EXPERIMENTAL_METRICS === 'true'
+                {riffConfig.metrics.showExperimentalMetrics
                 && <Route
                     path = { ROUTES.EXPERIMENTAL_DASHBOARD } >
                     <ExperimentalDashboard />
@@ -136,7 +136,7 @@ class Main extends React.Component {
                 <Route
                     path = { ROUTES.MEETINGS }
                     component = { Meetings } />
-                {process.env.DISABLE_GROUPS !== 'true'
+                {riffConfig.scheduler.enableGroupMeetings
                 && <Route
                     path = { ROUTES.MEETINGS_HARVARD }
                     // eslint-disable-next-line react/jsx-no-bind

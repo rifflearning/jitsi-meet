@@ -1,4 +1,4 @@
-/* global process */
+/* global riffConfig */
 /* eslint-disable react/jsx-sort-props */
 /* eslint-disable react/jsx-no-bind */
 
@@ -72,7 +72,7 @@ const Sidebar = ({ handleSidebarClose, isOpen }) => {
             <Divider />
             <List><MainListItems /></List>
             <Divider />
-            {process.env.DISABLE_GROUPS !== 'true'
+            {riffConfig.scheduler.enableGroupMeetings
                 && <List><GroupsList /></List>
             }
         </Drawer>

@@ -4,7 +4,9 @@
 const riffConfig = {
     /** access to the riffdata server for sending/receiving meeting metrics */
     riffdata: {
-        url: '<SERVER URL HERE>',
+        // by default, we use the riffdata server located on the same server
+        // jitsi-meet is being served from
+        url: '/',
         path: '/api/videodata',
         email: 'default-user-email',
         password: 'default-user-password'
@@ -12,8 +14,9 @@ const riffConfig = {
 
     /** access to the api-gateway for user authentication, meeting scheduling, etc. */
     apiGateway: {
-        url: '<SERVER URL HERE>',
-        path: '/api-gateway'
+        // by default, we use the api gateway located on the same server
+        // jitsi-meet is being served from
+        url: '/api-gateway'
     },
 
     /**
@@ -38,6 +41,12 @@ const riffConfig = {
         enableMeetingMediator: true,
         showMediatorOnJoinRegistered: true,
         showMediatorOnJoinAnonymous: true
+    },
+
+    calendar: {
+        enableCalendarIntegration: false,
+        googleApiAppClientId: '',
+        microsoftApiAppClientId: ''
     }
 };
 

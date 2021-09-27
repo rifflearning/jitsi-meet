@@ -1,4 +1,4 @@
-/* global process */
+/* global riffConfig */
 /* eslint-disable max-len */
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable-next-line import/order */
@@ -24,7 +24,7 @@ const DraggableMeetingMediator = ({ displayName, webRtcPeers, isOpen, toggleMedi
     const onCloseMeetingMediator = () => toggleMediator();
 
     useEffect(() => {
-        if (process.env.HIDE_MEETING_MEDIATOR_BY_DEFAULT_FOR_ANON_USER === 'true' && isAnon) {
+        if (!riffConfig.meeting.showMediatorOnJoinAnonymous && isAnon) {
             toggleMediator(false);
         }
     }, [ isAnon ]);

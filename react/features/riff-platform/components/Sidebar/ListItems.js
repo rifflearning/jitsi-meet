@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-sort-props */
 /* eslint-disable react/jsx-no-bind */
-/* global process */
+/* global riffConfig */
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -48,7 +48,7 @@ export default () => {
                 </ListItemIcon>
                 <ListItemText primary = 'Riff Metrics' />
             </ListItem>
-            {process.env.ENABLE_EXPERIMENTAL_METRICS === 'true'
+            {riffConfig.metrics.showExperimentalMetrics
             && <ListItem
                 button = { true }
                 onClick = { () => history.push(ROUTES.EXPERIMENTAL_DASHBOARD) }

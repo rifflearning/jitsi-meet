@@ -1,10 +1,10 @@
-/* global process */
+/* global riffConfig */
 /* eslint-disable object-property-newline */
 /* eslint-disable valid-jsdoc */
 /* eslint-disable no-invalid-this */
 import { jwt } from './functions';
 
-const API_GATEWAY_LINK = process.env.API_GATEWAY;
+const API_GATEWAY_LINK = riffConfig.apiGateway.url;
 
 /**
  * ApiService for REST calls to api-gateway.

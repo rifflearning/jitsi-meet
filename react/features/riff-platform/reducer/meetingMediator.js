@@ -1,9 +1,9 @@
-/* global process */
+/* global riffConfig */
 
 import * as actionTypes from '../constants/actionTypes';
 
 const initialState = {
-    isOpen: process.env.HIDE_MEETING_MEDIATOR_BY_DEFAULT !== 'true'
+    isOpen: riffConfig.meeting.showMediatorOnJoinRegistered
 };
 
 export default (state = initialState, action) => {

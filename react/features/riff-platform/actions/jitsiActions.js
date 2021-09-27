@@ -1,4 +1,4 @@
-/* global config, APP, process */
+/* global config, riffConfig, APP */
 import ObjectID from 'bson-objectid';
 import { createBrowserHistory } from 'history';
 
@@ -33,7 +33,7 @@ export const navigateWithoutReload = (component, route) => {
  * @returns {boolean}
 */
 export async function shouldRedirectToRiff() {
-    if (process.env.MATTERMOST_EMBEDDED_ONLY === 'true') {
+    if (riffConfig.embeddedAccessOnly) {
         setMatterMostUserFromLink();
 
         return false;

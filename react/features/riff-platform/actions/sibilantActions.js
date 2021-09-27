@@ -1,4 +1,4 @@
-/* global config, APP, process */
+/* global config, APP, riffConfig */
 /* eslint-disable require-jsdoc */
 
 import Sibilant from '@rifflearning/sibilant';
@@ -117,8 +117,8 @@ async function loginToRiffDataServer() {
     try {
         const { accessToken, user: { _id: uid } } = await app.authenticate({
             strategy: 'local',
-            email: 'default-user-email',
-            password: 'default-user-password'
+            email: riffConfig.riffdata.email,
+            password: riffConfig.riffdata.password
         });
 
         return {
@@ -133,7 +133,7 @@ async function loginToRiffDataServer() {
 function sendUtteranceToRiffDataServer(data, { uid: participant }, room, token) {
     return async dispatch => {
         try {
-            const volumesObj = process.env.SEND_SIBILANT_VOLUMES_TO_RIFF_DATA_SERVER === 'true'
+            const volumesObj = riffConfig.metrics.sendUtteranceVolumes
                 ? { volumes: data.volumes }
                 : {};
             const res = await app.service('utterances').create({
