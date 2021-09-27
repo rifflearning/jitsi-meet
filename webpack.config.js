@@ -2,7 +2,6 @@
 
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const dotenv = require('dotenv');
-const p = require('path');
 const process = require('process');
 const webpack = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
