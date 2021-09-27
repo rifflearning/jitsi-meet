@@ -10,7 +10,7 @@ import {
     getParticipantDisplayName
 } from '../base/participants';
 import { MiddlewareRegistry, StateListenerRegistry } from '../base/redux';
-import { maybeExtractIdFromDisplayName } from '../riff-dashboard-page/functions';
+import { maybeExtractIdFromDisplayName } from '../riff-platform/functions';
 
 import {
     clearNotifications,
@@ -34,25 +34,29 @@ MiddlewareRegistry.register(store => next => action => {
         const result = next(action);
         const { participant: p } = action;
         const { dispatch, getState } = store;
+        const state = getState();
+        const { conference } = state['features/base/conference'];
 
-        if (!p.local && !joinLeaveNotificationsDisabled()) {
+        if (conference && !p.local && !joinLeaveNotificationsDisabled() && !p.isReplacing) {
             dispatch(showParticipantJoinedNotification(
-                getParticipantDisplayName(getState, p.id)
+                getParticipantDisplayName(state, p.id)
             ));
         }
 
         if (typeof interfaceConfig === 'object'
                 && !interfaceConfig.DISABLE_FOCUS_INDICATOR && p.role === PARTICIPANT_ROLE.MODERATOR) {
             // Do not show the notification for mobile and also when the focus indicator is disabled.
-            const displayName = getParticipantDisplayName(getState, p.id);
+            const displayName = getParticipantDisplayName(state, p.id);
 
-            dispatch(showNotification({
-                descriptionArguments: { to: displayName || '$t(notify.somebody)' },
-                descriptionKey: 'notify.grantedTo',
-                titleKey: 'notify.somebody',
-                title: displayName
-            },
-            NOTIFICATION_TIMEOUT));
+            if (!p.isReplacing) {
+                dispatch(showNotification({
+                    descriptionArguments: { to: displayName || '$t(notify.somebody)' },
+                    descriptionKey: 'notify.grantedTo',
+                    titleKey: 'notify.somebody',
+                    title: displayName
+                },
+                NOTIFICATION_TIMEOUT));
+            }
         }
 
         return result;
@@ -66,7 +70,8 @@ MiddlewareRegistry.register(store => next => action => {
 
             if (typeof interfaceConfig === 'object'
                 && participant
-                && !participant.local) {
+                && !participant.local
+                && !action.participant.isReplaced) {
                 store.dispatch(showNotification({
                     descriptionKey: 'notify.disconnected',
                     titleKey: 'notify.somebody',

@@ -1,7 +1,14 @@
 /* eslint-disable require-jsdoc */
-import { isScreenShareSourceAvailable } from '../../../riff-dashboard-page/src/libs/utils';
 
 import { COMMAND_START, COMMAND_STOP, PROPERTY_STATS } from './LocalRecorderController';
+
+
+// Determine if the browser supports screen sharing
+function isScreenShareSourceAvailable() {
+    return Boolean(navigator.getDisplayMedia
+              || navigator.mediaDevices.getDisplayMedia
+              || navigator.mediaDevices.getSupportedConstraints().mediaSource);
+}
 
 class AudioStreamsMixer {
 

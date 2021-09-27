@@ -3,40 +3,38 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { toggleDialog } from '../../../base/dialog/actions';
+import { isMobileBrowser } from '../../../base/environment/utils';
 import { IconRec } from '../../../base/icons';
 import { connect } from '../../../base/redux';
-import { OverflowMenuItem } from '../../../base/toolbox/components';
-import ToolbarButton from '../../../toolbox/components/web/ToolbarButton';
+import ToolboxItem from '../../../base/toolbox/components/ToolboxItem.web';
 
 import { recordingController } from './LocalRecorderController';
 import LocalRecordingDialog from './LocalRecordingDialog';
 
-const LocalRecordingButton = ({ toggleLocalRecordingDialog, isEngagedLocally, isOverflowButton }) => {
+const LocalRecordingButton = ({ toggleLocalRecordingDialog, showLabel, isEngagedLocally }) => {
 
     const doToggleLocalRecordingDialog = () => toggleLocalRecordingDialog();
     const doStopLocalRecording = () => recordingController.stopRecording();
 
-    return (
-        isOverflowButton
-            ? <OverflowMenuItem
-                accessibilityLabel = 'Local Recording'
-                icon = { IconRec }
-                key = 'rifflocalrecording'
-                onClick = { isEngagedLocally ? doStopLocalRecording : doToggleLocalRecordingDialog }
-                text = { `${isEngagedLocally ? 'Stop' : 'Start'} Local Recording` } />
-            : <ToolbarButton
-                accessibilityLabel = 'Toggle Local Recording'
-                icon = { IconRec }
-                onClick = { isEngagedLocally ? doStopLocalRecording : doToggleLocalRecordingDialog }
-                toggled = { isEngagedLocally }
-                tooltip = { `${isEngagedLocally ? 'Stop' : 'Start'} Local Recording` } />
+    const isMobile = isMobileBrowser();
 
+    if (isMobile) {
+        return null;
+    }
+
+    return (
+        <ToolboxItem
+            accessibilityLabel = 'Local Recording'
+            icon = { IconRec }
+            label = { `${isEngagedLocally ? 'Stop' : 'Start'} Local Recording` }
+            onClick = { isEngagedLocally ? doStopLocalRecording : doToggleLocalRecordingDialog }
+            showLabel = { showLabel } />
     );
 };
 
 LocalRecordingButton.propTypes = {
     isEngagedLocally: PropTypes.bool,
-    isOverflowButton: PropTypes.bool,
+    showLabel: PropTypes.bool,
     toggleLocalRecordingDialog: PropTypes.func
 };
 

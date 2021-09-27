@@ -207,3 +207,35 @@ export function checkMeetingSingleOccurrenceDate({ meetingId, meeting, meetingsR
 export function getNumberRangeArray(start, end, step = 1) {
     return [ ...Array(Math.floor((end - start) / step) + 1) ].map((_, i) => start + (i * step));
 }
+
+/**
+ * Returns object from string: {id: string, displayName: string, idWithSeparator: string }.
+ *
+ * @param {Array} displayNameMaybeWithId - Display name maybe with riff Id.
+ * @returns {Object} - Returns object of id, display name and id with separator:
+ * {id: string, displayName: string, idWithSeparator: string }.
+ */
+export function maybeExtractIdFromDisplayName(displayNameMaybeWithId) {
+    if (typeof displayNameMaybeWithId !== 'string') {
+        return {};
+    }
+
+    let displayName = displayNameMaybeWithId;
+    let id = '';
+    const separator = '|';
+
+    if (displayNameMaybeWithId.includes(separator)) {
+        const [ uid, ...displayNameWithoutId ] = displayNameMaybeWithId.split(separator);
+
+        displayName = displayNameWithoutId.join('');
+        id = `${uid}`;
+    }
+
+    const idWithSeparator = id ? id + separator : '';
+
+    return {
+        id,
+        displayName,
+        idWithSeparator
+    };
+}
