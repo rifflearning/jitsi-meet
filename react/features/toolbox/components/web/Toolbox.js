@@ -234,11 +234,6 @@ type Props = {
      */
     dispatch: Function,
 
-    /*
-     * Check if user is anonymous
-     */
-    _isAnonymousUser: Boolean,
-
     /**
      * If the dominant speaker name should be displayed or not.
      */
@@ -1377,7 +1372,6 @@ function _mapStateToProps(state, ownProps) {
         _backgroundType: state['features/virtual-background'].backgroundType,
         _chatOpen: state['features/chat'].isOpen,
         _clientWidth: clientWidth,
-        _isAnonymousUser: state['features/riff-platform'].signIn.user.isAnon,
         _conference: conference,
         _desktopSharingEnabled: desktopSharingEnabled,
         _desktopSharingDisabledTooltipKey: desktopSharingDisabledTooltipKey,

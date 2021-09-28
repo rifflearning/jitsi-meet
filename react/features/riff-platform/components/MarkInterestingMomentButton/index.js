@@ -52,8 +52,7 @@ function _mapStateToProps(state) {
     return {
         roomId: state['features/riff-platform'].meeting.meeting.roomId,
         participantId: state['features/riff-platform'].signIn.user.uid,
-        isAnonymousUser: state['features/riff-platform'].signIn.user.isAnon,
-        user: state['features/riff-platform']
+        isAnonymousUser: state['features/riff-platform'].signIn.user.isAnon
     };
 }
 

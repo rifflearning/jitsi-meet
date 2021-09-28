@@ -145,7 +145,7 @@ export function markInterestingMoment(participantId, roomId) {
             });
 
             dispatch(showNotification({
-                title: 'Moment was marked as interesting'
+                title: 'Bookmarked!'
             }));
         } catch (error) {
             console.log('Error in markInterestingMoment', error);
