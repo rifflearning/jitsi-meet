@@ -23,7 +23,7 @@ export function attachSibilant(tracks) {
             const room = window.location.pathname.split('/')[1];
             const title = getState()['features/riff-platform'].meeting?.meeting?.name;
 
-            await riffAddUserToMeeting(userData, room, accessToken, title);
+            dispatch(riffAddUserToMeeting(userData, room, accessToken, title));
 
             if (config.iAmRecorder) {
                 const mockData = {
@@ -73,19 +73,31 @@ export function attachSibilant(tracks) {
     };
 }
 
-async function riffAddUserToMeeting({ uid, displayName, context = '' }, room, token, title) {
-    try {
-        socket.emit('meetingJoined', {
-            participant: uid,
-            name: displayName,
-            room,
-            title,
-            context,
-            token
-        });
-    } catch (error) {
-        console.error('Error while riffAddUserToMeeting action', error);
-    }
+function riffAddUserToMeeting({ uid, displayName, context = '' }, room, token, title) {
+    return async dispatch => {
+        try {
+            socket.emit('meetingJoined', {
+                participant: uid,
+                name: displayName,
+                room,
+                title,
+                context,
+                token
+            });
+
+            const meetingListener = meeting => {
+                if (meeting.active && meeting.room === room && meeting.participants.include(uid)) {
+                    meeting.removeListener('patched', meetingListener);
+                    dispatch(setRoomIdFromRiffDataServer(meeting._id));
+                }
+            };
+
+            app.service('meetings').on('patched', meetingListener);
+
+        } catch (error) {
+            console.error('Error while riffAddUserToMeeting action', error);
+        }
+    };
 }
 
 export function participantLeaveRoom(meetingId, participantId) {
