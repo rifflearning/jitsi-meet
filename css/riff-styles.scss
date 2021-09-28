@@ -159,6 +159,25 @@ body > .tooltip {
     .action-btn .options:hover {
         background-color: $primaryButtonHoverBackground;
     }
+
+    > div:not(#preview) {
+        position: absolute;
+        display: flex;
+        bottom: 0;
+        width: 100%;
+        justify-content: center;
+    }
+
+    #preview {
+        align-items: flex-start;
+
+        .avatar {
+            height: 90px !important;
+            width: 90px !important;
+            background: $primaryButtonBackground;
+            margin-top: 100px;
+        }
+    }
 }
 
 .watermark {
