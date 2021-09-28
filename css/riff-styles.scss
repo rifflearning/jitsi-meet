@@ -265,3 +265,10 @@ body > .tooltip {
 .local-rec-label {
     background-color: #E04757;
 }
+
+.subject-info {
+    max-width: none;
+    @media (max-width: 580px) {
+        max-width: 80%;
+    }
+}
