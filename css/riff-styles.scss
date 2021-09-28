@@ -265,3 +265,11 @@ body > .tooltip {
 .local-rec-label {
     background-color: #E04757;
 }
+
+.toolbox-content-items {
+    .toolbox-button:focus {
+        .toolbox-icon {
+            background-color: #36383c;
+        }
+    }
+}
