@@ -466,8 +466,8 @@ class Toolbox extends Component<Props, State> {
      */
     render() {
         const { _chatOpen, _visible, _toolbarButtons } = this.props;
-        // eslint-disable-next-line max-len
-        const rootClassNames = `new-toolbox ${_visible ? 'visible' : ''} ${_toolbarButtons.length ? '' : 'no-buttons'} ${_chatOpen ? 'shift-right' : ''}`;
+        const rootClassNames = `new-toolbox ${_visible ? 'visible' : ''}
+            ${_toolbarButtons.length ? '' : 'no-buttons'} ${_chatOpen ? 'shift-right' : ''}`;
 
         return (
             <div
