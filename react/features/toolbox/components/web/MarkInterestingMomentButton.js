@@ -1,7 +1,7 @@
 // @flow
 
 import { translate } from '../../../base/i18n';
-import {IconMuteVideoEveryone, IconStar} from '../../../base/icons';
+import { IconStar } from '../../../base/icons';
 import { connect } from '../../../base/redux';
 import { AbstractButton, type AbstractButtonProps } from '../../../base/toolbox/components';
 import { showInterestingMomentMarkedNotification } from '../../actions';
@@ -17,12 +17,12 @@ type Props = AbstractButtonProps & {
     /**
      * The ID of the participant.
      */
-    participantId: string,
+    participantId: String,
 
     /**
      * The ID of the room
      */
-    roomId: string
+    roomId: String
 };
 
 /**
