@@ -3,7 +3,7 @@ CLEANCSS = ./node_modules/.bin/cleancss
 DEPLOY_DIR = libs
 LIBJITSIMEET_DIR = node_modules/lib-jitsi-meet/
 LIBFLAC_DIR = node_modules/libflacjs/dist/min/
-OLM_DIR = node_modules/olm
+OLM_DIR = node_modules/@matrix-org/olm
 RNNOISE_WASM_DIR = node_modules/rnnoise-wasm/dist/
 TFLITE_WASM = react/features/stream-effects/virtual-background/vendor/tflite
 MEET_MODELS_DIR  = react/features/stream-effects/virtual-background/vendor/models/
@@ -170,6 +170,10 @@ dev-package:
 api-gateway-package: ## create package using api-gateway env settings (users and their meetings are handled by the api-gateway)
 	ln -fs env-api-gateway .env
 	$(MAKE) all source-package ENV=api-gateway
+
+api-gateway-exp-metrics-package: ## create package using api-gateway-exp-metrics env settings (users and their meetings are handled by the api-gateway and experimental metrics tab is available)
+	ln -fs env-api-gateway-exp-metrics .env
+	$(MAKE) all source-package ENV=api-gateway-exp-metrics
 
 api-gateway-no-mm-package: ## create package using api-gateway-no-mm env settings (hide meeting mediator)
 	ln -fs env-api-gateway-no-mm .env

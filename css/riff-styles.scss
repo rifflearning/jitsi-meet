@@ -59,8 +59,14 @@ body > .tooltip {
     z-index: 1000;
 }
 
+.prejoin-input-area {
+    display: flex;
+    flex-direction: column;
+}
+
 .prejoin-preview-login-anon-btn {
-    width: 50% !important;
+    max-width: 50%;
+    margin: 0 auto;
     box-sizing: border-box;
 }
 
@@ -140,10 +146,10 @@ body > .tooltip {
     font-size: 20px;
 }
 
-.prejoin-preview-dropdown-container .prejoin-preview-login-anon-text {
-    margin-top: 16px;
-    background: unset !important;
+.prejoin-preview-login-anon-text {
+    margin-bottom: 16px;
     color: #ffffff;
+    text-align: center;
 }
 
 .premeeting-screen {
@@ -152,6 +158,25 @@ body > .tooltip {
     }
     .action-btn .options:hover {
         background-color: $primaryButtonHoverBackground;
+    }
+
+    > div:not(#preview) {
+        position: absolute;
+        display: flex;
+        bottom: 0;
+        width: 100%;
+        justify-content: center;
+    }
+
+    #preview {
+        align-items: flex-start;
+
+        .avatar {
+            height: 90px !important;
+            width: 90px !important;
+            background: $primaryButtonBackground;
+            margin-top: 100px;
+        }
     }
 }
 

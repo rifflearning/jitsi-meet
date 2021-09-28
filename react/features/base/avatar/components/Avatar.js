@@ -2,7 +2,7 @@
 
 import React, { PureComponent } from 'react';
 
-import { maybeExtractIdFromDisplayName } from '../../../riff-dashboard-page/functions';
+import { maybeExtractIdFromDisplayName } from '../../../riff-platform/functions';
 import { getParticipantById } from '../../participants';
 import { connect } from '../../redux';
 import { getAvatarColor, getInitials } from '../functions';
@@ -10,6 +10,11 @@ import { getAvatarColor, getInitials } from '../functions';
 import { StatelessAvatar } from '.';
 
 export type Props = {
+
+    /**
+     * Custom avatar backgrounds from branding.
+     */
+    _customAvatarBackgrounds: Array<string>,
 
     /**
      * The string we base the initials on (this is generated from a list of precedences).
@@ -134,6 +139,7 @@ class Avatar<P: Props> extends PureComponent<P, State> {
      */
     render() {
         const {
+            _customAvatarBackgrounds,
             _initialsBase,
             _loadableAvatarUrl,
             className,
@@ -173,7 +179,7 @@ class Avatar<P: Props> extends PureComponent<P, State> {
 
         if (initials) {
             if (dynamicColor) {
-                avatarProps.color = getAvatarColor(colorBase || _initialsBase);
+                avatarProps.color = getAvatarColor(colorBase || _initialsBase, _customAvatarBackgrounds);
             }
 
             avatarProps.initials = initials;
@@ -212,6 +218,7 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
     const _initialsBase = maybeExtractIdFromDisplayName(_participant?.name).displayName ?? displayName;
 
     return {
+        _customAvatarBackgrounds: state['features/dynamic-branding'].avatarBackgrounds,
         _initialsBase,
         _loadableAvatarUrl: _participant?.loadableAvatarUrl,
         colorBase: !colorBase && _participant ? _participant.id : colorBase

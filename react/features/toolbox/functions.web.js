@@ -4,70 +4,6 @@ import { getToolbarButtons } from '../base/config';
 import { hasAvailableDevices } from '../base/devices';
 import { app } from '../riff-platform/libs/riffdata-client';
 
-const WIDTH = {
-    FIT_9_ICONS: 520,
-    FIT_8_ICONS: 470,
-    FIT_7_ICONS: 420,
-    FIT_6_ICONS: 370,
-    FIT_5_ICONS: 320,
-    FIT_4_ICONS: 280
-};
-
-/**
- * Returns a set of button names to be displayed in the toolbox, based on the screen width and platform.
- *
- * @param {number} width - The width of the screen.
- * @param {number} isMobile - The device is a mobile one.
- * @returns {Set} The button set.
- */
-export function getToolbarAdditionalButtons(width: number, isMobile: boolean): Set<string> {
-    let buttons = [];
-
-    switch (true) {
-    case width >= WIDTH.FIT_9_ICONS: {
-        buttons = isMobile
-            ? [ 'chat', 'tileview', 'markmoment', 'raisehand', 'participants-pane', 'overflow' ]
-            : [ 'desktop', 'chat', 'markmoment', 'raisehand', 'participants-pane', 'overflow' ];
-        break;
-    }
-
-    case width >= WIDTH.FIT_8_ICONS: {
-        buttons = [ 'desktop', 'chat', 'markmoment', 'raisehand', 'participants-pane', 'overflow' ];
-        break;
-    }
-
-    case width >= WIDTH.FIT_7_ICONS: {
-        buttons = [ 'desktop', 'chat', 'markmoment', 'participants-pane', 'raisehand', 'overflow' ];
-        break;
-    }
-
-    case width >= WIDTH.FIT_6_ICONS: {
-        buttons = [ 'chat', 'participants-pane', 'markmoment', 'overflow' ];
-        break;
-    }
-
-    case width >= WIDTH.FIT_5_ICONS: {
-        buttons = [ 'chat', 'overflow', 'markmoment' ];
-        break;
-    }
-
-    case width >= WIDTH.FIT_4_ICONS: {
-        buttons = isMobile
-            ? [ 'chat', 'overflow', 'markmoment' ]
-            : [ 'overflow' ];
-        break;
-    }
-
-    default: {
-        buttons = isMobile
-            ? [ 'chat', 'overflow' ]
-            : [];
-    }
-    }
-
-    return new Set(buttons);
-}
-
 /**
  * Helper for getting the height of the toolbox.
  *
@@ -111,7 +47,7 @@ export function isToolboxVisible(state: Object) {
     const { audioSettingsVisible, videoSettingsVisible } = state['features/settings'];
 
     return Boolean(!iAmSipGateway && (timeoutID || visible || alwaysVisible
-                                      || audioSettingsVisible || videoSettingsVisible));
+        || audioSettingsVisible || videoSettingsVisible));
 }
 
 /**
@@ -122,8 +58,8 @@ export function isToolboxVisible(state: Object) {
  */
 export function isAudioSettingsButtonDisabled(state: Object) {
     return (!hasAvailableDevices(state, 'audioInput')
-          && !hasAvailableDevices(state, 'audioOutput'))
-          || state['features/base/config'].startSilent;
+        && !hasAvailableDevices(state, 'audioOutput'))
+        || state['features/base/config'].startSilent;
 }
 
 /**
@@ -157,12 +93,12 @@ export async function markInterestingMoment(participantId: String, roomId: Strin
     try {
         const time = new Date().toISOString();
         const meetings = await app.service('meetings')
-                .find({
-                    query: {
-                        active: true,
-                        room: roomId
-                    }
-                });
+            .find({
+                query: {
+                    active: true,
+                    room: roomId
+                }
+            });
 
         const meetingId = meetings[0]._id;
 
