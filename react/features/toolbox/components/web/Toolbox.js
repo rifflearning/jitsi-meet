@@ -76,11 +76,8 @@ import {
     setFullScreen,
     setOverflowMenuVisible,
     setToolbarHovered,
-    showToolbox,
-    showInterestingMomentMarkedNotification
+    showToolbox
 } from '../../actions';
-import { isToolboxVisible } from '../../functions';
-import { markInterestingMoment } from '../../functions.web';
 import { THRESHOLDS, NOT_APPLICABLE } from '../../constants';
 import { isToolboxVisible } from '../../functions';
 import DownloadButton from '../DownloadButton';
@@ -91,6 +88,7 @@ import MuteEveryonesVideoButton from '../MuteEveryonesVideoButton';
 
 import AudioSettingsButton from './AudioSettingsButton';
 import FullscreenButton from './FullscreenButton';
+import MarkInterestingMomentButton from './MarkInterestingMomentButton';
 import OverflowMenuButton from './OverflowMenuButton';
 import ProfileButton from './ProfileButton';
 import RaiseHandButton from './RaiseHandButton';
@@ -241,16 +239,6 @@ type Props = {
      */
     _isAnonymousUser: Boolean,
 
-    /*
-     * ID of room
-     */
-    _roomId: String,
-
-    /*
-     * Id of the current user
-     */
-    _participantId: String,
-
     /**
      * If the dominant speaker name should be displayed or not.
      */
@@ -312,7 +300,6 @@ class Toolbox extends Component<Props, State> {
         this._onToolbarToggleRaiseHand = this._onToolbarToggleRaiseHand.bind(this);
         this._onToolbarToggleScreenshare = this._onToolbarToggleScreenshare.bind(this);
         this._onShortcutToggleTileView = this._onShortcutToggleTileView.bind(this);
-        this._onToolbarClickInterestingMoment = this._onToolbarClickInterestingMoment.bind(this);
         this._onEscKey = this._onEscKey.bind(this);
     }
 
@@ -461,7 +448,7 @@ class Toolbox extends Component<Props, State> {
      * @returns {void}
      */
     componentWillUnmount() {
-        ['A', 'C', 'D', 'R', 'S'].forEach(letter =>
+        [ 'A', 'C', 'D', 'R', 'S' ].forEach(letter =>
             APP.keyboardshortcut.unregisterShortcut(letter));
 
         if (this.props._reactionsEnabled && this.state.reactionsShortcutsRegistered) {
@@ -479,12 +466,13 @@ class Toolbox extends Component<Props, State> {
      */
     render() {
         const { _chatOpen, _visible, _toolbarButtons } = this.props;
+        // eslint-disable-next-line max-len
         const rootClassNames = `new-toolbox ${_visible ? 'visible' : ''} ${_toolbarButtons.length ? '' : 'no-buttons'} ${_chatOpen ? 'shift-right' : ''}`;
 
         return (
             <div
-                className={rootClassNames}
-                id='new-toolbox'>
+                className = { rootClassNames }
+                id = 'new-toolbox'>
                 {this._renderToolboxContent()}
             </div>
         );
@@ -834,6 +822,12 @@ class Toolbox extends Component<Props, State> {
             group: 2
         };
 
+        const markInterestingMoment = {
+            key: 'markmoment',
+            Content: MarkInterestingMomentButton,
+            group: 2
+        };
+
         return {
             microphone,
             camera,
@@ -841,6 +835,7 @@ class Toolbox extends Component<Props, State> {
             desktop,
             chat,
             raisehand,
+            markInterestingMoment,
             participants,
             invite,
             tileview,
@@ -1186,19 +1181,6 @@ class Toolbox extends Component<Props, State> {
         this._doToggleRaiseHand();
     }
 
-    _onToolbarClickInterestingMoment: () => void;
-
-    /**
-     * Marks current moment of conversation as interesting.
-     *
-     * @private
-     * @returns {void}
-     */
-    _onToolbarClickInterestingMoment() {
-        this.props.dispatch(showInterestingMomentMarkedNotification());
-        markInterestingMoment(this.props._participantId, this.props._roomId);
-    }
-
     _onToolbarToggleScreenshare: () => void;
 
     /**
@@ -1287,59 +1269,59 @@ class Toolbox extends Component<Props, State> {
         const { mainMenuButtons, overflowMenuButtons } = this._getVisibleButtons();
 
         return (
-            <div className={containerClassName}>
+            <div className = { containerClassName }>
                 <div
-                    className='toolbox-content-wrapper'
-                    onFocus={this._onTabIn}
-                    {...(_isMobile ? {} : {
+                    className = 'toolbox-content-wrapper'
+                    onFocus = { this._onTabIn }
+                    { ...(_isMobile ? {} : {
                         onMouseOut: this._onMouseOut,
                         onMouseOver: this._onMouseOver
-                    })}>
+                    }) }>
 
                     {showDominantSpeakerName && <DominantSpeakerName />}
 
-                    <div className='toolbox-content-items'>
+                    <div className = 'toolbox-content-items'>
                         {mainMenuButtons.map(({ Content, key, ...rest }) => Content !== Separator && (
                             <Content
-                                {...rest}
-                                key={key} />))}
+                                { ...rest }
+                                key = { key } />))}
 
                         {Boolean(overflowMenuButtons.length) && (
                             <OverflowMenuButton
-                                ariaControls='overflow-menu'
-                                isOpen={_overflowMenuVisible}
-                                key='overflow-menu'
-                                onVisibilityChange={this._onSetOverflowVisible}
-                                showMobileReactions={
+                                ariaControls = 'overflow-menu'
+                                isOpen = { _overflowMenuVisible }
+                                key = 'overflow-menu'
+                                onVisibilityChange = { this._onSetOverflowVisible }
+                                showMobileReactions = {
                                     _reactionsEnabled && overflowMenuButtons.find(({ key }) => key === 'raisehand')
                                 }>
                                 <ul
-                                    aria-label={t(toolbarAccLabel)}
-                                    className='overflow-menu'
-                                    id='overflow-menu'
-                                    onKeyDown={this._onEscKey}
-                                    role='menu'>
+                                    aria-label = { t(toolbarAccLabel) }
+                                    className = 'overflow-menu'
+                                    id = 'overflow-menu'
+                                    onKeyDown = { this._onEscKey }
+                                    role = 'menu'>
                                     {overflowMenuButtons.map(({ group, key, Content, ...rest }, index, arr) => {
                                         const showSeparator = index > 0 && arr[index - 1].group !== group;
 
                                         return (key !== 'raisehand' || !_reactionsEnabled)
-                                            && <Fragment key={`f${key}`}>
-                                                {showSeparator && <Separator key={`hr${group}`} />}
+                                            && <Fragment key = { `f${key}` }>
+                                                {showSeparator && <Separator key = { `hr${group}` } />}
                                                 <Content
-                                                    {...rest}
-                                                    key={key}
-                                                    showLabel={true} />
+                                                    { ...rest }
+                                                    key = { key }
+                                                    showLabel = { true } />
                                             </Fragment>
-                                            ;
+                                        ;
                                     })}
                                 </ul>
                             </OverflowMenuButton>
                         )}
 
                         <HangupButton
-                            customClass='hangup-button'
-                            key='hangup-button'
-                            visible={isToolbarButtonEnabled('hangup', _toolbarButtons)} />
+                            customClass = 'hangup-button'
+                            key = 'hangup-button'
+                            visible = { isToolbarButtonEnabled('hangup', _toolbarButtons) } />
                     </div>
                 </div>
             </div>
@@ -1395,8 +1377,6 @@ function _mapStateToProps(state, ownProps) {
         _backgroundType: state['features/virtual-background'].backgroundType,
         _chatOpen: state['features/chat'].isOpen,
         _isAnonymousUser: state['features/riff-platform'].signIn.user.isAnon,
-        _roomId: state['features/riff-platform'].meeting.meeting.roomId,
-        _participantId: state['features/riff-platform'].signIn.user.uid,
         _clientWidth: clientWidth,
         _conference: conference,
         _desktopSharingEnabled: desktopSharingEnabled,
