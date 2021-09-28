@@ -170,12 +170,12 @@ body > .tooltip {
 
     #preview {
         align-items: flex-start;
-        padding-top: 100px;
 
         .avatar {
             height: 90px !important;
             width: 90px !important;
             background: $primaryButtonBackground;
+            margin-top: 100px;
         }
     }
 }
