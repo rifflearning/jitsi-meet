@@ -2,9 +2,14 @@
 /* eslint-disable curly */
 /* eslint-disable require-jsdoc */
 
+import moment from 'moment';
+
+import { showNotification } from '../../notifications';
 import api from '../api';
 import * as actionTypes from '../constants/actionTypes';
 import * as errorTypes from '../constants/errorTypes';
+import { app } from '../libs/riffdata-client';
+
 
 function meetingRequest() {
     return {
@@ -118,6 +123,36 @@ export function checkIsMeetingAllowed(meetingId) {
         }
     };
 }
+
+export function markInterestingMoment(participantId, roomId) {
+    return async dispatch => {
+        try {
+            const meetings = await app.service('meetings')
+                .find({
+                    query: {
+                        active: true,
+                        room: roomId
+                    }
+                });
+
+            const meetingId = meetings[0]._id;
+            const time = moment().toISOString();
+
+            await app.service('moments').create({
+                meetingId,
+                participantId,
+                time
+            });
+
+            dispatch(showNotification({
+                title: 'Moment was marked as interesting'
+            }));
+        } catch (error) {
+            console.log('Error in markInterestingMoment', error);
+        }
+    };
+}
+
 
 // externalize check functions
 

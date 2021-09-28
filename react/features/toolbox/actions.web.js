@@ -2,8 +2,6 @@
 
 import type { Dispatch } from 'redux';
 
-import { showNotification } from '../notifications';
-
 import {
     FULL_SCREEN_CHANGED,
     SET_FULL_SCREEN,
@@ -164,18 +162,5 @@ export function setOverflowDrawer(displayAsDrawer: boolean) {
     return {
         type: SET_OVERFLOW_DRAWER,
         displayAsDrawer
-    };
-}
-
-/**
- * Signals that moment was successfully marked as interesting.
- *
- * @returns {Function}
- */
-export function showInterestingMomentMarkedNotification(): Function {
-    return (dispatch: Dispatch<any>) => {
-        dispatch(showNotification({
-            title: 'Moment was marked as interesting'
-        }, 5000));
     };
 }

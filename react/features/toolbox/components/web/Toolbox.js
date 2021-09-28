@@ -50,6 +50,7 @@ import {
 } from '../../../recording';
 import MeetingMediatorButton from '../../../riff-platform/components/DraggableMeetingMediator/MeetingMediatorButton';
 import RiffLocalRecordingButton from '../../../riff-platform/components/LocalRecorder/LocalRecordingButton';
+import MarkInterestingMomentButton from '../../../riff-platform/components/MarkInterestingMomentButton';
 import {
     isScreenAudioSupported,
     isScreenVideoShared,
@@ -88,7 +89,6 @@ import MuteEveryonesVideoButton from '../MuteEveryonesVideoButton';
 
 import AudioSettingsButton from './AudioSettingsButton';
 import FullscreenButton from './FullscreenButton';
-import MarkInterestingMomentButton from './MarkInterestingMomentButton';
 import OverflowMenuButton from './OverflowMenuButton';
 import ProfileButton from './ProfileButton';
 import RaiseHandButton from './RaiseHandButton';
@@ -1376,8 +1376,8 @@ function _mapStateToProps(state, ownProps) {
     return {
         _backgroundType: state['features/virtual-background'].backgroundType,
         _chatOpen: state['features/chat'].isOpen,
-        _isAnonymousUser: state['features/riff-platform'].signIn.user.isAnon,
         _clientWidth: clientWidth,
+        _isAnonymousUser: state['features/riff-platform'].signIn.user.isAnon,
         _conference: conference,
         _desktopSharingEnabled: desktopSharingEnabled,
         _desktopSharingDisabledTooltipKey: desktopSharingDisabledTooltipKey,

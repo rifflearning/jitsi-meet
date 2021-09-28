@@ -2,7 +2,6 @@
 
 import { getToolbarButtons } from '../base/config';
 import { hasAvailableDevices } from '../base/devices';
-import { app } from '../riff-platform/libs/riffdata-client';
 
 /**
  * Helper for getting the height of the toolbox.
@@ -80,34 +79,4 @@ export function isVideoSettingsButtonDisabled(state: Object) {
  */
 export function isVideoMuteButtonDisabled(state: Object) {
     return !hasAvailableDevices(state, 'videoInput');
-}
-
-/**
- * Marks moment as interesting.
- *
- * @param {string} participantId - Id of the current user.
- * @param {string} roomId - Id of the room.
- * @returns {(function(*, *): Promise<{error: *}|undefined>)|*}
- */
-export async function markInterestingMoment(participantId: String, roomId: String) {
-    try {
-        const time = new Date().toISOString();
-        const meetings = await app.service('meetings')
-            .find({
-                query: {
-                    active: true,
-                    room: roomId
-                }
-            });
-
-        const meetingId = meetings[0]._id;
-
-        await app.service('moments').create({
-            meetingId,
-            participantId,
-            time
-        });
-    } catch (error) {
-        return { error };
-    }
 }
