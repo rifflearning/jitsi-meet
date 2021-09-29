@@ -272,3 +272,55 @@ body > .tooltip {
         max-width: 80%;
     }
 }
+
+.poll-primary-button, .poll-small-primary-button {
+    background: $primaryButtonBackground;
+    color: #ffffff;
+
+    &:hover {
+        background: $primaryButtonHoverBackground;
+    }
+
+    &:active {
+        background-color: $violetColor;
+    }
+
+    &:focus {
+        background-color: $violetColor;
+        border: 3px solid $riffViolet;
+    }
+    &:disabled {
+        background-color: $riffVioletDark;
+    }
+}
+.poll-result-links {
+    > a {
+        color: $riffViolet !important;
+    }
+}
+
+.poll-bar {
+    background-color: $riffViolet;
+}
+
+input[type="checkbox"]:checked + svg {
+    --checkbox-background-color: #775e80;
+    --checkbox-border-color: #93759e;
+}
+
+input[type="checkbox"] + svg {
+    --checkbox-background-color: #775e80;
+    --checkbox-border-color: #93759e;
+    --local-background: #6F5678;
+    --local-background-hover: #4f3f56;
+    --local-background-active: #7b5f85;
+    --local-background-checked: #775e80;
+    --local-background-checked-hover: #bda0c9;
+    --local-background-disabled: #909090;
+    --local-border-disabled: #504d4d;
+    --local-border-checked: #93759e;
+    --local-border-active: #93759e;
+    --local-border-focus: #93759e;
+    --local-border-hover: #bc96ca;
+    --local-border-checked-hover: #93759e;
+}
