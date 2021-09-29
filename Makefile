@@ -52,6 +52,9 @@ compile-load-test:
 clean:
 	rm -fr $(BUILD_DIR)
 
+lint: ## Run eslint and flow checks using npm run lint
+	$(NPM) run lint
+
 .NOTPARALLEL:
 deploy: deploy-init deploy-appbundle deploy-rnnoise-binary deploy-tflite deploy-meet-models deploy-lib-jitsi-meet deploy-libflac deploy-olm deploy-css deploy-local
 
@@ -130,6 +133,10 @@ deploy-aws: GIT_USER := ${shell git config --get user.name}
 deploy-aws: dev-package
 	scp -i $(PEM_PATH) rifflearning-jitsi-meet-dev.tar.bz2 $(AWS_NAME):/home/ubuntu/tmp
 	ssh -i $(PEM_PATH) $(AWS_NAME) 'bin/install-riff-jitsi.sh tmp/rifflearning-jitsi-meet-dev.tar.bz2 "$(GIT_USER)"'
+
+bump-dev-version: ## Increment the development version in package.json and package-lock.json
+	$(NPM) version prerelease
+	git tag -d $$(git tag --points-at HEAD)
 
 .NOTPARALLEL:
 dev: deploy-init deploy-css deploy-rnnoise-binary deploy-lib-jitsi-meet deploy-meet-models deploy-libflac deploy-olm deploy-tflite
