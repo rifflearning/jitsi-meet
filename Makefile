@@ -167,29 +167,8 @@ dev-package:
 	$(MAKE) all source-package ENV=custom
 	mv --backup rifflearning-jitsi-meet-$(PKG_VERSION)-custom.tar.bz2 rifflearning-jitsi-meet-dev.tar.bz2
 
-api-gateway-package: ## create package using api-gateway env settings (users and their meetings are handled by the api-gateway)
-	ln -fs env-api-gateway .env
-	$(MAKE) all source-package ENV=api-gateway
-
-api-gateway-exp-metrics-package: ## create package using api-gateway-exp-metrics env settings (users and their meetings are handled by the api-gateway and experimental metrics tab is available)
-	ln -fs env-api-gateway-exp-metrics .env
-	$(MAKE) all source-package ENV=api-gateway-exp-metrics
-
-api-gateway-no-mm-package: ## create package using api-gateway-no-mm env settings (hide meeting mediator)
-	ln -fs env-api-gateway-no-mm .env
-	$(MAKE) all source-package ENV=api-gateway-no-mm
-
-embedded-package: ## create package using embedded env settings (used by riffedu)
-	ln -fs env-embedded .env
-	$(MAKE) all source-package ENV=embedded
-
-group-package: ## create package using group env settings
-	ln -fs env-group .env
-	$(MAKE) all source-package ENV=group
-
-discovery-package: ## create package using discovery env settings (volume capture)
-	ln -fs env-discovery .env
-	$(MAKE) all source-package ENV=discovery
+prod-package:
+	$(MAKE) all source-package ENV=prod
 
 # Help documentation à la https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 # if you want the help sorted rather than in the order of occurrence, pipe the grep to sort and pipe that to awk

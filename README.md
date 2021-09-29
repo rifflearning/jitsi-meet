@@ -21,82 +21,44 @@ git checkout develop
 npm install
 ```
 
-Create `.env` file in root dir (*ask colleagues for the `.env`*):
+Ensure you have a value set for your git user name (`git config --get user.name` should return your name)
+
+Create `.env` file in root dir:
 
 ```
-### Uncomment variables for specific instance deployment:
 ## Local development:
-WEBPACK_DEV_SERVER_PROXY_TARGET=https://dev-jitsi.riffplatform.com
-RIFF_SERVER_URL=https://dev-jitsi.riffplatform.com
-API_GATEWAY=https://dev-jitsi.riffplatform.com/api-gateway
-# for local api-gateway:
-# API_GATEWAY=https://localhost:4445/api
+## This is the backend that will be used when developing locally
+WEBPACK_DEV_SERVER_PROXY_TARGET=https://example.riffplatform.com
 
-
-
-### Deployment common variables:
-# PEM_PATH=~/.ssh/riffdev_1_useast2_key.pem
-# RIFF_SERVER_URL=/
-# API_GATEWAY=/api-gateway
-# HIDE_MEETING_MEDIATOR_BY_DEFAULT_FOR_ANON_USER=true
-
-### Deployment specific variables:
-## dev-jitsi (DEV):
-# AWS_NAME=ubuntu@dev-jitsi.riffplatform.com
-# DISABLE_GROUPS=true
-# SEND_SIBILANT_VOLUMES_TO_RIFF_DATA_SERVER=true
-
-## rif-poc:
-# AWS_NAME=ubuntu@riff-poc.riffplatform.com
-
-## hls-negotiations:
-# AWS_NAME=ubuntu@hls-negotiations.riffremote.com
-# DISABLE_EMOTIONS_CHART=true
-
-## nd-negotiations:
-# AWS_NAME=ubuntu@nd-negotiations.riffremote.com
-# DISABLE_EMOTIONS_CHART=true
-
-## pega:
-# AWS_NAME=ubuntu@pega.riffremote.com
-# DISABLE_EMOTIONS_CHART=true
-# DISABLE_GROUPS=true
-
-## staging.riffedu (DEV):
-# AWS_NAME=ubuntu@meet.staging.riffedu.com
-# MATTERMOST_EMBEDDED_ONLY=true
-
-## said-oxford.riffedu:
-# AWS_NAME=ubuntu@meet.said-oxford.riffedu.com
-# PEM_PATH=~/.ssh/riffdev_1_euwest2_key.pem
-# MATTERMOST_EMBEDDED_ONLY=true
-
-
-
-### Avaliable optional features flags:
-# ENABLE_CALENDAR_INTEGRATION=true # enables calendar integration and depends on GOOGLE_API_APP_CLIENT_ID and MICROSOFT_API_APP_CLIENT_ID
-# GOOGLE_API_APP_CLIENT_ID=xxxxx.apps.googleusercontent.com # google api Client ID 
-# MICROSOFT_API_APP_CLIENT_ID=00000000-0000-0000-0000-000000000000 # microsoft api Client ID
-# ENABLE_EXPERIMENTAL_METRICS=true
-# DISABLE_GROUPS=true
-# DISABLE_EMOTIONS_CHART=true
-# MATTERMOST_EMBEDDED_ONLY=true # disables auth, enables "Meeting ended" page instead of admin panel
-# SEND_SIBILANT_VOLUMES_TO_RIFF_DATA_SERVER=true # sends utterance obj with additional field 'volumes', for data analysis purposes only
-# HIDE_MEETING_MEDIATOR_BY_DEFAULT=true
-# HIDE_MEETING_MEDIATOR_BY_DEFAULT_FOR_ANON_USER=true
 ```
 
-Run dev server:
+Run the webpack dev server:
 
 ```
 make dev
 ```
+
+This will capture your local changes while using the backend you've specified in your .env file
+
+## Riff Specific Configuration
+
+Configuration that is specific to Riff lives in `riff_config.js`. When you are developing locally,
+you should note that the changes you make to the `riff_config.js` will not be reflected in the webpack dev
+server. If you wish to test changes or additions to the `riff_config.js` file, you can add them as special URL parameters in the format:
+`<urlBase>/any/path/#riffConfig.example.enableSomeThing=true&riffConfig.example.someValue=test`
+Note the use of `#` - jitsi has a special handler that interprets all of the parameters after the `#` as config overrides.
+For example, if you wish to enable experimental metrics:
+`https://0.0.0.0:8080/#riffConfig.metrics.showExperimentalMetrics=true`
+
+Note that this requires the riff_config.js file that is on the server you are using
+as your backend to have the `window.riffConfig = riffConfig` line uncommented at the bottom.
+
 ---
 ## Customization and deployment to AWS
 
 ### Deployment to Riff AWS development test instance
 
-The instance should have been created and initialized as a Riff production riffremote site.
+The instance should have been created and initialized as a Riff production riffremote or riffplatform site.
 
 You will need to have the ssh key for that instance. For example you may have the ssh key
 stored locally on your machine as `~/.ssh/riffdev_1_useast2_key.pem`.
@@ -107,12 +69,13 @@ you alway use the `ubuntu` user to connect to those instances.
 You will need the following 2 definitions in the `.env` file:
 
 ```
-AWS_NAME=ubuntu@dev-jitsi.riffplatform.com
+AWS_NAME=ubuntu@example.riffplatform.com
 PEM_PATH=~/.ssh/riffdev_1_useast2_key.pem
 ```
 
 These are example values. The example for `AWS_NAME` assumes that you are using the known DNS
-name for the instance, in this case `dev-jitsi.riffplatform.com`. And the value of `PEM_PATH`
+name for the instance, ex. `example.riffplatform.com`. You should replace the value with wherever you
+are planning to deploy to. And the value of `PEM_PATH`
 is to the ssh key discussed as an example above.
 
 It is recommended that you actually put these values in the file `env-dev` and make `.env` link to
@@ -150,16 +113,7 @@ In order to customize *jitsi-meet* with riff theme, all features and set up a ne
     ```
     ### Deployment common variables:
     PEM_PATH=~/.ssh/riffdev_1_useast2_key.pem
-    RIFF_SERVER_URL=/
-    API_GATEWAY=/api-gateway
-    HIDE_MEETING_MEDIATOR_BY_DEFAULT_FOR_ANON_USER=true
-
-    ### Deployment specific variables:
-
-    ## dev-jitsi (DEV):
     AWS_NAME=ubuntu@dev-jitsi.riffplatform.com
-    DISABLE_GROUPS=true
-    SEND_SIBILANT_VOLUMES_TO_RIFF_DATA_SERVER=true
     ```
     Build and deploy with:
     ```
