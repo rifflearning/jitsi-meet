@@ -5,11 +5,14 @@
 import { Grid, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
+import { useHistory } from 'react-router';
 import { useParams } from 'react-router-dom';
 
 import { connect } from '../../../base/redux';
 import { getMeetingById, meetingReset } from '../../actions/meeting';
+import * as ROUTES from '../../constants/routes';
 import Loader from '../Loader';
+import EditPesonalMeeting from '../PersonalMeetingRoom/EditPersonalMeeting';
 import SchedulerForm from '../Scheduler/SchedulerForm';
 import StyledPaper from '../StyledPaper';
 
@@ -24,6 +27,7 @@ const EditMeeting = ({ resetMeeting, fetchMeetingById, meetingError, meetingLoad
     useEffect(() => () => resetMeeting(), []);
 
     const { meetingId } = useParams();
+    const history = useHistory();
 
     useEffect(() => {
         fetchMeetingById(meetingId);
@@ -37,6 +41,8 @@ const EditMeeting = ({ resetMeeting, fetchMeetingById, meetingError, meetingLoad
         return <Loader />;
     }
 
+    const onSuccessEdit = () => history.push(`${ROUTES.MEETINGS}/${meetingId}`);
+
     return (
         <Grid
             container = { true }
@@ -44,11 +50,19 @@ const EditMeeting = ({ resetMeeting, fetchMeetingById, meetingError, meetingLoad
             <Grid
                 item = { true }
                 xs = { 12 }>
-                <StyledPaper title = 'Edit a meeting'>
-                    <SchedulerForm
-                        isEditing = { true }
-                        meeting = { meeting } />
-                </StyledPaper>
+                {meeting?.isPersonal
+                    ? <StyledPaper title = 'Edit Personal Meeting Room'>
+                        <EditPesonalMeeting
+                            meeting = { meeting }
+                            onCancelEdit = { onSuccessEdit }
+                            onSuccessEdit = { onSuccessEdit } />
+                    </StyledPaper>
+                    : <StyledPaper title = 'Edit a meeting'>
+                        <SchedulerForm
+                            isEditing = { true }
+                            meeting = { meeting } />
+                    </StyledPaper>
+                }
             </Grid>
         </Grid>
     );

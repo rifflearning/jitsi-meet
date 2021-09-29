@@ -3,7 +3,6 @@ import api from '../api';
 import * as actionTypes from '../constants/actionTypes';
 import * as LIST_TYPES from '../constants/meetingsListTypes';
 
-
 function personalMeetingRequest() {
     return {
         type: actionTypes.PERSONAL_MEETING_REQUEST
@@ -44,5 +43,87 @@ export function getUserPersonalMeetingRoom() {
         }
 
         return meeting;
+    };
+}
+
+function createPersonalMeetingRequest() {
+    return {
+        type: actionTypes.CREATE_PERSONAL_MEETING_REQUEST
+    };
+}
+
+function createPersonalMeetingSuccess(meeting) {
+    return {
+        type: actionTypes.CREATE_PERSONAL_MEETING_SUCCESS,
+        meeting
+    };
+}
+
+function createPersonalMeetingFailure(error) {
+    return {
+        type: actionTypes.CREATE_PERSONAL_MEETING_FAILURE,
+        error
+    };
+}
+
+export function createPersonalMeetingRoom(meeting, callback) {
+    return async dispatch => {
+        dispatch(createPersonalMeetingRequest());
+
+        try {
+            const res = await api.scheduleMeeting(meeting);
+
+            dispatch(createPersonalMeetingSuccess(res));
+            if (callback) {
+
+                callback();
+            }
+        } catch (e) {
+            dispatch(createPersonalMeetingFailure(e.message));
+        }
+    };
+}
+
+function updatePersonalMeetingRequest() {
+    return {
+        type: actionTypes.UPDATE_PERSONAL_MEETING_REQUEST
+    };
+}
+
+function updatePersonalMeetingSuccess(meeting) {
+    return {
+        type: actionTypes.UPDATE_PERSONAL_MEETING_SUCCESS,
+        meeting
+    };
+}
+
+function updatePersonalMeetingFailure(error) {
+    return {
+        type: actionTypes.UPDATE_PERSONAL_MEETING_FAILURE,
+        error
+    };
+}
+
+export function updatePersonalMeetingRoom(id, meeting, callback) {
+    return async dispatch => {
+        dispatch(updatePersonalMeetingRequest());
+
+        try {
+            const res = await api.updateMeeting(id, meeting);
+
+            dispatch(updatePersonalMeetingSuccess(res));
+            if (callback) {
+
+                callback();
+            }
+        } catch (e) {
+            dispatch(updatePersonalMeetingFailure(e.message));
+        }
+    };
+}
+
+export function personalMeetingReset() {
+    return {
+        type: actionTypes.PERSONAL_MEETING_RESET
     };
 }

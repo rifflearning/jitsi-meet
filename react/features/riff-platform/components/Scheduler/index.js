@@ -12,7 +12,7 @@ const Scheduler = () => (
         <Grid
             item = { true }
             xs = { 12 }>
-            <StyledPaper title = 'Schedule a meeting'>
+            <StyledPaper>
                 <SchedulerForm />
             </StyledPaper>
         </Grid>

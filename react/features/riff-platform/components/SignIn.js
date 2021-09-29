@@ -4,7 +4,10 @@
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
 import Container from '@material-ui/core/Container';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -17,7 +20,7 @@ import { Link as LinkTo, useHistory } from 'react-router-dom';
 import { connect } from '../../base/redux';
 import { signIn } from '../actions/signIn';
 import * as ROUTES from '../constants/routes';
-
+import { trustThisComputer } from '../functions';
 
 const useStyles = makeStyles(theme => {
     return {
@@ -48,9 +51,11 @@ const SignIn = ({ doLogin, loginError, loggingIn }) => {
     const [ emailError, setEmailError ] = useState('');
     const [ password, setPassword ] = useState('');
     const [ passwordError, setPasswordError ] = useState('');
+    const [ trustComputer, setTrustComputer ] = useState(true);
 
     const onChangeEmail = e => setEmail(e.target.value);
     const onChangePassword = e => setPassword(e.target.value);
+    const onChangeTrustComputer = e => setTrustComputer(e.target.checked);
 
     const isEmailValid = () => Boolean(email.length);
     const isPasswordValid = () => Boolean(password.length);
@@ -79,6 +84,9 @@ const SignIn = ({ doLogin, loginError, loggingIn }) => {
         if (!isFormValid()) {
             return;
         }
+
+        // mark computer/browser as trusted
+        trustThisComputer.set(trustComputer);
 
         doLogin({
             email,
@@ -135,6 +143,21 @@ const SignIn = ({ doLogin, loginError, loggingIn }) => {
                         onChange = { onChangePassword }
                         error = { Boolean(passwordError) }
                         helperText = { passwordError } />
+                    <Grid
+                        item
+                        xs = { 12 }>
+                        <FormControl
+                            component = 'fieldset'
+                            className = { classes.formControl }>
+                            <FormControlLabel
+                                control = { <Checkbox
+                                    checked = { trustComputer }
+                                    color = 'primary'
+                                    onChange = { onChangeTrustComputer }
+                                    value = 'trustComputer' /> }
+                                label = 'Trust this computer' />
+                        </FormControl>
+                    </Grid>
                     <Button
                         type = 'submit'
                         fullWidth

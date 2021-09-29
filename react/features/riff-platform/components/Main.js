@@ -21,6 +21,7 @@ import * as actionTypes from '../constants/actionTypes';
 import * as ROUTES from '../constants/routes';
 import { app as riffdataApp } from '../libs/riffdata-client';
 
+import CreateMeeting from './CreateMeeting';
 import Dashboard from './Dashboard';
 import EditMeeting from './EditMeeting';
 import ExperimentalDashboard from './ExperimentalDashboard';
@@ -31,7 +32,6 @@ import MeetingEndedPage from './MeetingEndedPage';
 import AllMeetings from './Meetings';
 import Profile from './Profile';
 import ResetPassword from './ResetPassword';
-import Scheduler from './Scheduler';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import Verify from './Verify';
@@ -142,8 +142,8 @@ class Main extends React.Component {
                     // eslint-disable-next-line react/jsx-no-bind
                     component = { () => <AllMeetings isGroup = { true } /> } />
                 }
-                <Route path = { ROUTES.SCHEDULE } >
-                    <Scheduler />
+                <Route path = { ROUTES.CREATE } >
+                    <CreateMeeting />
                 </Route>
                 <Redirect to = { ROUTES.PROFILE } />
             </Switch>

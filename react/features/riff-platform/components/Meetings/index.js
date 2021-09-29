@@ -2,9 +2,10 @@
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable react/jsx-no-bind */
 
-import { Button, Grid, Box, makeStyles } from '@material-ui/core';
+import { IconButton, Grid, Box, makeStyles } from '@material-ui/core';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
+import AddIcon from '@material-ui/icons/Add';
 import PropTypes from 'prop-types';
 import React, { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router';
@@ -15,14 +16,21 @@ import * as ROUTES from '../../constants/routes';
 import { groupMeetingsByDays } from '../../functions';
 import Loader from '../Loader';
 import StyledPaper from '../StyledPaper';
+import TabPanel from '../TabPanel';
 
-import MeetingTabPanel from './MeetingTabPanel';
 import MeetingsTable from './MeetingsTable';
 
 const useStyles = makeStyles(() => {
     return {
         tab: {
             color: '#ffffff'
+        },
+        addButton: {
+            backgroundColor: '#93759e',
+            boxShadow: '0px 2px 4px -1px rgb(0 0 0 / 20%)',
+            '&:hover': {
+                backgroundColor: 'rgb(102, 81, 110)'
+            }
         }
     };
 });
@@ -72,7 +80,7 @@ function Meetings({
 
     const classes = useStyles();
     const history = useHistory();
-    const handleScheduleClick = useCallback(() => history.push(ROUTES.SCHEDULE), [ history ]);
+    const handleScheduleClick = useCallback(() => history.push(ROUTES.CREATE), [ history ]);
 
     useEffect(() => {
         if (isGroup) {
@@ -85,7 +93,7 @@ function Meetings({
     const groupedMeetings = groupMeetingsByDays(meetingsLists);
 
     // eslint-disable-next-line max-len
-    const noMeetingDataText = `There are no ${meetingsListType} meetings. To schedule a new meeting click SCHEDULE A MEETING`;
+    const noMeetingDataText = `There are no ${meetingsListType} meetings. To create a new meeting click CREATE A MEETING`;
 
     const meetingsTabContent = Object.keys(groupedMeetings).length
         ? (<MeetingsList
@@ -123,12 +131,12 @@ function Meetings({
                         </Box>
                     </Grid>
                     <Grid item = { true }>
-                        <Button
-                            color = 'primary'
-                            onClick = { handleScheduleClick }
-                            variant = 'outlined'>
-                        Schedule a meeting
-                        </Button>
+                        <IconButton
+                            className = { classes.addButton }
+                            color = 'default'
+                            onClick = { handleScheduleClick }>
+                            <AddIcon />
+                        </IconButton>
                     </Grid>
                 </Grid>
                 {loading
@@ -138,16 +146,16 @@ function Meetings({
                         item = { true }
                         justify = 'center'
                         xs = { 12 }>
-                        <MeetingTabPanel
+                        <TabPanel
                             index = { 0 }
                             value = { meetingListTypeMap[meetingsListType] }>
                             { meetingsTabContent }
-                        </MeetingTabPanel>
-                        <MeetingTabPanel
+                        </TabPanel>
+                        <TabPanel
                             index = { 1 }
                             value = { meetingListTypeMap[meetingsListType] }>
                             { meetingsTabContent }
-                        </MeetingTabPanel>
+                        </TabPanel>
                     </Grid>}
             </Grid>
         </Grid>
