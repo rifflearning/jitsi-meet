@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { getLocalParticipant } from '../../../base/participants';
 import { withPixelLineHeight } from '../../../base/styles/functions.web';
 import { getLargeVideoParticipant } from '../../../large-video/functions';
+import { maybeExtractIdFromDisplayName } from '../../../riff-platform/functions';
 import { isToolboxVisible } from '../../../toolbox/functions.web';
 import { isLayoutTileView } from '../../../video-layout';
 
@@ -36,7 +37,7 @@ const useStyles = makeStyles(theme => {
 const DominantSpeakerName = () => {
     const classes = useStyles();
     const largeVideoParticipant = useSelector(getLargeVideoParticipant);
-    const nameToDisplay = largeVideoParticipant?.name;
+    const nameToDisplay = maybeExtractIdFromDisplayName(largeVideoParticipant?.name).displayName;
     const selectedId = largeVideoParticipant?.id;
 
     const localParticipant = useSelector(getLocalParticipant);
