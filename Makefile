@@ -161,13 +161,13 @@ source-package-version: source-package-files
 		-e 's/\(do_external_connect\.min\.js\)?v=[0-9]\+/\1?v='$(SHASUM_DO_EXTERNAL_CONNECT)'/' \
 		--in-place index.html
 
-dev-package: ## create package using working dir code and existing env settings for development deployment
+dev-package: ## create package using working dir code for development deployment
 dev-package: PKG_VERSION := ${shell sed -nE 's/^\s*\"version\": \"([^\"]+)\",$$/\1/p' package.json}
 dev-package:
 	$(MAKE) all source-package ENV=custom
 	mv --backup rifflearning-jitsi-meet-$(PKG_VERSION)-custom.tar.bz2 rifflearning-jitsi-meet-dev.tar.bz2
 
-prod-package:
+prod-package: ## create package using working dir code for production deployment
 	$(MAKE) all source-package ENV=prod
 
 # Help documentation à la https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
