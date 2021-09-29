@@ -46,6 +46,7 @@ $menuBG:#242528;
 $newToolbarFontSize: 24px;
 $newToolbarHangupFontSize: 32px;
 $newToolbarSize: 48px;
+$newToolbarSizeMobile: 60px;
 $newToolbarSizeWithPadding: calc(#{$newToolbarSize} + 24px);
 $toolbarTitleFontSize: 19px;
 $overflowMenuItemColor: #fff;
@@ -263,3 +264,9 @@ $chromeExtensionBannerRightInMeeeting: 10px;
 */
 $smallScreen: 700px;
 $verySmallScreen: 500px;
+
+/**
+* Prejoin / premeeting screen
+*/
+
+$prejoinDefaultContentWidth: 336px;

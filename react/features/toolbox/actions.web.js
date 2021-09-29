@@ -14,6 +14,7 @@ import {
     setToolboxVisible
 } from './actions.native';
 
+
 declare var interfaceConfig: Object;
 
 export * from './actions.native';
@@ -83,10 +84,13 @@ export function hideToolbox(force: boolean = false): Function {
 
         dispatch(clearToolboxTimeout());
 
+        const focusSelector = '.toolbox-content-items:focus-within,.filmstrip:focus-within,.remotevideomenu:hover';
+
         if (!force
                 && (hovered
                     || state['features/invite'].calleeInfoVisible
-                    || state['features/chat'].isOpen)) {
+                    || state['features/chat'].isOpen
+                    || document.querySelector(focusSelector))) {
             dispatch(
                 setToolboxTimeout(
                     () => dispatch(hideToolbox()),
