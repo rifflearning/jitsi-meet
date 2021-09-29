@@ -2,6 +2,7 @@
 
 import _ from 'lodash';
 
+import { participantLeaveRoom } from '../../../features/riff-platform/actions/sibilantActions';
 import { createToolbarEvent, sendAnalytics } from '../../analytics';
 import { appNavigate } from '../../app/actions';
 import { disconnect } from '../../base/connection';
@@ -18,7 +19,17 @@ type Props = AbstractButtonProps & {
     /**
      * The redux {@code dispatch} function.
      */
-    dispatch: Function
+    dispatch: Function,
+
+    /**
+     * The id for this meeting
+     */
+    meetingId: string,
+
+    /**
+     * The id for this participant
+     */
+    participantId: string,
 };
 
 /**
@@ -28,6 +39,7 @@ type Props = AbstractButtonProps & {
  */
 class HangupButton extends AbstractHangupButton<Props, *> {
     _hangup: Function;
+    onUnload: Function;
 
     accessibilityLabel = 'toolbar.accessibilityLabel.hangup';
     label = 'toolbar.hangup';
@@ -42,6 +54,8 @@ class HangupButton extends AbstractHangupButton<Props, *> {
     constructor(props: Props) {
         super(props);
 
+        this.onUnload = this.onUnload.bind(this);
+
         this._hangup = _.once(() => {
             sendAnalytics(createToolbarEvent('hangup'));
 
@@ -52,6 +66,33 @@ class HangupButton extends AbstractHangupButton<Props, *> {
                 this.props.dispatch(disconnect(true));
             }
         });
+    }
+
+    /**
+     * Handles closing the meeting's tab.
+     *
+     * @returns {Promise}.
+     */
+    onUnload() {
+        return participantLeaveRoom(this.props.meetingId, this.props.participantId);
+    }
+
+    /**
+     * Adds event listener for onUnload.
+     *
+     * @returns {void}
+     */
+    componentDidMount() {
+        window.addEventListener('unload', this.onUnload);
+    }
+
+    /**
+     * Removes event listener for onUnload.
+     *
+     * @returns {void}
+     */
+    componentWillUnmount() {
+        window.removeEventListener('unload', this.onUnload);
     }
 
     /**
@@ -66,4 +107,11 @@ class HangupButton extends AbstractHangupButton<Props, *> {
     }
 }
 
-export default translate(connect()(HangupButton));
+const mapStateToProps = state => {
+    return {
+        meetingId: state['features/riff-platform'].riff.roomId,
+        participantId: state['features/riff-platform'].signIn.user.uid
+    };
+};
+
+export default translate(connect(mapStateToProps)(HangupButton));
