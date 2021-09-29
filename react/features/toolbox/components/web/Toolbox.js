@@ -50,6 +50,7 @@ import {
 } from '../../../recording';
 import MeetingMediatorButton from '../../../riff-platform/components/DraggableMeetingMediator/MeetingMediatorButton';
 import RiffLocalRecordingButton from '../../../riff-platform/components/LocalRecorder/LocalRecordingButton';
+import MarkInterestingMomentButton from '../../../riff-platform/components/MarkInterestingMomentButton';
 import {
     isScreenAudioSupported,
     isScreenVideoShared,
@@ -401,7 +402,7 @@ class Toolbox extends Component<Props, State> {
 
         if (!this.state.reactionsShortcutsRegistered
             && (prevProps._reactionsEnabled !== this.props._reactionsEnabled
-            || prevProps._participantCount !== this.props._participantCount)) {
+                || prevProps._participantCount !== this.props._participantCount)) {
             if (this.props._reactionsEnabled && this.props._participantCount > 1) {
                 // eslint-disable-next-line react/no-did-update-set-state
                 this.setState({
@@ -460,14 +461,14 @@ class Toolbox extends Component<Props, State> {
      */
     render() {
         const { _chatOpen, _visible, _toolbarButtons } = this.props;
-        const rootClassNames = `new-toolbox ${_visible ? 'visible' : ''} ${
-            _toolbarButtons.length ? '' : 'no-buttons'} ${_chatOpen ? 'shift-right' : ''}`;
+        const rootClassNames = `new-toolbox ${_visible ? 'visible' : ''}
+            ${_toolbarButtons.length ? '' : 'no-buttons'} ${_chatOpen ? 'shift-right' : ''}`;
 
         return (
             <div
                 className = { rootClassNames }
                 id = 'new-toolbox'>
-                { this._renderToolboxContent() }
+                {this._renderToolboxContent()}
             </div>
         );
     }
@@ -816,6 +817,12 @@ class Toolbox extends Component<Props, State> {
             group: 2
         };
 
+        const markInterestingMoment = {
+            key: 'markmoment',
+            Content: MarkInterestingMomentButton,
+            group: 2
+        };
+
         return {
             microphone,
             camera,
@@ -823,6 +830,7 @@ class Toolbox extends Component<Props, State> {
             desktop,
             chat,
             raisehand,
+            markInterestingMoment,
             participants,
             invite,
             tileview,
@@ -1059,11 +1067,11 @@ class Toolbox extends Component<Props, State> {
      */
     _onShortcutToggleScreenshare() {
         sendAnalytics(createShortcutEvent(
-                'toggle.screen.sharing',
-                ACTION_SHORTCUT_TRIGGERED,
-                {
-                    enable: !this.props._screenSharing
-                }));
+            'toggle.screen.sharing',
+            ACTION_SHORTCUT_TRIGGERED,
+            {
+                enable: !this.props._screenSharing
+            }));
 
         this._doToggleScreenshare();
     }
@@ -1144,9 +1152,9 @@ class Toolbox extends Component<Props, State> {
     _onToolbarToggleFullScreen() {
         sendAnalytics(createToolbarEvent(
             'toggle.fullscreen',
-                {
-                    enable: !this.props._fullScreen
-                }));
+            {
+                enable: !this.props._fullScreen
+            }));
         this._closeOverflowMenuIfOpen();
         this._doToggleFullScreen();
     }
@@ -1265,7 +1273,7 @@ class Toolbox extends Component<Props, State> {
                         onMouseOver: this._onMouseOver
                     }) }>
 
-                    { showDominantSpeakerName && <DominantSpeakerName /> }
+                    {showDominantSpeakerName && <DominantSpeakerName />}
 
                     <div className = 'toolbox-content-items'>
                         {mainMenuButtons.map(({ Content, key, ...rest }) => Content !== Separator && (

@@ -4,8 +4,6 @@
 /* eslint-disable no-invalid-this */
 import { jwt } from './functions';
 
-// import { mockFetchEmotions, mockFetchUserNames } from './mockData';
-
 const API_GATEWAY_LINK = process.env.API_GATEWAY;
 
 /**

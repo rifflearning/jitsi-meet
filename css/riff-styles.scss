@@ -324,3 +324,11 @@ input[type="checkbox"] + svg {
     --local-border-hover: #bc96ca;
     --local-border-checked-hover: #93759e;
 }
+
+.toolbox-content-items {
+    .toolbox-button:focus {
+        .toolbox-icon {
+            background-color: #36383c;
+        }
+    }
+}

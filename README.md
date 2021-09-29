@@ -27,7 +27,7 @@ Create `.env` file in root dir (*ask colleagues for the `.env`*):
 ### Uncomment variables for specific instance deployment:
 ## Local development:
 WEBPACK_DEV_SERVER_PROXY_TARGET=https://dev-jitsi.riffplatform.com
-RIFF_SERVER_URL=https://dev-jitsi.riffplatform.com 
+RIFF_SERVER_URL=https://dev-jitsi.riffplatform.com
 API_GATEWAY=https://dev-jitsi.riffplatform.com/api-gateway
 # for local api-gateway:
 # API_GATEWAY=https://localhost:4445/api
@@ -175,7 +175,7 @@ In order to customize *jitsi-meet* with riff theme, all features and set up a ne
     ```
     Insert after `gzip_min_length 512;`:
     ```
-    
+
     # blocks iOS native client
     if ($http_user_agent ~* "^jitsi-meet\/101*") {
         return   403;
@@ -187,7 +187,7 @@ In order to customize *jitsi-meet* with riff theme, all features and set up a ne
     }
     ```
     Insert after `# BOSH location = /http-bind { ... }` and replace `RIFF_DATA_IP`:
-    
+
     (*you may need to set up a new riff-data server instance*)
     ```
     # config for api-gateway for Riff-Jitsi-Platform
@@ -220,14 +220,14 @@ In order to customize *jitsi-meet* with riff theme, all features and set up a ne
         enabled: false
     }
     disableDeepLinking: true,
-    
+
     //the name of the toolbar buttons to display in the toolbar
     toolbarButtons: [
         'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
         'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
         'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
-        'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts', 
-        'select-background', 'download', 'help', 'mute-everyone', 'mute-video-everyone', 
+        'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
+        'select-background', 'download', 'help', 'mute-everyone', 'mute-video-everyone',
         'security', 'meetingmediator', 'rifflocalrecording'
     ],
     ```
@@ -236,7 +236,7 @@ In order to customize *jitsi-meet* with riff theme, all features and set up a ne
     disableSimulcast: true,
 
     // in case meetings recording by jibri is needed
-    fileRecordingsEnabled: true, 
+    fileRecordingsEnabled: true,
 
     // depends on videobridge configuration
     openBridgeChannel: 'websocket',
