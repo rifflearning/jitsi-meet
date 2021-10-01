@@ -1209,7 +1209,7 @@ export default {
         const displayName = getDisplayName(id);
 
         if (displayName) {
-            return maybeExtractIdFromDisplayName(displayName).didisplayName;
+            return maybeExtractIdFromDisplayName(displayName).displayName;
         }
         if (APP.conference.isLocalId(id)) {
             return APP.translation.generateTranslationHTML(
