@@ -15,7 +15,22 @@ import {
     Radio,
     Switch
 } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 import { makeStyles } from '@material-ui/core/styles';
+import AddIcon from '@material-ui/icons/Add';
+import MenuIcon from '@material-ui/icons/Menu';
+// eslint-disable-next-line import/order
+import DeleteIcon from '@material-ui/icons/Delete';
+
+// import DoneIcon from '@material-ui/icons/DoneAllTwoTone';
+// import EditIcon from '@material-ui/icons/EditOutlined';
+// import RevertIcon from '@material-ui/icons/NotInterestedOutlined';
 import { Autocomplete } from '@material-ui/lab';
 import Alert from '@material-ui/lab/Alert';
 import {
@@ -26,8 +41,10 @@ import {
 import moment from 'moment';
 import momentTZ from 'moment-timezone';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+// eslint-disable-next-line import/order
+import React, { useEffect, useState } from 'react'; // useCallback,
 import 'moment-recur';
+
 import { useHistory } from 'react-router';
 
 import { connect } from '../../../base/redux';
@@ -39,6 +56,7 @@ import { schedule,
 import { logout } from '../../actions/signIn';
 import { getNumberRangeArray } from '../../functions';
 
+// import { AgendaTable } from './Agenda/AgendaTable';
 import {
     getRecurringDailyEventsByOccurance,
     getRecurringDailyEventsByEndDate,
@@ -81,6 +99,60 @@ const useStyles = makeStyles(theme => {
             '&:read-only': {
                 color: '#ffffff'
             }
+        },
+        table: {
+            minWidth: 600,
+            border: '1px solid #606060',
+            borderRadius: '4px'
+        },
+        tableBody: {
+            border: '1px solid #606060',
+            borderRadius: '4px'
+        },
+        selectTableCell: {
+            width: 100,
+            borderBottom: '1px solid #606060',
+            borderRadius: '4px'
+        },
+        tableCell: {
+            width: 100,
+            height: 20,
+            borderBottom: '1px solid #606060',
+            borderRadius: '4px'
+        },
+        input: {
+            width: 100,
+            height: 20
+        },
+        rightIcon: {
+            marginLeft: theme.spacing(1)
+        },
+        leftIcon: {
+            marginRight: theme.spacing(1)
+        },
+        errorText: {
+            margin: 0,
+            fontSize: '0.85em',
+            marginTop: '1px',
+            textAlign: 'left',
+            fontWeight: 'bold',
+            fontFamily: 'Helvetica',
+            lineHeight: 1.66,
+            letterSpacing: '0.03333em',
+            color: '#f44336',
+            width: '500px'
+        },
+        warningText: {
+            margin: 0,
+            fontSize: '0.85em',
+            marginTop: '1px',
+            textAlign: 'left',
+            fontWeight: 'bold',
+            fontFamily: 'Helvetica',
+            lineHeight: 1.66,
+            letterSpacing: '0.03333em',
+            color: '#EED202',
+            width: '500px'
         }
     };
 });
@@ -91,6 +163,48 @@ const MenuProps = {
             maxHeight: 300
         }
     }
+};
+
+
+// eslint-disable-next-line react/prop-types
+const CustomTableCell = ({ row, name, onChange, invalidAgendaItems }) => {
+    const classes = useStyles();
+    const { isEditMode } = row;
+
+    const isAgendaInputValid = (inputValue, source) => {
+        if (invalidAgendaItems) {
+            console.log('OLIVER in invalidAgendaItems check');
+            if (!inputValue) {
+                return false;
+            }
+
+            if (source === 'duration') {
+                const validDurCheck = !isNaN(inputValue) && inputValue > 0;
+
+                return validDurCheck;
+            }
+        }
+
+        return true;
+    };
+
+    return (
+        <TableCell
+            align = 'left'
+            className = { classes.tableCell }>
+            {isEditMode ? (
+                <Input
+                    value = { row[name] }
+                    name = { name }
+                    onChange = { e => onChange(e, row) }
+                    className = { classes.input }
+                    error = { !isAgendaInputValid(row[name], name) }
+                    required />
+            )
+                : row[name]
+            }
+        </TableCell>
+    );
 };
 
 const hoursArray = getNumberRangeArray(0, 9);
@@ -294,6 +408,7 @@ const SchedulerForm = ({
     const [ timezone, setTimezone ] = useState(localUserTimezone);
 
     const [ name, setname ] = useState('');
+    const [ invalidAgendaItems, setInvalidAgendaItems ] = useState(false);
     const [ description, setdescription ] = useState('');
     const [ date, setdate ] = useState(getDateByTimeAndTimezone(moment(), timezone));
     const [ hours, setHours ] = useState(1);
@@ -324,8 +439,9 @@ const SchedulerForm = ({
     const [ waitForHost, setWaitForHost ] = useState(false);
     const [ forbidNewParticipantsAfterDateEnd, setForbidNewParticipantsAfterDateEnd ] = useState(false);
 
-    const [ nameError, setnameError ] = useState('');
+    const [ nameError, setNameError ] = useState('');
     const [ durationError, setDurationError ] = useState('');
+    const [ agendaError, setAgendaError ] = useState('');
 
     const [ isMultipleRooms, setisMultipleRooms ] = useState(false);
     const [ multipleRooms, setmultipleRooms ] = useState(2);
@@ -415,17 +531,26 @@ const SchedulerForm = ({
     const isFormValid = () => {
         let isValid = true;
 
-        setnameError('');
+        setInvalidAgendaItems(false);
+        setNameError('');
         setDurationError('');
+        setAgendaError('');
 
         if (!isnameValid()) {
             isValid = false;
-            setnameError('Please, enter name');
+            setNameError('Please enter a name for the meeting');
         }
 
         if (!isDurationValid()) {
             isValid = false;
-            setDurationError('Please, pick meeting duration');
+            setDurationError('Please pick a valid meeting duration');
+        }
+
+        // eslint-disable-next-line no-use-before-define
+        if (!isAgendaValid() && showAgenda) {
+            isValid = false;
+            setInvalidAgendaItems(true);
+            setAgendaError('Please fill out the highlighted agenda fields');
         }
 
         return isValid;
@@ -543,11 +668,11 @@ const SchedulerForm = ({
 
     const recurrenceMaxEndDate = {
         daily: moment(date).add(3, 'months')
-.endOf('month'),
+                .endOf('month'),
         weekly: moment(date).add(1, 'years')
-.endOf('year'),
+                .endOf('year'),
         monthly: moment(date).add(2, 'years')
-.endOf('year')
+                .endOf('year')
     };
 
     // Passing true will change the time zone without changing the current time.
@@ -694,6 +819,196 @@ const SchedulerForm = ({
 
     const timeZonesList = momentTZ.tz.names();
 
+    // Agenda content
+    const [ previous, setPrevious ] = React.useState({});
+    const [ idIndex, setIdIndex ] = React.useState(0);
+    const [ showAgenda, setShowAgenda ] = React.useState(false);
+    const [ agendaData, setAgendaData ] = React.useState([ {
+        id: idIndex - 1, // made it - 1 because this doesn't modify the idIndex value which causess a dup
+        name: '',
+        duration: 10,
+        isEditMode: true } ]); // initalize with 1 empty agenda item
+    const [ tooLongAgendaDur, setTooLongAgendaDur ] = React.useState(false);
+
+    const onAgendaEntryChange = (e, row) => {
+        if (!previous[row.id]) {
+            setPrevious(state => {
+                return { ...state,
+                    [row.id]: row };
+            });
+        }
+        const value = e.target.value;
+        // eslint-disable-next-line no-shadow
+        const name = e.target.name;
+
+        const { id } = row;
+        // eslint-disable-next-line no-shadow
+        const newData = agendaData.map(row => {
+            if (row.id === id) {
+                if (name === 'duration') {
+                    const durVal = isNaN(parseFloat(value)) ? '' : parseFloat(value);
+
+                    return {
+                        ...row,
+                        [name]: durVal
+                    };
+                }
+
+                return {
+                    ...row,
+                    [name]: value
+                };
+            }
+
+            return row;
+        });
+
+        setAgendaData(newData);
+
+        // check to see if the sum of all agenda items is greater than the duration of the meeting
+        if (name === 'duration') {
+            // eslint-disable-next-line no-use-before-define
+            checkAgendaDuration(newData);
+        }
+    };
+
+    const checkAgendaDuration = data => {
+        const totAgendaDur = data.reduce((tot, entry) => tot + entry.duration, 0);
+        const totMeetingDur = (hours * 60) + minutes;
+        const result = totMeetingDur < totAgendaDur;
+
+        console.log('OLIVER result', { totAgendaDur,
+            totMeetingDur,
+            result });
+        setTooLongAgendaDur(result);
+    };
+
+
+    const onAgendaEntryDelete = row => {
+        if (!previous[row.id]) {
+            setPrevious(state => {
+                return {
+                    ...state,
+                    [row.id]: row
+                };
+            });
+        }
+
+        const { id } = row;
+        const newData = agendaData.filter(oldRow => oldRow.id !== id);
+
+        setAgendaData(newData);
+        checkAgendaDuration(newData);
+    };
+
+    const defaultAgendaDur = 10;
+    const defaultAgendaName = '';
+    const createAgendaData = id => {
+        setIdIndex(idIndex + 1);
+
+        return {
+            id,
+            name: defaultAgendaName,
+            duration: defaultAgendaDur,
+            isEditMode: true
+        };
+    };
+
+    // const onToggleEditMode = id => {
+    //     // eslint-disable-next-line no-unused-vars
+    //     setRows(() => agendaTableRows.map(row => {
+    //         if (row.id === id) {
+    //             return { ...row,
+    //                 isEditMode: !row.isEditMode };
+    //         }
+
+    //         return row;
+    //     }));
+    // };
+
+    // const onAgendaEntryRevert = id => {
+    //     const newRows = agendaTableRows.map(row => {
+    //         if (row.id === id) {
+    //             console.log('OLIVER in revert if statement');
+
+    //             return previous[id] ? previous[id] : row;
+    //         }
+    //         console.log('OLIVER not in revert if statemetn');
+
+    //         return row;
+    //     });
+
+    //     setRows(newRows);
+    //     setPrevious(state => {
+    //         delete state[id];
+
+    //         return state;
+    //     });
+    //     onToggleEditMode(id);
+    // };
+
+    const isAgendaValid = () => {
+        let allValid = true;
+
+        if (agendaData.length > 0) {
+            for (let i = 0; i < agendaData.length; i++) {
+                const durationCheck = agendaData[i].duration && isNaN(agendaData[i].duration.value);
+                const nameCheck = agendaData[i].name;
+                const isRowValid = durationCheck && nameCheck;
+
+                if (!isRowValid) {
+                    allValid = false;
+
+                    break;
+                }
+            }
+
+            return allValid;
+        }
+
+        return true;
+
+    };
+
+    // const [ grabbing, setGrabbing ] = useState(null);
+    // const [ lastFocus, requestFocus ] = useState(null);
+    // const onGrab = useCallback((i, ev) => {
+    //     if (ev.button !== 0) {
+    //         return;
+    //     }
+    //     setGrabbing(i);
+    //     window.addEventListener('mouseup', () => {
+    //         setGrabbing(_grabbing => {
+    //             requestFocus(_grabbing);
+
+    //             return null;
+    //         });
+    //     }, { once: true });
+    // });
+    // const onMouseOver = useCallback(i => {
+    //     if (grabbing !== null && grabbing !== i) {
+    //         moveAnswer(grabbing, i);
+    //         setGrabbing(i);
+    //     }
+    // });
+    // const moveAnswer = useCallback((i, j) => {
+    //     const newAnswers = [ ...answers ];
+
+    //     const answer = answers[i];
+
+    //     newAnswers.splice(i, 1);
+    //     newAnswers.splice(j, 0, answer);
+    //     setAnswers(newAnswers);
+    // });
+    // const [ answers, setAnswers ] = useState([ '', '' ]);
+
+    // const setAnswer = useCallback((i, answer) => {
+    //     const newAnswers = [ ...answers ];
+
+    //     newAnswers[i] = answer;
+    //     setAnswers(newAnswers);
+    // });
+
     return (
         <form
             className = { classes.form }
@@ -752,7 +1067,7 @@ const SchedulerForm = ({
                     sm = { 3 }
                     md = { 2 }>
                     <Typography>
-                    When
+                        When
                     </Typography>
                 </Grid>
 
@@ -816,7 +1131,7 @@ const SchedulerForm = ({
                     sm = { 3 }
                     md = { 2 }>
                     <Typography>
-            Duration
+                        Duration
                     </Typography>
                 </Grid>
                 <Grid
@@ -860,7 +1175,7 @@ const SchedulerForm = ({
                     sm = { 3 }
                     md = { 2 }>
                     <Typography>
-            Time Zone
+                        Time Zone
                     </Typography>
                 </Grid>
                 <Grid
@@ -890,6 +1205,152 @@ const SchedulerForm = ({
                     </Grid>
                 </Grid>
             </Grid>
+            <Grid
+                container
+                spacing = { 2 }>
+                <Grid
+                    item
+                    sm = { 12 }
+                    md = { 6 }>
+                    <FormControlLabel
+                        label = 'Agenda'
+                        control = { <Switch
+                            name = 'agenda'
+                            checked = { showAgenda }
+                            onChange = { e => {
+                                setChangesMadeByUserActions(true);
+                                setShowAgenda(e.target.checked);
+                            } }
+                            disabled = { isEditOneOccurrence } />
+                        } />
+                </Grid>
+            </Grid>
+            {showAgenda && !isEditOneOccurrence
+                && <Grid>
+                    <Grid
+                        container
+                        item
+                        xs = { 12 }
+                        sm = { 8 }
+                        md = { 10 }
+                        spacing = { 3 }>
+                        <Grid
+                            item
+                            xs = { 12 }
+                            md = { 4 }>
+                            <Table
+                                className = { classes.table }
+                                aria-label = 'caption table'
+                                variant = 'outlined'
+                                autoFocus
+                                margin = 'normal'>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell
+                                            align = 'left'
+                                            className = { classes.tableCell }>
+                                        Actions
+                                        </TableCell>
+                                        <TableCell
+                                            align = 'left'
+                                            className = { classes.tableCell }>
+                                        Event
+                                        </TableCell>
+                                        <TableCell
+                                            align = 'left'
+                                            className = { classes.tableCell }>
+                                        Duration (minutes)
+                                        </TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody
+                                    className = { classes.tableBody }>
+                                    {agendaData.map((row, index) => (
+                                        <TableRow
+                                            key = { index }
+                                            className = { classes.tableRow }>
+                                            <TableCell className = { classes.selectTableCell }>
+                                                <IconButton
+                                                    aria-label = 'move'
+                                                    onClick = { () => console.log('OLIVER clicked move icon') }>
+                                                    <MenuIcon />
+                                                </IconButton>
+                                                <IconButton
+                                                    aria-label = 'delete'
+                                                    onClick = { () => onAgendaEntryDelete(row) }>
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                                {/* {row.isEditMode ? (
+                                        <>
+                                            <IconButton
+                                                aria-label = 'done'
+                                                onClick = { () => onToggleEditMode(row.id) }>
+                                                <DoneIcon />
+                                            </IconButton>
+                                            <IconButton
+                                                aria-label = 'revert'
+                                                onClick = { () => onAgendaEntryRevert(row.id) }>
+                                                <RevertIcon />
+                                            </IconButton>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <IconButton
+                                                aria-label = 'cancel'
+                                                onClick = { () => onToggleEditMode(row.id) }>
+                                                <EditIcon />
+                                            </IconButton>
+                                            <IconButton
+                                                aria-label = 'delete'
+                                                onClick = { () => onAgendaEntryDelete(row) }>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </>
+                                    )} */}
+                                            </TableCell>
+                                            <CustomTableCell
+                                                { ...{
+                                                    row,
+                                                    name: 'name',
+                                                    onChange: onAgendaEntryChange,
+                                                    agendaError,
+                                                    invalidAgendaItems
+                                                } } />
+                                            <CustomTableCell
+                                                { ...{
+                                                    row,
+                                                    name: 'duration',
+                                                    onChange: onAgendaEntryChange,
+                                                    agendaError,
+                                                    invalidAgendaItems
+                                                } } />
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                            <Button
+                                variant = 'outlined'
+                                className = { classes.submit }
+                                onClick = { () => setAgendaData(agendaData.concat(createAgendaData(idIndex)
+                                )) }>
+                            Add Row
+                                <AddIcon className = { classes.rightIcon } />
+                            </Button>
+                            {Boolean(agendaError)
+                            && <Typography
+                                fullWidth
+                                className = { classes.errorText }>
+                                {agendaError}
+                            </Typography>}
+                            {tooLongAgendaDur && <Typography
+                                fullWidth
+                                className = { classes.warningText }>
+                                The duration of your agenda items is greater than the duration of the meeting
+                            </Typography>}
+                        </Grid>
+                    </Grid>
+                </Grid>
+            }
 
             <Grid
                 container
