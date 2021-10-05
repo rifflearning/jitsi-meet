@@ -31,20 +31,11 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GPR_PRIVATE_READ_TOKEN }}
 
-      - name: Build and pack the api-gateway configuration
-        id: build-api-gateway
+      - name: Build and pack the production configuration
+        id: build-package
         run: |
-          make api-gateway-package
-          echo ::set-output name=PKG_NAME::$(ls *-api-gateway.tar.bz2)
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GPR_PRIVATE_READ_TOKEN }}
-          TERM: dumb
-
-      - name: Build and pack the embedded configuration
-        id: build-embedded
-        run: |
-          make embedded-package
-          echo ::set-output name=PKG_NAME::$(ls *-embedded.tar.bz2)
+          make prod-package
+          echo ::set-output name=PKG_NAME::$(ls *-prod.tar.bz2)
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GPR_PRIVATE_READ_TOKEN }}
           TERM: dumb
@@ -60,22 +51,12 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset (api-gateway)
+      - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ steps.build-api-gateway.outputs.PKG_NAME }}
-          asset_name: ${{ steps.build-api-gateway.outputs.PKG_NAME }}
-          asset_content_type: application/x-tar
-
-      - name: Upload Release Asset (embedded)
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ steps.build-embedded.outputs.PKG_NAME }}
-          asset_name: ${{ steps.build-embedded.outputs.PKG_NAME }}
+          asset_path: ./${{ steps.build-package.outputs.PKG_NAME }}
+          asset_name: ${{ steps.build-package.outputs.PKG_NAME }}
           asset_content_type: application/x-tar

@@ -52,6 +52,9 @@ compile-load-test:
 clean:
 	rm -fr $(BUILD_DIR)
 
+lint: ## Run eslint and flow checks using npm run lint
+	$(NPM) run lint
+
 .NOTPARALLEL:
 deploy: deploy-init deploy-appbundle deploy-rnnoise-binary deploy-tflite deploy-meet-models deploy-lib-jitsi-meet deploy-libflac deploy-olm deploy-css deploy-local
 
@@ -131,6 +134,10 @@ deploy-aws: dev-package
 	scp -i $(PEM_PATH) rifflearning-jitsi-meet-dev.tar.bz2 $(AWS_NAME):/home/ubuntu/tmp
 	ssh -i $(PEM_PATH) $(AWS_NAME) 'bin/install-riff-jitsi.sh tmp/rifflearning-jitsi-meet-dev.tar.bz2 "$(GIT_USER)"'
 
+bump-dev-version: ## Increment the development version in package.json and package-lock.json
+	$(NPM) version prerelease
+	git tag -d $$(git tag --points-at HEAD)
+
 .NOTPARALLEL:
 dev: deploy-init deploy-css deploy-rnnoise-binary deploy-lib-jitsi-meet deploy-meet-models deploy-libflac deploy-olm deploy-tflite
 	$(WEBPACK_DEV_SERVER) --host 0.0.0.0
@@ -161,35 +168,14 @@ source-package-version: source-package-files
 		-e 's/\(do_external_connect\.min\.js\)?v=[0-9]\+/\1?v='$(SHASUM_DO_EXTERNAL_CONNECT)'/' \
 		--in-place index.html
 
-dev-package: ## create package using working dir code and existing env settings for development deployment
+dev-package: ## create package using working dir code for development deployment
 dev-package: PKG_VERSION := ${shell sed -nE 's/^\s*\"version\": \"([^\"]+)\",$$/\1/p' package.json}
 dev-package:
 	$(MAKE) all source-package ENV=custom
 	mv --backup rifflearning-jitsi-meet-$(PKG_VERSION)-custom.tar.bz2 rifflearning-jitsi-meet-dev.tar.bz2
 
-api-gateway-package: ## create package using api-gateway env settings (users and their meetings are handled by the api-gateway)
-	ln -fs env-api-gateway .env
-	$(MAKE) all source-package ENV=api-gateway
-
-api-gateway-exp-metrics-package: ## create package using api-gateway-exp-metrics env settings (users and their meetings are handled by the api-gateway and experimental metrics tab is available)
-	ln -fs env-api-gateway-exp-metrics .env
-	$(MAKE) all source-package ENV=api-gateway-exp-metrics
-
-api-gateway-no-mm-package: ## create package using api-gateway-no-mm env settings (hide meeting mediator)
-	ln -fs env-api-gateway-no-mm .env
-	$(MAKE) all source-package ENV=api-gateway-no-mm
-
-embedded-package: ## create package using embedded env settings (used by riffedu)
-	ln -fs env-embedded .env
-	$(MAKE) all source-package ENV=embedded
-
-group-package: ## create package using group env settings
-	ln -fs env-group .env
-	$(MAKE) all source-package ENV=group
-
-discovery-package: ## create package using discovery env settings (volume capture)
-	ln -fs env-discovery .env
-	$(MAKE) all source-package ENV=discovery
+prod-package: ## create package using working dir code for production deployment
+	$(MAKE) all source-package ENV=prod
 
 # Help documentation à la https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 # if you want the help sorted rather than in the order of occurrence, pipe the grep to sort and pipe that to awk

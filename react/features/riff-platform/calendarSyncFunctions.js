@@ -1,4 +1,4 @@
-/* global process */
+/* global riffConfig */
 
 import base64js from 'base64-js';
 
@@ -11,7 +11,9 @@ import {
 } from './constants/calendarSync';
 
 export const isGoogleCalendarEnabled = () =>
-    Boolean(process.env.ENABLE_CALENDAR_INTEGRATION === 'true' && process.env.GOOGLE_API_APP_CLIENT_ID);
+    riffConfig.calendar.enableCalendarIntegration
+    && riffConfig.calendar.googleApiAppClientId;
+
 
 export const getGoogleCalendarEntry = (calendarId, eventId) => googleApi._getGoogleApiClient()
     .client.calendar.events.get({
@@ -77,7 +79,8 @@ export const msCalendarSync = {
 };
 
 export const isMsCalendarEnabled = () =>
-    Boolean(process.env.ENABLE_CALENDAR_INTEGRATION === 'true' && process.env.MICROSOFT_API_APP_CLIENT_ID);
+    riffConfig.calendar.enableCalendarIntegration
+    && riffConfig.calendar.microsoftApiAppClientId;
 
 /**
  * Constructs and returns the URL to use for renewing an auth token.

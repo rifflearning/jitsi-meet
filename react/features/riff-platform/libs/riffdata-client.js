@@ -1,3 +1,4 @@
+/* global riffConfig */
 /* eslint-disable no-undef */
 import auth from '@feathersjs/authentication-client';
 import feathers from '@feathersjs/feathers';
@@ -6,11 +7,11 @@ import io from 'socket.io-client';
 
 // access to api
 
-let dataserverPath = '/api/videodata';
+let dataserverPath = riffConfig.riffdata.path;
 
 dataserverPath += '/socket.io';
 
-const socket = io(process.env.RIFF_SERVER_URL, {
+const socket = io(riffConfig.riffdata.url, {
     timeout: 20000,
     path: dataserverPath,
     transports: [

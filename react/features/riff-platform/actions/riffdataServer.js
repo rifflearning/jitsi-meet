@@ -1,3 +1,4 @@
+/* global riffConfig */
 import * as actionTypes from '../constants/actionTypes';
 import { app } from '../libs/riffdata-client';
 
@@ -18,8 +19,8 @@ export const riffServerAuthFail = err => {
 export const loginToRiffDataServer = () => dispatch => {
     app.authenticate({
         strategy: 'local',
-        email: 'default-user-email',
-        password: 'default-user-password'
+        email: riffConfig.riffdata.email,
+        password: riffConfig.riffdata.password
     })
     .then(result => {
         dispatch(riffServerAuthSuccess(result.accessToken));

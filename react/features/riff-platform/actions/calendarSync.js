@@ -1,4 +1,4 @@
-/* global process */
+/* global riffConfig */
 /* eslint-disable no-unused-vars */
 import { Client } from '@microsoft/microsoft-graph-client';
 
@@ -152,12 +152,13 @@ function loadGoogleAPI() {
     return (dispatch, getState) =>
         googleApi.get()
             .then(() => {
-
                 if (getState()['features/riff-platform'].calendarSync.google.googleAPIState
                     === GOOGLE_API_STATES.NEEDS_LOADING) {
                     return googleApi.initializeClient(
-                        // eslint-disable-next-line max-len
-                        process.env.GOOGLE_API_APP_CLIENT_ID, false, process.env.ENABLE_CALENDAR_INTEGRATION === 'true');
+                        riffConfig.calendar.googleApiAppClientId,
+                        false,
+                        riffConfig.calendar.enableCalendarIntegration
+                    );
                 }
 
                 return Promise.resolve();
@@ -191,7 +192,7 @@ export function bootstrapGoogleCalendarIntegration() {
 
         return Promise.resolve()
             .then(() => {
-                if (process.env.GOOGLE_API_APP_CLIENT_ID) {
+                if (riffConfig.calendar.googleApiAppClientId) {
                     return dispatch(loadGoogleAPI());
                 }
             })
@@ -408,7 +409,7 @@ export function microsoftSignIn() {
 
 
         const authUrl = getAuthUrl(
-            process.env.MICROSOFT_API_APP_CLIENT_ID,
+            riffConfig.calendar.microsoftApiAppClientId,
             guids.authState,
             guids.authNonce);
         const h = 600;
@@ -452,8 +453,7 @@ export function microsoftSignIn() {
             popupAuthWindow = null;
 
             const params = getParamsFromHash(data.url);
-            const tokenParts = getValidatedTokenParts(
-                params, guids, process.env.MICROSOFT_API_APP_CLIENT_ID);
+            const tokenParts = getValidatedTokenParts(params, guids, riffConfig.calendar.microsoftApiAppClientId);
 
             if (!tokenParts) {
                 signInDeferred.reject('Invalid token received');
@@ -517,7 +517,7 @@ function refreshAuthToken() {
             = getState()['features/riff-platform'].calendarSync.microsoft || {};
 
         const refreshAuthUrl = getAuthRefreshUrl(
-            process.env.MICROSOFT_API_APP_CLIENT_ID,
+            riffConfig.calendar.microsoftApiAppClientId,
             msAuthState.userDomainType,
             msAuthState.userSigninName);
 
@@ -643,7 +643,7 @@ export function bootstrapMsCalendarIntegration() {
     return (dispatch, getState) => {
         const state = getState();
 
-        if (!isMsCalendarEnabled(state)) {
+        if (!isMsCalendarEnabled()) {
             return Promise.reject();
         }
         const msAuthState = msCalendarSync.get();

@@ -4,8 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - develop
-      - riff-master
+      - riff-main
       - 'release/*'
 
 jobs:
@@ -26,6 +25,6 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GPR_PRIVATE_READ_TOKEN }}
 
-      - run: npm run lint
+      - run: make lint
 
-      - run: make
+      - run: make all

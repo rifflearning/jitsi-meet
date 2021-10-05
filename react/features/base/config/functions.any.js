@@ -59,6 +59,8 @@ export function getRecordingSharingUrl(state: Object) {
     return state['features/base/config'].recordingSharingUrl;
 }
 
+/* eslint-disable max-params, jsdoc/require-description-complete-sentence */
+
 /**
  * Overrides JSON properties in {@code config} and
  * {@code interfaceConfig} Objects with the values from {@code newConfig}.
@@ -69,6 +71,8 @@ export function getRecordingSharingUrl(state: Object) {
  * @param {Object} interfaceConfig - The interfaceConfig Object in which we'll
  * be overriding properties.
  * @param {Object} loggingConfig - The loggingConfig Object in which we'll be
+ * overriding properties.
+ * @param {Object} riffConfig - The riffConfig Object in which we'll be
  * overriding properties.
  * @param {Object} json - Object containing configuration properties.
  * Destination object is selected based on root property name:
@@ -82,12 +86,19 @@ export function getRecordingSharingUrl(state: Object) {
  *     loggingConfig: {
  *         // logging_config.js properties here
  *     }
+ *     riffConfig: {
+ *         // riff_config.js properties here
+ *     }
  * }.
  * @returns {void}
  */
 export function overrideConfigJSON(
-        config: ?Object, interfaceConfig: ?Object, loggingConfig: ?Object,
-        json: Object) {
+        config: ?Object,
+        interfaceConfig: ?Object,
+        loggingConfig: ?Object,
+        riffConfig: ?Object,
+        json: Object
+) {
     for (const configName of Object.keys(json)) {
         let configObj;
 
@@ -97,6 +108,8 @@ export function overrideConfigJSON(
             configObj = interfaceConfig;
         } else if (configName === 'loggingConfig') {
             configObj = loggingConfig;
+        } else if (configName === 'riffConfig') {
+            configObj = riffConfig;
         }
         if (configObj) {
             const configJSON
@@ -184,6 +197,7 @@ export function restoreConfig(baseURL: string): ?Object {
  * @param {Object} config - This is the general config.
  * @param {Object} interfaceConfig - This is the interface config.
  * @param {Object} loggingConfig - The logging config.
+ * @param {Object} riffConfig - The riff config.
  * @param {URI} location - The new location to which the app is navigating to.
  * @returns {void}
  */
@@ -191,6 +205,7 @@ export function setConfigFromURLParams(
         config: ?Object,
         interfaceConfig: ?Object,
         loggingConfig: ?Object,
+        riffConfig: ?Object,
         location: Object) {
     const params = parseURLParams(location);
     const json = {};
@@ -214,6 +229,7 @@ export function setConfigFromURLParams(
     config && (json.config = {});
     interfaceConfig && (json.interfaceConfig = {});
     loggingConfig && (json.loggingConfig = {});
+    riffConfig && (json.riffConfig = {});
 
     for (const param of Object.keys(params)) {
         let base = json;
@@ -227,7 +243,7 @@ export function setConfigFromURLParams(
         base[last] = params[param];
     }
 
-    overrideConfigJSON(config, interfaceConfig, loggingConfig, json);
+    overrideConfigJSON(config, interfaceConfig, loggingConfig, riffConfig, json);
 }
 
 /* eslint-enable max-params */
