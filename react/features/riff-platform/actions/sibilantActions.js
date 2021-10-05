@@ -86,8 +86,8 @@ function riffAddUserToMeeting({ uid, displayName, context = '' }, room, token, t
             });
 
             const meetingListener = meeting => {
-                if (meeting.active && meeting.room === room && meeting.participants.include(uid)) {
-                    meeting.removeListener('patched', meetingListener);
+                if (meeting.active && meeting.room === room && meeting.participants.includes(uid)) {
+                    app.service('meetings').removeListener('patched', meetingListener);
                     dispatch(setRoomIdFromRiffDataServer(meeting._id));
                 }
             };
