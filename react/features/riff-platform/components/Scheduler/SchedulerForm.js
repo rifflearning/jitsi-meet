@@ -13,10 +13,14 @@ import {
     TextField,
     Typography,
     Radio,
-    Switch
+    Switch,
+    List,
+    ListItem,
+    ListItemSecondaryAction
 } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
+import RootRef from '@material-ui/core/RootRef';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -24,13 +28,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
-import MenuIcon from '@material-ui/icons/Menu';
-// eslint-disable-next-line import/order
 import DeleteIcon from '@material-ui/icons/Delete';
-
-// import DoneIcon from '@material-ui/icons/DoneAllTwoTone';
-// import EditIcon from '@material-ui/icons/EditOutlined';
-// import RevertIcon from '@material-ui/icons/NotInterestedOutlined';
 import { Autocomplete } from '@material-ui/lab';
 import Alert from '@material-ui/lab/Alert';
 import {
@@ -56,7 +54,9 @@ import { schedule,
 import { logout } from '../../actions/signIn';
 import { getNumberRangeArray } from '../../functions';
 
-// import { AgendaTable } from './Agenda/AgendaTable';
+// eslint-disable-next-line import/order
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+
 import {
     getRecurringDailyEventsByOccurance,
     getRecurringDailyEventsByEndDate,
@@ -124,12 +124,30 @@ const useStyles = makeStyles(theme => {
             width: 100,
             height: 20
         },
+        eventInput: {
+            width: 150,
+            height: 20
+        },
+        durationInput: {
+            width: 50,
+            height: 20
+        },
         rightIcon: {
             marginLeft: theme.spacing(1)
         },
         leftIcon: {
             marginRight: theme.spacing(1)
         },
+
+        list: {
+            minWidth: 600,
+            border: '1px solid #606060',
+            borderRadius: '4px'
+        },
+        listLabel: {
+            marginRight: theme.spacing(1.5)
+        },
+
         errorText: {
             margin: 0,
             fontSize: '0.85em',
@@ -164,7 +182,6 @@ const MenuProps = {
         }
     }
 };
-
 
 // eslint-disable-next-line react/prop-types
 const CustomTableCell = ({ row, name, onChange, invalidAgendaItems }) => {
@@ -204,6 +221,41 @@ const CustomTableCell = ({ row, name, onChange, invalidAgendaItems }) => {
                 : row[name]
             }
         </TableCell>
+    );
+};
+
+// eslint-disable-next-line react/prop-types
+const CustomListItem = ({ row, name, onChange, invalidAgendaItems, labelText, classProp }) => {
+    const classes = useStyles();
+
+    const isAgendaInputValid = (inputValue, source) => {
+        if (invalidAgendaItems) {
+            console.log('OLIVER in invalidAgendaItems check');
+            if (!inputValue) {
+                return false;
+            }
+
+            if (source === 'duration') {
+                const validDurCheck = !isNaN(inputValue) && inputValue > 0;
+
+                return validDurCheck;
+            }
+        }
+
+        return true;
+    };
+
+    return (
+        <ListItem >
+            <Typography className = { classes.listLabel }>{labelText}</Typography>
+            <Input
+                value = { row[name] }
+                name = { name }
+                onChange = { e => onChange(e, row) }
+                className = { classProp }
+                error = { !isAgendaInputValid(row[name], name) }
+                required />
+        </ListItem>
     );
 };
 
@@ -362,7 +414,6 @@ const getRecurringDatesWithTime = ({ dates, startDate, duration, timezone }) => 
 };
 
 const getMeetingDuration = ({ dateStart, dateEnd }) => {
-
     const meetingDuration = moment
     .duration(moment(dateEnd)
     .diff(moment(dateStart)));
@@ -914,6 +965,9 @@ const SchedulerForm = ({
         };
     };
 
+    // NOTE: these are additional functions that we could add to the
+    // agenda table. they are currently not being used, but left in here
+    // in case we want to put this functionality back in
     // const onToggleEditMode = id => {
     //     // eslint-disable-next-line no-unused-vars
     //     setRows(() => agendaTableRows.map(row => {
@@ -970,44 +1024,48 @@ const SchedulerForm = ({
 
     };
 
-    // const [ grabbing, setGrabbing ] = useState(null);
-    // const [ lastFocus, requestFocus ] = useState(null);
-    // const onGrab = useCallback((i, ev) => {
-    //     if (ev.button !== 0) {
-    //         return;
-    //     }
-    //     setGrabbing(i);
-    //     window.addEventListener('mouseup', () => {
-    //         setGrabbing(_grabbing => {
-    //             requestFocus(_grabbing);
+    const getItemStyle = (isDragging, draggableStyle) => {
+        return {
+            // styles we need to apply on draggables
+            ...draggableStyle,
 
-    //             return null;
-    //         });
-    //     }, { once: true });
-    // });
-    // const onMouseOver = useCallback(i => {
-    //     if (grabbing !== null && grabbing !== i) {
-    //         moveAnswer(grabbing, i);
-    //         setGrabbing(i);
-    //     }
-    // });
-    // const moveAnswer = useCallback((i, j) => {
-    //     const newAnswers = [ ...answers ];
+            ...isDragging && {
+                background: 'primary'
+            }
+        };
+    };
 
-    //     const answer = answers[i];
+    const getListStyle = isDraggingOver => {
+        return {
+            border: isDraggingOver ? '1px solid white' : '1px solid #606060',
+            padding: 'grid',
+            width: 600
+        };
+    };
 
-    //     newAnswers.splice(i, 1);
-    //     newAnswers.splice(j, 0, answer);
-    //     setAnswers(newAnswers);
-    // });
-    // const [ answers, setAnswers ] = useState([ '', '' ]);
+    const reorder = (list, startIndex, endIndex) => {
+        const result = Array.from(list);
+        const [ removed ] = result.splice(startIndex, 1);
 
-    // const setAnswer = useCallback((i, answer) => {
-    //     const newAnswers = [ ...answers ];
+        result.splice(endIndex, 0, removed);
 
-    //     newAnswers[i] = answer;
-    //     setAnswers(newAnswers);
-    // });
+        return result;
+    };
+
+    const onDragEnd = result => {
+        // dropped outside the list
+        if (!result.destination) {
+            return;
+        }
+
+        const newData = reorder(
+            agendaData,
+            result.source.index,
+            result.destination.index
+        );
+
+        setAgendaData(newData);
+    };
 
     return (
         <form
@@ -1225,128 +1283,160 @@ const SchedulerForm = ({
                         } />
                 </Grid>
             </Grid>
+
             {showAgenda && !isEditOneOccurrence
                 && <Grid>
-                    <Grid
-                        container
-                        item
-                        xs = { 12 }
-                        sm = { 8 }
-                        md = { 10 }
-                        spacing = { 3 }>
+                    {/* Option 1 */}
+                    <DragDropContext
+                        onDragEnd = { onDragEnd }>
+                        <Droppable droppableId = 'droppable'>
+                            {(provided, snapshot) => (
+                                <RootRef rootRef = { provided.innerRef }>
+                                    <List
+                                        style = { getListStyle(snapshot.isDraggingOver) }
+                                        className = { classes.list }>
+                                        {agendaData.map((item, index) => (
+                                            <Draggable
+                                                draggableId = { String(item.id) }
+                                                index = { index }
+                                                key = { item.id }>
+                                                {/* eslint-disable-next-line no-shadow */}
+                                                {(provided, snapshot) => (
+                                                    <ListItem
+                                                        ContainerComponent = 'li'
+                                                        ContainerProps = {{ ref: provided.innerRef }}
+                                                        { ...provided.draggableProps }
+                                                        { ...provided.dragHandleProps }
+                                                        style = { getItemStyle(
+                                                    snapshot.isDragging,
+                                                    provided.draggableProps.style
+                                                        ) }>
+                                                        <IconButton
+                                                            aria-label = 'delete'
+                                                            onClick = { () => onAgendaEntryDelete(item) }>
+                                                            <DeleteIcon />
+                                                        </IconButton>
+                                                        <CustomListItem
+                                                            { ...{
+                                                                row: item,
+                                                                name: 'name',
+                                                                onChange: onAgendaEntryChange,
+                                                                agendaError,
+                                                                invalidAgendaItems,
+                                                                labelText: 'Topic:',
+                                                                classProp: classes.eventInput
+                                                            } } />
+                                                        <CustomListItem
+                                                            { ...{
+                                                                row: item,
+                                                                name: 'duration',
+                                                                onChange: onAgendaEntryChange,
+                                                                agendaError,
+                                                                invalidAgendaItems,
+                                                                labelText: 'Duration (min):',
+                                                                classProp: classes.durationInput
+                                                            } } />
+
+                                                        <ListItemSecondaryAction />
+                                                    </ListItem>
+                                                )}
+                                            </Draggable>
+                                        ))}
+                                        {provided.placeholder}
+                                    </List>
+                                </RootRef>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
+                    {/* Option 2 */}
+                    <Grid>
                         <Grid
+                            container
                             item
                             xs = { 12 }
-                            md = { 4 }>
-                            <Table
-                                className = { classes.table }
-                                aria-label = 'caption table'
-                                variant = 'outlined'
-                                autoFocus
-                                margin = 'normal'>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell
-                                            align = 'left'
-                                            className = { classes.tableCell }>
-                                        Actions
-                                        </TableCell>
-                                        <TableCell
-                                            align = 'left'
-                                            className = { classes.tableCell }>
-                                        Event
-                                        </TableCell>
-                                        <TableCell
-                                            align = 'left'
-                                            className = { classes.tableCell }>
-                                        Duration (minutes)
-                                        </TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody
-                                    className = { classes.tableBody }>
-                                    {agendaData.map((row, index) => (
-                                        <TableRow
-                                            key = { index }
-                                            className = { classes.tableRow }>
-                                            <TableCell className = { classes.selectTableCell }>
-                                                <IconButton
-                                                    aria-label = 'move'
-                                                    onClick = { () => console.log('OLIVER clicked move icon') }>
-                                                    <MenuIcon />
-                                                </IconButton>
-                                                <IconButton
-                                                    aria-label = 'delete'
-                                                    onClick = { () => onAgendaEntryDelete(row) }>
-                                                    <DeleteIcon />
-                                                </IconButton>
-                                                {/* {row.isEditMode ? (
-                                        <>
-                                            <IconButton
-                                                aria-label = 'done'
-                                                onClick = { () => onToggleEditMode(row.id) }>
-                                                <DoneIcon />
-                                            </IconButton>
-                                            <IconButton
-                                                aria-label = 'revert'
-                                                onClick = { () => onAgendaEntryRevert(row.id) }>
-                                                <RevertIcon />
-                                            </IconButton>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <IconButton
-                                                aria-label = 'cancel'
-                                                onClick = { () => onToggleEditMode(row.id) }>
-                                                <EditIcon />
-                                            </IconButton>
-                                            <IconButton
-                                                aria-label = 'delete'
-                                                onClick = { () => onAgendaEntryDelete(row) }>
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </>
-                                    )} */}
-                                            </TableCell>
-                                            <CustomTableCell
-                                                { ...{
-                                                    row,
-                                                    name: 'name',
-                                                    onChange: onAgendaEntryChange,
-                                                    agendaError,
-                                                    invalidAgendaItems
-                                                } } />
-                                            <CustomTableCell
-                                                { ...{
-                                                    row,
-                                                    name: 'duration',
-                                                    onChange: onAgendaEntryChange,
-                                                    agendaError,
-                                                    invalidAgendaItems
-                                                } } />
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                            <Button
-                                variant = 'outlined'
-                                className = { classes.submit }
-                                onClick = { () => setAgendaData(agendaData.concat(createAgendaData(idIndex)
-                                )) }>
+                            sm = { 8 }
+                            md = { 10 }
+                            spacing = { 3 }>
+                            <Grid
+                                item
+                                xs = { 12 }
+                                md = { 4 }>
+                                <Button
+                                    variant = 'outlined'
+                                    className = { classes.submit }
+                                    onClick = { () => setAgendaData(agendaData.concat(createAgendaData(idIndex)
+                                    )) }>
                             Add Row
-                                <AddIcon className = { classes.rightIcon } />
-                            </Button>
-                            {Boolean(agendaError)
+                                    <AddIcon className = { classes.rightIcon } />
+                                </Button>
+                                <Table
+                                    className = { classes.table }
+                                    aria-label = 'caption table'
+                                    variant = 'outlined'
+                                    autoFocus
+                                    margin = 'normal'>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell
+                                                align = 'left'
+                                                className = { classes.tableCell }>
+                                        Discussion Topic
+                                            </TableCell>
+                                            <TableCell
+                                                align = 'left'
+                                                className = { classes.tableCell }>
+                                        Duration (minutes)
+                                            </TableCell>
+                                            <TableCell
+                                                align = 'left'
+                                                className = { classes.tableCell }>
+                                        Delete
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody
+                                        className = { classes.tableBody }>
+                                        {agendaData.map((row, index) => (
+                                            <TableRow
+                                                key = { index }
+                                                className = { classes.tableRow }>
+                                                <CustomTableCell
+                                                    { ...{
+                                                        row,
+                                                        name: 'name',
+                                                        onChange: onAgendaEntryChange,
+                                                        agendaError,
+                                                        invalidAgendaItems
+                                                    } } />
+                                                <CustomTableCell
+                                                    { ...{
+                                                        row,
+                                                        name: 'duration',
+                                                        onChange: onAgendaEntryChange,
+                                                        agendaError,
+                                                        invalidAgendaItems
+                                                    } } />
+                                                <TableCell className = { classes.selectTableCell }>
+                                                    <IconButton
+                                                        aria-label = 'delete'
+                                                        onClick = { () => onAgendaEntryDelete(row) }>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                                {Boolean(agendaError)
                             && <Typography
-                                fullWidth
                                 className = { classes.errorText }>
                                 {agendaError}
                             </Typography>}
-                            {tooLongAgendaDur && <Typography
-                                fullWidth
-                                className = { classes.warningText }>
+                                {tooLongAgendaDur && <Typography
+                                    className = { classes.warningText }>
                                 The duration of your agenda items is greater than the duration of the meeting
-                            </Typography>}
+                                </Typography>}
+                            </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
