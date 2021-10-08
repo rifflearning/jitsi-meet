@@ -1,10 +1,13 @@
 /* eslint-disable require-jsdoc */
 
+import fixWebmDuration from 'fix-webm-duration';
+
 import logger from '../../../local-recording/logger';
 import { RecordingAdapter } from '../../../local-recording/recording';
 
 import { recordingController } from './LocalRecorderController';
 import { getCombinedStream, addNewAudioStream, removeAudioStream, cleanupAudioContext } from './helpers';
+
 
 /**
  * The argument slices the recording into chunks, calling dataavailable every defined seconds.
@@ -66,6 +69,11 @@ export default class WebmAdapter extends RecordingAdapter {
     _participantAudioStreams = [];
 
     /**
+     * Time when recording started
+     */
+    _startTime = null;
+
+    /**
      * Implements {@link RecordingAdapter#start()}.
      *
      * @inheritdoc
@@ -79,7 +87,9 @@ export default class WebmAdapter extends RecordingAdapter {
 
         return this._initPromise.then(() =>
             new Promise(resolve => {
+                console.log('start');
                 this._mediaRecorder.start(MEDIARECORDER_TIMESLICE);
+                this._startTime = new Date();
                 resolve();
             })
         );
@@ -146,10 +156,13 @@ export default class WebmAdapter extends RecordingAdapter {
         if (this._recordedData.length) {
             const blobData = new Blob(this._recordedData, { type: 'video/webm' });
 
-            return Promise.resolve({
-                data: blobData,
+            const duration = new Date() - this._startTime;
+
+            return fixWebmDuration(blobData, duration, { logger: false }).then(fixedBlobData => Promise.resolve({
+                data: fixedBlobData,
                 format: 'webm'
-            });
+            }));
+
         }
 
         return Promise.reject('No media data recorded.');
