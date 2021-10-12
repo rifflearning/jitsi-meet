@@ -1,5 +1,48 @@
 # Change Log for @rifflearning/jitsi-meet
 
+## [1.1.0](https://github.com/rifflearning/jitsi-meet/tree/v1.1.0) (2021-10-12)
+[Full Changelog](https://github.com/rifflearningjitsi-meet/compare/v1.0.0...v1.1.0)
+
+### Notable changes:
+
+- The base jitsi-meet code was updated from `stable/jitsi-meet_5963` to `stable/jitsi-meet_6293`
+- User's now have the ability to create and use a "personal" room for meetings
+- The dashboard was updated to use the dashboard provided by riff-metrics ver `2.1.0` from `1.2.0-dev.1`
+  The major UI change was changing the stacked bar graphs to clustered bar graphs. Other than that the
+  changes here were mostly for the experimental metrics, and some integration improvements
+- A new interesting moments feature is available, but the toolbar button is not being added in default deployments
+- A first pass of calendar integration is now available for both Google and Microsoft calendars
+- Features are now dynamically configurable, rather than requiring custom code to be built
+
+
+### Merged pull requests
+
+- [\#98](https://github.com/rifflearning/jitsi-meet/pull/98) Feature/login lti
+- [\#103](https://github.com/rifflearning/jitsi-meet/pull/103) add version to import links so that changes are reloaded
+- [\#101](https://github.com/rifflearning/jitsi-meet/pull/101) Feature/user personal meeting room
+- [\#104](https://github.com/rifflearning/jitsi-meet/pull/104) update riff metrics to version 2.0.0
+- [\#105](https://github.com/rifflearning/jitsi-meet/pull/105) change deploy-aws make target to deploy to a production instance configuration
+- [\#106](https://github.com/rifflearning/jitsi-meet/pull/106) Metrics Package Experimental Dashboard in Jitsi
+- [\#107](https://github.com/rifflearning/jitsi-meet/pull/107) Update riff-metrics package to version 2.1.0
+- [\#112](https://github.com/rifflearning/jitsi-meet/pull/112) Update jitsi-meet - 2.0.6293 (RIFF-600, 602)
+- [\#113](https://github.com/rifflearning/jitsi-meet/pull/113) Dev/nickolas kyrylyuk/riff 601
+- [\#111](https://github.com/rifflearning/jitsi-meet/pull/111) Fixed Footer Links (RIFF-279)
+- [\#109](https://github.com/rifflearning/jitsi-meet/pull/109) Interesting moments (updated)
+- [\#110](https://github.com/rifflearning/jitsi-meet/pull/110) Feature/calendars integration
+- [\#115](https://github.com/rifflearning/jitsi-meet/pull/115) Dev/uliana ostrova/fix theme
+- [\#114](https://github.com/rifflearning/jitsi-meet/pull/114) BugFix: End Time Is Now Correct (RIFF-549)
+- [\#117](https://github.com/rifflearning/jitsi-meet/pull/117) BugFix: display participant name in low bandwidth sharing mode
+- [\#118](https://github.com/rifflearning/jitsi-meet/pull/118) Bug fix in sibilantActions
+- [\#116](https://github.com/rifflearning/jitsi-meet/pull/116) Add riff_config.js for custom configuration instead of using .env file (RIFF-612)
+- [\#119](https://github.com/rifflearning/jitsi-meet/pull/119) Pull in screenshare fix
+- [\#121](https://github.com/rifflearning/jitsi-meet/pull/121) Fallback to jitsi premeeting screen design
+
+#### Notes on particularly opaque PR summaries:
+
+- \#113 was "Make pre join screen to look like a previous version"
+- \#118 fixes an error introduced in #114 which did not remove an event listener
+
+
 ## [1.0.0](https://github.com/rifflearning/jitsi-meet/tree/v1.0.0) (2021-08-09)
 [Full Changelog](https://github.com/rifflearningjitsi-meet/compare/v0.0.0...v1.0.0)
 
