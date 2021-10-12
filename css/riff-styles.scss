@@ -152,32 +152,8 @@ body > .tooltip {
     text-align: center;
 }
 
-.premeeting-screen {
-    .content input.field.focused {
-        box-shadow: 0 0 4px 3px $violetColor;
-    }
-    .action-btn .options:hover {
-        background-color: $primaryButtonHoverBackground;
-    }
-
-    > div:not(#preview) {
-        position: absolute;
-        display: flex;
-        bottom: 0;
-        width: 100%;
-        justify-content: center;
-    }
-
-    #preview {
-        align-items: flex-start;
-
-        .avatar {
-            height: 90px !important;
-            width: 90px !important;
-            background: $primaryButtonBackground;
-            margin-top: 100px;
-        }
-    }
+#preview .avatar {
+    background: $riffViolet;
 }
 
 .watermark {
