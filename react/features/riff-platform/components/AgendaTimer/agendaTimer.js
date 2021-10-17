@@ -22,8 +22,11 @@ class DraggableAgendaTimer extends React.Component {
                 }
             ],
             currentEventIndex: 0,
-            currentTime: 0,
-            noEventsLeft: false
+            currentLabel: '',
+            currentTime: '',
+            useEventStyle: false,
+            noEventsLeft: false,
+            timerIsShowing: true
         };
     }
 
@@ -36,7 +39,7 @@ class DraggableAgendaTimer extends React.Component {
         let timer = this.state.agendaData[this.state.currentEventIndex].duration * 60, minutes, seconds;
 
         setInterval(() => {
-
+            this.setState({ useEventStyle: false });
             minutes = parseInt(timer / 60, 10);
             seconds = parseInt(timer % 60, 10);
 
@@ -44,54 +47,62 @@ class DraggableAgendaTimer extends React.Component {
             seconds = seconds < 10 ? `0${seconds}` : seconds;
 
             this.setState({ currentTime: `${minutes}:${seconds}` });
-
+            if (this.state.currentLabel !== this.state.agendaData[this.state.currentEventIndex].name) {
+                this.setState({ currentLabel: `${this.state.agendaData[this.state.currentEventIndex].name}:` });
+            }
             if (--timer < 0) {
                 if ((this.state.agendaData.length - 1) > this.state.currentEventIndex) {
                     this.setState({ currentEventIndex: this.state.currentEventIndex + 1 });
-
+                    this.setState({ useEventStyle: true });
                     timer = this.state.agendaData[this.state.currentEventIndex].duration * 60;
                 } else {
-                    console.log('IN STEP 2');
+                    this.setState({ useEventStyle: true });
                     this.setState({ noEventsLeft: true });
+                    this.hideTimer();
                 }
             }
         }, 1000);
     }
 
+    hideTimer() {
+        setInterval(() => {
+            this.setState({ timerIsShowing: false });
+        }, 3000);
+    }
+
     render() {
-        // const bounds = {
-        //     left: -200,
-        //     top: -250,
-        //     right: 400,
-        //     bottom: 400
-        // };
+
+        const currClass = this.state.useEventStyle ? 'agenda-timer-event' : 'agenda-timer';
+
+        const agendaTimerContents = this.state.noEventsLeft
+            ? (<div className = { 'agenda-timer-label' }>
+                {'No more agenda items'}
+            </div>)
+            : (<div className = { 'agenda-timer-label' }>
+                {`${this.state.currentLabel}`}
+                <div classNAme = { 'agenda-timer-time' }>
+                    {`${this.state.currentTime}`}
+                </div>
+            </div>);
+
+
+        const showTimer = this.state.timerIsShowing;
 
         return (
             <div>
-                <div id = 'agenda-timer-wrapper'>
-                    {!this.state.noEventsLeft && <div
-                        className = { 'agenda-timer' }>
-                        <div className = { 'agenda-timer-label' }>
-                            {`${this.state.agendaData[this.state.currentEventIndex].name}:`}
-                        </div>
-                        <div classNAme = { 'agenda-timer-time' }> {`${this.state.currentTime}`}
-                        </div>
-                    </div>}
-                    {this.state.noEventsLeft && <div
-                        className = { 'agenda-timer' }>
-                        <div className = { 'agenda-timer-label' }>
-                            {'No more events remaining!'}
-                        </div>
-                    </div>}
-                </div>
+                {showTimer && <div id = 'agenda-timer-wrapper'>
+                    <div className = { currClass }>
+                        {agendaTimerContents}
+                    </div>
+                </div>}
             </div>
         );
     }
 }
 
 /* **************************************************************************** *
-  * Module exports                                                               *
-  * **************************************************************************** */
+ * Module exports                                                               *
+ * **************************************************************************** */
 export {
     DraggableAgendaTimer
 };
