@@ -1,5 +1,25 @@
 # Change Log for @rifflearning/jitsi-meet
 
+## [1.2.0](https://github.com/rifflearning/jitsi-meet/tree/v1.2.0) (2021-10-18)
+[Full Changelog](https://github.com/rifflearningjitsi-meet/compare/v1.1.0...v1.2.0)
+
+### Notable changes:
+
+The major feature added for this release was for LTI authentication and access to group meetings,
+and the user's dashboard as well as displaying a shared URL for the Esme simulations in the
+said-oxford and mitsapsloan edX courses.
+
+
+### Merged pull requests
+
+- [\#122](https://github.com/rifflearning/jitsi-meet/pull/122) Update the emotional sensing dev notes
+  for clarity and fix links (RIFF-705)
+- [\#123](https://github.com/rifflearning/jitsi-meet/pull/123) Add ability to share an Esme simulation
+  (RIFF-557), fix existing etherpad issues, 1-on-1 meetings
+- [\#124](https://github.com/rifflearning/jitsi-meet/pull/124) Launch via lti with cookies instead of
+  URL params (RIFF-639, RIFF-641)
+
+
 ## [1.1.0](https://github.com/rifflearning/jitsi-meet/tree/v1.1.0) (2021-10-12)
 [Full Changelog](https://github.com/rifflearningjitsi-meet/compare/v1.0.0...v1.1.0)
 
@@ -33,7 +53,8 @@
 - [\#114](https://github.com/rifflearning/jitsi-meet/pull/114) BugFix: End Time Is Now Correct (RIFF-549)
 - [\#117](https://github.com/rifflearning/jitsi-meet/pull/117) BugFix: display participant name in low bandwidth sharing mode
 - [\#118](https://github.com/rifflearning/jitsi-meet/pull/118) Bug fix in sibilantActions
-- [\#116](https://github.com/rifflearning/jitsi-meet/pull/116) Add riff_config.js for custom configuration instead of using .env file (RIFF-612)
+- [\#116](https://github.com/rifflearning/jitsi-meet/pull/116) Add riff_config.js for custom configuration
+  instead of using .env file (RIFF-612)
 - [\#119](https://github.com/rifflearning/jitsi-meet/pull/119) Pull in screenshare fix
 - [\#121](https://github.com/rifflearning/jitsi-meet/pull/121) Fallback to jitsi premeeting screen design
 
