@@ -63,6 +63,7 @@ MiddlewareRegistry.register(store => next => action => {
         } else {
             _restoreTileViewState(store);
         }
+        shouldUpdateAutoPin = true;
         break;
 
     // Things to update when tile view state changes
@@ -91,7 +92,7 @@ StateListenerRegistry.register(
         if (conference !== previousConference) {
             // conference changed, left or failed...
             // Clear tile view state.
-            dispatch(setTileView(true));
+            dispatch(setTileView());
         }
     });
 
@@ -103,6 +104,13 @@ StateListenerRegistry.register(
  */
 function _restoreTileViewState({ dispatch, getState }) {
     const { tileViewEnabled } = getState()['features/video-layout'];
+    const { editing } = getState()['features/etherpad'];
+
+    // don't restore the tile view if the user opened the shared doc
+    // after the state was stored
+    if (editing) {
+        return;
+    }
 
     if (tileViewEnabled === undefined && previousTileViewEnabled !== undefined) {
         dispatch(setTileView(previousTileViewEnabled));
