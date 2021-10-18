@@ -64,9 +64,43 @@ export const jwt = {
     }
 };
 
+/**
+ * Takes a string to be used for a jitsi room ID
+ * and ensures it will be valid by replacing
+ * any illegal characters.
+ *
+ * @param {string} str - The string to operate on.
+ * @returns {string} A sanitized version of the provided string.
+ */
+function escapeInvalidRoomIdChars(str) {
+    // note these should be valid regex characters,
+    // so we need to escape some
+    const characterMap = {
+        ':': '_C',
+        '?': '_Q',
+        '/': '_R',
+        '+': '_P',
+        '&': '_Z'
+    };
+
+    const re = new RegExp(`[${Object.keys(characterMap).join('')}]`, 'gi');
+
+    return str.replace(re, matched => characterMap[matched]);
+}
+
+/**
+ * Generates a room ID based on the LTI data.
+ *
+ * @param {Object} ltiData - The LTI Data the client was provided.
+ * @returns {string} The generated room ID.
+ */
+export function generateLtiRoomId(ltiData) {
+    return escapeInvalidRoomIdChars(`${ltiData.context.id}-${ltiData.group}`);
+}
+
 export const ltiUserInfo = {
     get() {
-        return localStorage.getItem('lti-data');
+        return JSON.parse(localStorage.getItem('lti-data') ?? '{}');
     },
     set(data) {
         localStorage.setItem('lti-data', JSON.stringify(data));
@@ -75,6 +109,57 @@ export const ltiUserInfo = {
         localStorage.removeItem('lti-data');
     }
 };
+
+/**
+ * Is the given path an LTI path?
+ *
+ * @param {string} path - The path to check.
+ * @returns {boolean} True if `path` is an LTI path, false otherwise.
+ */
+export function isLtiPath(path) {
+    const routeBase = `/${path.split('/')[1]}`;
+
+    return routeBase === ROUTES.LTI_BASE;
+}
+
+/**
+ * Takes a route beginning with the lti base
+ * and translates it into the appropriate route
+ * for after the user has been logged in.
+ *
+ * @param {string} ltiPath - The LTI path to translate.
+ * @param {State} state - The current state.
+ * @returns {string} The route the user should be navigated to.
+ */
+export function ltiPathTranslator(ltiPath, state) {
+    // split the path and prepend a '/' to each element for comparison with routes
+    const splitPath = ltiPath.split('/').map(pathPiece => `/${pathPiece}`);
+
+    if (!isLtiPath(ltiPath)) {
+        // sanity check but we shouldn't be calling this function
+        // if we're not in an lti route
+        // just route to the base for now if this occurs i guess?
+        // TODO (jr) - think about it
+        return '/';
+    }
+
+    const specificRoute = splitPath[2];
+
+    if (specificRoute === ROUTES.LTI_MEETING) {
+        const { roomId } = state['features/riff-platform'].meeting.meeting;
+
+        return `/${roomId}`;
+    }
+
+    if (specificRoute === ROUTES.LTI_DASHBOARD) {
+        return `${ROUTES.BASENAME}${ROUTES.DASHBOARD}`;
+    }
+
+    // we should never launch via LTI into a route other than
+    // those covered here.
+    // TODO (jr) - is there an error page?
+    return '/';
+}
 
 /**
  * Groups meetingsLists to object: {Today: meetingList, [otherDate]: meetingList ...}.
@@ -109,6 +194,7 @@ export function groupMeetingsByDays(meetings) {
 
     return groupedMeetings;
 }
+
 
 /**
  * Transforms milliseconds to duration string time.
@@ -251,3 +337,4 @@ export function maybeExtractIdFromDisplayName(displayNameMaybeWithId) {
         idWithSeparator
     };
 }
+

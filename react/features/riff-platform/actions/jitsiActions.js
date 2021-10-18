@@ -1,6 +1,7 @@
 /* global config, riffConfig, APP */
 import ObjectID from 'bson-objectid';
 import { createBrowserHistory } from 'history';
+import Cookies from 'js-cookie';
 
 import UIEvents from '../../../../service/UI/UIEvents';
 import { setTileView } from '../../video-layout';
@@ -9,10 +10,18 @@ import api from '../api';
 import RiffPlatform from '../components';
 import * as actionTypes from '../constants/actionTypes';
 import * as ROUTES from '../constants/routes';
-import { jwt, isRiffPlatformCurrentPath, previousLocationRoomName, ltiUserInfo } from '../functions';
+import {
+    generateLtiRoomId,
+    isRiffPlatformCurrentPath,
+    jwt,
+    ltiUserInfo,
+    previousLocationRoomName
+} from '../functions';
 
 import { checkIsMeetingAllowed } from './meeting';
 import { logout } from './signIn';
+
+const RIFF_LTI_COOKIE_NAME = 'riff-platform__lti_data';
 
 const customHistory = createBrowserHistory();
 
@@ -28,7 +37,8 @@ export const navigateWithoutReload = (component, route) => {
 };
 
 /**
- * Makes all checks to decide wether redirect to riff-app(for login, waiting room etc) or proceed with conference.
+ * Makes all non-LTI checks to decide whether redirect to riff-app
+ * (for login, waiting room etc) or proceed with conference.
  *
  * @returns {boolean}
 */
@@ -36,10 +46,6 @@ export async function shouldRedirectToRiff() {
     if (riffConfig.embeddedAccessOnly) {
         setMatterMostUserFromLink();
 
-        return false;
-    }
-
-    if (await isLtiUser()) {
         return false;
     }
 
@@ -151,7 +157,7 @@ export async function isAnonymousUsersAllowed() {
  *
  * @returns {boolean}
 */
-export async function setMatterMostUserFromLink() {
+export function setMatterMostUserFromLink() {
     const urlParams = new URLSearchParams(window.location.search);
 
     const userMock = {
@@ -178,72 +184,65 @@ export async function setMatterMostUserFromLink() {
 }
 
 /**
- * Check for Lti user`s credentials and if found use them to login, return true
- * if successful, false if Lti user`s credentials were not used to login.
+ * Did the user get here via LTI launch OR
+ * do we have cached LTI data for them?
  *
  * @returns {boolean}
 */
-async function isLtiUser() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const ltiUserFound = urlParams.get('ltiUser');
-    const ltiData = JSON.parse(ltiUserInfo.get());
+export function isLtiUser() {
+    const doesLtiCookieExist = Cookies.get(RIFF_LTI_COOKIE_NAME) !== undefined;
 
-    if (ltiData?.uid && !ltiUserFound) {
-        const user = await api.isAuth();
+    // if we have a truthy value for ltiUserInfo.uid that counts
+    const doesCachedLtiDataExist = Boolean(ltiUserInfo.get()?.uid);
 
-        // LTI users may only use the specified room name from LTI and name
-        if (user?.uid === ltiData?.uid && window.location.pathname.split('/')[1] === ltiData.roomId) {
-
-            const meetingMock = {
-                _id: ObjectID.generate(),
-                roomId: ltiData.roomId,
-                name: ltiData.roomName
-            };
-
-            APP.store.dispatch({
-                type: actionTypes.LOGIN_SUCCESS,
-                user
-            });
-
-            APP.store.dispatch({
-                type: actionTypes.MEETING_SUCCESS,
-                meeting: meetingMock
-            });
-
-            return true;
-        }
-    }
-
-    if (!ltiUserFound) {
-        return false;
-    }
-
-    return await setLtiUserFromLink();
+    return doesLtiCookieExist || doesCachedLtiDataExist;
 }
 
 /**
  * Sets user and meeting data from lti.
  *
- * @returns {boolean}
+ * NOTE - this should not be returning the data in the long term
+ * this is a temporary solution to avoid a significant refactor befor a deadline.
+ * This should be addressed in the near future.
+ * - jr 10.17.21.
+ *
+ * @returns {Object|null} The relevant LTI data.
 */
-export async function setLtiUserFromLink() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('jwtToken');
+export async function setLtiUserData() {
+    const ltiCookie = Cookies.get(RIFF_LTI_COOKIE_NAME);
+    const cachedLtiData = ltiUserInfo.get();
+    let ltiData;
+
+    if (ltiCookie !== undefined) {
+        ltiData = JSON.parse(ltiCookie);
+    } else if (cachedLtiData?.uid) {
+        ltiData = cachedLtiData;
+    } else {
+        // this should probably be an error condition?
+        // if setLtiUserData is called we should always have
+        // data for one or the other of ltiCookie and cachedLtiData
+        // unless we have been given bad data from the LTI launch
+        // TODO (jr) - reconsider
+        return null;
+    }
+
+    const token = ltiData.auth_token;
 
     jwt.set(token);
+
     const user = await api.isAuth();
 
     if (!user) {
         jwt.remove();
 
-        return false;
+        return null;
     }
 
 
     const meetingMock = {
         _id: ObjectID.generate(),
-        roomId: window.location.pathname.split('/')[1],
-        name: urlParams.get('roomName') || ''
+        roomId: generateLtiRoomId(ltiData),
+        name: ltiData.group
     };
 
     APP.store.dispatch({
@@ -261,7 +260,11 @@ export async function setLtiUserFromLink() {
     });
     setLocalDisplayNameAndEmail(user);
 
-    return true;
+    return {
+        roomId: meetingMock.roomId,
+        uid: user.uid,
+        roomName: meetingMock.roomName
+    };
 }
 
 /**
