@@ -1,3 +1,7 @@
+export const LTI_BASE = '/ltilaunch';
+export const LTI_MEETING = '/groupmeeting';
+export const LTI_DASHBOARD = '/dashboard';
+
 export const BASENAME = '/app';
 
 export const SIGNIN = '/login';
