@@ -87,7 +87,6 @@ export default class WebmAdapter extends RecordingAdapter {
 
         return this._initPromise.then(() =>
             new Promise(resolve => {
-                console.log('start');
                 this._mediaRecorder.start(MEDIARECORDER_TIMESLICE);
                 this._startTime = new Date();
                 resolve();
@@ -310,6 +309,7 @@ export default class WebmAdapter extends RecordingAdapter {
         this._newMediaRecorder = null;
         this._recordedData = [];
         this._isCalled = false;
+        this._startTime = new Date();
     }
 
 
