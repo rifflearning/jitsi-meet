@@ -1,7 +1,8 @@
-/* global $, APP, interfaceConfig */
+/* global $, APP, config, interfaceConfig */
 
 import { getSharedDocumentUrl, setDocumentEditingState } from '../../../react/features/etherpad';
 import { getToolboxHeight } from '../../../react/features/toolbox/functions.web';
+import { setTileView, shouldDisplayTileView } from '../../../react/features/video-layout';
 import Filmstrip from '../videolayout/Filmstrip';
 import LargeContainer from '../videolayout/LargeContainer';
 import VideoLayout from '../videolayout/VideoLayout';
@@ -64,10 +65,13 @@ class Etherpad extends LargeContainer {
 
         const iframe = document.createElement('iframe');
 
+        if (config.simulationUrl) {
+            iframe.scrolling = 'yes';
+        }
+
         iframe.id = 'etherpadIFrame';
         iframe.src = url;
         iframe.frameBorder = 0;
-        iframe.scrolling = 'no';
         iframe.width = DEFAULT_WIDTH;
         iframe.height = DEFAULT_HEIGHT;
         iframe.setAttribute('style', 'visibility: hidden;');
@@ -227,11 +231,17 @@ export default class EtherpadManager {
             this.openEtherpad();
         }
 
+        // is the document visible *before* the toggle?
         const isVisible = this.isVisible();
 
         VideoLayout.showLargeVideoContainer(
             ETHERPAD_CONTAINER_TYPE, !isVisible);
 
+        const state = APP.store.getState();
+
         APP.store.dispatch(setDocumentEditingState(!isVisible));
+
+        // update tile view after document editing state has been updated
+        APP.store.dispatch(setTileView(shouldDisplayTileView(state)));
     }
 }

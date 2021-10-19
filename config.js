@@ -447,13 +447,6 @@ var config = {
     // When 'true', it shows an intermediate page before joining, where the user can configure their devices.
     // prejoinPageEnabled: false,
 
-    // If etherpad integration is enabled, setting this to true will
-    // automatically open the etherpad when a participant joins.  This
-    // does not affect the mobile app since opening an etherpad
-    // obscures the conference controls -- it's better to let users
-    // choose to open the pad on their own in that case.
-    // openSharedDocumentOnJoin: false,
-
     // If true, shows the unsafe room name warning label when a room name is
     // deemed unsafe (due to the simplicity in the name) and a password is not
     // set or the lobby is not enabled.
@@ -835,17 +828,6 @@ var config = {
     // is not persisting the local storage inside the iframe.
     // useHostPageLocalStorage: true,
 
-    // etherpad ("shared document") integration.
-    //
-
-    // If set, add a "Open shared document" link to the bottom right menu that
-    // will open an etherpad document.
-    // etherpad_base: 'https://your-etherpad-installati.on/p/',
-
-    // If etherpad_base is set, and useRoomAsSharedDocumentName is set to true,
-    // open a pad with the name of the room (lowercased) instead of a pad with a
-    // random UUID.
-    // useRoomAsSharedDocumentName: true,
 
     // List of undocumented settings used in jitsi-meet
     /**
@@ -871,6 +853,26 @@ var config = {
      requireDisplayName
      tokenAuthUrl
      */
+
+    // etherpad ("shared document") integration.
+    //
+
+    // If etherpad integration or simulation is enabled, setting this to true will
+    // automatically open the etherpad / simulation when a participant joins.  This
+    // does not affect the mobile app since opening an etherpad
+    // obscures the conference controls -- it's better to let users
+    // choose to open the pad on their own in that case.
+    // openSharedDocumentOnJoin: false,
+
+    // The base url for etherpad. Setting a value
+    // here will enable the etherpad integration.
+    // The format of the URL should be `https://<etherpad_server_path>/p/`
+    // etherpadBaseUrl:
+
+    // The simulation location, for use in Esme courses
+    // NOTE - setting a value here will override etherpadBaseUrl
+    // and disable etherpad functionality
+    // simulationUrl:
 
     /**
      * This property can be used to alter the generated meeting invite links (in combination with a branding domain

@@ -8,9 +8,14 @@ import Logger from 'jitsi-meet-logger';
 
 import { isMobileBrowser } from '../../react/features/base/environment/utils';
 import { setColorAlpha } from '../../react/features/base/util';
-import { setDocumentUrl } from '../../react/features/etherpad';
+import {
+    generateEtherpadUrl,
+    generateSimulationUrl,
+    setDocumentUrl
+} from '../../react/features/etherpad';
 import { setFilmstripVisible } from '../../react/features/filmstrip';
 import { joinLeaveNotificationsDisabled, setNotificationsEnabled } from '../../react/features/notifications';
+import { maybeExtractIdFromDisplayName } from '../../react/features/riff-platform/functions';
 import {
     dockToolbox,
     setToolboxEnabled,
@@ -158,20 +163,30 @@ UI.unbindEvents = () => {
 };
 
 /**
- * Setup and show Etherpad.
- * @param {string} name etherpad id
+ * Setup and show Etherpad or simulation.
+ * @param {string} name the room name, used for simulation or as etherpad id
  */
 UI.initEtherpad = name => {
-    if (etherpadManager || !config.etherpad_base || !name) {
+    if (etherpadManager || !(config.etherpadBaseUrl || config.simulationUrl) || !name) {
         return;
     }
+
     logger.log('Etherpad is enabled');
 
     etherpadManager = new EtherpadManager(eventEmitter);
 
-    const url = new URL(name, config.etherpad_base);
+    const { displayName, id: userId } = maybeExtractIdFromDisplayName(APP.conference.getLocalDisplayName());
 
-    APP.store.dispatch(setDocumentUrl(url.toString()));
+    let url;
+
+    if (config.simulationUrl) {
+        url = generateSimulationUrl(config.simulationUrl, name, displayName, userId);
+    } else {
+        url = generateEtherpadUrl(config.simulationUrl, name, displayName);
+    }
+
+
+    APP.store.dispatch(setDocumentUrl(url));
 
     if (config.openSharedDocumentOnJoin) {
         etherpadManager.toggleEtherpad();

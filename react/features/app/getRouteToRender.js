@@ -8,10 +8,18 @@ import { isMobileBrowser } from '../base/environment/utils';
 import { toState } from '../base/redux';
 import { Conference } from '../conference';
 import { getDeepLinkingPage } from '../deep-linking';
-import { shouldRedirectToRiff } from '../riff-platform/actions/jitsiActions';
+import {
+    isLtiUser,
+    setLtiUserData,
+    shouldRedirectToRiff
+} from '../riff-platform/actions/jitsiActions';
 import RiffPlatform from '../riff-platform/components';
 import UnsupportedMobileBrowser from '../riff-platform/components/UnsupportedBrowser';
-import { isRiffPlatformCurrentPath } from '../riff-platform/functions';
+import {
+    isLtiPath,
+    isRiffPlatformCurrentPath,
+    ltiPathTranslator
+} from '../riff-platform/functions';
 import { UnsupportedDesktopBrowser } from '../unsupported-browser';
 import {
     BlankPage,
@@ -44,7 +52,22 @@ export type Route = {
 export async function _getRouteToRender(stateful: Function | Object): Promise<Route> {
     const state = toState(stateful);
 
-    if (await shouldRedirectToRiff()) {
+    // this was previously happening in shouldRedirectToRiff
+    // I pulled it out here, but i'm not sure it really belongs here either.
+    // NOTE - we rely on the data from setLtiUserData in _getLtiRoute.
+    // however, since that is updated in redux, we actually
+    // don't have access to it in this function
+    // since the redux state gets updated in setLtiUserData
+    // but we still have the same state object from before
+    // we called it
+    // So, for now, we also return and capture the lti data
+    // from setLtiUserData.
+    // TODO (jr) - think about when not on a tight deadline :)
+    let ltiData = null;
+
+    if (isLtiUser()) {
+        ltiData = await setLtiUserData();
+    } else if (await shouldRedirectToRiff()) {
         const route = {
             component: RiffPlatform,
             href: undefined
@@ -57,7 +80,12 @@ export async function _getRouteToRender(stateful: Function | Object): Promise<Ro
         return _getMobileRoute(state);
     }
 
-    return _getRiffPlatformRoute() || _getWebConferenceRoute(state) || _getWebWelcomePageRoute(state);
+    return (
+        _getLtiRoute(ltiData)
+        || _getRiffPlatformRoute()
+        || _getWebConferenceRoute(state)
+        || _getWebWelcomePageRoute(state)
+    );
 }
 
 /**
@@ -77,6 +105,44 @@ function _getRiffPlatformRoute(): ?Promise<Route> {
     }
 
     return undefined;
+}
+
+/**
+ * Returns the {@code Route} to display if the user
+ * navigated here via LTI.
+ *
+ * NOTE - we are passing ltiData instead of the redux state
+ * only as a temporary solution.
+ * We should be passing the redux state once the LTI login is refactored.
+ *
+ * @param {Object} ltiData - The LTI data. Temporary solution,
+ *    we do not want this here long term.
+ * @returns {Promise<Route>|undefined}
+ */
+function _getLtiRoute(ltiData): ?Promise<Route> {
+    const currentPath = window.location.pathname;
+
+    if (!isLtiPath(currentPath) || ltiData === null) {
+        return;
+    }
+
+    const route = _getEmptyRoute();
+
+    // mock the redux state to send ltiPathTranslator
+    // once we refactor we can just pass the state
+    const mockState = {
+        'features/riff-platform': {
+            meeting: {
+                meeting: { roomId: ltiData.roomId }
+            }
+        }
+    };
+
+    const newPath = ltiPathTranslator(currentPath, mockState);
+
+    route.href = new URL(newPath, window.location.origin).toString();
+
+    return Promise.resolve(route);
 }
 
 /**
