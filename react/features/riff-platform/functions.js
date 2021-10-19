@@ -80,12 +80,13 @@ function escapeInvalidRoomIdChars(str) {
         '?': '_Q',
         '/': '_R',
         '+': '_P',
+        '#': '_H',
         '&': '_Z'
     };
 
     const re = new RegExp(`[${Object.keys(characterMap).join('')}]`, 'gi');
 
-    return str.replace(re, matched => characterMap[matched]);
+    return encodeURIComponent(str.replace(re, matched => characterMap[matched]));
 }
 
 /**
