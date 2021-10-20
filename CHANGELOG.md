@@ -1,5 +1,14 @@
 # Change Log for @rifflearning/jitsi-meet
 
+## [1.2.1](https://github.com/rifflearning/jitsi-meet/tree/v1.2.1) (2021-10-20)
+[Full Changelog](https://github.com/rifflearningjitsi-meet/compare/v1.2.0...v1.2.1)
+
+## Fixes
+
+- URI Encode the LTI roomId and escape '#' to fix LTI roomId generation see PR
+  [\125](https://github.com/rifflearning/jitsi-meet/pull/125)
+
+
 ## [1.2.0](https://github.com/rifflearning/jitsi-meet/tree/v1.2.0) (2021-10-18)
 [Full Changelog](https://github.com/rifflearningjitsi-meet/compare/v1.1.0...v1.2.0)
 
