@@ -55,7 +55,6 @@ export async function sendReactionsWebhook(state: Object, reactions: Array<?stri
     const { webhookProxyUrl: url } = state['features/base/config'];
     const { conference } = state['features/base/conference'];
     const { jwt } = state['features/base/jwt'];
-    const { locationURL } = state['features/base/connection'];
     const localParticipant = getLocalParticipant(state);
 
     const headers = {
@@ -65,7 +64,7 @@ export async function sendReactionsWebhook(state: Object, reactions: Array<?stri
 
 
     const reqBody = {
-        meetingFqn: extractFqnFromPath(locationURL.pathname),
+        meetingFqn: extractFqnFromPath(),
         sessionId: conference.sessionId,
         submitted: Date.now(),
         reactions,
@@ -151,11 +150,11 @@ export function getReactionsSoundsThresholds(reactions: Array<string>) {
  * @returns {boolean}
  */
 export function isReactionsEnabled(state: Object) {
-    const { enableReactions } = state['features/base/config'];
+    const { disableReactions } = state['features/base/config'];
 
     if (navigator.product === 'ReactNative') {
-        return enableReactions && getFeatureFlag(state, REACTIONS_ENABLED, true);
+        return !disableReactions && getFeatureFlag(state, REACTIONS_ENABLED, true);
     }
 
-    return enableReactions;
+    return !disableReactions;
 }

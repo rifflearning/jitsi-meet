@@ -15,6 +15,7 @@ import {
 } from '../../react/features/base/conference';
 import { overwriteConfig, getWhitelistedJSON } from '../../react/features/base/config';
 import { toggleDialog } from '../../react/features/base/dialog/actions';
+import { isSupportedBrowser } from '../../react/features/base/environment';
 import { parseJWTFromURLParams } from '../../react/features/base/jwt';
 import JitsiMeetJS, { JitsiRecordingConstants } from '../../react/features/base/lib-jitsi-meet';
 import { MEDIA_TYPE } from '../../react/features/base/media';
@@ -39,6 +40,7 @@ import {
 } from '../../react/features/device-selection/functions';
 import { isEnabled as isDropboxEnabled } from '../../react/features/dropbox';
 import { toggleE2EE } from '../../react/features/e2ee/actions';
+import { setVolume } from '../../react/features/filmstrip';
 import { invite } from '../../react/features/invite';
 import {
     selectParticipantInLargeVideo
@@ -173,6 +175,9 @@ function initCommands() {
             logger.debug('Set large video participant command received');
             sendAnalytics(createApiEvent('largevideo.participant.set'));
             APP.store.dispatch(selectParticipantInLargeVideo(participantId));
+        },
+        'set-participant-volume': (participantId, volume) => {
+            APP.store.dispatch(setVolume(participantId, volume));
         },
         'subject': subject => {
             sendAnalytics(createApiEvent('subject.changed'));
@@ -688,6 +693,7 @@ class API {
         this._enabled = true;
 
         initCommands();
+        this.notifyBrowserSupport(isSupportedBrowser());
     }
 
     /**
@@ -1028,6 +1034,15 @@ class API {
     }
 
     /**
+     * Notify external application that the data channel has been opened.
+     *
+     * @returns {void}
+     */
+    notifyDataChannelOpened() {
+        this._sendEvent({ name: 'data-channel-opened' });
+    }
+
+    /**
      * Notify external application (if API is enabled) that we are ready to be
      * closed.
      *
@@ -1335,6 +1350,32 @@ class API {
         this._sendEvent({
             name: 'error-occurred',
             error
+        });
+    }
+
+    /**
+     * Notify external application ( if API is enabled) that a toolbar button was clicked.
+     *
+     * @param {string} key - The key of the toolbar button.
+     * @returns {void}
+     */
+    notifyToolbarButtonClicked(key: string) {
+        this._sendEvent({
+            name: 'toolbar-button-clicked',
+            key
+        });
+    }
+
+    /**
+     * Notify external application (if API is enabled) wether the used browser is supported or not.
+     *
+     * @param {boolean} supported - If browser is supported or not.
+     * @returns {void}
+     */
+    notifyBrowserSupport(supported: boolean) {
+        this._sendEvent({
+            name: 'browser-support',
+            supported
         });
     }
 

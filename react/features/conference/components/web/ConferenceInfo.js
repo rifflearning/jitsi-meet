@@ -1,6 +1,6 @@
 /* @flow */
 
-import React from 'react';
+import React, { Component } from 'react';
 
 import { JitsiRecordingConstants } from '../../../base/lib-jitsi-meet';
 import { getParticipantCount } from '../../../base/participants/functions';
@@ -14,10 +14,56 @@ import { isToolboxVisible } from '../../../toolbox/functions.web';
 import { TranscribingLabel } from '../../../transcribing';
 import { VideoQualityLabel } from '../../../video-quality';
 import ConferenceTimer from '../ConferenceTimer';
+import { getConferenceInfo } from '../functions';
 
+import ConferenceInfoContainer from './ConferenceInfoContainer';
+import InsecureRoomNameLabel from './InsecureRoomNameLabel';
 import ParticipantsCount from './ParticipantsCount';
+import SubjectText from './SubjectText';
 
-import { InsecureRoomNameLabel } from '.';
+const COMPONENTS = [
+    {
+        Component: SubjectText,
+        id: 'subject'
+    },
+    {
+        Component: ConferenceTimer,
+        id: 'conference-timer'
+    },
+    {
+        Component: ParticipantsCount,
+        id: 'participants-count'
+    },
+    {
+        Component: E2EELabel,
+        id: 'e2ee'
+    },
+    {
+        Component: () => (
+            <>
+                <RecordingLabel mode = { JitsiRecordingConstants.mode.FILE } />
+                <RecordingLabel mode = { JitsiRecordingConstants.mode.STREAM } />
+            </>
+        ),
+        id: 'recording'
+    },
+    {
+        Component: LocalRecordingLabel,
+        id: 'local-recording'
+    },
+    {
+        Component: TranscribingLabel,
+        id: 'transcribing'
+    },
+    {
+        Component: VideoQualityLabel,
+        id: 'video-quality'
+    },
+    {
+        Component: InsecureRoomNameLabel,
+        id: 'insecure-room'
+    }
+];
 
 /**
  * The type of the React {@code Component} props of {@link Subject}.
@@ -25,35 +71,9 @@ import { InsecureRoomNameLabel } from '.';
 type Props = {
 
     /**
-     * Whether the info should span across the full width.
+     * The conference info labels to be shown in the conference header.
      */
-    _fullWidth: boolean,
-
-    /**
-     * Whether the conference name and timer should be displayed or not.
-     */
-    _hideConferenceNameAndTimer: boolean,
-
-    /**
-     * Whether the conference timer should be shown or not.
-     */
-    _hideConferenceTimer: boolean,
-
-    /**
-     * Whether the recording label should be shown or not.
-     */
-    _hideRecordingLabel: boolean,
-
-    /**
-     * Whether the participant count should be shown or not.
-     */
-    _showParticipantCount: boolean,
-
-    /**
-     * The subject or the of the conference.
-     * Falls back to conference name.
-     */
-    _subject: string,
+    _conferenceInfo: Object,
 
     /**
      * Indicates whether the component should be visible or not.
@@ -86,7 +106,7 @@ const getLeftMargin = () => {
  * @param {Object} props - The props of the component.
  * @returns {React$None}
  */
-function ConferenceInfo(props: Props) {
+ function ConferenceInfo(props: Props) {
     const {
         _hideConferenceNameAndTimer,
         _hideConferenceTimer,
@@ -146,6 +166,7 @@ function ConferenceInfo(props: Props) {
         </div>
     );
 }
+
 
 /**
  * Maps (parts of) the Redux state to the associated
