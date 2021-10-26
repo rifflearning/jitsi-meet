@@ -89,6 +89,7 @@
     "promise.allsettled": "1.0.4",
     "punycode": "2.1.1",
     "react": "16.12",
+    "react-beautiful-dnd": "^13.1.0",
     "react-dom": "16.12",
     "react-draggable": "^4.4.3",
     "react-emoji-render": "1.2.4",
