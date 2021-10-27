@@ -10,6 +10,7 @@ import {
     PARTICIPANT_LEFT,
     PARTICIPANT_UPDATED,
     PIN_PARTICIPANT,
+    RAISE_HAND_UPDATED,
     SET_LOADABLE_AVATAR_URL
 } from './actionTypes';
 import { LOCAL_PARTICIPANT_DEFAULT_ID, PARTICIPANT_ROLE } from './constants';
@@ -60,6 +61,7 @@ const DEFAULT_STATE = {
     haveParticipantWithScreenSharingFeature: false,
     local: undefined,
     pinnedParticipant: undefined,
+    raisedHandsQueue: [],
     remote: new Map(),
     sortedRemoteParticipants: new Map(),
     sortedRemoteScreenshares: new Map(),
@@ -317,6 +319,12 @@ ReducerRegistry.register('features/base/participants', (state = DEFAULT_STATE, a
         }
 
         return { ...state };
+    }
+    case RAISE_HAND_UPDATED: {
+        return {
+            ...state,
+            raisedHandsQueue: action.queue
+        };
     }
     case SCREEN_SHARE_REMOTE_PARTICIPANTS_UPDATED: {
         const { participantIds } = action;
