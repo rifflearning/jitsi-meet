@@ -196,6 +196,10 @@ body > .tooltip {
     }
 }
 
+#chatconversation::-webkit-scrollbar-thumb {
+    background-color: $riffViolet;
+}
+
 // video quality dialog overrides
 .video-quality-dialog .video-quality-dialog-contents .video-quality-dialog-label-container.active {
     color: $violetColor;
@@ -283,7 +287,7 @@ body > .tooltip {
     background-color: $riffViolet;
 }
 
-input[type="checkbox"]:checked + svg {
+input[type="checkbox"]:checked + svg, .settings-pane input[type=checkbox]:checked+svg {
     --checkbox-background-color: #775e80;
     --checkbox-border-color: #93759e;
 }
@@ -310,5 +314,16 @@ input[type="checkbox"] + svg {
         .toolbox-icon {
             background-color: #36383c;
         }
+    }
+}
+
+.subject-text {
+    padding: 0;
+    .MuiFormControl-root {
+        margin-left: 0;
+    }
+
+    &--content {
+        padding: 0 16px;
     }
 }
