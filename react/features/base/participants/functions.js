@@ -275,17 +275,6 @@ export function getRemoteParticipants(stateful: Object | Function) {
 }
 
 /**
- * Selectors for the getting the remote participants in the order that they are displayed in the filmstrip.
- *
-@param {(Function|Object)} stateful - The (whole) redux state, or redux's {@code getState} function to be used to
- * retrieve the state features/filmstrip.
- * @returns {Array<string>}
- */
-export function getRemoteParticipantsSorted(stateful: Object | Function) {
-    return toState(stateful)['features/filmstrip'].remoteParticipants;
-}
-
-/**
  * Returns the participant which has its pinned state set to truthy.
  *
  * @param {(Function|Object)} stateful - The (whole) redux state, or redux's
@@ -456,57 +445,51 @@ async function _getFirstLoadableAvatarUrl(participant, store) {
     return undefined;
 }
 
+
 /**
- * Selector for retrieving ids of participants in the order that they are displayed in the filmstrip (with the
- * exception of participants with raised hand). The participants are reordered as follows.
- * 1. Local participant.
- * 2. Participants with raised hand.
- * 3. Participants with screenshare sorted alphabetically by their display name.
- * 4. Shared video participants.
- * 5. Recent speakers sorted alphabetically by their display name.
- * 6. Rest of the participants sorted alphabetically by their display name.
+ * Selector for retrieving sorted participants by display name.
  *
  * @param {(Function|Object)} stateful - The (whole) redux state, or redux's
- * {@code getState} function to be used to retrieve the state features/base/participants.
- * @returns {Array<string>}
+ * {@code getState} function to be used to retrieve the state
+ * features/base/participants.
+ * @returns {Array<Object>}
  */
-export function getSortedParticipantIds(stateful: Object | Function): Array<string> {
-    const { id } = getLocalParticipant(stateful);
-    const remoteParticipants = getRemoteParticipantsSorted(stateful);
-    const reorderedParticipants = new Set(remoteParticipants);
-    const raisedHandParticipants = getRaiseHandsQueue(stateful);
-    const remoteRaisedHandParticipants = new Set(raisedHandParticipants || []);
+export function getSortedParticipants(stateful: Object | Function) {
+    const localParticipant = getLocalParticipant(stateful);
+    const remoteParticipants = getRemoteParticipants(stateful);
 
-    for (const participant of remoteRaisedHandParticipants.keys()) {
-        // Avoid duplicates.
-        if (reorderedParticipants.has(participant)) {
-            reorderedParticipants.delete(participant);
-        } else {
-            remoteRaisedHandParticipants.delete(participant);
+    const items = [];
+    const dominantSpeaker = getDominantSpeakerParticipant(stateful);
+
+    remoteParticipants.forEach(p => {
+        if (p !== dominantSpeaker) {
+            items.push(p);
         }
+    });
+
+    items.sort((a, b) =>
+        getParticipantDisplayName(stateful, a.id).localeCompare(getParticipantDisplayName(stateful, b.id))
+    );
+
+    items.unshift(localParticipant);
+
+    if (dominantSpeaker && dominantSpeaker !== localParticipant) {
+        items.unshift(dominantSpeaker);
     }
 
-    // Remove self.
-    remoteRaisedHandParticipants.has(id) && remoteRaisedHandParticipants.delete(id);
-
-    // Move self and participants with raised hand to the top of the list.
-    return [
-        id,
-        ...Array.from(remoteRaisedHandParticipants.keys()),
-        ...Array.from(reorderedParticipants.keys())
-    ];
+    return items;
 }
 
 /**
- * Get the participants queue with raised hands.
+ * Selector for retrieving ids of alphabetically sorted participants by name.
  *
  * @param {(Function|Object)} stateful - The (whole) redux state, or redux's
  * {@code getState} function to be used to retrieve the state
  * features/base/participants.
  * @returns {Array<string>}
  */
-export function getRaiseHandsQueue(stateful: Object | Function): Array<string> {
-    const { raisedHandsQueue } = toState(stateful)['features/base/participants'];
+export function getSortedParticipantIds(stateful: Object | Function): Array<string> {
+    const participantIds = getSortedParticipants(stateful).map((p): Object => p.id);
 
-    return raisedHandsQueue;
+    return participantIds;
 }
