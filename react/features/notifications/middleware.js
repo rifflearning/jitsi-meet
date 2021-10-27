@@ -11,9 +11,8 @@ import {
     getLocalParticipant
 } from '../base/participants';
 import { MiddlewareRegistry, StateListenerRegistry } from '../base/redux';
-import { maybeExtractIdFromDisplayName } from '../riff-platform/functions';
-
 import { PARTICIPANTS_PANE_OPEN } from '../participants-pane/actionTypes';
+import { maybeExtractIdFromDisplayName } from '../riff-platform/functions';
 
 import {
     clearNotifications,

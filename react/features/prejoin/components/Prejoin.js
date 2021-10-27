@@ -19,7 +19,7 @@ import {
     joinConference as joinConferenceAction,
     joinConferenceWithoutAudio as joinConferenceWithoutAudioAction,
     setJoinByPhoneDialogVisiblity as setJoinByPhoneDialogVisiblityAction,
-    setSkipPrejoin as setSkipPrejoinAction,
+    setSkipPrejoin as setSkipPrejoinAction
 } from '../actions';
 import {
     isDeviceStatusVisible,
@@ -308,7 +308,6 @@ class Prejoin extends Component<Props, State> {
             joinConference,
             joinConferenceWithoutAudio,
             name,
-            readOnlyName,
             showCameraPreview,
             showDialog,
             t,

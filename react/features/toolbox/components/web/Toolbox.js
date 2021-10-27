@@ -260,7 +260,7 @@ type State = {
  *
  * @extends Component
  */
-class Toolbox extends Component<Props> {
+class Toolbox extends Component<Props, State> {
     /**
      * Initializes a new {@code Toolbox} instance.
      *
@@ -386,49 +386,13 @@ class Toolbox extends Component<Props> {
      * @inheritdoc
      */
     componentDidUpdate(prevProps) {
-        const { _dialog, dispatch } = this.props;
-
+        const { _dialog } = this.props;
 
         if (prevProps._overflowMenuVisible
             && !prevProps._dialog
             && _dialog) {
             this._onSetOverflowVisible(false);
             this.props.dispatch(setToolbarHovered(false));
-        }
-
-        if (!this.state.reactionsShortcutsRegistered
-            && (prevProps._reactionsEnabled !== this.props._reactionsEnabled
-                || prevProps._participantCount !== this.props._participantCount)) {
-            if (this.props._reactionsEnabled && this.props._participantCount > 1) {
-                // eslint-disable-next-line react/no-did-update-set-state
-                this.setState({
-                    reactionsShortcutsRegistered: true
-                });
-                const REACTION_SHORTCUTS = Object.keys(REACTIONS).map(key => {
-                    const onShortcutSendReaction = () => {
-                        this.props.dispatch(addReactionToBuffer(key));
-                        sendAnalytics(createShortcutEvent(
-                            `reaction.${key}`
-                        ));
-                    };
-
-                    return {
-                        character: REACTIONS[key].shortcutChar,
-                        exec: onShortcutSendReaction,
-                        helpDescription: this.props.t(`toolbar.reaction${key.charAt(0).toUpperCase()}${key.slice(1)}`),
-                        altKey: true
-                    };
-                });
-
-                REACTION_SHORTCUTS.forEach(shortcut => {
-                    APP.keyboardshortcut.registerShortcut(
-                        shortcut.character,
-                        null,
-                        shortcut.exec,
-                        shortcut.helpDescription,
-                        shortcut.altKey);
-                });
-            }
         }
     }
 

@@ -6,8 +6,8 @@ import { Dialog } from '../../../base/dialog';
 import { translate } from '../../../base/i18n';
 import { Switch } from '../../../base/react';
 import { connect } from '../../../base/redux';
-import AbstractMuteEveryoneDialog, { abstractMapStateToProps, type Props }
-    from '../AbstractMuteEveryoneDialog';
+import AbstractMuteEveryoneDialog, { abstractMapStateToProps, type Props } from
+'../AbstractMuteEveryoneDialog';
 
 /**
  * A React Component with the contents for a dialog that asks for confirmation

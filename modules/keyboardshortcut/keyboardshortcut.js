@@ -9,8 +9,7 @@ import {
     sendAnalytics
 } from '../../react/features/analytics';
 import { toggleDialog } from '../../react/features/base/dialog';
-import { KeyboardShortcutsDialog }
-    from '../../react/features/keyboard-shortcuts';
+import { KeyboardShortcutsDialog } from '../../react/features/keyboard-shortcuts';
 import { SpeakerStats } from '../../react/features/speaker-stats';
 
 const logger = Logger.getLogger(__filename);

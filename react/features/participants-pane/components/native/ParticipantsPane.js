@@ -11,8 +11,8 @@ import { JitsiModal } from '../../../base/modal';
 import {
     isLocalParticipantModerator
 } from '../../../base/participants';
-import MuteEveryoneDialog
-    from '../../../video-menu/components/native/MuteEveryoneDialog';
+import MuteEveryoneDialog from
+'../../../video-menu/components/native/MuteEveryoneDialog';
 import { close } from '../../actions.native';
 
 import { ContextMenuMore } from './ContextMenuMore';

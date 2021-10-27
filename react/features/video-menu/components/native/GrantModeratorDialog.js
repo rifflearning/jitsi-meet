@@ -6,8 +6,8 @@ import { Text } from 'react-native';
 import { ConfirmDialog } from '../../../base/dialog';
 import { translate } from '../../../base/i18n';
 import { connect } from '../../../base/redux';
-import AbstractGrantModeratorDialog, { abstractMapStateToProps }
-    from '../AbstractGrantModeratorDialog';
+import AbstractGrantModeratorDialog, { abstractMapStateToProps } from
+'../AbstractGrantModeratorDialog';
 
 /**
  * Dialog to confirm a remote participant kick action.

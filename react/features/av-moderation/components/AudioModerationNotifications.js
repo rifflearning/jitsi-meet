@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+
 // ../../notifications/components/NotificationWithParticipants
 import NotificationWithParticipants from '../../notifications/components/web/NotificationWithParticipants';
 import {

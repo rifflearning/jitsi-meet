@@ -2,8 +2,8 @@
 
 import { openDialog } from '../base/dialog';
 import { SharedVideoMenu } from '../video-menu';
-import ConnectionStatusComponent
-    from '../video-menu/components/native/ConnectionStatusComponent';
+import ConnectionStatusComponent from
+'../video-menu/components/native/ConnectionStatusComponent';
 import RemoteVideoMenu from '../video-menu/components/native/RemoteVideoMenu';
 
 import { SET_VOLUME } from './actionTypes';

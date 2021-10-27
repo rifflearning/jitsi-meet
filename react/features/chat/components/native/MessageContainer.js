@@ -7,8 +7,8 @@ import { ColorSchemeRegistry } from '../../../base/color-scheme';
 import { translate } from '../../../base/i18n';
 import { connect } from '../../../base/redux';
 import { StyleType } from '../../../base/styles';
-import AbstractMessageContainer, { type Props as AbstractProps }
-    from '../AbstractMessageContainer';
+import AbstractMessageContainer, { type Props as AbstractProps } from
+'../AbstractMessageContainer';
 
 import ChatMessageGroup from './ChatMessageGroup';
 import styles from './styles';

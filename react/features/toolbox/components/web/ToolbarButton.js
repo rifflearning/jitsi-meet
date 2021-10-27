@@ -5,8 +5,8 @@ import React from 'react';
 import { Icon } from '../../../base/icons';
 import { Tooltip } from '../../../base/tooltip';
 import AbstractToolbarButton from '../AbstractToolbarButton';
-import type { Props as AbstractToolbarButtonProps }
-    from '../AbstractToolbarButton';
+import type { Props as AbstractToolbarButtonProps } from
+'../AbstractToolbarButton';
 
 /**
  * The type of the React {@code Component} props of {@link ToolbarButton}.
