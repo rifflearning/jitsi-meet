@@ -1,5 +1,5 @@
 export const CONFERENCE_INFO = {
-    alwaysVisible: [ 'recording', 'local-recording', 'riff-local-recording' ],
+    alwaysVisible: [ 'recording', 'local-recording' ],
     autoHide: [
         'subject',
         'conference-timer',
@@ -7,6 +7,7 @@ export const CONFERENCE_INFO = {
         'e2ee',
         'transcribing',
         'video-quality',
-        'insecure-room'
+        'insecure-room',
+        'riff-local-recording'
     ]
 };
