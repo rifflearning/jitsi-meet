@@ -42,6 +42,11 @@ type Props = {
     placeHolder: string,
 
     /**
+     * Whether the input is read only or not.
+     */
+    readOnly?: boolean,
+
+    /**
      * The field type (e.g. text, password...etc).
      */
     type: string,
@@ -131,6 +136,7 @@ export default class InputField extends PureComponent<Props, State> {
                 onFocus = { this._onFocus }
                 onKeyDown = { this._onKeyDown }
                 placeholder = { this.props.placeHolder }
+                readOnly = { this.props.readOnly }
                 type = { this.props.type }
                 value = { this.state.value } />
         );

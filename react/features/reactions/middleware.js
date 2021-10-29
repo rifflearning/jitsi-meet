@@ -3,10 +3,11 @@
 import { batch } from 'react-redux';
 
 import { APP_WILL_MOUNT, APP_WILL_UNMOUNT } from '../base/app';
+import { getParticipantCount } from '../base/participants';
 import { MiddlewareRegistry } from '../base/redux';
 import { updateSettings } from '../base/settings';
 import { playSound, registerSound, unregisterSound } from '../base/sounds';
-import { isVpaasMeeting } from '../jaas/functions';
+import { getDisabledSounds } from '../base/sounds/functions.any';
 import { NOTIFICATION_TIMEOUT, showNotification } from '../notifications';
 
 import {
@@ -24,7 +25,13 @@ import {
     sendReactions,
     setReactionQueue
 } from './actions.any';
-import { ENDPOINT_REACTION_NAME, RAISE_HAND_SOUND_ID, REACTIONS, SOUNDS_THRESHOLDS } from './constants';
+import {
+    ENDPOINT_REACTION_NAME,
+    RAISE_HAND_SOUND_ID,
+    REACTIONS,
+    REACTION_SOUND,
+    SOUNDS_THRESHOLDS
+} from './constants';
 import {
     getReactionMessageFromBuffer,
     getReactionsSoundsThresholds,
@@ -91,16 +98,17 @@ MiddlewareRegistry.register(store => next => action => {
     case FLUSH_REACTION_BUFFER: {
         const state = getState();
         const { buffer } = state['features/reactions'];
+        const participantCount = getParticipantCount(state);
 
         batch(() => {
-            dispatch(sendReactions());
+            if (participantCount > 1) {
+                dispatch(sendReactions());
+            }
             dispatch(addReactionsToChat(getReactionMessageFromBuffer(buffer)));
             dispatch(pushReactions(buffer));
         });
 
-        if (isVpaasMeeting(state)) {
-            sendReactionsWebhook(state, buffer);
-        }
+        sendReactionsWebhook(state, buffer);
 
         break;
     }
@@ -124,10 +132,12 @@ MiddlewareRegistry.register(store => next => action => {
         const state = getState();
         const { queue, notificationDisplayed } = state['features/reactions'];
         const { soundsReactions } = state['features/base/settings'];
+        const disabledSounds = getDisabledSounds(state);
         const reactions = action.reactions;
 
         batch(() => {
-            if (!notificationDisplayed && soundsReactions && displayReactionSoundsNotification) {
+            if (!notificationDisplayed && soundsReactions && !disabledSounds.includes(REACTION_SOUND)
+                && displayReactionSoundsNotification) {
                 dispatch(displayReactionSoundsNotification());
             }
             if (soundsReactions) {

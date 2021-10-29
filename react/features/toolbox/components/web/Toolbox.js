@@ -1,4 +1,3 @@
-
 // @flow
 
 import React, { Component, Fragment } from 'react';
@@ -18,7 +17,6 @@ import { translate } from '../../../base/i18n';
 import JitsiMeetJS from '../../../base/lib-jitsi-meet';
 import {
     getLocalParticipant,
-    getParticipantCount,
     haveParticipantWithScreenSharingFeature,
     raiseHand
 } from '../../../base/participants';
@@ -91,7 +89,6 @@ import AudioSettingsButton from './AudioSettingsButton';
 import FullscreenButton from './FullscreenButton';
 import OverflowMenuButton from './OverflowMenuButton';
 import ProfileButton from './ProfileButton';
-import RaiseHandButton from './RaiseHandButton';
 import Separator from './Separator';
 import ShareDesktopButton from './ShareDesktopButton';
 import ToggleCameraButton from './ToggleCameraButton';
@@ -106,6 +103,11 @@ type Props = {
      * String showing if the virtual background type is desktop-share.
      */
     _backgroundType: String,
+
+    /**
+     * Toolbar buttons which have their click exposed through the API.
+     */
+    _buttonsWithNotifyClick: Array<string>,
 
     /**
      * Whether or not the chat feature is currently displayed.
@@ -180,11 +182,6 @@ type Props = {
     _overflowMenuVisible: boolean,
 
     /**
-     * Number of participants in the conference.
-     */
-    _participantCount: number,
-
-    /**
      * Whether or not the participants pane is open.
      */
     _participantsPaneOpen: boolean,
@@ -253,16 +250,12 @@ type Props = {
 
 declare var APP: Object;
 
-type State = {
-    reactionsShortcutsRegistered: boolean
-};
-
 /**
  * Implements the conference toolbox on React/Web.
  *
  * @extends Component
  */
-class Toolbox extends Component<Props, State> {
+class Toolbox extends Component<Props> {
     /**
      * Initializes a new {@code Toolbox} instance.
      *
@@ -271,10 +264,6 @@ class Toolbox extends Component<Props, State> {
      */
     constructor(props: Props) {
         super(props);
-
-        this.state = {
-            reactionsShortcutsRegistered: false
-        };
 
         // Bind event handlers so they are only bound once per instance.
         this._onMouseOut = this._onMouseOut.bind(this);
@@ -305,7 +294,7 @@ class Toolbox extends Component<Props, State> {
      * @returns {void}
      */
     componentDidMount() {
-        const { _toolbarButtons, t, dispatch, _reactionsEnabled, _participantCount } = this.props;
+        const { _toolbarButtons, t, dispatch, _reactionsEnabled } = this.props;
         const KEYBOARD_SHORTCUTS = [
             isToolbarButtonEnabled('videoquality', _toolbarButtons) && {
                 character: 'A',
@@ -354,7 +343,7 @@ class Toolbox extends Component<Props, State> {
             }
         });
 
-        if (_reactionsEnabled && _participantCount > 1) {
+        if (_reactionsEnabled) {
             const REACTION_SHORTCUTS = Object.keys(REACTIONS).map(key => {
                 const onShortcutSendReaction = () => {
                     dispatch(addReactionToBuffer(key));
@@ -388,51 +377,14 @@ class Toolbox extends Component<Props, State> {
      * @inheritdoc
      */
     componentDidUpdate(prevProps) {
-        // Ensure the dialog is closed when the toolbox becomes hidden.
-        if (prevProps._overflowMenuVisible && !this.props._visible) {
-            this._onSetOverflowVisible(false);
-        }
+        const { _dialog, dispatch } = this.props;
+
 
         if (prevProps._overflowMenuVisible
             && !prevProps._dialog
-            && this.props._dialog) {
+            && _dialog) {
             this._onSetOverflowVisible(false);
-            this.props.dispatch(setToolbarHovered(false));
-        }
-
-        if (!this.state.reactionsShortcutsRegistered
-            && (prevProps._reactionsEnabled !== this.props._reactionsEnabled
-                || prevProps._participantCount !== this.props._participantCount)) {
-            if (this.props._reactionsEnabled && this.props._participantCount > 1) {
-                // eslint-disable-next-line react/no-did-update-set-state
-                this.setState({
-                    reactionsShortcutsRegistered: true
-                });
-                const REACTION_SHORTCUTS = Object.keys(REACTIONS).map(key => {
-                    const onShortcutSendReaction = () => {
-                        this.props.dispatch(addReactionToBuffer(key));
-                        sendAnalytics(createShortcutEvent(
-                            `reaction.${key}`
-                        ));
-                    };
-
-                    return {
-                        character: REACTIONS[key].shortcutChar,
-                        exec: onShortcutSendReaction,
-                        helpDescription: this.props.t(`toolbar.reaction${key.charAt(0).toUpperCase()}${key.slice(1)}`),
-                        altKey: true
-                    };
-                });
-
-                REACTION_SHORTCUTS.forEach(shortcut => {
-                    APP.keyboardshortcut.registerShortcut(
-                        shortcut.character,
-                        null,
-                        shortcut.exec,
-                        shortcut.helpDescription,
-                        shortcut.altKey);
-                });
-            }
+            dispatch(setToolbarHovered(false));
         }
     }
 
@@ -446,7 +398,7 @@ class Toolbox extends Component<Props, State> {
         [ 'A', 'C', 'D', 'R', 'S' ].forEach(letter =>
             APP.keyboardshortcut.unregisterShortcut(letter));
 
-        if (this.props._reactionsEnabled && this.state.reactionsShortcutsRegistered) {
+        if (this.props._reactionsEnabled) {
             Object.keys(REACTIONS).map(key => REACTIONS[key].shortcutChar)
                 .forEach(letter =>
                     APP.keyboardshortcut.unregisterShortcut(letter, true));
@@ -614,8 +566,7 @@ class Toolbox extends Component<Props, State> {
         const {
             _feedbackConfigured,
             _isMobile,
-            _screenSharing,
-            _reactionsEnabled
+            _screenSharing
         } = this.props;
 
         const microphone = {
@@ -652,8 +603,8 @@ class Toolbox extends Component<Props, State> {
 
         const raisehand = {
             key: 'raisehand',
-            Content: _reactionsEnabled ? ReactionsMenuButton : RaiseHandButton,
-            handleClick: _reactionsEnabled ? null : this._onToolbarToggleRaiseHand,
+            Content: ReactionsMenuButton,
+            handleClick: this._onToolbarToggleRaiseHand,
             group: 2
         };
 
@@ -861,6 +812,24 @@ class Toolbox extends Component<Props, State> {
     }
 
     /**
+     * Overwrites click handlers for buttons in case click is exposed through the iframe API.
+     *
+     * @param {Object} buttons - The list of toolbar buttons.
+     * @returns {void}
+     */
+    _overwriteButtonsClickHandlers(buttons) {
+        if (typeof APP === 'undefined' || !this.props._buttonsWithNotifyClick?.length) {
+            return;
+        }
+
+        Object.values(buttons).forEach((button: any) => {
+            if (this.props._buttonsWithNotifyClick.includes(button.key)) {
+                button.handleClick = () => APP.API.notifyToolbarButtonClicked(button.key);
+            }
+        });
+    }
+
+    /**
      * Returns all buttons that need to be rendered.
      *
      * @param {Object} state - The redux state.
@@ -874,6 +843,8 @@ class Toolbox extends Component<Props, State> {
 
 
         const buttons = this._getAllButtons();
+
+        this._overwriteButtonsClickHandlers(buttons);
         const isHangupVisible = isToolbarButtonEnabled('hangup', _toolbarButtons);
         const { order } = THRESHOLDS.find(({ width }) => _clientWidth > width)
             || THRESHOLDS[THRESHOLDS.length - 1];
@@ -911,7 +882,9 @@ class Toolbox extends Component<Props, State> {
      * @returns {void}
      */
     _onMouseOut() {
-        this.props.dispatch(setToolbarHovered(false));
+        const { _overflowMenuVisible, dispatch } = this.props;
+
+        !_overflowMenuVisible && dispatch(setToolbarHovered(false));
     }
 
     _onMouseOver: () => void;
@@ -939,6 +912,7 @@ class Toolbox extends Component<Props, State> {
      */
     _onSetOverflowVisible(visible) {
         this.props.dispatch(setOverflowMenuVisible(visible));
+        this.props.dispatch(setToolbarHovered(visible));
     }
 
     _onShortcutToggleChat: () => void;
@@ -1338,7 +1312,9 @@ function _mapStateToProps(state, ownProps) {
     let desktopSharingEnabled = JitsiMeetJS.isDesktopSharingEnabled();
     const {
         callStatsID,
-        enableFeaturesBasedOnToken
+        disableProfile,
+        enableFeaturesBasedOnToken,
+        buttonsWithNotifyClick
     } = state['features/base/config'];
     const {
         fullScreen,
@@ -1370,6 +1346,7 @@ function _mapStateToProps(state, ownProps) {
 
     return {
         _backgroundType: state['features/virtual-background'].backgroundType,
+        _buttonsWithNotifyClick: buttonsWithNotifyClick,
         _chatOpen: state['features/chat'].isOpen,
         _clientWidth: clientWidth,
         _conference: conference,
@@ -1378,13 +1355,12 @@ function _mapStateToProps(state, ownProps) {
         _dialog: Boolean(state['features/base/dialog'].component),
         _feedbackConfigured: Boolean(callStatsID),
         _fullScreen: fullScreen,
-        _isProfileDisabled: Boolean(state['features/base/config'].disableProfile),
+        _isProfileDisabled: Boolean(disableProfile),
         _isMobile: isMobileBrowser(),
         _isVpaasMeeting: isVpaasMeeting(state),
         _localParticipantID: localParticipant?.id,
         _localVideo: localVideo,
         _overflowMenuVisible: overflowMenuVisible,
-        _participantCount: getParticipantCount(state),
         _participantsPaneOpen: getParticipantsPaneOpen(state),
         _raisedHand: localParticipant?.raisedHand,
         _reactionsEnabled: isReactionsEnabled(state),

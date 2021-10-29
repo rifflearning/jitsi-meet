@@ -8,17 +8,23 @@ import { translate } from '../../base/i18n';
 import { Switch } from '../../base/react';
 import { connect } from '../../base/redux';
 import { toggleE2EE } from '../actions';
+import { MAX_MODE } from '../constants';
 import { doesEveryoneSupportE2EE } from '../functions';
 
 type Props = {
 
     /**
-     * Custom e2ee label.
+     * The resource for the description, computed based on the maxMode and whether the switch is toggled or not.
      */
-    _e2eeLabel: string,
+    _descriptionResource: string,
 
     /**
-     * Whether E2EE is currently enabled or not.
+     * Custom e2ee labels.
+     */
+    _e2eeLabels: Object,
+
+    /**
+     * Whether the switch is currently enabled or not.
      */
     _enabled: boolean,
 
@@ -26,6 +32,11 @@ type Props = {
      * Indicates whether all participants in the conference currently support E2EE.
      */
     _everyoneSupportE2EE: boolean,
+
+    /**
+     * Whether E2EE is currently enabled or not.
+     */
+    _toggled: boolean,
 
     /**
      * The redux {@code dispatch} function.
@@ -43,7 +54,7 @@ type State = {
     /**
      * True if the switch is toggled on.
      */
-    enabled: boolean
+    toggled: boolean
 };
 
 /**
@@ -59,10 +70,10 @@ class E2EESection extends Component<Props, State> {
      * @inheritdoc
      */
     static getDerivedStateFromProps(props: Props, state: Object) {
-        if (props._enabled !== state.enabled) {
+        if (props._toggled !== state.toggled) {
 
             return {
-                enabled: props._enabled
+                toggled: props._toggled
             };
         }
 
@@ -78,7 +89,7 @@ class E2EESection extends Component<Props, State> {
         super(props);
 
         this.state = {
-            enabled: false
+            toggled: false
         };
 
         // Bind event handlers so they are only bound once for every instance.
@@ -92,21 +103,11 @@ class E2EESection extends Component<Props, State> {
      * @returns {ReactElement}
      */
     render() {
-        const { _e2eeLabel, _everyoneSupportE2EE, t } = this.props;
-        const { enabled } = this.state;
-        let description;
-        let label;
-        let warning;
-
-        if (_e2eeLabel) {
-            description = t('dialog.e2eeDescriptionCustom', { label: _e2eeLabel });
-            label = t('dialog.e2eeLabelCustom', { label: _e2eeLabel });
-            warning = t('dialog.e2eeWarningCustom', { label: _e2eeLabel });
-        } else {
-            description = t('dialog.e2eeDescription');
-            label = t('dialog.e2eeLabel');
-            warning = t('dialog.e2eeWarning');
-        }
+        const { _descriptionResource, _enabled, _e2eeLabels, _everyoneSupportE2EE, t } = this.props;
+        const { toggled } = this.state;
+        const description = _e2eeLabels?.description || t(_descriptionResource);
+        const label = _e2eeLabels?.label || t('dialog.e2eeLabel');
+        const warning = _e2eeLabels?.warning || t('dialog.e2eeWarning');
 
         return (
             <div id = 'e2ee-section'>
@@ -123,9 +124,10 @@ class E2EESection extends Component<Props, State> {
                         { label }
                     </label>
                     <Switch
+                        disabled = { !_enabled }
                         id = 'e2ee-section-switch'
                         onValueChange = { this._onToggle }
-                        value = { enabled } />
+                        value = { toggled } />
                 </div>
             </div>
         );
@@ -140,10 +142,10 @@ class E2EESection extends Component<Props, State> {
      * @returns {void}
      */
     _onToggle() {
-        const newValue = !this.state.enabled;
+        const newValue = !this.state.toggled;
 
         this.setState({
-            enabled: newValue
+            toggled: newValue
         });
 
         sendAnalytics(createE2EEEvent(`enabled.${String(newValue)}`));
@@ -159,12 +161,28 @@ class E2EESection extends Component<Props, State> {
  * @returns {Props}
  */
 function mapStateToProps(state) {
-    const { enabled } = state['features/e2ee'];
-    const { e2eeLabel } = state['features/base/config'];
+    const { enabled: e2eeEnabled, maxMode } = state['features/e2ee'];
+    const { e2eeLabels } = state['features/base/config'];
+
+    let descriptionResource = '';
+
+    if (e2eeLabels) {
+        // When e2eeLabels are present, the descriptionResouse is ignored.
+        descriptionResource = undefined;
+    } else if (maxMode === MAX_MODE.THRESHOLD_EXCEEDED) {
+        descriptionResource = 'dialog.e2eeDisabledDueToMaxModeDescription';
+    } else if (maxMode === MAX_MODE.ENABLED) {
+        descriptionResource = e2eeEnabled
+            ? 'dialog.e2eeWillDisableDueToMaxModeDescription' : 'dialog.e2eeDisabledDueToMaxModeDescription';
+    } else {
+        descriptionResource = 'dialog.e2eeDescription';
+    }
 
     return {
-        _e2eeLabel: e2eeLabel,
-        _enabled: enabled,
+        _descriptionResource: descriptionResource,
+        _e2eeLabels: e2eeLabels,
+        _enabled: maxMode === MAX_MODE.DISABLED || e2eeEnabled,
+        _toggled: e2eeEnabled,
         _everyoneSupportE2EE: doesEveryoneSupportE2EE(state)
     };
 }

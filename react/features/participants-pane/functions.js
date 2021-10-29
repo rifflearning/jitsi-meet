@@ -3,7 +3,8 @@
 import {
     isParticipantApproved,
     isEnabledFromState,
-    isLocalParticipantApprovedFromState
+    isLocalParticipantApprovedFromState,
+    isSupported
 } from '../av-moderation/functions';
 import { getFeatureFlag, INVITE_ENABLED } from '../base/flags';
 import { MEDIA_TYPE, type MediaType } from '../base/media/constants';
@@ -76,12 +77,32 @@ export function isForceMuted(participant: Object, mediaType: MediaType, state: O
 export function getParticipantAudioMediaState(participant: Object, muted: Boolean, state: Object) {
     const dominantSpeaker = getDominantSpeakerParticipant(state);
 
+    if (muted) {
+        if (isForceMuted(participant, MEDIA_TYPE.AUDIO, state)) {
+            return MEDIA_STATE.FORCE_MUTED;
+        }
+
+        return MEDIA_STATE.MUTED;
+    }
+
     if (participant === dominantSpeaker) {
         return MEDIA_STATE.DOMINANT_SPEAKER;
     }
 
+    return MEDIA_STATE.UNMUTED;
+}
+
+/**
+ * Determines the video media state (the mic icon) for a participant.
+ *
+ * @param {Object} participant - The participant.
+ * @param {boolean} muted - The mute state of the participant.
+ * @param {Object} state - The redux state.
+ * @returns {MediaState}
+ */
+export function getParticipantVideoMediaState(participant: Object, muted: Boolean, state: Object) {
     if (muted) {
-        if (isForceMuted(participant, MEDIA_TYPE.AUDIO, state)) {
+        if (isForceMuted(participant, MEDIA_TYPE.VIDEO, state)) {
             return MEDIA_STATE.FORCE_MUTED;
         }
 
@@ -144,11 +165,11 @@ export const getParticipantsPaneOpen = (state: Object) => Boolean(getState(state
 export function getQuickActionButtonType(participant: Object, isAudioMuted: Boolean, state: Object) {
     // handled only by moderators
     if (isLocalParticipantModerator(state)) {
-        if (isForceMuted(participant, MEDIA_TYPE.AUDIO, state)) {
-            return QUICK_ACTION_BUTTON.ASK_TO_UNMUTE;
-        }
         if (!isAudioMuted) {
             return QUICK_ACTION_BUTTON.MUTE;
+        }
+        if (isSupported()(state)) {
+            return QUICK_ACTION_BUTTON.ASK_TO_UNMUTE;
         }
     }
 
