@@ -1,16 +1,16 @@
 /* global APP */
 
-import { MEDIA_TYPE, FEATURES } from './constants';
+import { FEATURES } from './constants';
 
 
 /**
- * Collects the list of all video streams that are not muted
+ * Collects the list of all audio/video streams that are not muted
  *
  * @returns {Array}
  */
-export function getAllActiveVideoTracks() {
+export function getAllActiveTracks(mediaType) {
     return APP.store.getState()[FEATURES.TRACKS]
-            .filter(track => track.mediaType === MEDIA_TYPE.VIDEO)
+            .filter(track => track.mediaType === mediaType)
             .filter(track => !track.muted);
 };
 
@@ -20,20 +20,20 @@ export function getAllActiveVideoTracks() {
  * @returns {String}
  */
 export function getUserIdByParticipantId(participantId) {
-    const participant = APP.store.getState()[FEATURES.PARTICIPANTS]
-            .find(participant => participant.id === participantId); 
-    
+    const participant = APP.store.getState()[FEATURES.PARTICIPANTS].remote
+            .get(participantId); 
+
     return participant.name.split(`|`)[0];
 };
 
 /**
- * Returns video stream associated with given participantId
+ * Returns audio/video stream associated with given participantId
  *
  * @returns {MediaStream}
  */
-export function getVideoStreamByParticipantId(participantId) {
+export function getStreamByParticipantId(participantId, mediaType) {
     return APP.store.getState()[FEATURES.TRACKS]
-            .filter(track => track.mediaType === MEDIA_TYPE.VIDEO)
+            .filter(track => track.mediaType === mediaType)
             .find(track => track.participantId === participantId)
             .jitsiTrack.stream; 
 };
@@ -61,9 +61,9 @@ export function getRoomId() {
  *
  * @returns {Array}
  */
-export function getParticipantsWithActiveStreams() {
+export function getParticipantsWithActiveStreams(mediaType) {
     return APP.store.getState()[FEATURES.TRACKS]
-            .filter(track => track.mediaType === MEDIA_TYPE.VIDEO)
+            .filter(track => track.mediaType === mediaType)
             .map(track => track.participantId);
 };
 
@@ -73,8 +73,8 @@ export function getParticipantsWithActiveStreams() {
  *
  * @returns {Object}
  */
-export function selectUpdatedParticipants(last) {
-    const current = getParticipantsWithActiveStreams();
+export function selectUpdatedParticipants(last, mediaType) {
+    const current = getParticipantsWithActiveStreams(mediaType);
 
     return {
         left: last.filter(x => !current.includes(x)),
