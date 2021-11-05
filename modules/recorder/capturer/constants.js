@@ -2,8 +2,14 @@
  * The set of media types defined for streams
  */
 export const MEDIA_TYPE = {
+    AUDIO: "audio",
     VIDEO: "video"
 };
+
+export const MEDIA_TYPES = [
+    MEDIA_TYPE.AUDIO,
+    MEDIA_TYPE.VIDEO
+];
 
 /**
  * The set of params for frame captured from video stream 

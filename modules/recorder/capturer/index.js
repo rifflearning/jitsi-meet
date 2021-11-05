@@ -1,7 +1,9 @@
-import Capturer from './Capturer';
+import AudioCapturer from './AudioCapturer';
+import VideoCapturer from './VideoCapturer';
+import { MEDIA_TYPES, MEDIA_TYPE } from './constants';
 import { 
     getUserIdByParticipantId, 
-    getVideoStreamByParticipantId, 
+    getStreamByParticipantId, 
     selectUpdatedParticipants,
     getRoomId,
     getRoom 
@@ -10,8 +12,11 @@ import {
 
 class Capturers {
     constructor() {
-        // map between participant and video stream capturer
-        this._capturers = new Map();
+        // map between participant and audio/video stream capturer
+        this._capturers = {};
+        for (let mediaType of MEDIA_TYPES) {
+            this._capturers[mediaType] = new Map();
+        }
 
         // link to dispatcher resource for analysis processes creation
         this._dispatcherUrl = null;
@@ -29,26 +34,38 @@ class Capturers {
     }
 
     _handleParticipantsUpdate = () => {
+        for (let mediaType of MEDIA_TYPES) {
+            this._handleParticipantsUpdateByMediaType(mediaType);
+        }
+    }
+
+    _handleParticipantsUpdateByMediaType = (mediaType) => {
         if (!getRoomId()) {
             // we might need to wait for store to be updated with roomId
             return;
         }
 
-        const update = selectUpdatedParticipants(Array.from(this._capturers.keys()));
+        const update = selectUpdatedParticipants(Array.from(this._capturers[mediaType].keys()), mediaType);
 
         for (let participantId of update.left) {
-            this._capturers.get(participantId).disconnect();
-            this._capturers.delete(participantId);
+            this._capturers[mediaType].get(participantId).disconnect();
+            this._capturers[mediaType].delete(participantId);
         }
 
         for (let participantId of update.joined) {
-            const stream = getVideoStreamByParticipantId(participantId);
-            const userId = getUserIdByParticipantId(participantId);
+            const stream = getStreamByParticipantId(participantId, mediaType);
+            const userId = getUserIdByParticipantId(participantId, mediaType);
             const room = getRoom();
             const roomId = getRoomId();
-            const capturer = new Capturer(room, roomId, userId, stream);
+            var capturer;
+            if (mediaType == MEDIA_TYPE.AUDIO){
+                capturer = new AudioCapturer(room, roomId, userId, stream);
+            }
+            else if (mediaType == MEDIA_TYPE.VIDEO){
+                capturer = new VideoCapturer(room, roomId, userId, stream);
+            }
             
-            this._capturers.set(participantId, capturer);
+            this._capturers[mediaType].set(participantId, capturer);
             capturer.connect(this._dispatcherUrl);
         }
     }
@@ -56,10 +73,12 @@ class Capturers {
     stop = () => {
         this.cancelStoreSubscription();
 
-        for (let capturer of this._capturers.values()) {
-            capturer.disconnect();
+        for (let mediaType of MEDIA_TYPES) {
+            for (let capturer of this._capturers[mediaType].values()) {
+                capturer.disconnect();
+            }
+            this._capturers[mediaType].clear();
         }
-        this._capturers.clear();
     }
 
 }
