@@ -8,9 +8,11 @@ class AudioCapturer {
         this._room = room;
         this._roomId = roomId;
         this._userId = userId;
-        this.context = new AudioContext();
-        this.mediaStream = this.context.createMediaStreamSource(stream);
         this._getAudioTracksProperties(stream);
+        this.context = new AudioContext({
+            sampleRate: this._settings["sampleRate"],
+        });
+        this.mediaStream = this.context.createMediaStreamSource(stream);
     }
 
     /**
