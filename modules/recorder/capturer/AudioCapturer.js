@@ -8,7 +8,7 @@ class AudioCapturer {
         this._room = room;
         this._roomId = roomId;
         this._userId = userId;
-        this._capturer = new MediaRecorder(stream, {mimeType: `audio/${this._mediaType}`});
+        this._getAudioTracksProperties(stream);
     }
 
     /**
@@ -28,7 +28,20 @@ class AudioCapturer {
         this._capturer.ondataavailable = this._onData;
         //Activate audio stream and stomp connection
         this._rabbitMQ.activate();
-        this._capturer.start(100);
+
+    /**
+     * Creates settings object with required MediaTrackSettings
+     * 
+     * @param {MediaStream} stream - Used audio stream
+     * @returns {void}
+     */
+    _getAudioTracksProperties = (stream) => {
+        const settings = stream.getAudioTracks()[0].getSettings();
+        this._settings = {
+            "sampleRate":settings.sampleRate,
+            "bitsPerSample":settings.sampleSize,
+            "channelCount": settings.channelCount,
+        };
     }
 
     /**
