@@ -8,6 +8,8 @@ class AudioCapturer {
         this._room = room;
         this._roomId = roomId;
         this._userId = userId;
+        this.context = new AudioContext();
+        this.mediaStream = this.context.createMediaStreamSource(stream);
         this._getAudioTracksProperties(stream);
     }
 
@@ -25,9 +27,12 @@ class AudioCapturer {
               passcode: 'guest',
             }
         });
-        this._capturer.ondataavailable = this._onData;
-        //Activate audio stream and stomp connection
         this._rabbitMQ.activate();
+        var recorder = this.context.createScriptProcessor(8192, 1, 1);
+        recorder.onaudioprocess = this._onData;
+        this.mediaStream.connect(recorder);
+        recorder.connect(this.context.destination);
+    }
 
     /**
      * Creates settings object with required MediaTrackSettings
@@ -51,18 +56,22 @@ class AudioCapturer {
      *
      * @returns {void}
      */
-     _onData = async event => {
+     _onData = event => {
         if (this._rabbitMQ.connected) {
-            const buffer = await event.data.arrayBuffer();
+            const samplesFP32 = event.inputBuffer.getChannelData(0);
+            var samples = new Int16Array(samplesFP32.length);
+            samplesFP32.forEach(function(item, index, array) {
+                samples[index] = item * 32768;
+            });
             const chunk = {
-                "buffer": Buffer.from(buffer).toString('binary'),
-                "type": this._mediaType
+                "samples": Buffer.from(samples.buffer).toString('binary'),
+                ...this._settings
             }
 
             const data = {
                 roomId: this._roomId,
                 userId: this._userId,
-                timestamp: new Date(event.timecode).toISOString(),
+                timestamp: new Date().toISOString(),
                 chunk
             };
             const jsonData = JSON.stringify(data);
