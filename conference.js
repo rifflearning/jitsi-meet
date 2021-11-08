@@ -1,4 +1,4 @@
-/* global APP, JitsiMeetJS, config, interfaceConfig */
+/* global APP, JitsiMeetJS, config, interfaceConfig, riffConfig */
 
 import { jitsiLocalStorage } from '@jitsi/js-utils';
 import EventEmitter from 'events';
@@ -1937,7 +1937,7 @@ export default {
 
                 // if there was a camera video being used, before switching to screen sharing,
                 // show presenter video
-                if (didHaveVideo) {
+                if (didHaveVideo && riffConfig.enablePresenterModeByDefault) {
                     this.muteVideo(false);
                 }
             })
