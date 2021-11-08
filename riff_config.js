@@ -39,6 +39,13 @@ const riffConfig = {
     meeting: {
         /** should the meeting mediator be available */
         enableMeetingMediator: true,
+
+        /**
+         * should we start the user in 'presenter mode'
+         * when they share their screen?
+         */
+        enablePresenterModeByDefault: false,
+
         showMediatorOnJoinRegistered: true,
         showMediatorOnJoinAnonymous: true
     },
