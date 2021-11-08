@@ -1,3 +1,4 @@
+/* global riffConfig */
 /* eslint-disable import/order */
 /* eslint-disable react/jsx-boolean-value */
 /* eslint-disable react/jsx-no-bind */
@@ -442,11 +443,9 @@ const SchedulerForm = ({
 
     // const [ idIndex, setIdIndex ] = React.useState(0);
     const [ showAgenda, setShowAgenda ] = React.useState(false);
-    const [ agendaData, setAgendaData ] = React.useState([ {
-        id: -1, // made it - 1 because this doesn't modify the idIndex value which causes a dup
-        name: '',
-        duration: '' // default value: 10
-    } ]); // initalize with 1 empty agenda item
+    const [ agendaData, setAgendaData ] = React.useState(riffConfig.scheduler.placeholderAgenda);
+
+    // initalize with 1 empty agenda item
     // const [ tooLongAgendaDur, setTooLongAgendaDur ] = React.useState(false);
 
     const history = useHistory();
@@ -475,18 +474,22 @@ const SchedulerForm = ({
             const meetingTimezone = meeting.timezone ? meeting.timezone : localUserTimezone;
 
             setdescription(meetingData.description);
-            console.log('OLIVER meeting data agenda data', meetingData);
 
-            const newAgendaData = meetingData.agenda.map((item, index) => {
-                return {
-                    id: index,
-                    name: item.eventName,
-                    duration: item.duration
-                };
-            });
+            // if there is agenda data in the meeting, map it...
+            const newAgendaData = meetingData.agenda.length > 0
+                ? meetingData.agenda.map((item, index) => {
+                    return {
+                        id: index,
+                        name: item.eventName,
+                        duration: item.duration
+                    };
+                })
+
+                // ...otherwise initialize again with 1 empty item
+                : riffConfig.scheduler.placeholderAgenda;
 
             setAgendaData(newAgendaData);
-            setShowAgenda(newAgendaData.length > 0);
+            setShowAgenda(meetingData.agenda.length > 0);
             setForbidNewParticipantsAfterDateEnd(meetingData.forbidNewParticipantsAfterDateEnd);
             setWaitForHost(meetingData.waitForHost);
             setAllowAnonymous(meetingData.allowAnonymous);

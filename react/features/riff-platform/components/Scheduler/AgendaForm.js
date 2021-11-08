@@ -1,9 +1,20 @@
-/* eslint-disable import/order */
-/* eslint-disable max-len */
+/* ******************************************************************************
+ * AgendaForm.js                                                                *
+ * *************************************************************************/ /**
+ *
+ * @fileoverview React component to allow users to create an agenda in the
+ * scheduler form.
+ *
+ * Created on       November 22, 2021
+ * @author          Oliver Millard
+ *
+ * @copyright (c) 2021-present Riff Analytics,
+ *            MIT License (see https://opensource.org/licenses/MIT)
+ *
+ * ******************************************************************************/
 /* eslint-disable react/jsx-sort-props */
 /* eslint-disable react/jsx-no-bind */
-/* eslint-disable no-unused-vars */
-/* eslint-disable require-jsdoc */
+/* eslint-disable valid-jsdoc */
 
 import {
     Button,
@@ -18,32 +29,41 @@ import IconButton from '@material-ui/core/IconButton';
 import RootRef from '@material-ui/core/RootRef';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
-
-// eslint-disable-next-line import/order
-import React from 'react'; // useCallback,
-
-// eslint-disable-next-line import/order
+import React from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-/* class */
+/* ******************************************************************************
+ * AgendaForm                                                            */ /**
+ *
+ * React component which allows users to input agenda items and drag and drop
+ * them to reorder them in the list.
+ *
+ ********************************************************************************/
 class AgendaForm extends React.PureComponent {
+
+    /* **************************************************************************
+     * constructor                                                         */ /**
+     */
     constructor(props) {
         super(props);
 
         this.state = {
-            previousState: {},
-            showAgenda: false,
-            tooLongAgendaDur: false,
-            invalidAgendaItems: false
+            previousOrder: {},
+            tooLongAgendaDur: false
         };
 
         this.onAgendaEntryChange = this.onAgendaEntryChange.bind(this);
         this.isAgendaInputValid = this.isAgendaInputValid.bind(this);
     }
 
+    /* **************************************************************************
+     * render                                                              */ /**
+     *
+     * Required method of a React component.
+     *
+     * @see {@link https://reactjs.org/docs/react-component.html#render|React.Component.render}
+     */
     render() {
-
-        console.log('OLIVER classes', this.props.classes);
         const addRowButton = (
             <Button
                 className = { this.props.classes.submit }
@@ -70,8 +90,6 @@ class AgendaForm extends React.PureComponent {
             this.props.setAgendaData(newData);
         };
 
-        console.info('OLIVER props', this.props);
-
         return (
             <Grid>
                 {addRowButton}
@@ -81,8 +99,8 @@ class AgendaForm extends React.PureComponent {
                         {(provided, snapshot) => (
                             <RootRef rootRef = { provided.innerRef }>
                                 <List
-                                    style = { this.getListStyle(snapshot.isDraggingOver) }
-                                    className = { this.props.classes.list }>
+                                    className = { this.props.classes.list }
+                                    style = { this.getListStyle(snapshot.isDraggingOver) }>
                                     {this.props.agendaData.map((item, index) => (
                                         <Draggable
                                             draggableId = { String(item.id) }
@@ -101,27 +119,31 @@ class AgendaForm extends React.PureComponent {
                                                     ) }>
                                                     <ListItem >
                                                         <TextField
-                                                            type = { 'agendaInput' }
-                                                            variant = { 'standard' }
-                                                            value = { item.name }
-                                                            name = { 'name' }
-                                                            onChange = { entry => this.onAgendaEntryChange(entry, item) }
                                                             className = { this.props.classes.eventInput }
                                                             error = { !this.isAgendaInputValid(item.name, name) }
+                                                            name = { 'name' }
+                                                            onChange = {
+                                                                entry => this.onAgendaEntryChange(entry, item)
+                                                            }
                                                             placeholder = { 'Discussion Topic' }
-                                                            required = { true } />
+                                                            required = { true }
+                                                            type = { 'agendaInput' }
+                                                            value = { item.name }
+                                                            variant = { 'standard' } />
                                                     </ListItem>
                                                     <ListItem >
                                                         <TextField
-                                                            type = 'agendaInput'
-                                                            variant = 'standard'
-                                                            value = { item.duration }
-                                                            name = { 'duration' }
-                                                            onChange = { entry => this.onAgendaEntryChange(entry, item) }
                                                             className = { this.props.classes.input }
                                                             error = { !this.isAgendaInputValid(item.duration, name) }
+                                                            name = { 'duration' }
+                                                            onChange = {
+                                                                entry => this.onAgendaEntryChange(entry, item)
+                                                            }
                                                             placeholder = { 'Duration (min)' }
-                                                            required = { true } />
+                                                            required = { true }
+                                                            type = 'agendaInput'
+                                                            value = { item.duration }
+                                                            variant = 'standard' />
                                                     </ListItem>
                                                     <IconButton
                                                         aria-label = 'delete'
@@ -172,8 +194,17 @@ class AgendaForm extends React.PureComponent {
         );
     }
 
+    /* **************************************************************************
+     * isAgendaInputValid                                                  */ /**
+     *
+     * Checks to see if the value that has been inputted into a text field is
+     * valid for that specific field.
+     *
+     * @param {string} inputValue - The inputted value into the field.
+     * @param {string} source - The source of the text, either eventName or duration.
+     */
     isAgendaInputValid(inputValue, source) {
-        if (this.state.invalidAgendaItems) {
+        if (this.props.invalidAgendaItems) {
             if (!inputValue) {
                 return false;
             }
@@ -188,6 +219,12 @@ class AgendaForm extends React.PureComponent {
         return true;
     }
 
+    /* **************************************************************************
+     * createAgendaData                                                    */ /**
+     *
+     * Creates the agenda data for the meeting.
+     *
+     */
     createAgendaData() {
         const idIndex = this.props.agendaData.reduce((max, item) => {
             if (item.id > max) {
@@ -204,10 +241,17 @@ class AgendaForm extends React.PureComponent {
         };
     }
 
+    /* **************************************************************************
+     * onAgendaEntryDelete                                                 */ /**
+     *
+     * Handles the deletion of rows in the agenda form.
+     *
+     * @param {object} row - The row which is going to be deleted.
+     */
     onAgendaEntryDelete(row) {
-        if (!this.state.previousState[row.id]) {
+        if (!this.state.previousOrder[row.id]) {
             this.setState({
-                previousState: state => {
+                previousOrder: state => {
                     return {
                         ...state,
                         [row.id]: row
@@ -229,6 +273,14 @@ class AgendaForm extends React.PureComponent {
         this.checkAgendaDuration(newData);
     }
 
+    /* **************************************************************************
+     * checkAgendaDuration                                                 */ /**
+     *
+     * Checks if the sum of the duration fields of all the agenda entries is greater
+     * than the set duration of the meeting.
+     *
+     * @param {object} data - The agenda data being checked.
+     */
     checkAgendaDuration(data) {
         const totAgendaDur = data.reduce((tot, entry) => tot + entry.duration, 0);
         const totMeetingDur = (this.props.hours * 60) + this.props.minutes;
@@ -237,10 +289,18 @@ class AgendaForm extends React.PureComponent {
         this.setState({ tooLongAgendaDur: result });
     }
 
+    /* **************************************************************************
+     * onAgendaEntryChange                                                 */ /**
+     *
+     * Handles moving agenda rows by dragging and dropping.
+     *
+     * @param {event} e - The event transpiring when a user moves a row.
+     * @param {object} rowToChange - The row that is being moved.
+     */
     onAgendaEntryChange(e, rowToChange) {
         if (!rowToChange.id) {
             this.setState({
-                previousState: state => {
+                previousOrder: state => {
                     return {
                         ...state,
                         [rowToChange.id]: rowToChange
@@ -249,11 +309,9 @@ class AgendaForm extends React.PureComponent {
             });
         }
         const value = e.target.value;
-        // eslint-disable-next-line no-shadow
         const name = e.target.name;
-
         const { id } = rowToChange;
-        // eslint-disable-next-line no-shadow
+
         const newData = this.props.agendaData.map(row => {
             if (row.id === id) {
                 if (name === 'duration') {
@@ -283,7 +341,14 @@ class AgendaForm extends React.PureComponent {
         }
     }
 
-
+    /* **************************************************************************
+     * getItemStyle                                                        */ /**
+     *
+     * Handles changing the style of agenda rows when they are being dragged.
+     *
+     * @param {boolean} isDragging - Check if the user is dragging a row.
+     * @param {object} draggableStyle - The new style when dragging.
+     */
     getItemStyle(isDragging, draggableStyle) {
         return {
             // styles we need to apply on draggables
@@ -295,6 +360,13 @@ class AgendaForm extends React.PureComponent {
         };
     }
 
+    /* **************************************************************************
+     * getListStyle                                                        */ /**
+     *
+     * Change the style of the whole list when the user is dragging a row.
+     *
+     * @param {boolean} isDraggingOver - Check if the user has stopped dragging a row.
+     */
     getListStyle(isDraggingOver) {
         return {
             border: isDraggingOver ? '1px solid white' : '1px solid #606060',
@@ -303,6 +375,15 @@ class AgendaForm extends React.PureComponent {
         };
     }
 
+    /* **************************************************************************
+     * reorder                                                             */ /**
+     *
+     * Handles reordering the agenda items after they've been dragged and dropped.
+     *
+     * @param {List} list - The agenda list in the scheduler form.
+     * @param {number} startIndex - The index at which the list item started.
+     * @param {number} endIndex - The index at which the list item ended up at.
+     */
     reorder(list, startIndex, endIndex) {
         const result = Array.from(list);
         const [ removed ] = result.splice(startIndex, 1);
@@ -313,6 +394,9 @@ class AgendaForm extends React.PureComponent {
     }
 }
 
+/* **************************************************************************** *
+ * Module exports                                                               *
+ * **************************************************************************** */
 export {
     AgendaForm
 };
