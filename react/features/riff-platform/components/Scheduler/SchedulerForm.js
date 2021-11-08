@@ -1,3 +1,4 @@
+/* eslint-disable import/order */
 /* eslint-disable react/jsx-boolean-value */
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable react/jsx-sort-props */
@@ -13,16 +14,17 @@ import {
     TextField,
     Typography,
     Radio,
-    Switch,
-    List,
-    ListItem,
-    ListItemSecondaryAction
+    Switch
+
+    // ListItem
 } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import RootRef from '@material-ui/core/RootRef';
+
+// import IconButton from '@material-ui/core/IconButton';
+// import RootRef from '@material-ui/core/RootRef';
 import { makeStyles } from '@material-ui/core/styles';
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
+
+// import AddIcon from '@material-ui/icons/Add';
+// import DeleteIcon from '@material-ui/icons/Delete';
 import { Autocomplete } from '@material-ui/lab';
 import Alert from '@material-ui/lab/Alert';
 import {
@@ -48,8 +50,10 @@ import { schedule,
 import { logout } from '../../actions/signIn';
 import { getNumberRangeArray } from '../../functions';
 
+import { AgendaForm } from './AgendaForm';
+
 // eslint-disable-next-line import/order
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+// import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import {
     getRecurringDailyEventsByOccurance,
@@ -95,7 +99,7 @@ const useStyles = makeStyles(theme => {
             }
         },
         input: {
-            width: 100,
+            width: 110,
             height: 20
         },
         eventInput: {
@@ -158,41 +162,40 @@ const MenuProps = {
 };
 
 // eslint-disable-next-line react/prop-types
-const CustomListItem = ({ row, name, onChange, invalidAgendaItems, labelText }) => {
-    const classes = useStyles();
+// const CustomListItem = ({ row, name, onChange, invalidAgendaItems, labelText }) => {
+//     const classes = useStyles();
 
-    const isAgendaInputValid = (inputValue, source) => {
-        if (invalidAgendaItems) {
-            if (!inputValue) {
-                return false;
-            }
+//     const isAgendaInputValid = (inputValue, source) => {
+//         if (invalidAgendaItems) {
+//             if (!inputValue) {
+//                 return false;
+//             }
 
-            if (source === 'duration') {
-                const validDurCheck = !isNaN(inputValue) && inputValue > 0;
+//             if (source === 'duration') {
+//                 const validDurCheck = !isNaN(inputValue) && inputValue > 0;
 
-                return validDurCheck;
-            }
-        }
+//                 return validDurCheck;
+//             }
+//         }
 
-        return true;
-    };
+//         return true;
+//     };
 
-    return (
-        <ListItem >
-            <TextField
-                type = 'agendaInput'
-                variant = 'standard'
-                value = { row[name] }
-                name = { name }
-                onChange = { e => onChange(e, row) }
-                className = { classes.eventInput }
-                error = { !isAgendaInputValid(row[name], name) }
-                placeholder = { labelText }
-                required />
-        </ListItem>
-    );
-};
-
+//     return (
+//         <ListItem >
+//             <TextField
+//                 type = 'agendaInput'
+//                 variant = 'standard'
+//                 value = { row[name] }
+//                 name = { name }
+//                 onChange = { e => onChange(e, row) }
+//                 className = { classes.eventInput }
+//                 error = { !isAgendaInputValid(row[name], name) }
+//                 placeholder = { labelText }
+//                 required />
+//         </ListItem>
+//     );
+// };
 
 const hoursArray = getNumberRangeArray(0, 9);
 const minutesArray = getNumberRangeArray(0, 45, 15);
@@ -394,6 +397,7 @@ const SchedulerForm = ({
     const [ timezone, setTimezone ] = useState(localUserTimezone);
 
     const [ name, setname ] = useState('');
+
     const [ invalidAgendaItems, setInvalidAgendaItems ] = useState(false);
     const [ description, setdescription ] = useState('');
     const [ date, setdate ] = useState(getDateByTimeAndTimezone(moment(), timezone));
@@ -434,6 +438,17 @@ const SchedulerForm = ({
 
     const [ changesMadeByUserActions, setChangesMadeByUserActions ] = useState(false);
 
+    // const [ previous, setPrevious ] = React.useState({});
+
+    // const [ idIndex, setIdIndex ] = React.useState(0);
+    const [ showAgenda, setShowAgenda ] = React.useState(false);
+    const [ agendaData, setAgendaData ] = React.useState([ {
+        id: -1, // made it - 1 because this doesn't modify the idIndex value which causes a dup
+        name: '',
+        duration: '' // default value: 10
+    } ]); // initalize with 1 empty agenda item
+    // const [ tooLongAgendaDur, setTooLongAgendaDur ] = React.useState(false);
+
     const history = useHistory();
 
     const defineEditMode = () => {
@@ -460,6 +475,18 @@ const SchedulerForm = ({
             const meetingTimezone = meeting.timezone ? meeting.timezone : localUserTimezone;
 
             setdescription(meetingData.description);
+            console.log('OLIVER meeting data agenda data', meetingData);
+
+            const newAgendaData = meetingData.agenda.map((item, index) => {
+                return {
+                    id: index,
+                    name: item.eventName,
+                    duration: item.duration
+                };
+            });
+
+            setAgendaData(newAgendaData);
+            setShowAgenda(newAgendaData.length > 0);
             setForbidNewParticipantsAfterDateEnd(meetingData.forbidNewParticipantsAfterDateEnd);
             setWaitForHost(meetingData.waitForHost);
             setAllowAnonymous(meetingData.allowAnonymous);
@@ -607,6 +634,13 @@ const SchedulerForm = ({
             multipleRoomsQuantity: isMultipleRooms ? multipleRooms : null
         };
 
+        const agenda = showAgenda ? agendaData.map(item => {
+            return {
+                eventName: item.name,
+                duration: item.duration
+            };
+        }) : [];
+
         const meetingData = {
             createdBy: userId,
             name,
@@ -622,7 +656,8 @@ const SchedulerForm = ({
                 options: getRecurrenceOptions()
             } : null,
             forbidNewParticipantsAfterDateEnd,
-            multipleRoomsQuantity: isMultipleRooms ? multipleRooms : null
+            multipleRoomsQuantity: isMultipleRooms ? multipleRooms : null,
+            agenda
         };
 
         if (!isEditing) {
@@ -635,6 +670,7 @@ const SchedulerForm = ({
             } else if (isEditOneOccurrence) {
                 return updateScheduleMeetingRecurringSingleOccurrence(meeting._id, meeting.roomId, {
                     name,
+                    agendaData,
                     description,
                     dateStart: meetingStartDate,
                     dateEnd,
@@ -806,103 +842,92 @@ const SchedulerForm = ({
     const timeZonesList = momentTZ.tz.names();
 
     // Agenda content
-    const [ previous, setPrevious ] = React.useState({});
-    const [ idIndex, setIdIndex ] = React.useState(0);
-    const [ showAgenda, setShowAgenda ] = React.useState(false);
-    const [ agendaData, setAgendaData ] = React.useState([ {
-        id: idIndex - 1, // made it - 1 because this doesn't modify the idIndex value which causess a dup
-        name: '',
-        duration: '', // default value: 10
-        isEditMode: true } ]); // initalize with 1 empty agenda item
-    const [ tooLongAgendaDur, setTooLongAgendaDur ] = React.useState(false);
+    // const defaultAgendaDur = '';
+    // const defaultAgendaName = '';
 
-    const defaultAgendaDur = '';
-    const defaultAgendaName = '';
-    const createAgendaData = id => {
-        setIdIndex(idIndex + 1);
+    // const createAgendaData = id => {
+    //     setIdIndex(idIndex + 1);
 
-        return {
-            id,
-            name: defaultAgendaName,
-            duration: defaultAgendaDur,
-            isEditMode: true
-        };
-    };
+    //     return {
+    //         id,
+    //         name: defaultAgendaName,
+    //         duration: defaultAgendaDur
+    //     };
+    // };
 
-    const onAgendaEntryChange = (e, row) => {
-        if (!previous[row.id]) {
-            setPrevious(state => {
-                return { ...state,
-                    [row.id]: row };
-            });
-        }
-        const value = e.target.value;
-        // eslint-disable-next-line no-shadow
-        const name = e.target.name;
+    // const onAgendaEntryChange = (e, row) => {
+    //     if (!previous[row.id]) {
+    //         setPrevious(state => {
+    //             return { ...state,
+    //                 [row.id]: row };
+    //         });
+    //     }
+    //     const value = e.target.value;
+    //     // eslint-disable-next-line no-shadow
+    //     const name = e.target.name;
 
-        const { id } = row;
-        // eslint-disable-next-line no-shadow
-        const newData = agendaData.map(row => {
-            if (row.id === id) {
-                if (name === 'duration') {
-                    const durVal = isNaN(parseFloat(value)) ? '' : parseFloat(value);
+    //     const { id } = row;
+    //     // eslint-disable-next-line no-shadow
+    //     const newData = agendaData.map(row => {
+    //         if (row.id === id) {
+    //             if (name === 'duration') {
+    //                 const durVal = isNaN(parseFloat(value)) ? '' : parseFloat(value);
 
-                    return {
-                        ...row,
-                        [name]: durVal
-                    };
-                }
+    //                 return {
+    //                     ...row,
+    //                     [name]: durVal
+    //                 };
+    //             }
 
-                return {
-                    ...row,
-                    [name]: value
-                };
-            }
+    //             return {
+    //                 ...row,
+    //                 [name]: value
+    //             };
+    //         }
 
-            return row;
-        });
+    //         return row;
+    //     });
 
-        setAgendaData(newData);
-        console.log('OLIVER agenda data', agendaData);
+    //     setAgendaData(newData);
 
-        // check to see if the sum of all agenda items is greater than the duration of the meeting
-        if (name === 'duration') {
-            // eslint-disable-next-line no-use-before-define
-            checkAgendaDuration(newData);
-        }
-    };
+    //     // check to see if the sum of all agenda items is greater than the duration of the meeting
+    //     if (name === 'duration') {
+    //         // eslint-disable-next-line no-use-before-define
+    //         checkAgendaDuration(newData);
+    //     }
+    // };
 
-    const checkAgendaDuration = data => {
-        const totAgendaDur = data.reduce((tot, entry) => tot + entry.duration, 0);
-        const totMeetingDur = (hours * 60) + minutes;
-        const result = totMeetingDur < totAgendaDur;
+    // const checkAgendaDuration = data => {
+    //     const totAgendaDur = data.reduce((tot, entry) => tot + entry.duration, 0);
+    //     const totMeetingDur = (hours * 60) + minutes;
+    //     const result = totMeetingDur < totAgendaDur;
 
-        setTooLongAgendaDur(result);
-    };
+    //     setTooLongAgendaDur(result);
+    // };
 
 
-    const onAgendaEntryDelete = row => {
-        if (!previous[row.id]) {
-            setPrevious(state => {
-                return {
-                    ...state,
-                    [row.id]: row
-                };
-            });
-        }
+    // const onAgendaEntryDelete = row => {
+    //     console.log('OLIVER old test', previous[row.id]);
+    //     if (!previous[row.id]) {
+    //         setPrevious(state => {
+    //             return {
+    //                 ...state,
+    //                 [row.id]: row
+    //             };
+    //         });
+    //     }
 
-        const { id } = row;
-        let newData = agendaData.filter(oldRow => oldRow.id !== id);
+    //     const { id } = row;
+    //     let newData = agendaData.filter(oldRow => oldRow.id !== id);
 
-        if (newData.length === 0) {
-            newData = [ createAgendaData(idIndex) ];
-            setShowAgenda(false);
-        }
+    //     if (newData.length === 0) {
+    //         newData = [ createAgendaData(idIndex) ];
+    //         setShowAgenda(false);
+    //     }
 
-        setAgendaData(newData);
-        checkAgendaDuration(newData);
-
-    };
+    //     setAgendaData(newData);
+    //     checkAgendaDuration(newData);
+    // };
 
 
     // NOTE: these are additional functions that we could add to the
@@ -957,51 +982,50 @@ const SchedulerForm = ({
         }
 
         return true;
-
     };
 
-    const getItemStyle = (isDragging, draggableStyle) => {
-        return {
-            // styles we need to apply on draggables
-            ...draggableStyle,
+    // const getItemStyle = (isDragging, draggableStyle) => {
+    //     return {
+    //         // styles we need to apply on draggables
+    //         ...draggableStyle,
 
-            ...isDragging && {
-                background: 'primary'
-            }
-        };
-    };
+    //         ...isDragging && {
+    //             background: 'primary'
+    //         }
+    //     };
+    // };
 
-    const getListStyle = isDraggingOver => {
-        return {
-            border: isDraggingOver ? '1px solid white' : '1px solid #606060',
-            padding: 'grid',
-            width: 600
-        };
-    };
+    // const getListStyle = isDraggingOver => {
+    //     return {
+    //         border: isDraggingOver ? '1px solid white' : '1px solid #606060',
+    //         padding: 'grid',
+    //         width: 600
+    //     };
+    // };
 
-    const reorder = (list, startIndex, endIndex) => {
-        const result = Array.from(list);
-        const [ removed ] = result.splice(startIndex, 1);
+    // const reorder = (list, startIndex, endIndex) => {
+    //     const result = Array.from(list);
+    //     const [ removed ] = result.splice(startIndex, 1);
 
-        result.splice(endIndex, 0, removed);
+    //     result.splice(endIndex, 0, removed);
 
-        return result;
-    };
+    //     return result;
+    // };
 
-    const onDragEnd = result => {
-        // dropped outside the list
-        if (!result.destination) {
-            return;
-        }
+    // const onDragEnd = result => {
+    //     // dropped outside the list
+    //     if (!result.destination) {
+    //         return;
+    //     }
 
-        const newData = reorder(
-            agendaData,
-            result.source.index,
-            result.destination.index
-        );
+    //     const newData = reorder(
+    //         agendaData,
+    //         result.source.index,
+    //         result.destination.index
+    //     );
 
-        setAgendaData(newData);
-    };
+    //     setAgendaData(newData);
+    // };
 
     return (
         <form
@@ -1221,105 +1245,114 @@ const SchedulerForm = ({
             </Grid>
 
             {showAgenda && !isEditOneOccurrence
-                && <Grid>
-                    <Button
-                        variant = 'outlined'
-                        className = { classes.submit }
-                        onClick = { () => setAgendaData(agendaData.concat(createAgendaData(idIndex))) }>
-                        Add Row
-                        <AddIcon className = { classes.rightIcon } />
-                    </Button>
-                    <DragDropContext
-                        onDragEnd = { onDragEnd }>
-                        <Droppable droppableId = 'droppable'>
-                            {(provided, snapshot) => (
-                                <RootRef rootRef = { provided.innerRef }>
-                                    <List
-                                        style = { getListStyle(snapshot.isDraggingOver) }
-                                        className = { classes.list }>
-                                        {agendaData.map((item, index) => (
-                                            <Draggable
-                                                draggableId = { String(item.id) }
-                                                index = { index }
-                                                key = { item.id }>
-                                                {/* eslint-disable-next-line no-shadow */}
-                                                {(provided, snapshot) => (
-                                                    <ListItem
-                                                        ContainerComponent = 'li'
-                                                        ContainerProps = {{ ref: provided.innerRef }}
-                                                        { ...provided.draggableProps }
-                                                        { ...provided.dragHandleProps }
-                                                        style = { getItemStyle(
-                                                                    snapshot.isDragging,
-                                                                    provided.draggableProps.style
-                                                        ) }>
-                                                        <CustomListItem
-                                                            { ...{
-                                                                row: item,
-                                                                name: 'name',
-                                                                onChange: onAgendaEntryChange,
-                                                                agendaError,
-                                                                invalidAgendaItems,
-                                                                labelText: 'Discussion Topic',
-                                                                index
-                                                            } } />
-                                                        <CustomListItem
-                                                            { ...{
-                                                                row: item,
-                                                                name: 'duration',
-                                                                onChange: onAgendaEntryChange,
-                                                                agendaError,
-                                                                invalidAgendaItems,
-                                                                labelText: 'Duration (min)',
-                                                                index
-                                                            } } />
-                                                        <IconButton
-                                                            aria-label = 'delete'
-                                                            onClick = { () => onAgendaEntryDelete(item) }>
-                                                            <DeleteIcon />
-                                                        </IconButton>
-                                                        <ListItemSecondaryAction />
-                                                    </ListItem>
-                                                )}
-                                            </Draggable>
-                                        ))}
-                                        {provided.placeholder}
-                                    </List>
-                                </RootRef>
-                            )}
-                        </Droppable>
-                    </DragDropContext>
-                    {/* Option 2 */}
-                    <Grid>
-                        <Grid
-                            container
-                            item
-                            xs = { 12 }
-                            sm = { 8 }
-                            md = { 10 }
-                            spacing = { 3 }>
-                            <Grid
-                                item
-                                xs = { 12 }
-                                md = { 4 }>
-                                {Boolean(agendaError)
-                                    && <Grid className = { classes.helperTextContainer }>
-                                        <Typography
-                                            className = { classes.errorText }>
-                                            {agendaError}
-                                        </Typography>
-                                    </Grid>}
-                                {tooLongAgendaDur
-                                    && <Grid className = { classes.helperTextContainer }>
-                                        <Typography
-                                            className = { classes.warningText }>
-                                        The duration of your agenda items is greater than the duration of the meeting
-                                        </Typography>
-                                    </Grid>}
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </Grid>
+                && <AgendaForm
+                    hours = { hours }
+                    minutes = { minutes }
+                    agendaData = { agendaData }
+                    setAgendaData = { setAgendaData }
+                    agendaError = { agendaError }
+                    invalidAgendaItems = { invalidAgendaItems }
+                    setShowAgenda = { setShowAgenda }
+                    classes = { classes } />
+
+                // <Grid>
+                //     <Button
+                //         variant = 'outlined'
+                //         className = { classes.submit }
+                //         onClick = { () => setAgendaData(agendaData.concat(createAgendaData(idIndex))) }>
+                //         Add Row
+                //         <AddIcon className = { classes.rightIcon } />
+                //     </Button>
+                //     <DragDropContext
+                //         onDragEnd = { onDragEnd }>
+                //         <Droppable droppableId = 'droppable'>
+                //             {(provided, snapshot) => (
+                //                 <RootRef rootRef = { provided.innerRef }>
+                //                     <List
+                //                         style = { getListStyle(snapshot.isDraggingOver) }
+                //                         className = { classes.list }>
+                //                         {agendaData.map((item, index) => (
+                //                             <Draggable
+                //                                 draggableId = { String(item.id) }
+                //                                 index = { index }
+                //                                 key = { item.id }>
+                //                                 {/* eslint-disable-next-line no-shadow */}
+                //                                 {(provided, snapshot) => (
+                //                                     <ListItem
+                //                                         ContainerComponent = 'li'
+                //                                         ContainerProps = {{ ref: provided.innerRef }}
+                //                                         { ...provided.draggableProps }
+                //                                         { ...provided.dragHandleProps }
+                //                                         style = { getItemStyle(
+                //                                                     snapshot.isDragging,
+                //                                                     provided.draggableProps.style
+                //                                         ) }>
+                //                                         <CustomListItem
+                //                                             { ...{
+                //                                                 row: item,
+                //                                                 name: 'name',
+                //                                                 onChange: onAgendaEntryChange,
+                //                                                 agendaError,
+                //                                                 invalidAgendaItems,
+                //                                                 labelText: 'Discussion Topic',
+                //                                                 index
+                //                                             } } />
+                //                                         <CustomListItem
+                //                                             { ...{
+                //                                                 row: item,
+                //                                                 name: 'duration',
+                //                                                 onChange: onAgendaEntryChange,
+                //                                                 agendaError,
+                //                                                 invalidAgendaItems,
+                //                                                 labelText: 'Duration (min)',
+                //                                                 index
+                //                                             } } />
+                //                                         <IconButton
+                //                                             aria-label = 'delete'
+                //                                             onClick = { () => onAgendaEntryDelete(item) }>
+                //                                             <DeleteIcon />
+                //                                         </IconButton>
+                //                                         <ListItemSecondaryAction />
+                //                                     </ListItem>
+                //                                 )}
+                //                             </Draggable>
+                //                         ))}
+                //                         {provided.placeholder}
+                //                     </List>
+                //                 </RootRef>
+                //             )}
+                //         </Droppable>
+                //     </DragDropContext>
+                //     <Grid>
+                //         <Grid
+                //             container
+                //             item
+                //             xs = { 12 }
+                //             sm = { 8 }
+                //             md = { 10 }
+                //             spacing = { 3 }>
+                //             <Grid
+                //                 item
+                //                 xs = { 12 }
+                //                 md = { 4 }>
+                //                 {Boolean(agendaError)
+                //                     && <Grid className = { classes.helperTextContainer }>
+                //                         <Typography
+                //                             className = { classes.errorText }>
+                //                             {agendaError}
+                //                         </Typography>
+                //                     </Grid>}
+                //                 {tooLongAgendaDur
+                //                     && <Grid className = { classes.helperTextContainer }>
+                //                         <Typography
+                //                             className = { classes.warningText }>
+                //                         The duration of your agenda items is greater than the duration of the meeting
+                //                         </Typography>
+                //                     </Grid>}
+                //             </Grid>
+                //         </Grid>
+                //     </Grid>
+                // </Grid>
             }
 
             <Grid
@@ -1745,6 +1778,7 @@ const SchedulerForm = ({
 };
 
 SchedulerForm.propTypes = {
+    agendaData: PropTypes.object,
     doLogout: PropTypes.func,
     error: PropTypes.string,
     isAnon: PropTypes.bool,

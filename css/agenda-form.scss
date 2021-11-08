@@ -1,0 +1,59 @@
+// NOTE: currently unused, but left in here in case we want to refactor to using scss
+// to style the agenda form - obm: 11/4/21
+.agenda-input {
+    width: 100;
+    height: 20;
+}
+
+.event-input {
+    width: 150;
+    height: 20;
+}
+
+// .right-icon {
+//     margin-left: theme.spacing(1);
+// }
+
+// .left-icon{
+//     margin-right: theme.spacing(1);
+// }
+
+.agenda-list {
+    min-width: 600;
+    border: '1px solid #606060';
+    border-radius: '4px';
+}
+
+// .agenda-list-label {
+//     margin-right: theme.spacing(1.5);
+// }
+
+.error-text, .warning-text {
+    // font-size: '0.85em';
+    font-size: '100px';
+    margin-top: '2px';
+    margin-left: '5px';
+    text-align: 'left';
+    font-weight: 'bold';
+    font-family: 'Helvetica';
+    line-height: 1.66;
+    letter-spacing: '0.03333em';
+    width: '500px';
+}
+
+.error-text {
+    color: '#f44336';
+}
+
+.warning-text {
+    color: '#EED202';
+}
+
+.helper-text-container {
+    margin-top: '3px';
+    margin-left: '7.5px';
+}
+
+// .agenda-submit {
+//      margin: theme.spacing(3, 0, 2);
+// }

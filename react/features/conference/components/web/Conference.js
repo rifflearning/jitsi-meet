@@ -19,7 +19,7 @@ import { getIsLobbyVisible } from '../../../lobby/functions';
 import { ParticipantsPane } from '../../../participants-pane/components/web';
 import { getParticipantsPaneOpen } from '../../../participants-pane/functions';
 import { Prejoin, isPrejoinPageVisible, isPrejoinPageLoading } from '../../../prejoin';
-import { DraggableAgendaTimer } from '../../../riff-platform/components/AgendaTimer/agendaTimer';
+import { AgendaTimer } from '../../../riff-platform/components/AgendaTimer/agendaTimer';
 import DraggableMeetingMediator from '../../../riff-platform/components/DraggableMeetingMediator';
 import { fullScreenChanged, showToolbox } from '../../../toolbox/actions.web';
 import { Toolbox } from '../../../toolbox/components/web';
@@ -228,7 +228,7 @@ class Conference extends AbstractConference<Props, *> {
                     onMouseMove = { this._onShowToolbar }
                     ref = { this._setBackground }>
                     <ConferenceInfo />
-                    {!_showPrejoin && <DraggableAgendaTimer />}
+                    {!_showPrejoin && <AgendaTimer />}
                     {!_showPrejoin && <DraggableMeetingMediator />}
                     <Notice />
                     <div id = 'videospace'>
