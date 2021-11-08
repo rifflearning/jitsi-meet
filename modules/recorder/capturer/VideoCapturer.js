@@ -1,10 +1,9 @@
-import io from 'socket.io-client';
+import { Client } from '@stomp/stompjs';
 import { FRAME } from './constants';
 
 
-class Capturer {
+class VideoCapturer {
     constructor(room, roomId, userId, stream) {
-        this._socket = null;
         this._isLive = false;
         this._room = room;
         this._roomId = roomId;
@@ -18,23 +17,20 @@ class Capturer {
     /**
      * Creates socket connection and initialises capturing process
      * 
-     * @param {String} dispatcherUrl - The url that socket will use to connect
+     * @param {String} rmqUrl - The url that socket will use to connect
      * @returns {void}
      */
-    connect = async (dispatcherUrl) => {
-        this._socket = io(dispatcherUrl);
-        this._socket.on('connect', () => {
-            this._socket.emit('server-ping', this._userId);
+    connect = async (rmqUrl) => {
+        this._rabbitMQ = new Client({
+            brokerURL: rmqUrl,
+            connectHeaders: {
+              login: 'guest',
+              passcode: 'guest',
+            }
         });
-        this._socket.on('server-pong', () => {
-            this._isLive = true;
-            this._socket.emit('add', { 
-                room: this._room, 
-                roomId: this._roomId, 
-                userId: this._userId 
-            });
-            this._pushNextFrame();
-        });
+        this._rabbitMQ.activate();
+        this._isLive = true;
+        this._pushNextFrame();
     }
 
     /**
@@ -44,20 +40,21 @@ class Capturer {
      */
     _pushNextFrame = async () => {
         if (this._isLive) {
-            try {
-                const bitmap = await this._capturer.grabFrame();
-                const blob = await this._processFrame(bitmap);
-                
-                this._socket.emit('next-frame', { 
-                    room: this._room, 
-                    roomId: this._roomId, 
-                    userId: this._userId, 
-                    image: blob 
-                });
-                this._pushNextFrame(); // schedule next one
-            } catch (err) {
-                console.error(err);
+            const bitmap = await this._capturer.grabFrame();
+            const blob = await this._processFrame(bitmap);
+            const buffer = await blob.arrayBuffer();
+            
+            const data = { 
+                room: this._room,
+                roomId: this._roomId,
+                userId: this._userId,
+                frame: Buffer.from(buffer).toString('binary') 
+            };
+            const jsonData = JSON.stringify(data);
+            if (this._rabbitMQ.connected) {
+                this._rabbitMQ.publish({destination:'/exchange/es', body:jsonData});
             }
+            this._pushNextFrame(); // schedule next one
         }
     }
 
@@ -92,13 +89,19 @@ class Capturer {
      */
     disconnect = () => {
         this._isLive = false;
-        this._socket.emit('remove', { 
-            room: this._room, 
-            roomId: this._roomId, 
-            userId: this._userId 
-        });
-        this._socket.close();
+        if (this._rabbitMQ.connected) {
+            const data = {
+                roomId: this._roomId,
+                userId: this._userId,
+                timestamp: new Date().toISOString(),
+                frame: ""
+            };
+            const jsonData = JSON.stringify(data);
+            this._rabbitMQ.publish({destination:'/exchange/es', body:jsonData});
+        }
+        //deactivate, to stop reconnecting
+        this._rabbitMQ.deactivate();
     }
 }
 
-export default Capturer;
+export default VideoCapturer;
