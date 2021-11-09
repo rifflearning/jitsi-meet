@@ -22,8 +22,9 @@ export function attachSibilant(tracks) {
             const userData = getState()['features/riff-platform'].signIn.user;
             const room = window.location.pathname.split('/')[1];
             const title = getState()['features/riff-platform'].meeting?.meeting?.name;
+            const agenda = getState()['features/riff-platform'].meeting?.meeting?.agenda;
 
-            dispatch(riffAddUserToMeeting(userData, room, accessToken, title));
+            dispatch(riffAddUserToMeeting(userData, room, accessToken, title, agenda));
 
             if (config.iAmRecorder) {
                 const mockData = {
@@ -73,7 +74,7 @@ export function attachSibilant(tracks) {
     };
 }
 
-function riffAddUserToMeeting({ uid, displayName, context = '' }, room, token, title) {
+function riffAddUserToMeeting({ uid, displayName, context = '' }, room, token, title, agenda) {
     return async dispatch => {
         try {
             socket.emit('meetingJoined', {
@@ -82,7 +83,8 @@ function riffAddUserToMeeting({ uid, displayName, context = '' }, room, token, t
                 room,
                 title,
                 context,
-                token
+                token,
+                agenda
             });
 
             const meetingListener = meeting => {
