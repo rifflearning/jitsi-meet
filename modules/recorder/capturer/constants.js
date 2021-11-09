@@ -14,8 +14,8 @@ export const MEDIA_TYPES = [
 /**
  * The set of params for frame captured from video stream 
  */
-export const FRAME = {
-    WIDTH: 720
+ export const FRAME = {
+    HEIGHT: 180
 };
 
 /**

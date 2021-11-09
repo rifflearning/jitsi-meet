@@ -66,7 +66,7 @@ class VideoCapturer {
     _processFrame = (bitmap) => {
         return new Promise(resolve => {
             const context = this._canvas.getContext('2d');
-            const { width, height } = this._rescaleToWidth(bitmap, FRAME.WIDTH);
+            const { width, height } = this._rescaleToWidth(bitmap, FRAME.HEIGHT);
  
             this._canvas.width = width;
             this._canvas.height = height;           
@@ -75,10 +75,10 @@ class VideoCapturer {
         });
     }
 
-    _rescaleToWidth = (bitmap, width) => {
+    _rescaleToWidth = (bitmap, height) => {
         return {
-            width: width,
-            height: bitmap.height / (bitmap.width / width)
+            width: bitmap.width / (bitmap.height / height),
+            height: height
         };
     }
 
