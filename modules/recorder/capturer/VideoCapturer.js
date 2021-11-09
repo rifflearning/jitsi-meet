@@ -71,7 +71,7 @@ class VideoCapturer {
             this._canvas.width = width;
             this._canvas.height = height;           
             context.drawImage(bitmap, 0, 0, width, height);
-            this._canvas.toBlob(resolve, 'image/jpeg', 1);
+            this._canvas.toBlob(resolve, 'image/webp', 1);
         });
     }
 
