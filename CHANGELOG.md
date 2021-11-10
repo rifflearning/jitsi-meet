@@ -1,5 +1,33 @@
 # Change Log for @rifflearning/jitsi-meet
 
+## [1.3.0](https://github.com/rifflearning/jitsi-meet/tree/v1.3.0) (2021-11-10)
+[Full Changelog](https://github.com/rifflearningjitsi-meet/compare/v1.2.0...v1.3.0)
+
+### Notable changes:
+
+- local recordings should now be able to be navigated
+- The latest stable base jitsi code (ver 6433) is included
+- A riff configuration setting was created to immediately start presenter mode
+  when a user starts screen sharing. Having this enabled is the suspected
+  culprit for many observed screen sharing issues, so it is recommended to leave
+  this disabled.
+
+There were changes in the base jitsi code to the configuration file, so
+deploying this version will require an updated configuration file.
+
+In addition there are other Riff recommended default configuration setting changes.
+
+
+### Merged pull requests
+
+- [\#120](https://github.com/rifflearning/jitsi-meet/pull/120) Initial support for navigating local recording videos
+- [\#125](https://github.com/rifflearning/jitsi-meet/pull/125) Fix LTI roomId generation
+- [\#127](https://github.com/rifflearning/jitsi-meet/pull/127) Merge latest stable jitsi-meet ver 6433 with Riff changes (RIFF-711)
+- [\#128](https://github.com/rifflearning/jitsi-meet/pull/128) Update google calendar auth scope
+- [\#129](https://github.com/rifflearning/jitsi-meet/pull/129) Update riff-metrics pkg (RIFF-711)
+- [\#130](https://github.com/rifflearning/jitsi-meet/pull/130) Add a feature flag for starting presenter mode by default
+
+
 ## [1.2.0](https://github.com/rifflearning/jitsi-meet/tree/v1.2.0) (2021-10-18)
 [Full Changelog](https://github.com/rifflearningjitsi-meet/compare/v1.1.0...v1.2.0)
 
