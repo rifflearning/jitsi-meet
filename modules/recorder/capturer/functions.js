@@ -21,8 +21,8 @@ export function getAllActiveVideoTracks() {
  */
 export function getUserIdByParticipantId(participantId) {
     const participant = APP.store.getState()[FEATURES.PARTICIPANTS]
-            .find(participant => participant.id === participantId); 
-    
+            .find(participant => participant.id === participantId);
+
     return participant.name.split(`|`)[0];
 };
 
@@ -35,7 +35,7 @@ export function getVideoStreamByParticipantId(participantId) {
     return APP.store.getState()[FEATURES.TRACKS]
             .filter(track => track.mediaType === MEDIA_TYPE.VIDEO)
             .find(track => track.participantId === participantId)
-            .jitsiTrack.stream; 
+            .jitsiTrack.stream;
 };
 
 /**
@@ -44,7 +44,7 @@ export function getVideoStreamByParticipantId(participantId) {
  * @returns {String}
  */
 export function getRoom() {
-    return APP.store.getState()[FEATURES.CONFERENCE].room; 
+    return APP.store.getState()[FEATURES.CONFERENCE].room;
 };
 
 /**
@@ -53,7 +53,7 @@ export function getRoom() {
  * @returns {String}
  */
 export function getRoomId() {
-    return APP.store.getState()[FEATURES.RIFF_PLATFORM].riff.roomId; 
+    return APP.store.getState()[FEATURES.RIFF_PLATFORM].riff.activeMeeting?.meetingId;
 };
 
 /**

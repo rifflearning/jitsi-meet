@@ -299,11 +299,11 @@ export function setTileViewByDefault() {
 */
 export function redirectToRiffAfterMeeting() {
     return async (dispatch, getState) => {
-        const roomId = getState()['features/riff-platform'].riff.roomId;
+        const meetingId = getState()['features/riff-platform'].riff.activeMeeting?.meetingId;
         const { uid, isAnon } = getState()['features/riff-platform'].signIn.user;
 
-        if (roomId) {
-            await participantLeaveRoom(roomId, uid);
+        if (meetingId) {
+            await dispatch(participantLeaveRoom(meetingId, uid));
         }
 
         // if in iframe, send message to parent window (for embedding in mattermost)

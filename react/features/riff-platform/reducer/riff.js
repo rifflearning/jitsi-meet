@@ -1,9 +1,25 @@
 import * as actionTypes from '../constants/actionTypes';
 
-export default (state = {}, action) => {
+const initialState = {
+    activeMeeting: null
+};
+
+export default (state = initialState, action) => {
     switch (action.type) {
-    case actionTypes.SET_RIFF_SERVER_ROOM_ID:
-        return { roomId: action.roomId };
+    case actionTypes.JOIN_RIFF_MEETNG:
+        return {
+            ...state,
+            activeMeeting: {
+                startTime: new Date(action.meeting.startTime),
+                meetingId: action.meeting._id
+            } };
+
+    case actionTypes.LEAVE_RIFF_MEETNG:
+        return {
+            ...state,
+            activeMeeting: null
+        };
+
     default:
         return state;
     }

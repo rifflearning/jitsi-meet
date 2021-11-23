@@ -32,7 +32,12 @@ const riffConfig = {
     },
 
     scheduler: {
-        enableGroupMeetings: false
+        enableGroupMeetings: false,
+        placeholderAgenda: [ {
+            id: -1, // these have to be unique
+            name: '',
+            duration: ''
+        } ]
     },
 
     /** Various settings for the meeting UI */

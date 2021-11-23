@@ -7,10 +7,16 @@ import UIEvents from '../../../../service/UI/UIEvents';
 import * as actionTypes from '../constants/actionTypes';
 import { app, socket } from '../libs/riffdata-client';
 
-function setRoomIdFromRiffDataServer(roomId) {
+function joinRiffMeeting(meeting) {
     return {
-        type: actionTypes.SET_RIFF_SERVER_ROOM_ID,
-        roomId
+        type: actionTypes.JOIN_RIFF_MEETNG,
+        meeting
+    };
+}
+
+function leaveRiffMeeting() {
+    return {
+        type: actionTypes.LEAVE_RIFF_MEETNG
     };
 }
 
@@ -32,7 +38,7 @@ export function attachSibilant(tracks) {
                     end: new Date()
                 };
 
-                dispatch(sendUtteranceToRiffDataServer(mockData, userData, room, accessToken));
+                sendUtteranceToRiffDataServer(mockData, userData, room, accessToken);
 
                 return;
             }
@@ -64,7 +70,7 @@ export function attachSibilant(tracks) {
 
                     speakingEvents.bind(
                             'stoppedSpeaking',
-                            data => dispatch(sendUtteranceToRiffDataServer(data, userData, room, accessToken))
+                            data => sendUtteranceToRiffDataServer(data, userData, room, accessToken)
                     );
                 }
             }
@@ -77,6 +83,15 @@ export function attachSibilant(tracks) {
 function riffAddUserToMeeting({ uid, displayName, context = '' }, room, token, title, agenda) {
     return async dispatch => {
         try {
+            const meetingListener = meeting => {
+                if (meeting.active && meeting.room === room && meeting.participants.includes(uid)) {
+                    app.service('meetings').removeListener('patched', meetingListener);
+                    dispatch(joinRiffMeeting(meeting));
+                }
+            };
+
+            app.service('meetings').on('patched', meetingListener);
+
             socket.emit('meetingJoined', {
                 participant: uid,
                 name: displayName,
@@ -87,15 +102,6 @@ function riffAddUserToMeeting({ uid, displayName, context = '' }, room, token, t
                 agenda
             });
 
-            const meetingListener = meeting => {
-                if (meeting.active && meeting.room === room && meeting.participants.includes(uid)) {
-                    app.service('meetings').removeListener('patched', meetingListener);
-                    dispatch(setRoomIdFromRiffDataServer(meeting._id));
-                }
-            };
-
-            app.service('meetings').on('patched', meetingListener);
-
         } catch (error) {
             console.error('Error while riffAddUserToMeeting action', error);
         }
@@ -103,16 +109,22 @@ function riffAddUserToMeeting({ uid, displayName, context = '' }, room, token, t
 }
 
 export function participantLeaveRoom(meetingId, participantId) {
-    return app.service('meetings').patch(meetingId, {
-        // eslint-disable-next-line camelcase
-        remove_participants: [ participantId ]
-    })
-        .then(() => true)
-        .catch(err => {
-            console.error('Action.Riff: caught an error leaving the room:', err);
+    return async dispatch => {
+        try {
+            await app.service('meetings').patch(meetingId, {
+            // eslint-disable-next-line camelcase
+                remove_participants: [ participantId ]
 
-            return false;
-        });
+            });
+
+            dispatch(leaveRiffMeeting());
+
+        } catch (error) {
+            console.error('Action.Riff: caught an error leaving the room:', error);
+
+            return error;
+        }
+    };
 }
 
 async function loginToRiffDataServer() {
@@ -132,30 +144,28 @@ async function loginToRiffDataServer() {
     }
 }
 
-function sendUtteranceToRiffDataServer(data, { uid: participant }, room, token) {
-    return async dispatch => {
-        try {
-            const volumesObj = riffConfig.metrics.sendUtteranceVolumes
-                ? { volumes: data.volumes }
-                : {};
-            const res = await app.service('utterances').create({
-                participant,
-                room,
-                startTime: data.start.toISOString(),
-                endTime: data.end.toISOString(),
-                token,
-                ...volumesObj
-            });
+async function sendUtteranceToRiffDataServer(data, { uid: participant }, room, token) {
+    try {
+        const volumesObj = riffConfig.metrics.sendUtteranceVolumes
+            ? { volumes: data.volumes }
+            : {};
+        const res = await app.service('utterances').create({
+            participant,
+            room,
+            startTime: data.start.toISOString(),
+            endTime: data.end.toISOString(),
+            token,
+            ...volumesObj
+        });
 
-            console.log({ sentUtteranceToRiffData: res });
+        console.log({ sentUtteranceToRiffData: res });
 
-            const roomIdFromRiffDataServer = res.meeting;
+        // const roomIdFromRiffDataServer = res.meeting;
 
-            dispatch(setRoomIdFromRiffDataServer(roomIdFromRiffDataServer));
+        // dispatch(joinRiffMeeting(roomIdFromRiffDataServer));
 
-            return undefined;
-        } catch (err) {
-            console.error('Error while sendUtteranceToRiffDataServer', err);
-        }
-    };
+        return undefined;
+    } catch (err) {
+        console.error('Error while sendUtteranceToRiffDataServer', err);
+    }
 }

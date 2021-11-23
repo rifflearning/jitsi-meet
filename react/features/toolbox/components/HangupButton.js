@@ -22,6 +22,11 @@ type Props = AbstractButtonProps & {
     dispatch: Function,
 
     /**
+     * The function called when leaving the meeting
+     */
+    participantLeaveRoom: Function,
+
+    /**
      * The id for this meeting
      */
     meetingId: string,
@@ -74,7 +79,13 @@ class HangupButton extends AbstractHangupButton<Props, *> {
      * @returns {Promise}.
      */
     onUnload() {
-        return participantLeaveRoom(this.props.meetingId, this.props.participantId);
+        if (!this.props.meetingId) {
+            console.error('Couldn\'t find meeting id too remove participant from meeting');
+
+            return;
+        }
+
+        return this.props.dispatch(participantLeaveRoom(this.props.meetingId, this.props.participantId));
     }
 
     /**
@@ -109,7 +120,7 @@ class HangupButton extends AbstractHangupButton<Props, *> {
 
 const mapStateToProps = state => {
     return {
-        meetingId: state['features/riff-platform'].riff.roomId,
+        meetingId: state['features/riff-platform'].riff.activeMeeting?.meetingId,
         participantId: state['features/riff-platform'].signIn.user.uid
     };
 };
