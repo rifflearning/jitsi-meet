@@ -14,7 +14,6 @@ import { connect } from '../../../base/redux';
 import { setParticipantContextMenuOpen } from '../../../base/responsive-ui/actions';
 import { getLocalVideoTrack } from '../../../base/tracks';
 import ConnectionIndicatorContent from '../../../connection-indicator/components/web/ConnectionIndicatorContent';
-import { hideToolboxOnTileView } from '../../../toolbox/actions';
 import { getCurrentLayout, LAYOUTS } from '../../../video-layout';
 import { renderConnectionStatus } from '../../actions.web';
 
@@ -38,6 +37,21 @@ type Props = {
      * Gets a ref to the current component instance.
      */
      getRef: Function,
+
+    /**
+     * Hides popover.
+     */
+     hidePopover: Function,
+
+    /**
+     * Whether the popover is visible or not.
+     */
+     popoverVisible: boolean,
+
+    /**
+     * Shows popover.
+     */
+     showPopover: Function,
 
     /**
      * The id of the local participant.
@@ -76,13 +90,9 @@ type Props = {
  * React Component for displaying an icon associated with opening the
  * the video menu for the local participant.
  *
- * @extends {Component}
+ * @augments {Component}
  */
 class LocalVideoMenuTriggerButton extends Component<Props> {
-    /**
-     * Reference to the Popover instance.
-     */
-    popoverRef: Object;
 
     /**
      * Initializes a new LocalVideoMenuTriggerButton instance.
@@ -93,45 +103,10 @@ class LocalVideoMenuTriggerButton extends Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        this.popoverRef = React.createRef();
         this._onPopoverClose = this._onPopoverClose.bind(this);
         this._onPopoverOpen = this._onPopoverOpen.bind(this);
     }
 
-    /**
-     * Triggers showing the popover's context menu.
-     *
-     * @returns {void}
-     */
-    showContextMenu() {
-        if (this.popoverRef && this.popoverRef.current) {
-            this.popoverRef.current.showDialog();
-        }
-    }
-
-    /**
-     * Calls the ref(instance) getter.
-     *
-     * @inheritdoc
-     * @returns {void}
-     */
-    componentDidMount() {
-        if (this.props.getRef) {
-            this.props.getRef(this);
-        }
-    }
-
-    /**
-     * Calls the ref(instance) getter.
-     *
-     * @inheritdoc
-     * @returns {void}
-     */
-    componentWillUnmount() {
-        if (this.props.getRef) {
-            this.props.getRef(null);
-        }
-    }
 
     /**
      * Implements React's {@link Component#render()}.
@@ -146,6 +121,8 @@ class LocalVideoMenuTriggerButton extends Component<Props> {
             _showConnectionInfo,
             _overflowDrawer,
             _showLocalVideoFlipButton,
+            hidePopover,
+            popoverVisible,
             t
         } = this.props;
 
@@ -153,7 +130,7 @@ class LocalVideoMenuTriggerButton extends Component<Props> {
             ? <ConnectionIndicatorContent participantId = { _localParticipantId } />
             : (
                 <VideoMenu id = 'localVideoMenu'>
-                    <FlipLocalVideoButton />
+                    <FlipLocalVideoButton onClick = { hidePopover } />
                     { isMobileBrowser()
                             && <ConnectionStatusButton participantId = { _localParticipantId } />
                     }
@@ -164,18 +141,19 @@ class LocalVideoMenuTriggerButton extends Component<Props> {
             isMobileBrowser() || _showLocalVideoFlipButton
                 ? <Popover
                     content = { content }
+                    id = 'local-video-menu-trigger'
                     onPopoverClose = { this._onPopoverClose }
                     onPopoverOpen = { this._onPopoverOpen }
                     overflowDrawer = { _overflowDrawer }
                     position = { _menuPosition }
-                    ref = { this.popoverRef }>
+                    visible = { popoverVisible }>
                     {!_overflowDrawer && (
                         <span
                             className = 'popover-trigger local-video-menu-trigger'>
                             {!isMobileBrowser() && <Icon
                                 ariaLabel = { t('dialog.localUserControls') }
                                 role = 'button'
-                                size = '1em'
+                                size = '1.4em'
                                 src = { IconMenuThumb }
                                 tabIndex = { 0 }
                                 title = { t('dialog.localUserControls') } />
@@ -195,8 +173,10 @@ class LocalVideoMenuTriggerButton extends Component<Props> {
      * @returns {void}
      */
     _onPopoverOpen() {
-        this.props.dispatch(setParticipantContextMenuOpen(true));
-        this.props.dispatch(hideToolboxOnTileView());
+        const { dispatch, showPopover } = this.props;
+
+        showPopover();
+        dispatch(setParticipantContextMenuOpen(true));
     }
 
     _onPopoverClose: () => void;
@@ -207,8 +187,9 @@ class LocalVideoMenuTriggerButton extends Component<Props> {
      * @returns {void}
      */
     _onPopoverClose() {
-        const { dispatch } = this.props;
+        const { hidePopover, dispatch } = this.props;
 
+        hidePopover();
         batch(() => {
             dispatch(setParticipantContextMenuOpen(false));
             dispatch(renderConnectionStatus(false));

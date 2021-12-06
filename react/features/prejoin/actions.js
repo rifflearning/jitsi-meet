@@ -3,11 +3,10 @@
 declare var JitsiMeetJS: Object;
 declare var APP: Object;
 
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 import { getDialOutStatusUrl, getDialOutUrl, updateConfig } from '../base/config';
-import { isIosMobileBrowser } from '../base/environment/utils';
-import { createLocalTrack } from '../base/lib-jitsi-meet';
+import { browser, createLocalTrack } from '../base/lib-jitsi-meet';
 import { isVideoMutedByUser, MEDIA_TYPE } from '../base/media';
 import { updateSettings } from '../base/settings';
 import {
@@ -20,7 +19,7 @@ import {
 } from '../base/tracks';
 import { openURLInBrowser } from '../base/util';
 import { executeDialOutRequest, executeDialOutStatusRequest, getDialInfoPageURL } from '../invite/functions';
-import { showErrorNotification } from '../notifications';
+import { NOTIFICATION_TIMEOUT_TYPE, showErrorNotification } from '../notifications';
 
 import {
     PREJOIN_JOINING_IN_PROGRESS,
@@ -37,7 +36,6 @@ import {
     SET_PREJOIN_PAGE_VISIBILITY,
     SET_DEVICE_STATUS
 } from './actionTypes';
-import { type PREJOIN_SCREEN_STATE, PREJOIN_SCREEN_STATES } from './constants';
 import {
     getFullDialOutNumber,
     getDialOutConferenceUrl,
@@ -116,7 +114,7 @@ function pollForStatus(
             case DIAL_OUT_STATUS.DISCONNECTED: {
                 dispatch(showErrorNotification({
                     titleKey: 'prejoin.errorDialOutDisconnected'
-                }));
+                }, NOTIFICATION_TIMEOUT_TYPE.LONG));
 
                 return onFail();
             }
@@ -124,7 +122,7 @@ function pollForStatus(
             case DIAL_OUT_STATUS.FAILED: {
                 dispatch(showErrorNotification({
                     titleKey: 'prejoin.errorDialOutFailed'
-                }));
+                }, NOTIFICATION_TIMEOUT_TYPE.LONG));
 
                 return onFail();
             }
@@ -132,7 +130,7 @@ function pollForStatus(
         } catch (err) {
             dispatch(showErrorNotification({
                 titleKey: 'prejoin.errorDialOutStatus'
-            }));
+            }, NOTIFICATION_TIMEOUT_TYPE.LONG));
             logger.error('Error getting dial out status', err);
             onFail();
         }
@@ -153,7 +151,7 @@ function pollForStatus(
 export function dialOut(onSuccess: Function, onFail: Function) {
     return async function(dispatch: Function, getState: Function) {
         const state = getState();
-        const reqId = uuid.v4();
+        const reqId = uuidv4();
         const url = getDialOutUrl(state);
         const conferenceUrl = getDialOutConferenceUrl(state);
         const phoneNumber = getFullDialOutNumber(state);
@@ -185,7 +183,7 @@ export function dialOut(onSuccess: Function, onFail: Function) {
                 }
             }
 
-            dispatch(showErrorNotification(notification));
+            dispatch(showErrorNotification(notification, NOTIFICATION_TIMEOUT_TYPE.LONG));
             logger.error('Error dialing out', err);
             onFail();
         }
@@ -241,10 +239,10 @@ export function joinConference(options?: Object, ignoreJoiningInProgress: boolea
 
         // Do not signal audio/video tracks if the user joins muted.
         for (const track of localTracks) {
-            // Always add the audio track on mobile Safari because of a known issue where audio playout doesn't happen
+            // Always add the audio track on Safari because of a known issue where audio playout doesn't happen
             // if the user joins audio and video muted.
             if (track.muted
-                && !(isIosMobileBrowser() && track.jitsiTrack && track.jitsiTrack.getType() === MEDIA_TYPE.AUDIO)) {
+                && !(browser.isWebKitBased() && track.jitsiTrack && track.jitsiTrack.getType() === MEDIA_TYPE.AUDIO)) {
                 try {
                     await dispatch(replaceLocalTrack(track.jitsiTrack, null));
                 } catch (error) {
@@ -259,8 +257,6 @@ export function joinConference(options?: Object, ignoreJoiningInProgress: boolea
         localTracks = getLocalTracks(getState()['features/base/tracks']);
 
         const jitsiTracks = localTracks.map(t => t.jitsiTrack);
-
-        dispatch(setPrejoinPageVisibility(PREJOIN_SCREEN_STATES.LOADING));
 
         APP.conference.prejoinStart(jitsiTracks);
     };
@@ -556,10 +552,10 @@ export function setPrejoinDeviceErrors(value: Object) {
 /**
  * Action used to set the visibility of the prejoin page.
  *
- * @param {string} value - The value.
+ * @param {boolean} value - The value.
  * @returns {Object}
  */
-export function setPrejoinPageVisibility(value: PREJOIN_SCREEN_STATE) {
+export function setPrejoinPageVisibility(value: boolean) {
     return {
         type: SET_PREJOIN_PAGE_VISIBILITY,
         value

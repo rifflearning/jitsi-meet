@@ -47,7 +47,7 @@ type Props = {
     readOnly?: boolean,
 
     /**
-     * The field type (e.g. text, password...etc).
+     * The field type (e.g. Text, password...etc).
      */
     type: string,
 

@@ -1,4 +1,4 @@
-import { NOTIFICATION_TIMEOUT, showNotification } from '../../notifications';
+import { NOTIFICATION_TIMEOUT_TYPE, showNotification } from '../../notifications';
 import { set } from '../redux';
 
 import {
@@ -476,9 +476,9 @@ export function participantMutedUs(participant, track) {
         dispatch(showNotification({
             titleKey: isAudio ? 'notify.mutedRemotelyTitle' : 'notify.videoMutedRemotelyTitle',
             titleArguments: {
-                moderator: getParticipantDisplayName(getState, participant.getId())
+                participantDisplayName: getParticipantDisplayName(getState, participant.getId())
             }
-        }));
+        }, NOTIFICATION_TIMEOUT_TYPE.LONG));
     };
 }
 
@@ -510,7 +510,7 @@ export function participantKicked(kicker, kicked) {
                     getParticipantDisplayName(getState, kicker.getId())
             },
             titleKey: 'notify.kickParticipant'
-        }, NOTIFICATION_TIMEOUT * 2)); // leave more time for this
+        }, NOTIFICATION_TIMEOUT_TYPE.MEDIUM));
     };
 }
 
@@ -564,13 +564,13 @@ export function setLoadableAvatarUrl(participantId, url) {
  * @param {boolean} enabled - Raise or lower hand.
  * @returns {{
  *     type: LOCAL_PARTICIPANT_RAISE_HAND,
- *     enabled: boolean
+ *     raisedHandTimestamp: number
  * }}
  */
 export function raiseHand(enabled) {
     return {
         type: LOCAL_PARTICIPANT_RAISE_HAND,
-        enabled
+        raisedHandTimestamp: enabled ? Date.now() : 0
     };
 }
 

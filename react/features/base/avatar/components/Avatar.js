@@ -39,12 +39,12 @@ export type Props = {
 
     /**
      * Display name of the entity to render an avatar for (if any). This is handy when we need
-     * an avatar for a non-participasnt entity (e.g. a recent list item).
+     * an avatar for a non-participasnt entity (e.g. A recent list item).
      */
     displayName?: string,
 
     /**
-     * Whether or not to update the background color of the avatar
+     * Whether or not to update the background color of the avatar.
      */
     dynamicColor?: Boolean,
 
@@ -221,7 +221,7 @@ export function _mapStateToProps(state: Object, ownProps: Props) {
         _customAvatarBackgrounds: state['features/dynamic-branding'].avatarBackgrounds,
         _initialsBase,
         _loadableAvatarUrl: _participant?.loadableAvatarUrl,
-        colorBase: !colorBase && _participant ? _participant.id : colorBase
+        colorBase
     };
 }
 
