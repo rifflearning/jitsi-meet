@@ -3,8 +3,6 @@
 import _ from 'lodash';
 import React from 'react';
 
-// import { getConferenceNameForTitle } from '../../../base/conference';
-
 import VideoLayout from '../../../../../modules/UI/videolayout/VideoLayout';
 import { connect, disconnect } from '../../../base/connection';
 import { isMobileBrowser } from '../../../base/environment/utils';
@@ -409,7 +407,6 @@ function _mapStateToProps(state) {
         _roomName: state['features/riff-platform']?.meeting?.meeting?.name,
         _mouseMoveCallbackInterval: mouseMoveCallbackInterval,
         _overflowDrawer: overflowDrawer,
-        _roomName: getConferenceNameForTitle(state),
         _showLobby: getIsLobbyVisible(state),
         _showPrejoin: isPrejoinPageVisible(state)
     };
