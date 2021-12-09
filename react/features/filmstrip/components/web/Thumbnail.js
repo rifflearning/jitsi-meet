@@ -900,15 +900,6 @@ class Thumbnail extends Component<Props, State> {
                 </span>
                 <div className = 'videocontainer__toolbar'>
                     <StatusIndicators participantID = { id } />
-                    <div
-                        className = 'videocontainer__participant-name'
-                        onClick = { onClick }>
-                        <DisplayName
-                            allowEditing = { _allowEditing }
-                            displayNameSuffix = { _defaultLocalDisplayName }
-                            elementID = 'localDisplayName'
-                            participantID = { id } />
-                    </div>
                 </div>
                 <div className = 'videocontainer__toptoolbar'>
                     { this._renderTopIndicators() }
