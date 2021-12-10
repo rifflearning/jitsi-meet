@@ -5,18 +5,34 @@ import type { Dispatch } from 'redux';
 
 import { Dialog } from '../../../base/dialog';
 import { translate } from '../../../base/i18n';
+import { getLocalParticipant } from '../../../base/participants';
 import { connect } from '../../../base/redux';
 import { escapeRegexp } from '../../../base/util';
-import { initSearch } from '../../actions';
+import { maybeExtractIdFromDisplayName } from '../../../riff-platform/functions';
+import { initUpdateStats, initSearch } from '../../actions';
+import { SPEAKER_STATS_RELOAD_INTERVAL } from '../../constants';
+import { getSpeakerStats, getSearchCriteria } from '../../functions';
 
+import SpeakerStatsItem from './SpeakerStatsItem';
 import SpeakerStatsLabels from './SpeakerStatsLabels';
-import SpeakerStatsList from './SpeakerStatsList';
 import SpeakerStatsSearch from './SpeakerStatsSearch';
+
+declare var interfaceConfig: Object;
 
 /**
  * The type of the React {@code Component} props of {@link SpeakerStats}.
  */
 type Props = {
+
+    /**
+     * The display name for the local participant obtained from the redux store.
+     */
+    _localDisplayName: string,
+
+    /**
+     * The speaker paricipant stats.
+     */
+    _stats: Object,
 
     /**
      * The flag which shows if the facial recognition is enabled, obtained from the redux store.
@@ -35,6 +51,11 @@ type Props = {
     _criteria: string | null,
 
     /**
+     * The JitsiConference from which stats will be pulled.
+     */
+    conference: Object,
+
+    /**
      * Redux store dispatch method.
      */
     dispatch: Dispatch<any>,
@@ -51,6 +72,7 @@ type Props = {
  * @augments Component
  */
 class SpeakerStats extends Component<Props> {
+    _updateInterval: IntervalID;
 
     /**
      * Initializes a new SpeakerStats instance.
@@ -62,7 +84,29 @@ class SpeakerStats extends Component<Props> {
         super(props);
 
         // Bind event handlers so they are only bound once per instance.
+        this._updateStats = this._updateStats.bind(this);
         this._onSearch = this._onSearch.bind(this);
+
+        this._updateStats();
+    }
+
+    /**
+     * Begin polling for speaker stats updates.
+     *
+     * @inheritdoc
+     */
+    componentDidMount() {
+        this._updateInterval = setInterval(() => this._updateStats(), SPEAKER_STATS_RELOAD_INTERVAL);
+    }
+
+    /**
+     * Stop polling for speaker stats updates.
+     *
+     * @inheritdoc
+     * @returns {void}
+     */
+    componentWillUnmount() {
+        clearInterval(this._updateInterval);
     }
 
     /**
@@ -72,6 +116,9 @@ class SpeakerStats extends Component<Props> {
      * @returns {ReactElement}
      */
     render() {
+        const userIds = Object.keys(this.props._stats);
+        const items = userIds.map(userId => this._createStatsItem(userId));
+
         return (
             <Dialog
                 cancelKey = 'dialog.close'
@@ -83,9 +130,46 @@ class SpeakerStats extends Component<Props> {
                     <SpeakerStatsLabels
                         reduceExpressions = { this.props._reduceExpressions }
                         showFacialExpressions = { this.props._showFacialExpressions ?? false } />
-                    <SpeakerStatsList />
+                    { items }
                 </div>
             </Dialog>
+        );
+    }
+
+    /**
+     * Create a SpeakerStatsItem instance for the passed in user id.
+     *
+     * @param {string} userId -  User id used to look up the associated
+     * speaker stats from the jitsi library.
+     * @returns {SpeakerStatsItem|null}
+     * @private
+     */
+    _createStatsItem(userId) {
+        const statsModel = this.props._stats[userId];
+
+        if (!statsModel || statsModel.hidden) {
+            return null;
+        }
+
+        const isDominantSpeaker = statsModel.isDominantSpeaker();
+        const dominantSpeakerTime = statsModel.getTotalDominantSpeakerTime();
+        const hasLeft = statsModel.hasLeft();
+
+        const displayName = maybeExtractIdFromDisplayName(statsModel.getDisplayName()).displayName;
+        const facialExpressions = statsModel.getFacialExpressions();
+
+        return (
+            <SpeakerStatsItem
+                displayName = { displayName }
+                dominantSpeakerTime = { dominantSpeakerTime }
+                facialExpressions = { facialExpressions }
+                hasLeft = { hasLeft }
+                isDominantSpeaker = { isDominantSpeaker }
+                key = { userId }
+                participantId = { userId }
+                reduceExpressions = { this.props._reduceExpressions }
+                showFacialExpressions = { this.props._showFacialExpressions ?? false }
+                t = { this.props.t } />
         );
     }
 
@@ -101,6 +185,51 @@ class SpeakerStats extends Component<Props> {
     _onSearch(criteria = '') {
         this.props.dispatch(initSearch(escapeRegexp(criteria)));
     }
+
+    _updateStats: () => void;
+
+    /**
+     * Update the internal state with the latest speaker stats.
+     *
+     * @returns {void}
+     * @private
+     */
+    _updateStats() {
+        this.props.dispatch(initUpdateStats(() => this._getSpeakerStats()));
+    }
+
+    /**
+     * Update the internal state with the latest speaker stats.
+     *
+     * @returns {Object}
+     * @private
+     */
+    _getSpeakerStats() {
+        const stats = { ...this.props.conference.getSpeakerStats() };
+
+        for (const userId in stats) {
+            if (stats[userId]) {
+                if (stats[userId].isLocalStats()) {
+                    const { t } = this.props;
+                    const meString = t('me');
+
+                    stats[userId].setDisplayName(
+                        this.props._localDisplayName
+                            ? `${this.props._localDisplayName} (${meString})`
+                            : meString
+                    );
+                }
+
+                if (!stats[userId].getDisplayName()) {
+                    stats[userId].setDisplayName(
+                        interfaceConfig.DEFAULT_REMOTE_DISPLAY_NAME
+                    );
+                }
+            }
+        }
+
+        return stats;
+    }
 }
 
 /**
@@ -109,6 +238,9 @@ class SpeakerStats extends Component<Props> {
  * @param {Object} state - The redux state.
  * @private
  * @returns {{
+ *     _localDisplayName: ?string,
+ *     _stats: Object,
+ *     _criteria: string,
  *     _showFacialExpressions: ?boolean,
  *     _reduceExpressions: boolean,
  * }}
@@ -116,6 +248,7 @@ class SpeakerStats extends Component<Props> {
 function _mapStateToProps(state) {
     const { enableFacialRecognition } = state['features/base/config'];
     const { clientWidth } = state['features/base/responsive-ui'];
+    const localParticipant = getLocalParticipant(state);
 
     return {
         /**
@@ -124,6 +257,9 @@ function _mapStateToProps(state) {
          * @private
          * @type {string|undefined}
          */
+        _localDisplayName: localParticipant && localParticipant.name,
+        _stats: getSpeakerStats(state),
+        _criteria: getSearchCriteria(state),
         _showFacialExpressions: enableFacialRecognition,
         _reduceExpressions: clientWidth < 750
     };

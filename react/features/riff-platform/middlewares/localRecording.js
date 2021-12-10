@@ -12,6 +12,7 @@ import { MiddlewareRegistry } from '../../base/redux';
 import { SETTINGS_UPDATED } from '../../base/settings/actionTypes';
 import { TRACK_ADDED } from '../../base/tracks/actionTypes';
 import { showNotification } from '../../notifications/actions';
+import { NOTIFICATION_TIMEOUT_TYPE } from '../../notifications/constants';
 import { VIDEO_PLAYER_PARTICIPANT_NAME, YOUTUBE_PLAYER_PARTICIPANT_NAME } from '../../shared-video/constants';
 import { locRecordingEngaged, locRecordingStats, setSharedVideoId } from '../actions/localRecording';
 import DownloadInfoDialog from '../components/LocalRecorder/DownloadInfoDialog';
@@ -72,11 +73,11 @@ MiddlewareRegistry.register(({ getState, dispatch }) => next => action => {
         };
 
         recordingController.onWarning = (messageKey, messageParams) => {
-            dispatch(showNotification(getLocalRecordingMessage(messageKey, messageParams), 10000));
+            dispatch(showNotification(getLocalRecordingMessage(messageKey, messageParams), NOTIFICATION_TIMEOUT_TYPE.LONG));
         };
 
         recordingController.onNotify = (messageKey, messageParams) => {
-            dispatch(showNotification(getLocalRecordingMessage(messageKey, messageParams), 10000));
+            dispatch(showNotification(getLocalRecordingMessage(messageKey, messageParams), NOTIFICATION_TIMEOUT_TYPE.LONG));
         };
 
         recordingController.onMemoryExceeded = isExceeded => {

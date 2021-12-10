@@ -20,8 +20,10 @@ import {
     showNotification,
     showParticipantJoinedNotification
 } from './actions';
-import { NOTIFICATION_TIMEOUT_TYPE, NOTIFICATION_TIMEOUT } from './constants';
+import { NOTIFICATION_TIMEOUT_TYPE } from './constants';
 import { joinLeaveNotificationsDisabled } from './functions';
+
+declare var interfaceConfig: Object;
 
 /**
  * Middleware that captures actions to display notifications.
@@ -65,7 +67,7 @@ MiddlewareRegistry.register(store => next => action => {
                     descriptionKey: 'notify.disconnected',
                     titleKey: 'notify.somebody',
                     title: maybeExtractIdFromDisplayName(participant.name).displayName
-                }, NOTIFICATION_TIMEOUT));
+                }, NOTIFICATION_TIMEOUT_TYPE.MEDIUM));
             }
 
             // TODO: [Balu] Discuss these changes with [Jordan].

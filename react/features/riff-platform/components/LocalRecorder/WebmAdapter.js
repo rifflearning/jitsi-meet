@@ -74,7 +74,7 @@ export default class WebmAdapter extends RecordingAdapter {
     _participantAudioStreams = [];
 
     /**
-     * Time when recording started
+     * Time when recording started.
      */
     _startTime = null;
 
@@ -106,7 +106,7 @@ export default class WebmAdapter extends RecordingAdapter {
      */
     stop() {
         return new Promise(
-            async resolve => {
+            resolve => {
                 // eslint-disable-next-line no-negated-condition
                 if (this._mediaRecorder.state !== 'inactive') {
                     this._mediaRecorder.stop(this._stopStreamTracks());
@@ -295,7 +295,7 @@ export default class WebmAdapter extends RecordingAdapter {
      */
     handleMemoryExceededStop() {
         return new Promise(
-            async resolve => {
+            resolve => {
                 this._mediaRecorder.onstop = () => resolve();
                 this._mediaRecorder.stop();
             }

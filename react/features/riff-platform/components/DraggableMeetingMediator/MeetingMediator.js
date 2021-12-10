@@ -88,8 +88,9 @@ class MeetingMediator extends React.Component {
     updateAccessibleTable(data) {
         this.setState({
             tableRows: data.turns.map(turn => [
-                this.namesById[turn.participant],
-                [`${Math.round(turn.turns * 100)}%`]
+                this.namesById[turn.participant], [
+                    `${Math.round(turn.turns * 100)}%`
+                ]
             ]),
             caption: `Turns taken: The group has taken ${data.transitions} turns `
                 + 'between participants in the last five minutes.'
@@ -117,13 +118,14 @@ class MeetingMediator extends React.Component {
 
         const chartTable = this.state.tableRows.length ? (
             <A11y.ChartTable
-                cols = { ['Participant', 'Amount of Speaking'] }
+                cols = { [
+                    'Participant', 'Amount of Speaking'
+                ] }
                 rows = { this.state.tableRows }
-                caption = { this.state.caption }
-            />
+                caption = { this.state.caption } />
         ) : null;
 
-        const chartDiv = <div id='meeting-mediator'/>;
+        const chartDiv = <div id = 'meeting-mediator' />;
 
         return (
             <div>
@@ -132,8 +134,7 @@ class MeetingMediator extends React.Component {
                     chartInfo = { chartConfig.info }
                     chartDiv = { chartDiv }
                     chartCardId = 'meeting-mediator-card'
-                    longDescription = { true }
-                >
+                    longDescription = { true }>
                     {chartTable}
                     {chartDiv}
                 </ChartCard>
@@ -146,7 +147,7 @@ MeetingMediator.propTypes = {
     /** ID of the current user. */
     displayName: PropTypes.string.isRequired,
 
-    /** display name of the current user. */
+    /** Display name of the current user. */
     isEnabled: PropTypes.bool.isRequired,
 
     /** List of participant IDs in the meeting. */
@@ -165,7 +166,10 @@ MeetingMediator.propTypes = {
 const mapStateToProps = state => {
     const localParticipantName = state['features/base/participants'].local?.name;
     const remoteParticipants = state['features/base/participants'].sortedRemoteParticipants;
-    const allParticipantName = [localParticipantName, ...Array.from(remoteParticipants.values())];
+    const allParticipantName = [
+        localParticipantName,
+        ...Array.from(remoteParticipants.values())
+    ];
 
     return {
         uid: state['features/riff-platform'].signIn.user?.uid, // getUserId(state),
