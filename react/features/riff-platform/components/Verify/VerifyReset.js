@@ -27,11 +27,11 @@ export default () => {
     }, []);
 
     if (token) {
-        return <>
+        return (<>
             {isTokenValid
                 ? <NewPasswordForm token = { token } />
                 : <Text text = { state || 'Verifying...' } />}
-        </>;
+        </>);
     }
 
     return <Text text = 'Please check your email to reset your password.' />;

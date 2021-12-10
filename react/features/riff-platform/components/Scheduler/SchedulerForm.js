@@ -752,7 +752,7 @@ const SchedulerForm = ({
                     sm = { 3 }
                     md = { 2 }>
                     <Typography>
-                    When
+                        When
                     </Typography>
                 </Grid>
 
@@ -816,7 +816,7 @@ const SchedulerForm = ({
                     sm = { 3 }
                     md = { 2 }>
                     <Typography>
-            Duration
+                        Duration
                     </Typography>
                 </Grid>
                 <Grid
@@ -860,7 +860,7 @@ const SchedulerForm = ({
                     sm = { 3 }
                     md = { 2 }>
                     <Typography>
-            Time Zone
+                        Time Zone
                     </Typography>
                 </Grid>
                 <Grid
@@ -1301,7 +1301,7 @@ const SchedulerForm = ({
                         variant = 'outlined'
                         className = { classes.submit }
                         onClick = { () => history.goBack() }>
-            Cancel
+                        Cancel
                     </Button>
                 </Grid>
             </Grid>

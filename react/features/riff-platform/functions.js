@@ -252,7 +252,6 @@ export function msToTime(milliseconds) {
 /**
  * Checks if current pathname equals to riff-platform basename.
  *
- *
  * @returns {boolean} - True if we're on platform, false if on roomId or '/'.
  */
 export function isRiffPlatformCurrentPath() {

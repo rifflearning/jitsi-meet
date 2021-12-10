@@ -1,9 +1,9 @@
 /* global __dirname */
 
 const CircularDependencyPlugin = require('circular-dependency-plugin');
+const dotenv = require('dotenv');
 const fs = require('fs');
 const { join } = require('path');
-const dotenv = require('dotenv');
 const process = require('process');
 const webpack = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
@@ -36,7 +36,7 @@ const devServerProxyTarget
  * @returns {Object} a performance hints object.
  */
 function getPerformanceHints(options, size) {
-    const { analyzeBundle, minimize } = options;
+    // const { analyzeBundle, minimize } = options;
 
     return {
         // hints: minimize && !analyzeBundle ? 'error' : false,

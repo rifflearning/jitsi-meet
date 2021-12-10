@@ -46,20 +46,21 @@ function LocalRecordingDialog({ onClose }) {
     };
 
     const renderControls = (
-    <>
-        <Typography>Follow the below steps to do screen recording:</Typography>
-        <List>
-            {recordingSteps.map((el, i) => (
-                <ListItem
-                    dense = { true }
-                    disableGutters = { true }
-                    key = { i }>
-                    <ListItemText
-                        primary = { `*${el}` } />
-                </ListItem>
-            ))}
-        </List>
-    </>);
+        <>
+            <Typography>Follow the below steps to do screen recording:</Typography>
+            <List>
+                {recordingSteps.map((el, i) => (
+                    <ListItem
+                        dense = { true }
+                        disableGutters = { true }
+                        key = { i }>
+                        <ListItemText
+                            primary = { `*${el}` } />
+                    </ListItem>
+                ))}
+            </List>
+        </>
+    );
 
     return (
         <Dialog

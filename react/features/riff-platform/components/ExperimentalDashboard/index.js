@@ -2,10 +2,10 @@
  * index.js                                                                     *
  * *************************************************************************/ /**
  *
- * @fileoverview React component container for meeting metrics (the dashboard)
+ * @file React component container for meeting metrics (the dashboard).
  *
- * Created on       August 25, 2021
- * @author          Oliver Millard
+ * Created on       August 25, 2021.
+ * @author          Oliver Millard.
  *
  * @copyright (c) 2021-present Riff Analytics,
  *            MIT License (see https://opensource.org/licenses/MIT)

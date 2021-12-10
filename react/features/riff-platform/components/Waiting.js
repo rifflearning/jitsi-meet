@@ -145,7 +145,7 @@ const Waiting = ({ meeting, checkIsMeetingAllowedProp }) => {
                         component = 'p'
                         color = 'textPrimary'
                         variant = 'subtitle1'>
-                        {`Meeting is scheduled for ${(new Date(meeting.dateStart)).toString()
+                        {`Meeting is scheduled for ${new Date(meeting.dateStart).toString()
                             .slice(0, 24)}`}
                     </Typography>
                     : expiredMeetingError ? null : <Typography
@@ -170,7 +170,7 @@ const Waiting = ({ meeting, checkIsMeetingAllowedProp }) => {
                             className = { classes.timeText }>
                             {time}
                         </Typography>
-                </>
+                    </>
                 )}
                 <Typography color = 'textPrimary'>
                     {Boolean(noHostError) && 'Waiting for the host...'}

@@ -58,7 +58,7 @@ type Props = {
 /**
  * React component for displaying a list of speaker stats.
  *
- * @extends Component
+ * @param {any} Component - React Component.
  */
 class SpeakerStats extends Component<Props> {
     _updateInterval: IntervalID;

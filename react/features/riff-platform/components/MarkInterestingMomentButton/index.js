@@ -8,7 +8,7 @@ import { markInterestingMoment } from '../../actions/meeting';
 
 /**
  * Implements a React {@link Component} which displays a button
- * for marking moments
+ * for marking moments.
  */
 class MarkInterestingMomentButton extends AbstractButton {
     accessibilityLabel = 'toolbar.accessibilityLabel.markInterestingMoment';

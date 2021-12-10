@@ -20,30 +20,34 @@ const MEDIARECORDER_TIMESLICE = 180000;
 const MEDIARECORDER_MAX_SIZE = 950;
 
 /**
- * Recording adapter that uses {@code MediaRecorder}
+ * Recording adapter that uses {@code MediaRecorder}.
  */
 export default class WebmAdapter extends RecordingAdapter {
 
     /**
      * Instance of MediaRecorder.
+     *
      * @private
      */
     _mediaRecorder = null;
 
     /**
      * Initialization promise.
+     *
      * @private
      */
     _initPromise = null;
 
     /**
      * The recorded media file.
+     *
      * @private
      */
     _recordedData = [];
 
     /**
      * The recorded  stream.
+     *
      * @private
      */
     _recorderStream = null;
@@ -57,6 +61,7 @@ export default class WebmAdapter extends RecordingAdapter {
 
     /**
      * Instance of MediaRecorder.
+     *
      * @private
      */
     _newMediaRecorder = null;
@@ -118,8 +123,8 @@ export default class WebmAdapter extends RecordingAdapter {
 
     /**
      * Returns the remote participant id and audio stream.
-      *@Private.
      *
+     * @private
      * @param {Object} participant - The participant object.
      * @returns {({Object}|undefined)} - The object with participant id and audio stream.
      */
@@ -134,8 +139,8 @@ export default class WebmAdapter extends RecordingAdapter {
 
     /**
      * Returns array of remote participants id and their audio stream.
-     *@Private.
      *
+     * @private
      * @returns {(Object[])} - List of remote participants id and their audio stream.
      */
     _getAudioParticipantsStream() {

@@ -136,7 +136,7 @@ const CalendarSync = ({
                     item = { true }
                     justify = 'center'>
                     <Typography>
-                            Schedule your calendars events from {interfaceConfig.APP_NAME}
+                        Schedule your calendars events from {interfaceConfig.APP_NAME}
                     </Typography>
                 </Grid>
                 {isGoogleCalendarIntegrationEnabled

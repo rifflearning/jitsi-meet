@@ -2,7 +2,7 @@
  * EmotionsChart.js                                                             *
  * *************************************************************************/ /**
  *
- * @fileoverview React component to visualize meeting speaking timelines and
+ * @file React component to visualize meeting speaking timelines and
  * interaction events
  *
  * Created on       October 28, 2019
@@ -38,23 +38,6 @@ const { Colors } = riffUtils.color;
  *
  ********************************************************************************/
 class EmotionsChart extends React.Component {
-    static propTypes = {
-        /** The request status of the graphDataset */
-        datasetStatus: PropTypes.string.isRequired,
-
-        /** The main dataset that is used for this graph */
-        graphDataset: PropTypes.object.isRequired,
-
-        /** Meeting whose relevant data will be in graphDataset */
-        meeting: PropTypes.shape({
-            _id: PropTypes.string.isRequired,
-            participants: PropTypes.instanceOf(Map).isRequired
-        }),
-
-        /** ID of the logged in user so their data can be distinguished */
-        participantId: PropTypes.string.isRequired
-    };
-
     /** The GraphDatasetType of the graphDataset property */
     static datasetType = GraphDatasetTypes.UTTERANCE_TIMELINE;
 
@@ -204,6 +187,23 @@ class EmotionsChart extends React.Component {
             allWereLoaded };
     }
 }
+
+EmotionsChart.propTypes = {
+    /** The request status of the graphDataset */
+    datasetStatus: PropTypes.string.isRequired,
+
+    /** The main dataset that is used for this graph */
+    graphDataset: PropTypes.object.isRequired,
+
+    /** Meeting whose relevant data will be in graphDataset */
+    meeting: PropTypes.shape({
+        _id: PropTypes.string.isRequired,
+        participants: PropTypes.instanceOf(Map).isRequired
+    }),
+
+    /** ID of the logged in user so their data can be distinguished */
+    participantId: PropTypes.string.isRequired
+};
 
 const mapStateToProps = state => {
     return {

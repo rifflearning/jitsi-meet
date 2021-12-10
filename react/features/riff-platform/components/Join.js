@@ -110,14 +110,12 @@ const Join = ({ meetingError, user }) => {
                     </Button>
                     {meetingError
                         && <Typography color = 'error'>
-                          No such meeting.
+                            No such meeting.
                         </Typography>
                     }
-                    {meetingError && !user
-                        && <Typography color = 'error'>
-                          Or anonymous users are not allowed. Please SignIn or SignUp.
-                        </Typography>
-                    }
+                    {meetingError && !user && <Typography color = 'error'>
+                        Or anonymous users are not allowed. Please SignIn or SignUp.
+                    </Typography>}
                 </form>
             </div>
         </Container>

@@ -24,7 +24,7 @@ const NoPersonalMeeting = ({ handleCreateRoom }) => (
                 color = 'primary'
                 onClick = { () => handleCreateRoom() }
                 variant = 'contained'>
-                    Create your room
+                Create your room
             </Button>
         </Grid>
     </Grid>

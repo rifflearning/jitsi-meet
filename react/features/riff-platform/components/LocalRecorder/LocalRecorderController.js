@@ -60,7 +60,7 @@ const ControllerState = Object.freeze({
     RECORDING: Symbol('RECORDING'),
 
     /**
-     * Stopping."flowtype/no-types-missing-file-annotation": 0
+     * Stopping."flowtype/no-types-missing-file-annotation": 0.
      */
     STOPPING: Symbol('STOPPING'),
 
@@ -184,7 +184,7 @@ class LocalRecordingController {
     _onStateChanged: ?(boolean) => void;
 
     /**
-     * saves in the redux store user local recording state.
+     * Saves in the redux store user local recording state.
      */
     _onStatusUpdated: ?(boolean) => void;
 

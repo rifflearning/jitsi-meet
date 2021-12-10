@@ -221,7 +221,7 @@ function Meeting({
         === momentTZ.tz(meeting.dateStart, meeting.timezone).format('DD');
 
     const timezoneTimeInfo = `${momentTZ.tz(meeting.dateStart, meeting.timezone).format('HH:mm')} -
-    ${momentTZ.tz(meeting.dateEnd, meeting.timezone).format('HH:mm')}, 
+    ${momentTZ.tz(meeting.dateEnd, meeting.timezone).format('HH:mm')},
     ${isSameDay ? '' : `${momentTZ.tz(meeting.dateStart, meeting.timezone).format('MMM DD')},`}
      ${meeting.timezone}`;
 
@@ -308,7 +308,7 @@ function Meeting({
                         sm = { 3 }
                         xs = { 12 }>
                         <Typography>
-                        Time
+                            Time
                         </Typography>
                     </Grid>
                     <Grid
@@ -413,7 +413,7 @@ function Meeting({
                                     className = { classes.untrustText }
                                     color = 'textSecondary'
                                     variant = 'body2'>
-                                    {`The ${interfaceConfig.APP_NAME} will ask you to 
+                                    {`The ${interfaceConfig.APP_NAME} will ask you to
                                     sign in to the calendar every time until you untrust this computer`}
                                 </Typography>
                             </Grid>

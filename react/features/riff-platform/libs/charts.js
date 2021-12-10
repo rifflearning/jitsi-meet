@@ -4,15 +4,15 @@
  * charts.js                                                                    *
  * *************************************************************************/ /**
  *
- * @fileoverview Meeting mediator wrapper which listens to events for updates
+ * @file Meeting mediator wrapper which listens to events for updates.
  *
- * [More detail about the file's contents]
+ * [More detail about the file's contents].
  *
- * Created on        August 7, 2017
- * @author           Jordan Reedie
+ * Created on        August 7, 2017.
+ * @author           Jordan Reedie.
  *
  * @copyright (c) 2018-present Riff Learning, Inc.,
- *            MIT License (see https://opensource.org/licenses/MIT)
+ *            MIT License (see https://opensource.org/licenses/MIT).
  *
  * ******************************************************************************/
 
@@ -64,7 +64,7 @@ class Mediator {
             },
             [ this.user ],
             this.mm_width,
-            this.mm_height,
+            this.mm_height
         );
         this.mm.render('#meeting-mediator');
 

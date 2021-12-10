@@ -103,7 +103,7 @@ function UserPersonalMeetingRoom({
                 <Button
                     className = { classes.meetingButton }
                     onClick = { () => handleShowDetails(true) }>
-                        Details
+                    Details
                 </Button>
             </Grid>
         </Grid>

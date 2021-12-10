@@ -22,12 +22,12 @@ type Props = AbstractButtonProps & {
     dispatch: Function,
 
     /**
-     * The id for this meeting
+     * The id for this meeting.
      */
     meetingId: string,
 
     /**
-     * The id for this participant
+     * The id for this participant.
      */
     participantId: string,
 };

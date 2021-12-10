@@ -83,14 +83,6 @@ function Meetings() {
     );
 }
 class Main extends React.Component {
-    static propTypes = {
-        authenticateToRiffDataServer: PropTypes.func.isRequired,
-        classes: PropTypes.any,
-        isRiffServerConnected: PropTypes.bool.isRequired,
-        metrics: PropTypes.object,
-        user: PropTypes.object
-    }
-
     constructor(props) {
         super(props);
 
@@ -201,6 +193,14 @@ class Main extends React.Component {
         );
     }
 }
+
+Main.propTypes = {
+    authenticateToRiffDataServer: PropTypes.func.isRequired,
+    classes: PropTypes.any,
+    isRiffServerConnected: PropTypes.bool.isRequired,
+    metrics: PropTypes.object,
+    user: PropTypes.object
+};
 
 const mapStateToProps = state => {
 

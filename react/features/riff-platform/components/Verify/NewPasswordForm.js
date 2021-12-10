@@ -170,7 +170,7 @@ const ResetPassword = ({ doReset, hideMessage, resetPasswordError, resetingPassw
                         justify = 'flex-end'>
                         <Grid item>
                             <LinkTo to = '/signup'>
-                              Don't have an account? Sign Up
+                                Don't have an account? Sign Up
                             </LinkTo>
                         </Grid>
                     </Grid>
