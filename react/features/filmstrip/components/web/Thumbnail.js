@@ -24,7 +24,6 @@ import {
     updateLastTrackVideoMediaEvent
 } from '../../../base/tracks';
 import { ConnectionIndicator } from '../../../connection-indicator';
-import { DisplayName } from '../../../display-name';
 import { StatusIndicators, RaisedHandIndicator, DominantSpeakerIndicator } from '../../../filmstrip';
 import { PresenceLabel } from '../../../presence-status';
 import { getCurrentLayout, LAYOUTS } from '../../../video-layout';
@@ -900,15 +899,6 @@ class Thumbnail extends Component<Props, State> {
                 </span>
                 <div className = 'videocontainer__toolbar'>
                     <StatusIndicators participantID = { id } />
-                    <div
-                        className = 'videocontainer__participant-name'
-                        onClick = { onClick }>
-                        <DisplayName
-                            allowEditing = { _allowEditing }
-                            displayNameSuffix = { _defaultLocalDisplayName }
-                            elementID = 'localDisplayName'
-                            participantID = { id } />
-                    </div>
                 </div>
                 <div className = 'videocontainer__toptoolbar'>
                     { this._renderTopIndicators() }
@@ -1032,11 +1022,6 @@ class Thumbnail extends Component<Props, State> {
                 </div>
                 <div className = 'videocontainer__toolbar'>
                     <StatusIndicators participantID = { id } />
-                    <div className = 'videocontainer__participant-name'>
-                        <DisplayName
-                            elementID = { `participant_${id}_name` }
-                            participantID = { id } />
-                    </div>
                 </div>
                 <div className = 'videocontainer__hoverOverlay' />
                 { this._renderAvatar(styles.avatar) }

@@ -94,6 +94,8 @@ type Props = {
  * @returns {Object}
  */
 const styles = theme => {
+    const riffPurple = '#644a6d';
+
     return {
         actionButton: {
             ...withPixelLineHeight(theme.typography.bodyLongBold),
@@ -109,12 +111,12 @@ const styles = theme => {
             width: '100%',
 
             '&.primary': {
-                background: theme.palette.action01,
-                border: '1px solid #0376DA',
+                background: riffPurple, // theme.palette.action01,
+                border: '1px solid #644a6d' // '1px solid #0376DA',
 
-                '&:hover': {
-                    backgroundColor: theme.palette.action01Hover
-                }
+                // '&:hover': {
+                //     backgroundColor: theme.palette.action01Hover,
+                // }
             },
 
             '&.secondary': {
@@ -130,8 +132,8 @@ const styles = theme => {
             },
 
             '&.disabled': {
-                background: theme.palette.action01Disabled,
-                border: '1px solid #5E6D7A',
+                background: riffPurple, // theme.palette.action01Disabled,
+                border: '1px solid #644a6d',
                 color: '#AFB6BC',
                 cursor: 'initial',
 
@@ -161,7 +163,7 @@ const styles = theme => {
             width: 36,
 
             '&:hover': {
-                backgroundColor: '#0262B6'
+                backgroundColor: riffPurple // '#0262B6'
             },
 
             '& svg': {
