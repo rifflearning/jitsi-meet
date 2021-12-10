@@ -91,6 +91,7 @@ import {
     dominantSpeakerChanged,
     getLocalParticipant,
     getNormalizedDisplayName,
+    getParticipantById,
     localParticipantConnectionStatusChanged,
     localParticipantRoleChanged,
     participantConnectionStatusChanged,
@@ -240,6 +241,17 @@ function sendData(command, value) {
 
     room.removeCommand(command);
     room.sendCommand(command, { value });
+}
+
+/**
+ * Get user nickname by user id.
+ * @param {string} id user id
+ * @returns {string?} user nickname or undefined if user is unknown.
+ */
+function getDisplayName(id) {
+    const participant = getParticipantById(APP.store.getState(), id);
+
+    return participant && participant.name;
 }
 
 /**

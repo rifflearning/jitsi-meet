@@ -46,7 +46,8 @@ StateListenerRegistry.register(
             conference.addCommandListener(ETHERPAD_COMMAND,
                 ({ value: roomName }) => {
                     let url;
-                    // TODO: [Balu] Discuss the below logic with [Jordan]. Ratained while upgrading to `jitsi-meet` 6689.
+                    // TODO: [Balu] Discuss the below logic with [Jordan].
+                    // Retained while upgrading to `jitsi-meet` 6689.
                     const { etherpadBaseUrl, simulationUrl } = getState()['features/base/config'];
                     const {
                         displayName,

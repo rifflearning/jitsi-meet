@@ -17,7 +17,7 @@ class ApiService {
                 'Authorization': `Bearer ${jwt.get()}`
             }
         };
-    }
+    };
 
     fetchWithJwt = async (url, options) => {
         const r = await fetch(API_GATEWAY_LINK + url, { ...this.getHeaders(),
@@ -28,7 +28,7 @@ class ApiService {
         }
 
         return await r.json();
-    }
+    };
 
     postWithJwt = (url, body = {}) => this.fetchWithJwt(url, { method: 'post', body: JSON.stringify(body) });
     putWithJwt = (url, body = {}) => this.fetchWithJwt(url, { method: 'put', body: JSON.stringify(body) });
@@ -84,7 +84,7 @@ class ApiService {
         }
 
         return user;
-    }
+    };
 }
 
 export default new ApiService();

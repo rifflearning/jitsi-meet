@@ -1,3 +1,4 @@
+// @flow
 import { generateRoomWithoutSeparator } from '@jitsi/js-utils/random';
 
 import { isRoomValid } from '../base/conference';

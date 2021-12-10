@@ -3,8 +3,9 @@
 import { getGravatarURL } from '@jitsi/js-utils/avatar';
 import type { Store } from 'redux';
 
-import { GRAVATAR_BASE_URL } from '../avatar';
 import { maybeExtractIdFromDisplayName } from '../../riff-platform/functions';
+
+import { GRAVATAR_BASE_URL } from '../avatar';
 import { JitsiParticipantConnectionStatus } from '../lib-jitsi-meet';
 import { MEDIA_TYPE, shouldRenderVideoTrack } from '../media';
 import { toState } from '../redux';

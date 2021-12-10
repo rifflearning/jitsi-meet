@@ -18,8 +18,7 @@ import {
     clearNotifications,
     hideRaiseHandNotifications,
     showNotification,
-    showParticipantJoinedNotification,
-    showParticipantLeftNotification
+    showParticipantJoinedNotification
 } from './actions';
 import { NOTIFICATION_TIMEOUT_TYPE, NOTIFICATION_TIMEOUT } from './constants';
 import { joinLeaveNotificationsDisabled } from './functions';
@@ -56,7 +55,8 @@ MiddlewareRegistry.register(store => next => action => {
                 action.participant.id
             );
 
-            // TODO: [Balu] Discuss the below logic with [Jordan]. Ratained while upgrading to `jitsi-meet` 6689.
+            // TODO: [Balu] Discuss the below logic with [Jordan].
+            // Retained while upgrading to `jitsi-meet` 6689.
             if (typeof interfaceConfig === 'object'
                 && participant
                 && !participant.local
