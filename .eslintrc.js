@@ -1,5 +1,6 @@
-export default {
+module.exports = {
     'extends': [
-        '@jitsi/eslint-config'
+        'eslint-config-jitsi'
+        // '@jitsi/eslint-config'
     ]
 };
