@@ -240,18 +240,6 @@ export type Props = {|
 |};
 
 /**
- * Click handler for the display name container.
- *
- * @param {SyntheticEvent} event - The click event.
- * @returns {void}
- */
-function onClick(event) {
-    // If the event is propagated to the thumbnail container the participant will be pinned. That's why the propagation
-    // needs to be stopped.
-    event.stopPropagation();
-}
-
-/**
  * Implements a thumbnail.
  *
  * @augments Component
@@ -850,8 +838,6 @@ class Thumbnail extends Component<Props, State> {
      */
     _renderLocalParticipant() {
         const {
-            _allowEditing,
-            _defaultLocalDisplayName,
             _disableLocalVideoFlip,
             _isMobile,
             _isMobilePortrait,
