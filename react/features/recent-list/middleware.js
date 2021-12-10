@@ -9,6 +9,7 @@ import {
 import { addKnownDomains } from '../base/known-domains';
 import { MiddlewareRegistry } from '../base/redux';
 import { parseURIString } from '../base/util';
+import { isRiffPlatformCurrentPath } from '../riff-platform/functions';
 
 import { _storeCurrentConference, _updateConferenceDuration } from './actions';
 import { isRecentListEnabled } from './functions';
@@ -128,7 +129,7 @@ function _conferenceWillLeave({ dispatch, getState }, next, action) {
 function _setRoom({ dispatch, getState }, next, action) {
     const { doNotStoreRoom } = getState()['features/base/config'];
 
-    if (!doNotStoreRoom && action.room) {
+    if (!doNotStoreRoom && action.room && !isRiffPlatformCurrentPath()) {
         const { locationURL } = getState()['features/base/connection'];
 
         if (locationURL) {

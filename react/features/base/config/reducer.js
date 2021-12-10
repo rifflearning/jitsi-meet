@@ -26,8 +26,7 @@ declare var interfaceConfig: Object;
  *
  * @type {Object}
  */
-const INITIAL_NON_RN_STATE = {
-};
+const INITIAL_NON_RN_STATE = {};
 
 /**
  * The initial state of the feature base/config when executing in a React Native

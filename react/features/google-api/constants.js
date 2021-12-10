@@ -58,10 +58,11 @@ export const GOOGLE_API_STATES = {
 
 /**
  * Google API auth scope to access Google calendar.
+ * For Riff only events are needed not all calendar scope.
  *
  * @type {string}
  */
-export const GOOGLE_SCOPE_CALENDAR = 'https://www.googleapis.com/auth/calendar';
+export const GOOGLE_SCOPE_CALENDAR = 'https://www.googleapis.com/auth/calendar.events';
 
 /**
  * Google API auth scope to access YouTube streams.

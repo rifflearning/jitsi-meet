@@ -6,6 +6,7 @@ import I18nextXHRBackend from 'i18next-xhr-backend';
 
 import LANGUAGES_RESOURCES from '../../../../lang/languages.json';
 import MAIN_RESOURCES from '../../../../lang/main.json';
+import EMOTIONALSENSING_RESOURCES from '../../riff-platform/emotionalSensingTranslations';
 
 import languageDetector from './languageDetector';
 
@@ -78,6 +79,14 @@ i18next.addResourceBundle(
     DEFAULT_LANGUAGE,
     'main',
     MAIN_RESOURCES,
+    /* deep */ true,
+    /* overwrite */ true);
+
+// overwrite recording translations for emotional sensing feature
+i18next.addResourceBundle(
+    DEFAULT_LANGUAGE,
+    'main',
+    EMOTIONALSENSING_RESOURCES,
     /* deep */ true,
     /* overwrite */ true);
 

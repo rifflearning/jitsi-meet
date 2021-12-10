@@ -1,0 +1,329 @@
+$violetColor: #775e80;
+
+html body {
+  background-color: $defaultBackground;
+}
+
+.has-text-centered {
+    text-align: center !important;
+}
+
+.is-size-7 {
+    font-size: .75rem!important;
+}
+
+#meeting-mediator-wrapper {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    cursor: move;
+    pointer-events: all;
+
+    .chart-card-info-small {
+        box-sizing: border-box;
+    }
+
+
+    &.closed {
+       display: none;
+    }
+
+     .chart-card-title {
+        justify-content: start !important;
+
+         .chart-card-toggle {
+             margin-left: 10px;
+        }
+    }
+
+     .meeting-mediator-close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        color: #4a4a4a;
+        cursor: pointer;
+        height: 24px;
+        width: 24px;
+        padding: 5px;
+        z-index: 1;
+
+        svg {
+            fill: #4a4a4a;
+        }
+    }
+}
+
+/* tooltip for meeting-mediator */
+body > .tooltip {
+    z-index: 1000;
+}
+
+.prejoin-input-area {
+    display: flex;
+    flex-direction: column;
+}
+
+.prejoin-preview-login-anon-btn {
+    max-width: 50%;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.videocontainer__toolbar {
+    background-image: linear-gradient(to top,rgba(0,0,0,.6),rgba(0,0,0,0));
+}
+
+// fix bottom difference between indicators for using text-overflow: ellipsis
+.indicator-container {
+    overflow: hidden;
+}
+
+.indicator-container:nth-child(1) .username-indicator {
+    margin-left: 0;
+}
+
+.username-indicator-container {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 60%;
+
+    &.username-indicator-filmstrip-view {
+        float: left !important;
+
+        .username-indicator {
+            margin-left: 10px;
+        }
+    }
+
+    div {
+        display: inline;
+    }
+}
+
+.username-indicator {
+    font-size: 8pt;
+    text-align: center;
+    color: #fff;
+    width: 12px;
+    line-height: 22px;
+    height: 22px;
+    padding: 0;
+    border: 0;
+    margin: 0 5px 0 5px;
+}
+
+// Participant name by default always show on video container
+// in order to improve the user experience.
+.displayNameContainer {
+  display: none;
+}
+
+.large-video-labels .circular-label.file {
+    background: #99ae90;
+}
+
+.emotion-container {
+    justify-content: center;
+
+    .emotion-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .emotion-label {
+        font-size: 14px;
+        line-height: 1.43;
+        color: #4a4a4a;
+        margin-left: 5px;
+        margin-right: 10px;
+        font-weight: 700;
+    }
+}
+
+.emotional-chart-emoji {
+    font-size: 20px;
+}
+
+.prejoin-preview-login-anon-text {
+    margin-bottom: 16px;
+    color: #ffffff;
+    text-align: center;
+}
+
+#preview .avatar {
+    background: $riffViolet;
+}
+
+.premeeting-screen .action-btn .options:hover {
+    background-color: $riffViolet;
+}
+
+.watermark {
+    width: 186px;
+    height: 74px;
+    z-index: 10;
+}
+
+.participants_pane-content button {
+    background: $primaryButtonBackground;
+
+        &:hover {
+            background: $primaryButtonHoverBackground;
+        }
+}
+
+.invite-more-dialog .copy-button {
+    background: $primaryButtonBackground;
+}
+
+// chat overrides
+.chat-input-container.populated #chat-input .send-button {
+    background: $primaryButtonBackground;
+
+        &:hover {
+            background: $primaryButtonHoverBackground;
+        }
+}
+
+#chat-input {
+    &:focus-within {
+        border: 1px solid $riffViolet;
+    }
+    .jitsi-icon svg {
+        fill: #fff;
+    }
+}
+
+#chatconversation::-webkit-scrollbar-thumb {
+    background-color: $riffViolet;
+}
+
+// video quality dialog overrides
+.video-quality-dialog .video-quality-dialog-contents .video-quality-dialog-label-container.active {
+    color: $violetColor;
+
+    &::before {
+        background: $violetColor;
+    }
+}
+// security overrides
+.security-dialog.password-section .password-actions a {
+    color: $violetColor;
+}
+
+// start a live stream modal overrides
+.helper-link {
+    color: $violetColor;
+
+    &:hover {
+        color: $riffViolet;
+    }
+}
+
+// background dialog overrides
+.virtual-background-dialog {
+    .desktop-share-selected, .blur-selected, .slight-blur-selected,
+    .none-selected, .thumbnail-selected {
+        border-color: $riffViolet;
+    }
+
+    .desktop-share:hover, .thumbnail:hover, .blur:hover, .slight-blur:hover, .virtual-background-none:hover {
+        border-color: $violetColor;
+    }
+}
+
+.file-upload-label {
+    color: $riffViolet;
+
+    svg path {
+        fill: $riffViolet;
+    }
+}
+
+.device-selection .audio-output-preview a {
+    color: $violetColor;
+}
+
+.local-rec-label {
+    background-color: #E04757;
+}
+
+.subject-info {
+    max-width: none;
+    @media (max-width: 580px) {
+        max-width: 80%;
+    }
+}
+
+.subject-text {
+    padding: 0;
+    .MuiFormControl-root {
+        margin-left: 0;
+    }
+
+    &--content {
+        padding: 0 16px;
+    }
+}
+
+.poll-primary-button, .poll-small-primary-button {
+    background: $primaryButtonBackground;
+    color: #ffffff;
+
+    &:hover {
+        background: $primaryButtonHoverBackground;
+    }
+
+    &:active {
+        background-color: $violetColor;
+    }
+
+    &:focus {
+        background-color: $violetColor;
+        border: 3px solid $riffViolet;
+    }
+    &:disabled {
+        background-color: $riffVioletDark;
+    }
+}
+.poll-result-links {
+    > a {
+        color: $riffViolet !important;
+    }
+}
+
+.poll-bar {
+    background-color: $riffViolet;
+}
+
+input[type="checkbox"]:checked + svg, .settings-pane input[type=checkbox]:checked+svg {
+    --checkbox-background-color: #775e80;
+    --checkbox-border-color: #93759e;
+}
+
+input[type="checkbox"] + svg {
+    --checkbox-background-color: #775e80;
+    --checkbox-border-color: #93759e;
+    --local-background: #6F5678;
+    --local-background-hover: #4f3f56;
+    --local-background-active: #7b5f85;
+    --local-background-checked: #775e80;
+    --local-background-checked-hover: #bda0c9;
+    --local-background-disabled: #909090;
+    --local-border-disabled: #504d4d;
+    --local-border-checked: #93759e;
+    --local-border-active: #93759e;
+    --local-border-focus: #93759e;
+    --local-border-hover: #bc96ca;
+    --local-border-checked-hover: #93759e;
+}
+
+.toolbox-content-items {
+    .toolbox-button:focus {
+        .toolbox-icon {
+            background-color: #36383c;
+        }
+    }
+}

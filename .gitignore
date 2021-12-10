@@ -1,7 +1,8 @@
 *.swp
 .*.tmp
 deploy-local.sh
-libs/
+/libs/
+/resources/load-test/libs/
 all.css
 *css.map
 .remote-sync.json
@@ -17,6 +18,7 @@ Pods/
 # OSX
 #
 .DS_Store
+*.icloud
 
 # Xcode
 #
@@ -85,10 +87,16 @@ android/app/google-services.json
 ios/app/dropbox.key
 ios/app/GoogleService-Info.plist
 
+# .env variables for riff, client aws deployment
+.env
+env-dev
+temp-deploy-aws
+temp-deploy-aws.zip
 .vscode
 
 # TWA
 twa/*.apk
 twa/*.aab
 twa/assetlinks.json
+
 

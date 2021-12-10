@@ -1,4 +1,4 @@
-/* global APP, JitsiMeetJS, config, interfaceConfig */
+/* global APP, JitsiMeetJS, config, interfaceConfig, riffConfig */
 
 import { jitsiLocalStorage } from '@jitsi/js-utils';
 import Logger from '@jitsi/logger';
@@ -143,6 +143,9 @@ import {
     setPrejoinPageVisibility
 } from './react/features/prejoin';
 import { disableReceiver, stopReceiver } from './react/features/remote-control';
+import { startRiffServices } from './react/features/riff-platform/actions/jitsiActions';
+import { stopLocalRecordingHandling } from './react/features/riff-platform/components/LocalRecorder/helpers';
+import { maybeExtractIdFromDisplayName } from './react/features/riff-platform/functions';
 import { setScreenAudioShareState, isScreenAudioShared } from './react/features/screen-share/';
 import { toggleScreenshotCaptureSummary } from './react/features/screenshot-capture';
 import { AudioMixerEffect } from './react/features/stream-effects/audio-mixer/AudioMixerEffect';
@@ -729,6 +732,8 @@ export default {
             }
         });
 
+        APP.store.dispatch(startRiffServices(tracks));
+
         con.addEventListener(JitsiConnectionEvents.CONNECTION_FAILED, _connectionFailedHandler);
         APP.connection = connection = con;
 
@@ -1221,6 +1226,29 @@ export default {
      */
     getParticipantById(id) {
         return room ? room.getParticipantById(id) : null;
+    },
+
+    /**
+     * Gets the display name foe the <tt>JitsiParticipant</tt> identified by
+     * the given <tt>id</tt>.
+     *
+     * @param id {string} the participant's id(MUC nickname/JVB endpoint id)
+     *
+     * @return {string} the participant's display name or the default string if
+     * absent.
+     */
+    getParticipantDisplayName(id) {
+        const displayName = getDisplayName(id);
+
+        if (displayName) {
+            return maybeExtractIdFromDisplayName(displayName).displayName;
+        }
+        if (APP.conference.isLocalId(id)) {
+            return APP.translation.generateTranslationHTML(
+                    interfaceConfig.DEFAULT_LOCAL_DISPLAY_NAME);
+        }
+
+        return interfaceConfig.DEFAULT_REMOTE_DISPLAY_NAME;
     },
 
     getMyUserId() {
@@ -1887,6 +1915,7 @@ export default {
         if (this.videoSwitchInProgress) {
             return Promise.reject('Switch in progress.');
         }
+        const didHaveVideo = !this.isLocalVideoMuted();
 
         this.videoSwitchInProgress = true;
 
@@ -1939,6 +1968,12 @@ export default {
                 }
                 sendAnalytics(createScreenSharingEvent('started'));
                 logger.log('Screen sharing started');
+
+                // if there was a camera video being used, before switching to screen sharing,
+                // show presenter video
+                if (didHaveVideo && riffConfig.enablePresenterModeByDefault) {
+                    this.muteVideo(false);
+                }
             })
             .catch(error => {
                 this.videoSwitchInProgress = false;
@@ -2060,10 +2095,11 @@ export default {
         room.on(JitsiConferenceEvents.USER_LEFT, (id, user) => {
             // The logic shared between RN and web.
             commonUserLeftHandling(APP.store, room, user);
-
             if (user.isHidden()) {
                 return;
             }
+
+            stopLocalRecordingHandling(user);
 
             logger.log(`USER ${id} LEFT:`, user);
         });
@@ -2888,6 +2924,9 @@ export default {
      * requested
      */
     hangup(requestFeedback = false) {
+
+        // eventEmitter.emit(JitsiMeetConferenceEvents.BEFORE_HANGUP);
+
         APP.store.dispatch(disableReceiver());
 
         this._stopProxyConnection();

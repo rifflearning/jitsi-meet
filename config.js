@@ -503,13 +503,6 @@ var config = {
     // (Mainly useful when used in conjuction with the JWT so the JWT name becomes read only.)
     // readOnlyName: false,
 
-    // If etherpad integration is enabled, setting this to true will
-    // automatically open the etherpad when a participant joins.  This
-    // does not affect the mobile app since opening an etherpad
-    // obscures the conference controls -- it's better to let users
-    // choose to open the pad on their own in that case.
-    // openSharedDocumentOnJoin: false,
-
     // If true, shows the unsafe room name warning label when a room name is
     // deemed unsafe (due to the simplicity in the name) and a password is not
     // set or the lobby is not enabled.
@@ -810,7 +803,7 @@ var config = {
 
     // DEPRECATED! Use `disabledSounds` instead.
     // Decides whether the start/stop recording audio notifications should play on record.
-    // disableRecordAudioNotification: false,
+    disableRecordAudioNotification: true,
 
     // DEPRECATED! Use `disabledSounds` instead.
     // Disables the sounds that play when other participants join or leave the
@@ -1035,13 +1028,6 @@ var config = {
     // is not persisting the local storage inside the iframe.
     // useHostPageLocalStorage: true,
 
-    // etherpad ("shared document") integration.
-    //
-
-    // If set, add a "Open shared document" link to the bottom right menu that
-    // will open an etherpad document.
-    // etherpad_base: 'https://your-etherpad-installati.on/p/',
-
     // List of undocumented settings used in jitsi-meet
     /**
      _immediateReloadThreshold
@@ -1066,6 +1052,26 @@ var config = {
      requireDisplayName
      tokenAuthUrl
      */
+
+    // etherpad ("shared document") integration.
+    //
+
+    // If etherpad integration or simulation is enabled, setting this to true will
+    // automatically open the etherpad / simulation when a participant joins.  This
+    // does not affect the mobile app since opening an etherpad
+    // obscures the conference controls -- it's better to let users
+    // choose to open the pad on their own in that case.
+    // openSharedDocumentOnJoin: false,
+
+    // The base url for etherpad. Setting a value
+    // here will enable the etherpad integration.
+    // The format of the URL should be `https://<etherpad_server_path>/p/`
+    // etherpadBaseUrl:
+
+    // The simulation location, for use in Esme courses
+    // NOTE - setting a value here will override etherpadBaseUrl
+    // and disable etherpad functionality
+    // simulationUrl:
 
     /**
      * This property can be used to alter the generated meeting invite links (in combination with a branding domain

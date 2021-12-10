@@ -188,6 +188,7 @@ MiddlewareRegistry.register(store => next => action => {
         }
         break;
     case UPDATE_DEVICE_LIST:
+        document.dispatchEvent(new Event('RIFF_UPDATE_DEVICE_LIST'));
         logDeviceList(groupDevicesByKind(action.devices));
         if (areDeviceLabelsInitialized(store.getState())) {
             return _processPendingRequests(store, next, action);

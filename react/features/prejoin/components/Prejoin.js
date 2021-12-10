@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 // @flow
 
 import InlineDialog from '@atlaskit/inline-dialog';
@@ -12,6 +13,8 @@ import { ActionButton, InputField, PreMeetingScreen } from '../../base/premeetin
 import { connect } from '../../base/redux';
 import { getDisplayName, updateSettings } from '../../base/settings';
 import { getLocalJitsiVideoTrack } from '../../base/tracks';
+import { updateName } from '../../riff-platform/actions/signIn';
+import { maybeExtractIdFromDisplayName, previousLocationRoomName } from '../../riff-platform/functions';
 import {
     joinConference as joinConferenceAction,
     joinConferenceWithoutAudio as joinConferenceWithoutAudioAction,
@@ -97,7 +100,21 @@ type Props = {
     /**
      * The JitsiLocalTrack to display.
      */
-    videoTrack: ?Object
+    videoTrack: ?Object,
+
+    /**
+     * If the user is anonymous.
+     */
+    isAnon: Boolean,
+
+    /**
+     * Update name.
+     */
+    doUpdateName: Function,
+
+     /* Array with the buttons which this Toolbox should display.
+     */
+    visibleButtons: Array<string>
 };
 
 type State = {
@@ -206,7 +223,7 @@ class Prejoin extends Component<Props, State> {
         });
     }
 
-    _setName: () => void;
+    _setName: (string) => void;
 
     /**
      * Sets the guest participant name.
@@ -294,12 +311,18 @@ class Prejoin extends Component<Props, State> {
             showCameraPreview,
             showDialog,
             t,
-            videoTrack
+            videoTrack,
+            isAnon,
+            doUpdateName
         } = this.props;
 
         const { _closeDialog, _onDropdownClose, _onJoinButtonClick, _onJoinKeyPress, _showDialogKeyPress,
             _onJoinConferenceWithoutAudioKeyPress, _onOptionsClick, _setName, _showDialog } = this;
         const { showJoinByPhoneButtons, showError } = this.state;
+
+        const { idWithSeparator, displayName } = maybeExtractIdFromDisplayName(name);
+
+        const joinButtonDisabled = this.props.showErrorOnJoin;
 
         return (
             <PreMeetingScreen
@@ -312,14 +335,20 @@ class Prejoin extends Component<Props, State> {
                     data-testid = 'prejoin.screen'>
                     <InputField
                         autoComplete = { 'name' }
-                        autoFocus = { true }
+                        autoFocus = { Boolean(isAnon) }
                         className = { showError ? 'error' : '' }
                         hasError = { showError }
-                        onChange = { _setName }
+                        onChange = { value => {
+                            if (isAnon) {
+                                doUpdateName(value);
+
+                                return _setName(`${idWithSeparator}${value}`);
+                            }
+                        } }
                         onSubmit = { joinConference }
                         placeHolder = { t('dialog.enterDisplayName') }
                         readOnly = { readOnlyName }
-                        value = { name } />
+                        value = { displayName } />
 
                     {showError && <div
                         className = 'prejoin-error'
@@ -348,6 +377,7 @@ class Prejoin extends Component<Props, State> {
                                 ariaDropDownLabel = { t('prejoin.joinWithoutAudio') }
                                 ariaLabel = { t('prejoin.joinMeeting') }
                                 ariaPressed = { showJoinByPhoneButtons }
+                                disabled = { joinButtonDisabled || (isAnon && !displayName) }
                                 hasOptions = { true }
                                 onClick = { _onJoinButtonClick }
                                 onKeyPress = { _onJoinKeyPress }
@@ -356,10 +386,23 @@ class Prejoin extends Component<Props, State> {
                                 tabIndex = { 0 }
                                 testId = 'prejoin.joinMeeting'
                                 type = 'primary'>
-                                { t('prejoin.joinMeeting') }
+                                {isAnon ? 'Join as a guest' : `${t('prejoin.joinMeeting')}`}
                             </ActionButton>
                         </InlineDialog>
                     </div>
+                    {isAnon
+                            && <><div className = 'prejoin-preview-login-anon-text'>or</div>
+                                <ActionButton
+                                    className = 'prejoin-preview-login-anon-btn'
+                                    disabled = { joinButtonDisabled }
+                                    onClick = { () => {
+                                        previousLocationRoomName.set(window.location.pathname);
+                                        window.location.href = '/app/login'
+                                        ;
+                                    } }
+                                    type = 'primary'>
+                                    Login
+                                </ActionButton></>}
                 </div>
                 { showDialog && (
                     <JoinByPhoneDialog
@@ -382,6 +425,7 @@ function mapStateToProps(state): Object {
     const showErrorOnJoin = isDisplayNameRequired(state) && !name;
 
     return {
+        isAnon: Boolean(state['features/riff-platform'].signIn.user?.isAnon),
         name,
         deviceStatusVisible: isDeviceStatusVisible(state),
         roomName: getRoomName(state),
@@ -398,7 +442,8 @@ const mapDispatchToProps = {
     joinConferenceWithoutAudio: joinConferenceWithoutAudioAction,
     joinConference: joinConferenceAction,
     setJoinByPhoneDialogVisiblity: setJoinByPhoneDialogVisiblityAction,
-    updateSettings
+    updateSettings,
+    doUpdateName: updateName
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(translate(Prejoin));

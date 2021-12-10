@@ -15,5 +15,7 @@ react/features/facial-recognition/resources/*
 # remaining JavaScript source code.
 !.eslintrc.js
 
+modules/recorder/capturer/*
+
 # Not worth it.
 actionTypes.js

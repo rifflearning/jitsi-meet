@@ -15,6 +15,7 @@ import conference from './conference';
 import API from './modules/API';
 import UI from './modules/UI/UI';
 import keyboardshortcut from './modules/keyboardshortcut/keyboardshortcut';
+import capturer from './modules/recorder/capturer/index';
 import translation from './modules/translation/translation';
 
 // Initialize Olm as early as possible.
@@ -47,7 +48,8 @@ window.APP = {
 
     keyboardshortcut,
     translation,
-    UI
+    UI,
+    capturer
 };
 
 // TODO The execution of the mobile app starts from react/index.native.js.

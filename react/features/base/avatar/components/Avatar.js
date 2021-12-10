@@ -2,6 +2,7 @@
 
 import React, { PureComponent } from 'react';
 
+import { maybeExtractIdFromDisplayName } from '../../../riff-platform/functions';
 import { getParticipantById } from '../../participants';
 import { connect } from '../../redux';
 import { getAvatarColor, getInitials } from '../functions';
@@ -214,7 +215,7 @@ class Avatar<P: Props> extends PureComponent<P, State> {
 export function _mapStateToProps(state: Object, ownProps: Props) {
     const { colorBase, displayName, participantId } = ownProps;
     const _participant: ?Object = participantId && getParticipantById(state, participantId);
-    const _initialsBase = _participant?.name ?? displayName;
+    const _initialsBase = maybeExtractIdFromDisplayName(_participant?.name).displayName ?? displayName;
 
     return {
         _customAvatarBackgrounds: state['features/dynamic-branding'].avatarBackgrounds,

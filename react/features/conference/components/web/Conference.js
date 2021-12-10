@@ -4,7 +4,6 @@ import _ from 'lodash';
 import React from 'react';
 
 import VideoLayout from '../../../../../modules/UI/videolayout/VideoLayout';
-import { getConferenceNameForTitle } from '../../../base/conference';
 import { connect, disconnect } from '../../../base/connection';
 import { isMobileBrowser } from '../../../base/environment/utils';
 import { translate } from '../../../base/i18n';
@@ -18,8 +17,9 @@ import { KnockingParticipantList, LobbyScreen } from '../../../lobby';
 import { getIsLobbyVisible } from '../../../lobby/functions';
 import { ParticipantsPane } from '../../../participants-pane/components/web';
 import { getParticipantsPaneOpen } from '../../../participants-pane/functions';
-import { Prejoin, isPrejoinPageVisible } from '../../../prejoin';
 import { toggleToolboxVisible } from '../../../toolbox/actions.any';
+import { Prejoin, isPrejoinPageVisible } from '../../../prejoin';
+import DraggableMeetingMediator from '../../../riff-platform/components/DraggableMeetingMediator';
 import { fullScreenChanged, showToolbox } from '../../../toolbox/actions.web';
 import { JitsiPortal, Toolbox } from '../../../toolbox/components/web';
 import { LAYOUTS, getCurrentLayout } from '../../../video-layout';
@@ -237,6 +237,7 @@ class Conference extends AbstractConference<Props, *> {
                     ref = { this._setBackground }>
                     <ConferenceInfo />
 
+                    {!_showPrejoin && <DraggableMeetingMediator />}
                     <Notice />
                     <div
                         id = 'videospace'
@@ -405,7 +406,7 @@ function _mapStateToProps(state) {
         _layoutClassName: LAYOUT_CLASSNAMES[getCurrentLayout(state)],
         _mouseMoveCallbackInterval: mouseMoveCallbackInterval,
         _overflowDrawer: overflowDrawer,
-        _roomName: getConferenceNameForTitle(state),
+        _roomName: state['features/riff-platform']?.meeting?.meeting?.name,
         _showLobby: getIsLobbyVisible(state),
         _showPrejoin: isPrejoinPageVisible(state)
     };

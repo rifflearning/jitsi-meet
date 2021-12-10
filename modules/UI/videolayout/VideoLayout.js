@@ -173,10 +173,15 @@ const VideoLayout = {
         if (!largeVideo) {
             return;
         }
+        const state = APP.store.getState();
+
+        if (state['features/etherpad'].editing) {
+            return;
+        }
+
         const currentContainer = largeVideo.getCurrentContainer();
         const currentContainerType = largeVideo.getCurrentContainerType();
         const isOnLarge = this.isCurrentlyOnLarge(id);
-        const state = APP.store.getState();
         const videoTrack = getTrackByMediaTypeAndParticipant(state['features/base/tracks'], MEDIA_TYPE.VIDEO, id);
         const videoStream = videoTrack?.jitsiTrack;
 

@@ -1,0 +1,8 @@
+@use '@rifflearning/riff-metrics/sass/chart_card';
+@use '@rifflearning/riff-metrics/sass/chart_table';
+@use '@rifflearning/riff-metrics/sass/dashboard' with (
+    $dashboard-background-image: linear-gradient(-90deg,#282725 0,#282725 50%,#282725 100%),
+    $dashboard-header-color: white,
+    $meeting-info-title-color: white,
+    $meeting-info-details-color: #ffffffcc,
+);

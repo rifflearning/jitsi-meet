@@ -27,6 +27,7 @@ import {
 import { isVpaasMeeting } from '../jaas/functions';
 import { NOTIFICATION_TIMEOUT_TYPE, clearNotifications, showNotification } from '../notifications';
 import { setFatalError } from '../overlay';
+import { redirectToRiffAfterMeeting } from '../riff-platform/actions/jitsiActions';
 
 import {
     getDefaultURL,
@@ -331,6 +332,10 @@ export function maybeRedirectToWelcomePage(options: Object = {}) {
             }, NOTIFICATION_TIMEOUT_TYPE.STICKY));
         }
 
+        return dispatch(redirectToRiffAfterMeeting());
+
+        /* Jitsi original code
+
         // if Welcome page is enabled redirect to welcome page after 3 sec, if
         // there is a thank you message to be shown, 0.5s otherwise.
         if (getState()['features/base/config'].enableWelcomePage) {
@@ -340,5 +345,6 @@ export function maybeRedirectToWelcomePage(options: Object = {}) {
                 },
                 options.showThankYou ? 3000 : 500);
         }
+        */
     };
 }

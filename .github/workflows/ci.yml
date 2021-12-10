@@ -1,22 +1,30 @@
 name: Simple CI
 
-on: [pull_request]
+on:
+    pull_request:
+    push:
+        branches:
+            - riff-main
+            - 'release/*'
 
 jobs:
-  run-ci:
-    name: Build Frontend
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '16.x'
-    - run: npm install
-    - name: Check git status
-      run: git status
-    - name: Check git diff
-      run: git diff
-    - name: Check if the git repository is clean
-      run: exit $( git status --porcelain --untracked-files=no | head -255 | wc -l )
-    - run: npm run lint
-    - run: make
+    run-ci:
+        name: Build Frontend
+        runs-on: ubuntu-latest
+        steps:
+            - name: Use Node.js 16.x
+              uses: actions/setup-node@v1
+              with:
+                  node-version: 16.x
+                  registry-url: https://npm.pkg.github.com/
+
+            - uses: actions/checkout@v2
+
+            - name: Install dependencies based on package-lock.json
+              run: npm ci
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.GPR_PRIVATE_READ_TOKEN }}
+
+            - run: make lint
+
+            - run: make all

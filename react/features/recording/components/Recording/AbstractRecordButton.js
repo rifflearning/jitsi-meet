@@ -1,11 +1,14 @@
 // @flow
 
+import EmotionsIcon from '@material-ui/icons/EmojiEmotions';
+
+// import { IconToggleRecording } from '../../../base/icons';
+
 import {
     createToolbarEvent,
     sendAnalytics
 } from '../../../analytics';
 import { openDialog } from '../../../base/dialog';
-import { IconToggleRecording } from '../../../base/icons';
 import { JitsiRecordingConstants } from '../../../base/lib-jitsi-meet';
 import {
     getLocalParticipant,
@@ -56,7 +59,7 @@ export type Props = AbstractButtonProps & {
  */
 export default class AbstractRecordButton<P: Props> extends AbstractButton<P, *> {
     accessibilityLabel = 'toolbar.accessibilityLabel.recording';
-    icon = IconToggleRecording;
+    icon = EmotionsIcon;
     label = 'dialog.startRecording';
     toggledLabel = 'dialog.stopRecording';
 

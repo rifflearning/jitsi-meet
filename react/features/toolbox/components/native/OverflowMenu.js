@@ -13,6 +13,8 @@ import { ParticipantsPaneButton } from '../../../participants-pane/components/na
 import { ReactionMenu } from '../../../reactions/components';
 import { isReactionsEnabled } from '../../../reactions/functions.any';
 import { LiveStreamButton, RecordButton } from '../../../recording';
+import MeetingMediatorButton from '../../../riff-platform/components/DraggableMeetingMediator/MeetingMediatorButton';
+import RiffLocalRecordingButton from '../../../riff-platform/components/LocalRecorder/LocalRecordingButton';
 import SecurityDialogButton from '../../../security/components/security-dialog/SecurityDialogButton';
 import { SharedVideoButton } from '../../../shared-video/components';
 import SpeakerStatsButton from '../../../speaker-stats/components/native/SpeakerStatsButton';
@@ -139,6 +141,8 @@ class OverflowMenu extends PureComponent<Props, State> {
                 renderFooter = { _reactionsEnabled && !toolbarButtons.has('raisehand')
                     ? this._renderReactionMenu
                     : null }>
+                <MeetingMediatorButton { ...buttonProps } />
+                <RiffLocalRecordingButton { ...buttonProps } />
                 <AudioRouteButton { ...topButtonProps } />
                 <ParticipantsPaneButton { ...buttonProps } />
                 <AudioOnlyButton { ...buttonProps } />

@@ -136,14 +136,6 @@ export function shouldDisplayTileView(state: Object = {}) {
         return false;
     }
 
-    const { tileViewEnabled } = state['features/video-layout'];
-
-    if (tileViewEnabled !== undefined) {
-        // If the user explicitly requested a view mode, we
-        // do that.
-        return tileViewEnabled;
-    }
-
     const { iAmRecorder } = state['features/base/config'];
 
     // None tile view mode is easier to calculate (no need for many negations), so we do

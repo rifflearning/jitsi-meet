@@ -2,6 +2,7 @@
 
 import React from 'react';
 
+import { maybeExtractIdFromDisplayName } from '../../../riff-platform/functions';
 import AbstractPollResults from '../AbstractPollResults';
 import type { AbstractProps } from '../AbstractPollResults';
 
@@ -53,7 +54,7 @@ const PollResults = (props: AbstractProps) => {
                         { showDetails && voters && voterCount > 0
                             && <ul className = 'poll-answer-voters'>
                                 {voters.map(voter =>
-                                    <li key = { voter.id }>{voter.name}</li>
+                                    <li key = { voter.id }>{maybeExtractIdFromDisplayName(voter.name).displayName}</li>
                                 )}
                             </ul>}
                     </li>)

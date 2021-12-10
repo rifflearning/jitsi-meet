@@ -9,6 +9,7 @@ import { connect } from '../../../base/redux';
 import { E2EELabel } from '../../../e2ee';
 import { LocalRecordingLabel } from '../../../local-recording';
 import { RecordingLabel } from '../../../recording';
+import RiffLocalRecordingLabel from '../../../riff-platform/components/LocalRecorder/LocalRecordingLabel';
 import { isToolboxVisible } from '../../../toolbox/functions.web';
 import { TranscribingLabel } from '../../../transcribing';
 import { VideoQualityLabel } from '../../../video-quality';
@@ -77,6 +78,10 @@ const COMPONENTS = [
     {
         Component: InsecureRoomNameLabel,
         id: 'insecure-room'
+    },
+    {
+        Component: RiffLocalRecordingLabel,
+        id: 'riff-local-recording'
     }
 ];
 

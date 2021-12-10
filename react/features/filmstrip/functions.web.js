@@ -20,7 +20,6 @@ import {
     ASPECT_RATIO_BREAKPOINT,
     DISPLAY_AVATAR,
     DISPLAY_AVATAR_WITH_NAME,
-    DISPLAY_BLACKNESS_WITH_NAME,
     DISPLAY_VIDEO,
     DISPLAY_VIDEO_WITH_NAME,
     SCROLL_SIZE,
@@ -76,13 +75,16 @@ export function shouldRemoteVideosBeVisible(state: Object) {
         contextMenuOpened
             || participantCount > 2
 
-            // Always show the filmstrip when there is another participant to
-            // show and the  local video is pinned, or the toolbar is displayed.
+            // Always show the filmstrip when:
+            // - there is another participant to show and the  local video is pinned,
+            // - the toolbar is displayed,
+            // - or a document is open.
             || (participantCount > 1
                 && disable1On1Mode !== null
                 && (state['features/toolbox'].visible
                     || ((pinnedParticipant = getPinnedParticipant(state))
-                        && pinnedParticipant.local)))
+                        && pinnedParticipant.local)
+                    || state['features/etherpad'].editing))
 
             || disable1On1Mode);
 }
@@ -259,8 +261,7 @@ export function computeDisplayMode(input: Object) {
     if (!tileViewActive && isScreenSharing && isRemoteParticipant) {
         return isHovered ? DISPLAY_AVATAR_WITH_NAME : DISPLAY_AVATAR;
     } else if (isCurrentlyOnLargeVideo && !tileViewActive) {
-        // Display name is always and only displayed when user is on the stage
-        return adjustedIsVideoPlayable && !isAudioOnly ? DISPLAY_BLACKNESS_WITH_NAME : DISPLAY_AVATAR_WITH_NAME;
+        return adjustedIsVideoPlayable && !isAudioOnly ? DISPLAY_VIDEO : DISPLAY_AVATAR_WITH_NAME;
     } else if (adjustedIsVideoPlayable && !isAudioOnly) {
         // check hovering and change state to video with name
         return isHovered ? DISPLAY_VIDEO_WITH_NAME : DISPLAY_VIDEO;

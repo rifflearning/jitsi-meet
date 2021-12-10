@@ -6,6 +6,7 @@ import { MEDIA_TYPE } from '../../../base/media';
 import { getParticipantByIdOrUndefined, PARTICIPANT_ROLE } from '../../../base/participants';
 import { connect } from '../../../base/redux';
 import { getTrackByMediaTypeAndParticipant, isLocalTrackMuted, isRemoteTrackMuted } from '../../../base/tracks';
+import DisplayParticipantNameIndicator from '../../../riff-platform/components/DisplayParticipantNameIndicator';
 import { getCurrentLayout, LAYOUTS } from '../../../video-layout';
 
 import AudioMutedIndicator from './AudioMutedIndicator';
@@ -90,6 +91,10 @@ class StatusIndicators extends Component<Props> {
                 { _showScreenShareIndicator ? <ScreenShareIndicator tooltipPosition = { tooltipPosition } /> : null }
                 { _showVideoMutedIndicator ? <VideoMutedIndicator tooltipPosition = { tooltipPosition } /> : null }
                 { _showModeratorIndicator ? <ModeratorIndicator tooltipPosition = { tooltipPosition } /> : null }
+                <DisplayParticipantNameIndicator
+                    participantId = { this.props.participantID }
+                    tileView = { _currentLayout }
+                    tooltipPosition = { tooltipPosition } />
             </div>
         );
     }

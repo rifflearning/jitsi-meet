@@ -7,6 +7,7 @@ import { Icon, IconInviteMore } from '../../../base/icons';
 import { getParticipantCount } from '../../../base/participants';
 import { connect } from '../../../base/redux';
 import { beginAddPeople } from '../../../invite';
+import MultipleRoomsNameDropdown from '../../../riff-platform/components/Meeting/MultipleRoomsMeetingNameDropdown';
 import { isButtonEnabled, isToolboxVisible } from '../../../toolbox/functions.web';
 
 declare var interfaceConfig: Object;
@@ -31,7 +32,12 @@ type Props = {
     /**
      * Invoked to obtain translated strings.
      */
-    t: Function
+    t: Function,
+
+    /**
+     * Whether to show name with multiple rooms quantity instead of name.
+     */
+    _isMultipleRoomsQuantity: boolean
 }
 
 /**
@@ -42,11 +48,14 @@ type Props = {
  * @returns {React$Element<any>}
  */
 function InviteMore({
+    _isMultipleRoomsQuantity,
     _shouldShow,
     _toolboxVisible,
+
     onClick,
     t
 }: Props) {
+
     const onKeyPressHandler = useCallback(e => {
         if (onClick && (e.key === ' ' || e.key === 'Enter')) {
             e.preventDefault();
@@ -72,6 +81,7 @@ function InviteMore({
                         <Icon src = { IconInviteMore } />
                         <div className = 'invite-more-button-text'>
                             {t('addPeople.inviteMorePrompt')}
+                            {_isMultipleRoomsQuantity ? <MultipleRoomsNameDropdown /> : null }
                         </div>
                     </div>
                 </div>
@@ -93,6 +103,7 @@ function mapStateToProps(state) {
     const hide = interfaceConfig.HIDE_INVITE_MORE_HEADER;
 
     return {
+        _isMultipleRoomsQuantity: Boolean(state['features/riff-platform']?.meeting?.meeting?.multipleRoomsQuantity),
         _shouldShow: isButtonEnabled('invite', state) && isAlone && !hide,
         _toolboxVisible: isToolboxVisible(state)
     };

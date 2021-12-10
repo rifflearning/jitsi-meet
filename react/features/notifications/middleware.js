@@ -12,6 +12,7 @@ import {
 } from '../base/participants';
 import { MiddlewareRegistry, StateListenerRegistry } from '../base/redux';
 import { PARTICIPANTS_PANE_OPEN } from '../participants-pane/actionTypes';
+import { maybeExtractIdFromDisplayName } from '../riff-platform/functions';
 
 import {
     clearNotifications,
@@ -20,7 +21,7 @@ import {
     showParticipantJoinedNotification,
     showParticipantLeftNotification
 } from './actions';
-import { NOTIFICATION_TIMEOUT_TYPE } from './constants';
+import { NOTIFICATION_TIMEOUT_TYPE, NOTIFICATION_TIMEOUT } from './constants';
 import { joinLeaveNotificationsDisabled } from './functions';
 
 /**
@@ -51,15 +52,30 @@ MiddlewareRegistry.register(store => next => action => {
             const { dispatch, getState } = store;
             const state = getState();
             const participant = getParticipantById(
-                store.getState(),
+                state,
                 action.participant.id
             );
 
-            if (participant && !participant.local && !action.participant.isReplaced) {
-                dispatch(showParticipantLeftNotification(
-                    getParticipantDisplayName(state, participant.id)
-                ));
+            // TODO: [Balu] Discuss the below logic with [Jordan]. Ratained while upgrading to `jitsi-meet` 6689.
+            if (typeof interfaceConfig === 'object'
+                && participant
+                && !participant.local
+                && !action.participant.isReplaced) {
+                dispatch(showNotification({
+                    descriptionKey: 'notify.disconnected',
+                    titleKey: 'notify.somebody',
+                    title: maybeExtractIdFromDisplayName(participant.name).displayName
+                }, NOTIFICATION_TIMEOUT));
             }
+
+            // TODO: [Balu] Discuss these changes with [Jordan].
+            //  Commented the below `if` in favor of the above `if` while upgrading to `jitsi-meet` 6689.
+            // if (participant && !participant.local && !action.participant.isReplaced) {
+            //     dispatch(showParticipantLeftNotification(
+            //         getParticipantDisplayName(state, participant.id)
+            //     ));
+            // }
+
         }
 
         return next(action);

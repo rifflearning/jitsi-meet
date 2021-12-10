@@ -9,7 +9,6 @@ import {
     sendAnalytics
 } from '../../react/features/analytics';
 import { toggleDialog } from '../../react/features/base/dialog';
-import { clickOnVideo } from '../../react/features/filmstrip/actions';
 import { KeyboardShortcutsDialog }
     from '../../react/features/keyboard-shortcuts';
 import { SpeakerStats } from '../../react/features/speaker-stats';
@@ -77,7 +76,8 @@ const KeyboardShortcut = {
                 if (_shortcuts.has(key)) {
                     _shortcuts.get(key).function(e);
                 } else if (!isNaN(num) && num >= 0 && num <= 9) {
-                    APP.store.dispatch(clickOnVideo(num));
+                    // disable 0-9 shortcuts
+                    // APP.store.dispatch(clickOnVideo(num));
                 }
             }
         };
@@ -260,8 +260,9 @@ const KeyboardShortcut = {
          * FIXME: Currently focus keys are directly implemented below in
          * onkeyup. They should be moved to the SmallVideo instead.
          */
-        this._addShortcutToHelp('0', 'keyboardShortcuts.focusLocal');
-        this._addShortcutToHelp('1-9', 'keyboardShortcuts.focusRemote');
+        // remove 0-9 shortcuts from shortcuts info
+        // this._addShortcutToHelp('0', 'keyboardShortcuts.focusLocal');
+        // this._addShortcutToHelp('1-9', 'keyboardShortcuts.focusRemote');
     }
 };
 

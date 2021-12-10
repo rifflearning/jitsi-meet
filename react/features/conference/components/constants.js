@@ -7,6 +7,7 @@ export const CONFERENCE_INFO = {
         'e2ee',
         'transcribing',
         'video-quality',
-        'insecure-room'
+        'insecure-room',
+        'riff-local-recording'
     ]
 };

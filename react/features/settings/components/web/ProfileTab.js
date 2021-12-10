@@ -12,6 +12,7 @@ import {
 import { AbstractDialogTab } from '../../../base/dialog';
 import type { Props as AbstractDialogTabProps } from '../../../base/dialog';
 import { translate } from '../../../base/i18n';
+import { maybeExtractIdFromDisplayName } from '../../../riff-platform/functions';
 import { openLogoutDialog } from '../../actions';
 
 declare var APP: Object;
@@ -120,6 +121,8 @@ class ProfileTab extends AbstractDialogTab<Props> {
             t
         } = this.props;
 
+        const { idWithSeparator, displayName: nameWithoutUid } = maybeExtractIdFromDisplayName(displayName);
+
         return (
             <div>
                 <div className = 'profile-edit'>
@@ -127,18 +130,24 @@ class ProfileTab extends AbstractDialogTab<Props> {
                         <FieldTextStateless
                             autoComplete = 'name'
                             compact = { true }
+                            disabled = { true }
                             id = 'setDisplayName'
                             isReadOnly = { readOnlyName }
                             label = { t('profile.setDisplayNameLabel') }
-                            onChange = { this._onDisplayNameChange }
+                            // eslint-disable-next-line react/jsx-no-bind
+                            onChange = {
+                                ({ target: { value } }) =>
+                                    super._onChange({ displayName: `${idWithSeparator}${value}` })
+                            }
                             placeholder = { t('settings.name') }
                             shouldFitContainer = { true }
                             type = 'text'
-                            value = { displayName } />
+                            value = { nameWithoutUid } />
                     </div>
                     <div className = 'profile-edit-field'>
                         <FieldTextStateless
                             compact = { true }
+                            disabled = { true }
                             id = 'setEmail'
                             label = { t('profile.setEmailLabel') }
                             onChange = { this._onEmailChange }

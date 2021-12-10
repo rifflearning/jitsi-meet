@@ -3,9 +3,20 @@
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const fs = require('fs');
 const { join } = require('path');
+const dotenv = require('dotenv');
 const process = require('process');
 const webpack = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+
+// get .env variables
+const env = dotenv.config().parsed || {};
+
+// reduce it to a nice object, the same as before
+const envKeys = Object.keys(env).reduce((prev, next) => {
+    prev[`process.env.${next}`] = JSON.stringify(env[next]);
+
+    return prev;
+}, {});
 
 /**
  * The URL of the Jitsi Meet deployment to be proxy to in the context of
@@ -28,7 +39,8 @@ function getPerformanceHints(options, size) {
     const { analyzeBundle, minimize } = options;
 
     return {
-        hints: minimize && !analyzeBundle ? 'error' : false,
+        // hints: minimize && !analyzeBundle ? 'error' : false,
+        hints: false,
         maxAssetSize: size,
         maxEntrypointSize: size
     };
@@ -64,13 +76,13 @@ function getBundleAnalyzerPlugin(analyzeBundle, name) {
  */
 function devServerProxyBypass({ path }) {
     if (path.startsWith('/css/')
-            || path.startsWith('/doc/')
-            || path.startsWith('/fonts/')
-            || path.startsWith('/images/')
-            || path.startsWith('/lang/')
-            || path.startsWith('/sounds/')
-            || path.startsWith('/static/')
-            || path.endsWith('.wasm')) {
+        || path.startsWith('/doc/')
+        || path.startsWith('/fonts/')
+        || path.startsWith('/images/')
+        || path.startsWith('/lang/')
+        || path.startsWith('/sounds/')
+        || path.startsWith('/static/')
+        || path.endsWith('.wasm')) {
 
         return path;
     }
@@ -202,11 +214,12 @@ function getConfig(options = {}) {
         },
         plugins: [
             detectCircularDeps
-                && new CircularDependencyPlugin({
-                    allowAsyncCycles: false,
-                    exclude: /node_modules/,
-                    failOnError: false
-                })
+            && new CircularDependencyPlugin({
+                allowAsyncCycles: false,
+                exclude: /node_modules/,
+                failOnError: false
+            }),
+            new webpack.DefinePlugin(envKeys)
         ].filter(Boolean),
         resolve: {
             alias: {
