@@ -69,6 +69,8 @@ class Mediator {
         this.mm.render('#meeting-mediator');
 
         this.maybe_update_mm_turns = this.maybe_update_mm_turns.bind(this);
+
+        // NOTE: For Meeting Mediator to work on post 2.2.0 server builds, switch 'updated' to 'patched
         this.turns.on('updated', this.maybe_update_mm_turns);
 
         this.handle_participantEvent_created = this.handle_participantEvent_created.bind(this);
