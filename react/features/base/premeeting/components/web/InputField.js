@@ -166,6 +166,10 @@ export default class InputField extends PureComponent<Props, State> {
     _onChange(evt) {
         const value = getFieldValue(evt);
 
+        // if (value.trim().length === 0) {
+        //     value = '';
+        // }
+
         this.setState({
             value
         });
