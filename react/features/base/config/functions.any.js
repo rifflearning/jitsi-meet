@@ -69,6 +69,8 @@ export function getRecordingSharingUrl(state: Object) {
     return state['features/base/config'].recordingSharingUrl;
 }
 
+/* eslint-disable max-params */
+
 /**
  * Overrides JSON properties in {@code config} and
  * {@code interfaceConfig} Objects with the values from {@code newConfig}.

@@ -5,7 +5,22 @@ import { getRiffApp } from './riffClient';
 
 let _detachSibilantFn = null;
 
-export function getRiffState(state) {
+/**
+ * Returns an object containing all the state relevant
+ * to Riff.
+ *
+ * @param {Object} state - The redux state object.
+ * @returns {Object} - Object with relevant state. Contains:
+ * {
+ *     accessToken,
+ *     displayName,
+ *     meetingId,
+ *     meetingTitle,
+ *     participant,
+ *     room
+ * }
+ */
+function getRiffState(state) {
     const {
         accessToken,
         participantId: participant,
@@ -14,16 +29,15 @@ export function getRiffState(state) {
     } = state['features/riff-integration'];
     const { name: displayName } = state['features/base/settings'];
     const { room } = state['features/base/conference'];
-    // TODO - jr - add option to pass a title with external api
-    const title = room;
+
     return {
         accessToken,
         displayName,
         meetingId,
+        meetingTitle,
         participant,
         room,
-        title
-    }
+    };
 }
 
 /**
@@ -45,7 +59,7 @@ async function sendUtteranceToRiffDataServer(data, getState) {
         return;
     }
 
-    const { accessToken: token, participant, room } = getRiffState(state)
+    const { accessToken: token, participant, room } = getRiffState(state);
 
     const volumes = riffConfig.metrics.sendUtteranceVolumes ? data.volumes : {};
 
@@ -58,7 +72,7 @@ async function sendUtteranceToRiffDataServer(data, getState) {
             startTime: data.start.toISOString(),
             endTime: data.end.toISOString(),
             token,
-            volumes
+            volumes,
         });
     } catch (error) {
         console.error('error sending utterance to data server!', error);
