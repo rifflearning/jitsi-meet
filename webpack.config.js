@@ -303,7 +303,7 @@ module.exports = (_env, argv) => {
                     process: 'process/browser'
                 })
             ],
-            performance: getPerformanceHints(perfHintOptions, 4 * 1024 * 1024)
+            performance: getPerformanceHints(perfHintOptions, 5 * 1024 * 1024)
         }),
         Object.assign({}, config, {
             entry: {
