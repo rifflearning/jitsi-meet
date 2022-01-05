@@ -7,6 +7,7 @@ OLM_DIR = node_modules/@matrix-org/olm
 RNNOISE_WASM_DIR = node_modules/rnnoise-wasm/dist/
 TFLITE_WASM = react/features/stream-effects/virtual-background/vendor/tflite
 MEET_MODELS_DIR  = react/features/stream-effects/virtual-background/vendor/models/
+FACIAL_MODELS_DIR = react/features/facial-recognition/resources
 NODE_SASS = ./node_modules/.bin/sass
 SASS_OPTIONS = --load-path ./node_modules
 NPM = npm
@@ -15,12 +16,12 @@ STYLES_BUNDLE = css/all.bundle.css
 STYLES_DESTINATION = css/all.css
 STYLES_MAIN = css/main.scss
 WEBPACK = ./node_modules/.bin/webpack
-WEBPACK_DEV_SERVER = ./node_modules/.bin/webpack-dev-server
+WEBPACK_DEV_SERVER = ./node_modules/.bin/webpack serve --mode development
+
 ENV ?= UNKenv
 
 SRC_PKG_FILES := \
 	README.md               \
-	CHANGELOG.md            \
 	LICENSE                 \
 	favicon.ico             \
 	package.json            \
@@ -44,7 +45,7 @@ NOT_SRC_PKG_FILES := \
 all: compile deploy clean
 
 compile: compile-load-test
-	$(WEBPACK) -p
+	$(WEBPACK)
 
 compile-load-test:
 	${NPM} install --prefix resources/load-test && ${NPM} run build --prefix resources/load-test
@@ -56,7 +57,7 @@ lint: ## Run eslint and flow checks using npm run lint
 	$(NPM) run lint
 
 .NOTPARALLEL:
-deploy: deploy-init deploy-appbundle deploy-rnnoise-binary deploy-tflite deploy-meet-models deploy-lib-jitsi-meet deploy-libflac deploy-olm deploy-css deploy-local
+deploy: deploy-init deploy-appbundle deploy-rnnoise-binary deploy-tflite deploy-meet-models deploy-lib-jitsi-meet deploy-libflac deploy-olm deploy-css deploy-local deploy-facial-expressions
 
 deploy-init:
 	rm -fr $(DEPLOY_DIR)
@@ -65,23 +66,27 @@ deploy-init:
 deploy-appbundle:
 	cp \
 		$(BUILD_DIR)/app.bundle.min.js \
-		$(BUILD_DIR)/app.bundle.min.map \
+		$(BUILD_DIR)/app.bundle.min.js.map \
 		$(BUILD_DIR)/do_external_connect.min.js \
-		$(BUILD_DIR)/do_external_connect.min.map \
+		$(BUILD_DIR)/do_external_connect.min.js.map \
 		$(BUILD_DIR)/external_api.min.js \
-		$(BUILD_DIR)/external_api.min.map \
+		$(BUILD_DIR)/external_api.min.js.map \
 		$(BUILD_DIR)/flacEncodeWorker.min.js \
-		$(BUILD_DIR)/flacEncodeWorker.min.map \
+		$(BUILD_DIR)/flacEncodeWorker.min.js.map \
 		$(BUILD_DIR)/dial_in_info_bundle.min.js \
-		$(BUILD_DIR)/dial_in_info_bundle.min.map \
+		$(BUILD_DIR)/dial_in_info_bundle.min.js.map \
 		$(BUILD_DIR)/alwaysontop.min.js \
-		$(BUILD_DIR)/alwaysontop.min.map \
+		$(BUILD_DIR)/alwaysontop.min.js.map \
 		$(OUTPUT_DIR)/analytics-ga.js \
 		$(BUILD_DIR)/analytics-ga.min.js \
-		$(BUILD_DIR)/analytics-ga.min.map \
-		$(BUILD_DIR)/close3.min.js \
-		$(BUILD_DIR)/close3.min.map \
+		$(BUILD_DIR)/analytics-ga.min.js.map \
+		$(BUILD_DIR)/facial-expressions-worker.min.js \
+		$(BUILD_DIR)/facial-expressions-worker.min.js.map \
 		$(DEPLOY_DIR)
+	cp \
+		$(BUILD_DIR)/close3.min.js \
+		$(BUILD_DIR)/close3.min.js.map \
+		$(DEPLOY_DIR) || true
 
 deploy-lib-jitsi-meet:
 	cp \
@@ -118,6 +123,11 @@ deploy-meet-models:
 		$(MEET_MODELS_DIR)/*.tflite \
 		$(DEPLOY_DIR)
 
+deploy-facial-expressions:
+	cp \
+		$(FACIAL_MODELS_DIR)/* \
+		$(DEPLOY_DIR)
+
 deploy-css:
 	$(NODE_SASS) $(SASS_OPTIONS) $(STYLES_MAIN) $(STYLES_BUNDLE) && \
 	$(CLEANCSS) --skip-rebase $(STYLES_BUNDLE) > $(STYLES_DESTINATION) ; \
@@ -139,8 +149,8 @@ bump-dev-version: ## Increment the development version in package.json and packa
 	git tag -d $$(git tag --points-at HEAD)
 
 .NOTPARALLEL:
-dev: deploy-init deploy-css deploy-rnnoise-binary deploy-lib-jitsi-meet deploy-meet-models deploy-libflac deploy-olm deploy-tflite
-	$(WEBPACK_DEV_SERVER) --host 0.0.0.0
+dev: deploy-init deploy-css deploy-rnnoise-binary deploy-tflite deploy-meet-models deploy-lib-jitsi-meet deploy-libflac deploy-olm deploy-facial-expressions
+	$(WEBPACK_DEV_SERVER)
 
 source-package: ## create a distribution tar file packaging all files to be served by a web server (run make all first)
 source-package: PKG_VERSION := ${shell sed -nE 's/^\s*\"version\": \"([^\"]+)\",$$/\1/p' package.json}
