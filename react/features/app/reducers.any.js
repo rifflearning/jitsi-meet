@@ -45,6 +45,7 @@ import '../polls/reducer';
 import '../reactions/reducer';
 import '../recent-list/reducer';
 import '../recording/reducer';
+import '../riff-integration/reducer';
 import '../settings/reducer';
 import '../speaker-stats/reducer';
 import '../subtitles/reducer';
