@@ -91,7 +91,7 @@ async function sendUtteranceToRiffDataServer(data, getState) {
 function attachSibilant(audioTrack, getState) {
     detachSibilant();
 
-    const sibilant = new Sibilant(audioTrack);
+    const sibilant = new Sibilant(new MediaStream([ audioTrack ]));
     const collectSpeechEvent = data => sendUtteranceToRiffDataServer(data, getState);
 
     sibilant.bind('stoppedSpeaking', collectSpeechEvent);

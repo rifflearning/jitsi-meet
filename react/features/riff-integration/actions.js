@@ -1,5 +1,5 @@
 /* global riffConfig */
-import { startRiffdataApp } from '@rifflearning/riff-metrics';
+import { riffdataClient } from '@rifflearning/riff-metrics';
 
 import {
     RIFF_SET_ACCESS_TOKEN,
@@ -80,7 +80,7 @@ function connectToRiffDataServer() {
         };
 
         try {
-            const { app } = startRiffdataApp({
+            const { app } = riffdataClient.startRiffdataApp({
                 url: riffConfig.riffdata.url,
                 path: riffConfig.riffdata.path,
                 email: riffConfig.riffdata.email,
