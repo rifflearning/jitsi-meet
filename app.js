@@ -17,6 +17,10 @@ import UI from './modules/UI/UI';
 import keyboardshortcut from './modules/keyboardshortcut/keyboardshortcut';
 import capturer from './modules/recorder/capturer/index';
 import translation from './modules/translation/translation';
+import packageJson from './package.json';
+
+// Write the Riff jitsi-meet version to the console
+console.info(`Running Riff jitsi-meet version ${packageJson.version}\n\n`);
 
 // Initialize Olm as early as possible.
 if (window.Olm) {
