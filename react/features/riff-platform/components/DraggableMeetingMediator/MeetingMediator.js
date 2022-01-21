@@ -35,11 +35,13 @@ import { app } from '../../libs/riffdata-client';
 const chartConfig = {
     cardTitle: 'Meeting Mediator',
     info: 'The Meeting Mediator provides real-time feedback about the last five '
-           + 'minutes of your conversation. Thick lines and proximity to the central '
-           + 'node indicate conversational dominance. Hover over a node to see how '
-           + 'much a person has spoken. The center node displays the number of '
-           + 'exchanges between participants. A higher number represents a more '
-           + 'energetic conversation.'
+        + 'minutes of your conversation.',
+    longInfo: 'The Meeting Mediator provides real-time feedback about the last five '
+            + 'minutes of your conversation. Thick lines and proximity to the central '
+            + 'node indicate conversational dominance. Hover over a node to see how '
+            + 'much a person has spoken. The center node displays the number of '
+            + 'exchanges between participants. A higher number represents a more '
+            + 'energetic conversation.'
 };
 
 class MeetingMediator extends React.Component {
@@ -148,6 +150,7 @@ class MeetingMediator extends React.Component {
                  <ChartCard
                      title = { chartConfig.cardTitle }
                      chartInfo = { chartConfig.info }
+                     chartInfoLong = { chartConfig.longInfo }
                      chartDiv = { chartDiv }
                      chartCardId = 'meeting-mediator-card'
                      longDescription = { true }>
