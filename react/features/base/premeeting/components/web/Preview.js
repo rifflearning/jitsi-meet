@@ -81,7 +81,7 @@ function _mapStateToProps(state, ownProps) {
     return {
         _participantId,
         flipVideo: state['features/base/settings'].localFlipX,
-        name,
+        name: name.trim(),
         videoMuted: ownProps.videoTrack ? ownProps.videoMuted : state['features/base/media'].video.muted,
         videoTrack: ownProps.videoTrack || (getLocalVideoTrack(state['features/base/tracks']) || {}).jitsiTrack
     };

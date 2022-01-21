@@ -390,7 +390,8 @@ class Prejoin extends Component<Props, State> {
                                 ariaDropDownLabel = { t('prejoin.joinWithoutAudio') }
                                 ariaLabel = { t('prejoin.joinMeeting') }
                                 ariaPressed = { showJoinByPhoneButtons }
-                                disabled = { joinButtonDisabled || (isAnon && !displayName) }
+                                disabled = { joinButtonDisabled
+                                    || (isAnon && (!displayName || (displayName.trim().length === 0))) }
                                 hasOptions = { true }
                                 onClick = { _onJoinButtonClick }
                                 onKeyPress = { _onJoinKeyPress }
