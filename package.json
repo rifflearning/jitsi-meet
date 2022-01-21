@@ -49,7 +49,7 @@
     "@react-native-community/google-signin": "3.0.1",
     "@react-native-community/netinfo": "4.1.5",
     "@react-native-community/slider": "3.0.3",
-    "@rifflearning/riff-metrics": "^2.2.0-dev.2",
+    "@rifflearning/riff-metrics": "^3.0.1",
     "@rifflearning/sibilant": "^0.1.7",
     "@svgr/webpack": "4.3.2",
     "amplitude-js": "8.2.1",
