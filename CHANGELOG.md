@@ -1,5 +1,20 @@
 # Change Log for @rifflearning/jitsi-meet
 
+## [1.4.0](https://github.com/rifflearning/jitsi-meet/tree/v1.4.0) (2022-01-21)
+[Full Changelog](https://github.com/rifflearningjitsi-meet/compare/v1.3.0...v1.4.0)
+
+### Notable changes:
+
+- Latest Riff metrics dashboard
+
+
+### Merged pull requests
+
+- [\#136](https://github.com/rifflearning/jitsi-meet/pull/136) RA-318: Guest User's Name Can't Be a Space
+- [\#134](https://github.com/rifflearning/jitsi-meet/pull/134) RA-317 Fixed Info Button on Meeting Mediator
+- [\#138](https://github.com/rifflearning/jitsi-meet/pull/138) Update riff metrics to version 3 (RA-431)
+
+
 ## [1.3.0](https://github.com/rifflearning/jitsi-meet/tree/v1.3.0) (2021-11-10)
 [Full Changelog](https://github.com/rifflearningjitsi-meet/compare/v1.2.0...v1.3.0)
 
