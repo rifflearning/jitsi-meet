@@ -1,0 +1,11 @@
+---
+settings:
+    jsdoc:
+      tagNamePreference:
+        fileoverview: fileoverview
+
+rules:
+  comma-dangle:
+    - error
+    - always-multiline
+  jsdoc/require-description-complete-sentence: off
