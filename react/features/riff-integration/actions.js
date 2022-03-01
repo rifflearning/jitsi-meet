@@ -18,7 +18,10 @@ import { riffdataClient } from '@rifflearning/riff-metrics';
 
 import {
     RIFF_SET_ACCESS_TOKEN,
+    RIFF_SET_MEETING_CONTEXT,
     RIFF_SET_MEETING_ID,
+    RIFF_SET_MEETING_TITLE,
+    RIFF_SET_PARTICIPANT_ID,
 } from './actionTypes';
 import { getRiffState } from './functions';
 import { getRiffApp, setRiffApp } from './riffClient';
@@ -34,6 +37,45 @@ function setRiffAccessToken(accessToken) {
     return {
         type: RIFF_SET_ACCESS_TOKEN,
         accessToken,
+    };
+}
+
+/**
+ * Redux action to set Riff meeting context
+ *
+ * @param {string} meetingContext - The meeting context
+ * @returns {Object}
+ */
+function setRiffMeetingContext(meetingContext) {
+    return {
+        type: RIFF_SET_MEETING_CONTEXT,
+        meetingContext,
+    };
+}
+
+/**
+ * Redux action to set Riff meeting title
+ *
+ * @param {string} meetingTitle - The meeting title
+ * @returns {Object}
+ */
+function setRiffMeetingTitle(meetingTitle) {
+    return {
+        type: RIFF_SET_MEETING_TITLE,
+        meetingTitle,
+    };
+}
+
+/**
+ * Redux action to set Riff participant ID
+ *
+ * @param {string} participantId - The local user's Riff Id
+ * @returns {Object}
+ */
+function setRiffParticipantId(participantId) {
+    return {
+        type: RIFF_SET_PARTICIPANT_ID,
+        participantId,
     };
 }
 
@@ -101,8 +143,9 @@ function riffAddUserToMeeting() {
             displayName,
             participant,
             room,
+            meetingTitle: title,
+            meetingContext: context,
         } = getRiffState(getState());
-
 
         const app = getRiffApp();
         const meetingListener = meeting => {
@@ -122,10 +165,8 @@ function riffAddUserToMeeting() {
                 participant,
                 name: displayName,
                 room,
-                title: `title-${room}`,
-
-                // TODO - context?
-                // context,
+                title,
+                context,
                 token,
             });
         } catch (error) {
@@ -169,5 +210,8 @@ export {
     riffAddUserToMeeting,
     riffRemoveUserFromMeeting,
     setRiffAccessToken,
+    setRiffMeetingContext,
     setRiffMeetingId,
+    setRiffMeetingTitle,
+    setRiffParticipantId,
 };
