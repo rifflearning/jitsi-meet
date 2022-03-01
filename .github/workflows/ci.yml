@@ -1,23 +1,31 @@
 name: Simple CI
 
-on: [pull_request]
+on:
+  pull_request:
+  push:
+    branches:
+      - 'riff/mods_*'
 
 jobs:
   run-ci:
     name: Build Frontend
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '16.x'
-    - run: npm install
-    - name: Check git status
-      run: git status
-    - name: Normalize lang files to ensure sorted
-      run: npm run lang-sort
-    - name: Check if the git repository is clean
-      run: $(exit $(git status --porcelain --untracked-files=no | head -255 | wc -l)) || (echo "Dirty git tree"; git diff; exit 1)
-    - run: npm run lint
-    - run: for file in lang/*.json; do npx --yes jsonlint -q $file || exit 1; done
-    - run: make
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+          registry-url: https://npm.pkg.github.com/
+
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies based on package-lock.json
+        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GPR_PRIVATE_READ_TOKEN }}
+
+      - run: make lint
+
+      - run: make all
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
