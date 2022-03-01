@@ -17,13 +17,17 @@
 
 import { APP_WILL_MOUNT } from '../base/app';
 import { CONFERENCE_JOINED, CONFERENCE_LEFT } from '../base/conference';
+import { SET_LOCATION_URL } from '../base/connection';
 import { MiddlewareRegistry } from '../base/redux';
 import { TRACK_ADDED } from '../base/tracks';
+import { parseURLParams } from '../base/util';
 
 import {
     connectToRiffDataServer,
     riffAddUserToMeeting,
     riffRemoveUserFromMeeting,
+    setRiffMeetingTitle,
+    setRiffParticipantId,
 } from './actions';
 import { attachSibilant } from './functions';
 
@@ -57,6 +61,9 @@ MiddlewareRegistry.register(store => next => action => {
         store.dispatch(riffRemoveUserFromMeeting());
         window.removeEventListener('beforeunload', _onbeforeunload(store));
         break;
+    case SET_LOCATION_URL:
+        // eslint-disable-next-line object-property-newline
+        _updateRiffInfoFromUrl(store);
     }
 
     return result;
@@ -73,4 +80,26 @@ MiddlewareRegistry.register(store => next => action => {
  */
 function _onbeforeunload(store) {
     return () => store.dispatch(riffRemoveUserFromMeeting());
+}
+
+/**
+ * Private function to update redux state with values passed in
+ * through the URL (e.g. via External API).
+ *
+ * @param {Store} store - The redux store.
+ *
+ * @returns {void}
+ */
+function _updateRiffInfoFromUrl({ dispatch, getState }) {
+    const urlParams = parseURLParams(getState()['features/base/connection'].locationURL);
+    const urlRiffParticipantId = urlParams['riffInfo.participantId'];
+    const urlRiffMeetingTitle = urlParams['riffInfo.meetingTitle'];
+
+    if (urlRiffParticipantId) {
+        dispatch(setRiffParticipantId(urlRiffParticipantId));
+    }
+
+    if (urlRiffMeetingTitle) {
+        dispatch(setRiffMeetingTitle(urlRiffMeetingTitle));
+    }
 }
