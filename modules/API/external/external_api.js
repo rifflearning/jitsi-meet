@@ -303,6 +303,8 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
      * information about the initial devices that will be used in the call.
      * @param {Object} [options.userInfo] - Object containing information about
      * the participant opening the meeting.
+     * @param {Object} [options.riffInfo] - Object containing information
+     * relevant to Riff (eg participantId, meetingTitle).
      * @param {string}  [options.e2eeKey] - The key used for End-to-End encryption.
      * THIS IS EXPERIMENTAL.
      * @param {string}  [options.release] - The key used for specifying release if enabled on the backend.
@@ -322,6 +324,7 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
             invitees,
             devices,
             userInfo,
+            riffInfo,
             e2eeKey,
             release
         } = parseArguments(args);
@@ -336,6 +339,7 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
             roomName,
             devices,
             userInfo,
+            riffInfo,
             appData: {
                 localStorageContent
             },

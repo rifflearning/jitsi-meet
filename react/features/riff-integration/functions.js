@@ -29,6 +29,7 @@ let _detachSibilantFn = null;
  * {
  *     accessToken,
  *     displayName,
+ *     meetingContext,
  *     meetingId,
  *     meetingTitle,
  *     participant,
@@ -39,6 +40,7 @@ function getRiffState(state) {
     const {
         accessToken,
         participantId: participant,
+        meetingContext,
         meetingId,
         meetingTitle,
     } = state['features/riff-integration'];
@@ -48,6 +50,7 @@ function getRiffState(state) {
     return {
         accessToken,
         displayName,
+        meetingContext,
         meetingId,
         meetingTitle,
         participant,
