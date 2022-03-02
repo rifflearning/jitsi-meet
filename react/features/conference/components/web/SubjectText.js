@@ -5,6 +5,7 @@ import React from 'react';
 import { getConferenceName } from '../../../base/conference/functions';
 import { connect } from '../../../base/redux';
 import { Tooltip } from '../../../base/tooltip';
+import { getRiffState } from '../../../riff-integration';
 
 type Props = {
 
@@ -43,7 +44,8 @@ const SubjectText = ({ _subject }: Props) => (
  */
 function _mapStateToProps(state) {
     return {
-        _subject: getConferenceName(state)
+        // Prefer the Riff meeting title if we have one
+        _subject: getRiffState(state).meetingTitle || getConferenceName(state)
     };
 }
 

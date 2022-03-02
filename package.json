@@ -1,10 +1,10 @@
 {
-  "name": "jitsi-meet",
-  "version": "0.0.0",
-  "description": "A sample app for the Jitsi Videobridge",
+  "name": "@rifflearning/jitsi-meet",
+  "version": "2.0.0-dev.1",
+  "description": "Videochat app based on the jitsi-meet project enhanced for Riff interoperability",
   "repository": {
     "type": "git",
-    "url": "git://github.com/jitsi/jitsi-meet"
+    "url": "git://github.com/rifflearning/jitsi-meet"
   },
   "keywords": [
     "jingle",
@@ -52,6 +52,8 @@
     "@react-navigation/material-top-tabs": "6.0.6",
     "@react-navigation/native": "6.0.6",
     "@react-navigation/stack": "6.0.11",
+    "@rifflearning/riff-metrics": "^2.2.0-dev.2",
+    "@rifflearning/sibilant": "^0.1.7",
     "@svgr/webpack": "4.3.2",
     "@xmldom/xmldom": "0.7.5",
     "amplitude-js": "8.2.1",

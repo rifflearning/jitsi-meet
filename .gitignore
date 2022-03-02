@@ -1,3 +1,12 @@
+# riff ignore #
+
+.env
+tags
+jsconfig.json
+
+###############
+
+
 *.swp
 .*.tmp
 deploy-local.sh
