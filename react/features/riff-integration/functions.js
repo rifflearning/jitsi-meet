@@ -65,8 +65,8 @@ function getRiffState(state) {
  */
 async function sendUtteranceToRiffDataServer(data, getState) {
     const state = getState();
-    const conference = state['features/base/conference'];
-    const isUserInMeeting = conference !== undefined && conference.room !== null;
+    const { conference } = state['features/base/conference'];
+    const isUserInMeeting = conference !== undefined;
 
     if (!isUserInMeeting) {
         // this ensures we don't send any utterances before the user joins the meeting,
