@@ -2,6 +2,11 @@
 
 .env
 tags
+
+# packages
+/rifflearning-jitsi-meet-*.bz2
+
+# VSCode files
 jsconfig.json
 
 ###############
