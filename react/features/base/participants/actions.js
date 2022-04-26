@@ -18,7 +18,9 @@ import {
     PIN_PARTICIPANT,
     SCREENSHARE_PARTICIPANT_NAME_CHANGED,
     SET_LOADABLE_AVATAR_URL,
-    RAISE_HAND_UPDATED
+    RAISE_HAND_UPDATED,
+    LOCAL_PARTICIPANT_RECORDING_STATUS,
+    LOCAL_RECORDING_UPDATED
 } from './actionTypes';
 import {
     DISCO_REMOTE_CONTROL_FEATURE
@@ -610,6 +612,38 @@ export function raiseHand(enabled) {
 export function raiseHandUpdateQueue(participant) {
     return {
         type: RAISE_HAND_UPDATED,
+        participant
+    };
+}
+
+/**
+ * Local video recording status for the local participant.
+ *
+ * @param {boolean} localVideoRecordingStarted - If local video recording started.
+ * @returns {{
+ *     type: LOCAL_PARTICIPANT_RECORDING_STATUS,
+ *     localVideoRecordingStarted: boolean
+ * }}
+ */
+export function updateLocalRecordingStatus(localVideoRecordingStarted) {
+    return {
+        type: LOCAL_PARTICIPANT_RECORDING_STATUS,
+        localVideoRecordingStarted
+    };
+}
+
+/**
+ * Update local recording queue of participants.
+ *
+ * @param {Object} participant - Participant that updated raised hand.
+ * @returns {{
+ *      type: LOCAL_RECORDING_UPDATED,
+ *      participant: Object
+ * }}
+ */
+export function localRecordingUpdateQueue(participant) {
+    return {
+        type: LOCAL_RECORDING_UPDATED,
         participant
     };
 }

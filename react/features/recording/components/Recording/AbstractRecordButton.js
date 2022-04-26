@@ -6,6 +6,10 @@ import {
 } from '../../../analytics';
 import { IconToggleRecording } from '../../../base/icons';
 import { JitsiRecordingConstants } from '../../../base/lib-jitsi-meet';
+<<<<<<< HEAD
+=======
+import { getLocalParticipant } from '../../../base/participants';
+>>>>>>> 730eb2e04 (feat(video-local-recording): Enable users to record their conference locally.)
 import { AbstractButton, type AbstractButtonProps } from '../../../base/toolbox/components';
 import { maybeShowPremiumFeatureDialog } from '../../../jaas/actions';
 import { FEATURES } from '../../../jaas/constants';
@@ -81,7 +85,13 @@ export default class AbstractRecordButton<P: Props> extends AbstractButton<P, *>
      * @returns {void}
      */
     async _handleClick() {
-        const { _isRecordingRunning, dispatch } = this.props;
+        const { _isRecordingRunning, dispatch, handleClick } = this.props;
+
+        if (handleClick) {
+            handleClick();
+
+            return;
+        }
 
         sendAnalytics(createToolbarEvent(
             'recording.button',
@@ -133,16 +143,56 @@ export default class AbstractRecordButton<P: Props> extends AbstractButton<P, *>
  *     visible: boolean
  * }}
  */
+<<<<<<< HEAD
 export function _mapStateToProps(state: Object): Object {
     const {
         disabled: _disabled,
         tooltip: _tooltip,
         visible
     } = getRecordButtonProps(state);
+=======
+export function _mapStateToProps(state: Object, ownProps: Props): Object {
+    let { visible } = ownProps;
+
+    // a button can be disabled/enabled if enableFeaturesBasedOnToken
+    // is on or if the livestreaming is running.
+    let _disabled;
+    let _tooltip = '';
+
+    if (typeof visible === 'undefined') {
+        // If the containing component provides the visible prop, that is one
+        // above all, but if not, the button should be autonomus and decide on
+        // its own to be visible or not.
+        const { enableFeaturesBasedOnToken } = state['features/base/config'];
+        const { features = {} } = getLocalParticipant(state);
+
+        if (enableFeaturesBasedOnToken) {
+            _disabled = String(features.recording) === 'disabled';
+            if (!visible && !_disabled) {
+                _disabled = true;
+                visible = true;
+                _tooltip = 'dialog.recordingDisabledTooltip';
+            }
+        }
+    }
+
+    // disable the button if the livestreaming is running.
+    if (getActiveSession(state, JitsiRecordingConstants.mode.STREAM)) {
+        _disabled = true;
+        _tooltip = 'dialog.recordingDisabledBecauseOfActiveLiveStreamingTooltip';
+    }
+
+    // disable the button if we are in a breakout room.
+    if (isInBreakoutRoom(state)) {
+        _disabled = true;
+        visible = false;
+    }
+>>>>>>> 730eb2e04 (feat(video-local-recording): Enable users to record their conference locally.)
 
     return {
         _disabled,
-        _isRecordingRunning: Boolean(getActiveSession(state, JitsiRecordingConstants.mode.FILE)),
+        _isRecordingRunning: Boolean(getActiveSession(state, JitsiRecordingConstants.mode.FILE))
+            || state['features/recording'].localVideoRecordingHasStarted || false,
         _tooltip,
         visible
     };
