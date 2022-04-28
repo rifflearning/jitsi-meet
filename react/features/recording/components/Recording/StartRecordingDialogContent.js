@@ -20,26 +20,20 @@ import {
     Text
 } from '../../../base/react';
 import { connect } from '../../../base/redux';
-import { StyleType } from '../../../base/styles';
+import { ColorPalette, StyleType } from '../../../base/styles';
 import { authorizeDropbox, updateDropboxToken } from '../../../dropbox';
 import { isVpaasMeeting } from '../../../jaas/functions';
 import { RECORDING_TYPES } from '../../constants';
 import { getRecordingDurationEstimation } from '../../functions';
 
-<<<<<<< HEAD
 import {
     DROPBOX_LOGO,
     ICON_CLOUD,
     ICON_INFO,
     ICON_USERS,
     JITSI_LOGO,
+    LOCAL_RECORDING,
     TRACK_COLOR
-=======
-import { DROPBOX_LOGO,
-    ICON_CLOUD,
-    JITSI_LOGO,
-    LOCAL_RECORDING
->>>>>>> 730eb2e04 (feat(video-local-recording): Enable users to record their conference locally.)
 } from './styles';
 
 type Props = {
@@ -178,12 +172,9 @@ class StartRecordingDialogContent extends Component<Props> {
                 style = { styles.container }>
                 { this._renderNoIntegrationsContent() }
                 { this._renderFileSharingContent() }
-<<<<<<< HEAD
                 { this._renderUploadToTheCloudInfo() }
                 { this._renderIntegrationsContent() }
-=======
                 { this._renderLocalRecordingContent() }
->>>>>>> 730eb2e04 (feat(video-local-recording): Enable users to record their conference locally.)
             </Container>
         );
     }

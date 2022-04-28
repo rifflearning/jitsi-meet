@@ -6,14 +6,7 @@ import {
     sendAnalytics
 } from '../analytics';
 import { APP_WILL_MOUNT, APP_WILL_UNMOUNT } from '../base/app';
-<<<<<<< HEAD
 import { CONFERENCE_JOIN_IN_PROGRESS, getCurrentConference } from '../base/conference';
-=======
-import {
-    CONFERENCE_WILL_JOIN,
-    getCurrentConference
-} from '../base/conference';
->>>>>>> 730eb2e04 (feat(video-local-recording): Enable users to record their conference locally.)
 import JitsiMeetJS, {
     JitsiConferenceEvents,
     JitsiRecordingConstants

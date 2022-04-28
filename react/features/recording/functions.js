@@ -199,7 +199,6 @@ export function getResourceId(remoteRecorder: string | Object) {
 }
 
 /**
-<<<<<<< HEAD
  * Sends a meeting highlight to backend.
  *
  * @param  {Object} state - Redux state.
@@ -245,7 +244,9 @@ export async function sendMeetingHighlight(state: Object) {
     }
 
     return false;
-=======
+}
+
+/**
  * Starts a local recording.
  *
  * @returns {void}
@@ -373,5 +374,4 @@ export function saveRecording() {
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
     }, 100);
->>>>>>> 730eb2e04 (feat(video-local-recording): Enable users to record their conference locally.)
 }

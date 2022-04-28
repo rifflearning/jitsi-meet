@@ -671,17 +671,14 @@
         "leftOneMember": "{{name}} left the meeting",
         "leftThreePlusMembers": "{{name}} and many others left the meeting",
         "leftTwoMembers": "{{first}} and {{second}} left the meeting",
-<<<<<<< HEAD
         "linkToSalesforce": "Link to Salesforce",
         "linkToSalesforceDescription": "You can link the meeting summary to a Salesforce object.",
         "linkToSalesforceError": "Failed to link meeting to Salesforce",
         "linkToSalesforceKey": "Link this meeting",
         "linkToSalesforceProgress": "Linking meeting to Salesforce...",
         "linkToSalesforceSuccess": "The meeting was linked to Salesforce",
-=======
         "localRecordingStarted": "{{name}} has started local recording.",
         "localRecordingStopped": "{{name}} has stopped local recording.",
->>>>>>> 730eb2e04 (feat(video-local-recording): Enable users to record their conference locally.)
         "me": "Me",
         "moderationInEffectCSDescription": "Please raise hand if you want to share your screen.",
         "moderationInEffectCSTitle": "Screen sharing is blocked by the moderator",
