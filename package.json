@@ -1,6 +1,6 @@
 {
   "name": "@rifflearning/jitsi-meet",
-  "version": "2.1.0-jitsi.7287.dev.0",
+  "version": "2.1.0-jitsi.7287",
   "description": "Videochat app based on the jitsi-meet project enhanced for Riff interoperability",
   "repository": {
     "type": "git",
