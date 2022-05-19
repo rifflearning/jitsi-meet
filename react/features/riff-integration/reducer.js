@@ -19,6 +19,7 @@ import { ReducerRegistry } from '../base/redux';
 
 import {
     RIFF_SET_ACCESS_TOKEN,
+    RIFF_SET_MEETING_CONTEXT,
     RIFF_SET_MEETING_ID,
     RIFF_SET_MEETING_TITLE,
     RIFF_SET_PARTICIPANT_ID,
@@ -29,6 +30,7 @@ const INITIAL_STATE = {
     meetingId: null,
 
     // TODO - jr - decide on initial state
+    meetingContext: '',
     meetingTitle: '',
     participantId: '',
 };
@@ -40,6 +42,12 @@ ReducerRegistry.register('features/riff-integration', (state = INITIAL_STATE, ac
         return {
             ...state,
             accessToken: action.accessToken,
+        };
+
+    case RIFF_SET_MEETING_CONTEXT:
+        return {
+            ...state,
+            meetingContext: action.meetingContext,
         };
 
     case RIFF_SET_MEETING_ID:

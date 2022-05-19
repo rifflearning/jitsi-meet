@@ -26,6 +26,7 @@ import {
     connectToRiffDataServer,
     riffAddUserToMeeting,
     riffRemoveUserFromMeeting,
+    setRiffMeetingContext,
     setRiffMeetingTitle,
     setRiffParticipantId,
 } from './actions';
@@ -94,6 +95,7 @@ function _updateRiffInfoFromUrl({ dispatch, getState }) {
     const urlParams = parseURLParams(getState()['features/base/connection'].locationURL);
     const urlRiffParticipantId = urlParams['riffInfo.participantId'];
     const urlRiffMeetingTitle = urlParams['riffInfo.meetingTitle'];
+    const urlRiffMeetingContext = urlParams['riffInfo.meetingContext'];
 
     if (urlRiffParticipantId) {
         dispatch(setRiffParticipantId(urlRiffParticipantId));
@@ -101,5 +103,9 @@ function _updateRiffInfoFromUrl({ dispatch, getState }) {
 
     if (urlRiffMeetingTitle) {
         dispatch(setRiffMeetingTitle(urlRiffMeetingTitle));
+    }
+
+    if (urlRiffMeetingContext) {
+        dispatch(setRiffMeetingContext(urlRiffMeetingContext));
     }
 }

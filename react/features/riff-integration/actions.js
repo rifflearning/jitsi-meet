@@ -18,6 +18,7 @@ import { riffdataClient } from '@rifflearning/riff-metrics';
 
 import {
     RIFF_SET_ACCESS_TOKEN,
+    RIFF_SET_MEETING_CONTEXT,
     RIFF_SET_MEETING_ID,
     RIFF_SET_MEETING_TITLE,
     RIFF_SET_PARTICIPANT_ID,
@@ -36,6 +37,19 @@ function setRiffAccessToken(accessToken) {
     return {
         type: RIFF_SET_ACCESS_TOKEN,
         accessToken,
+    };
+}
+
+/**
+ * Redux action to set Riff meeting context
+ *
+ * @param {string} meetingContext - The meeting context
+ * @returns {Object}
+ */
+function setRiffMeetingContext(meetingContext) {
+    return {
+        type: RIFF_SET_MEETING_CONTEXT,
+        meetingContext,
     };
 }
 
@@ -130,6 +144,7 @@ function riffAddUserToMeeting() {
             participant,
             room,
             meetingTitle: title,
+            meetingContext: context,
         } = getRiffState(getState());
 
         const app = getRiffApp();
@@ -151,9 +166,7 @@ function riffAddUserToMeeting() {
                 name: displayName,
                 room,
                 title,
-
-                // TODO - context?
-                // context,
+                context,
                 token,
             });
         } catch (error) {
@@ -197,6 +210,7 @@ export {
     riffAddUserToMeeting,
     riffRemoveUserFromMeeting,
     setRiffAccessToken,
+    setRiffMeetingContext,
     setRiffMeetingId,
     setRiffMeetingTitle,
     setRiffParticipantId,
