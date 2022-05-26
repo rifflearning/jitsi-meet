@@ -47,6 +47,7 @@ import '../reactions/reducer';
 import '../recent-list/reducer';
 import '../recording/reducer';
 import '../riff-integration/reducer';
+import '../riff-local-recording/reducer';
 import '../settings/reducer';
 import '../speaker-stats/reducer';
 import '../subtitles/reducer';
