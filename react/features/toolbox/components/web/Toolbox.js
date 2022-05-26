@@ -52,6 +52,7 @@ import {
     LiveStreamButton,
     RecordButton
 } from '../../../recording';
+import RiffLocalRecordingButton from '../../../riff-local-recording/components/LocalRecordingButton';
 import { isSalesforceEnabled } from '../../../salesforce/functions';
 import {
     isScreenAudioSupported,
@@ -738,6 +739,12 @@ class Toolbox extends Component<Props> {
             group: 2
         };
 
+        const localRecording = {
+            key: 'localrecording',
+            Content: RiffLocalRecordingButton,
+            group: 2
+        };
+
         const livestreaming = {
             key: 'livestreaming',
             Content: LiveStreamButton,
@@ -851,6 +858,7 @@ class Toolbox extends Component<Props> {
             security,
             cc,
             recording,
+            localRecording,
             livestreaming,
             linkToSalesforce,
             shareVideo,
