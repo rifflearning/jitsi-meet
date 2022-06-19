@@ -135,14 +135,6 @@ deploy-css:
 deploy-local:
 	([ ! -x deploy-local.sh ] || ./deploy-local.sh)
 
-deploy-aws: ## deploy a dev build based on the current state of the working directory to AWS
-deploy-aws: AWS_NAME := ${shell bash -c 'source .env ; echo $$AWS_NAME'}#' cmt to fix vim formatting
-deploy-aws: PEM_PATH := ${shell bash -c 'source .env ; echo $$PEM_PATH'}#' cmt to fix vim formatting
-deploy-aws: GIT_USER := ${shell git config --get user.name}
-deploy-aws: dev-package
-	scp -i $(PEM_PATH) rifflearning-jitsi-meet-dev.tar.bz2 $(AWS_NAME):/home/ubuntu/tmp
-	ssh -i $(PEM_PATH) $(AWS_NAME) 'bin/install-riff-jitsi.sh tmp/rifflearning-jitsi-meet-dev.tar.bz2 "$(GIT_USER)"'
-
 bump-dev-version: ## Increment the development version in package.json and package-lock.json
 	$(NPM) version prerelease
 	git tag -d $$(git tag --points-at HEAD)
