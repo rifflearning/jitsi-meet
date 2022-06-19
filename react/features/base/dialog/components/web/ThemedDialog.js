@@ -6,6 +6,7 @@ import {
     dialogWidth,
     dialogHeight,
     PositionerAbsolute,
+    PositionerFixed,
     PositionerRelative
 } from '@atlaskit/modal-dialog/dist/es2019/styled/Modal.js';
 import { N0, DN50 } from '@atlaskit/theme/colors';
@@ -28,4 +29,4 @@ const ThemedDialog = (props: Props) => {
 };
 
 
-export { ThemedDialog as Dialog, FillScreen, dialogWidth, dialogHeight, PositionerAbsolute, PositionerRelative };
+export { ThemedDialog as Dialog, FillScreen, dialogWidth, dialogHeight, PositionerAbsolute, PositionerFixed, PositionerRelative }; // eslint-disable-line max-len
