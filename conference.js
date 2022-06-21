@@ -160,7 +160,6 @@ import { createRnnoiseProcessor } from './react/features/stream-effects/rnnoise'
 import { endpointMessageReceived } from './react/features/subtitles';
 import { dialTranscriber } from './react/features/transcribing/actions';
 import { muteLocal } from './react/features/video-menu/actions.any';
-
 import UIEvents from './service/UI/UIEvents';
 
 const logger = Logger.getLogger(__filename);
