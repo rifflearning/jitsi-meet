@@ -769,8 +769,6 @@ export default {
             }, NOTIFICATION_TIMEOUT_TYPE.LONG));
         }
 
-        APP.store.dispatch(dialTranscriber());
-
         // XXX The API will take care of disconnecting from the XMPP
         // server (and, thus, leaving the room) on unload.
         return new Promise((resolve, reject) => {
@@ -1443,6 +1441,8 @@ export default {
         sendLocalParticipant(APP.store, room);
 
         this._setupListeners();
+
+        APP.store.dispatch(dialTranscriber());
     },
 
     /**
