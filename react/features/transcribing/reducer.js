@@ -2,10 +2,13 @@
 import { ReducerRegistry } from '../base/redux';
 
 import {
+    _DIAL_ERROR,
     _TRANSCRIBER_JOINED,
     _TRANSCRIBER_LEFT,
     _POTENTIAL_TRANSCRIBER_JOINED,
-    SET_PENDING_TRANSCRIBING_NOTIFICATION_UID
+    DIAL_TRANSCRIBER,
+    SET_PENDING_TRANSCRIBING_NOTIFICATION_UID,
+    STOP_TRANSCRIBING
 } from './actionTypes';
 
 /**
@@ -91,6 +94,22 @@ ReducerRegistry.register('features/transcribing',
             return {
                 ...state,
                 pendingNotificationUid: action.uid
+            };
+        case DIAL_TRANSCRIBER:
+            return {
+                ...state,
+                isDialing: true
+            };
+        case STOP_TRANSCRIBING:
+            return {
+                ...state,
+                isTerminating: true
+            };
+        case _DIAL_ERROR:
+            return {
+                ...state,
+                isDialing: false,
+                potentialTranscriberJIDs: []
             };
         default:
             return state;

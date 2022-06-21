@@ -46,3 +46,33 @@ export const _POTENTIAL_TRANSCRIBER_JOINED
  */
 export const SET_PENDING_TRANSCRIBING_NOTIFICATION_UID
     = 'SET_PENDING_TRANSCRIBING_NOTIFICATION_UID';
+
+/**
+ * The type of Redux action triggering the transcriber to join (be 'dialed' in)
+ *
+ * {
+ *     type: DIAL_TRANSCRIBER
+ * }
+ * @public
+ */
+export const DIAL_TRANSCRIBER = 'DIAL_TRANSCRIBER';
+
+/**
+ * The type of Redux action triggering the transcriber to leave.
+ *
+ * {
+ *     type: STOP_TRANSCRBIBING
+ * }
+ * @public
+ */
+export const STOP_TRANSCRIBING = 'STOP_TRANSCRBIBING';
+
+/**
+ * The type of a Redux action signalling that dialing the transcriber failed.
+ *
+ * {
+ *     type: _DIAL_ERROR,
+ * }
+ * @private
+ */
+export const _DIAL_ERROR = 'DIAL_ERROR';

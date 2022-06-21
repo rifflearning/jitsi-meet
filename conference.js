@@ -158,7 +158,9 @@ import { AudioMixerEffect } from './react/features/stream-effects/audio-mixer/Au
 import { createPresenterEffect } from './react/features/stream-effects/presenter';
 import { createRnnoiseProcessor } from './react/features/stream-effects/rnnoise';
 import { endpointMessageReceived } from './react/features/subtitles';
+import { dialTranscriber } from './react/features/transcribing/actions';
 import { muteLocal } from './react/features/video-menu/actions.any';
+
 import UIEvents from './service/UI/UIEvents';
 
 const logger = Logger.getLogger(__filename);
@@ -767,6 +769,8 @@ export default {
                 titleKey: 'notify.startSilentTitle'
             }, NOTIFICATION_TIMEOUT_TYPE.LONG));
         }
+
+        APP.store.dispatch(dialTranscriber());
 
         // XXX The API will take care of disconnecting from the XMPP
         // server (and, thus, leaving the room) on unload.

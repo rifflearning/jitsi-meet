@@ -8,10 +8,13 @@ import {
 } from '../notifications';
 
 import {
+    _DIAL_ERROR,
     _POTENTIAL_TRANSCRIBER_JOINED,
     _TRANSCRIBER_JOINED,
     _TRANSCRIBER_LEFT,
-    SET_PENDING_TRANSCRIBING_NOTIFICATION_UID
+    DIAL_TRANSCRIBER,
+    SET_PENDING_TRANSCRIBING_NOTIFICATION_UID,
+    STOP_TRANSCRIBING
 } from './actionTypes';
 
 /**
@@ -140,4 +143,44 @@ export function showTranscribingError() {
         descriptionKey: 'transcribing.error',
         titleKey: 'transcribing.failedToStart'
     }, NOTIFICATION_TIMEOUT_TYPE.LONG);
+}
+
+/**
+ * Dial the transcriber into the room.
+ *
+ * @public
+ * @returns {{
+ *     type: DIAL_TRANSCRIBER
+ * }}
+ */
+export function dialTranscriber() {
+    return {
+        type: DIAL_TRANSCRIBER
+    };
+}
+
+/**
+ * Stop the transcribing by kicking the transcriber participant.
+ *
+ * @returns {{
+ *     type: STOP_TRANSCRIBING
+ * }}
+ */
+export function stopTranscribing() {
+    return {
+        type: STOP_TRANSCRIBING
+    };
+}
+
+/**
+ * Notify that dialing the transcriber resulted in an error.
+ *
+ * @returns {{
+ *      type: _DIAL_ERROR
+ * }}
+ */
+export function dialError() {
+    return {
+        type: _DIAL_ERROR
+    };
 }
