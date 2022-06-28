@@ -162,6 +162,7 @@ import { dialTranscriber } from './react/features/transcribing/actions';
 import { muteLocal } from './react/features/video-menu/actions.any';
 import UIEvents from './service/UI/UIEvents';
 
+
 const logger = Logger.getLogger(__filename);
 
 const eventEmitter = new EventEmitter();
@@ -1442,7 +1443,6 @@ export default {
 
         this._setupListeners();
 
-        APP.store.dispatch(dialTranscriber());
     },
 
     /**

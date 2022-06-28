@@ -7,8 +7,7 @@ import {
     _TRANSCRIBER_LEFT,
     _POTENTIAL_TRANSCRIBER_JOINED,
     DIAL_TRANSCRIBER,
-    SET_PENDING_TRANSCRIBING_NOTIFICATION_UID,
-    STOP_TRANSCRIBING
+    SET_PENDING_TRANSCRIBING_NOTIFICATION_UID
 } from './actionTypes';
 
 /**
@@ -67,6 +66,18 @@ function _getInitialState() {
  */
 ReducerRegistry.register('features/transcribing',
     (state = _getInitialState(), action) => {
+        if ([
+            _TRANSCRIBER_JOINED,
+            _TRANSCRIBER_LEFT,
+            _POTENTIAL_TRANSCRIBER_JOINED,
+            SET_PENDING_TRANSCRIBING_NOTIFICATION_UID
+        ].includes(action.type)) {
+            console.log('========================================');
+            console.log('transcribing.reducer.action ----> ', action);
+            console.log('transcribing.reducer.state ----> ', state);
+            console.log('========================================');
+        }
+
         switch (action.type) {
         case _TRANSCRIBER_JOINED:
             return {
@@ -95,15 +106,11 @@ ReducerRegistry.register('features/transcribing',
                 ...state,
                 pendingNotificationUid: action.uid
             };
+
         case DIAL_TRANSCRIBER:
             return {
                 ...state,
                 isDialing: true
-            };
-        case STOP_TRANSCRIBING:
-            return {
-                ...state,
-                isTerminating: true
             };
         case _DIAL_ERROR:
             return {

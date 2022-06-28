@@ -928,9 +928,6 @@ class API {
      * @returns {void}
      */
     _sendEvent(event: Object = {}) {
-        logger.debug('=========================');
-        logger.debug('API._sendEvent', event);
-        logger.debug('=========================');
         if (this._enabled) {
             transport.sendEvent(event);
         }

@@ -77,14 +77,20 @@ MiddlewareRegistry.register(store => next => action => {
     case DIAL_TRANSCRIBER:
         if (!(isDialing || isTranscribing)) {
             store.dispatch(showPendingTranscribingNotification());
-
-            conference.room.dial(TRANSCRIBER_DIAL_COMMAND).catch(
-                () => {
+            console.log('TRANSCRIBER_DIAL_COMMAND -> called');
+            APP.conference._room.dial(TRANSCRIBER_DIAL_COMMAND)
+            .catch(
+                error => {
+                    console.log('TRANSCRIBER_DIAL_COMMAND -> error');
+                    console.log(error);
                     store.dispatch(dialError());
                     store.dispatch(hidePendingTranscribingNotification());
                     store.dispatch(showTranscribingError());
                 }
-            );
+            )
+            .then(() => {
+                console.log('TRANSCRIBER_DIAL_COMMAND -> success');
+            });
         }
         break;
 

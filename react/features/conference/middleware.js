@@ -14,16 +14,19 @@ import { FeedbackDialog } from '../feedback';
 import { setFilmstripEnabled } from '../filmstrip';
 import { showSalesforceNotification } from '../salesforce/actions';
 import { setToolboxEnabled } from '../toolbox/actions';
+import { dialTranscriber } from '../transcribing/actions';
 
 import { notifyKickedOut } from './actions';
 
 MiddlewareRegistry.register(store => next => action => {
     const result = next(action);
+    const { dispatch } = store;
 
     switch (action.type) {
     case CONFERENCE_JOINED:
         _conferenceJoined(store);
-
+        console.log('conference.middlewares --> startTranscriber');
+        dispatch(dialTranscriber());
         break;
 
     case SET_REDUCED_UI: {
@@ -33,8 +36,6 @@ MiddlewareRegistry.register(store => next => action => {
     }
 
     case KICKED_OUT: {
-        const { dispatch } = store;
-
         dispatch(notifyKickedOut(
             action.participant,
             () => {
