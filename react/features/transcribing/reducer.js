@@ -107,11 +107,11 @@ ReducerRegistry.register('features/transcribing',
                 pendingNotificationUid: action.uid
             };
 
-        case DIAL_TRANSCRIBER:
-            return {
-                ...state,
-                isDialing: true
-            };
+        // case DIAL_TRANSCRIBER:
+        //     return {
+        //         ...state,
+        //         isDialing: true
+        //     };
         case _DIAL_ERROR:
             return {
                 ...state,
