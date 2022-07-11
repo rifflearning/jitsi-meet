@@ -5,6 +5,8 @@ import { getGravatarURL } from '@jitsi/js-utils/avatar';
 import { IState, IStore } from '../../app/types';
 // @ts-ignore
 import { isStageFilmstripAvailable } from '../../filmstrip/functions';
+// @ts-ignore
+import { riffTryParseEmail } from '../../riff-integration/functions';
 import { GRAVATAR_BASE_URL } from '../avatar/constants';
 import { isCORSAvatarURL } from '../avatar/functions';
 // @ts-ignore
@@ -45,7 +47,7 @@ const AVATAR_CHECKER_FUNCTIONS = [
                 || config.gravatarBaseURL
                 || GRAVATAR_BASE_URL;
 
-            return getGravatarURL(participant.email, gravatarBaseURL);
+            return getGravatarURL(riffTryParseEmail(participant.email), gravatarBaseURL);
         }
 
         return null;
