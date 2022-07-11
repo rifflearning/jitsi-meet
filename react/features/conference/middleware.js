@@ -17,6 +17,12 @@ import { setToolboxEnabled } from '../toolbox/actions';
 
 import { notifyKickedOut } from './actions';
 
+/**
+ * The local participant property which is used to set whether the local
+ * participant wants to have a transcriber in the room.
+ */
+const P_NAME_REQUESTING_TRANSCRIPTION = 'requestingTranscription';
+
 MiddlewareRegistry.register(store => next => action => {
     const result = next(action);
 
@@ -112,5 +118,28 @@ function _conferenceJoined({ dispatch, getState }) {
         getState
     });
 
+
+    // Always enable transcription because Riff requires it in order to collect utterance data
+    _setRequestingTranscription({ getState }, true);
+
     dispatch(showSalesforceNotification());
+}
+
+
+/**
+ * Set the local property 'requestingTranscription'. This will cause Jicofo
+ * and Jigasi to decide whether the transcriber needs to be in the room.
+ *
+ * @param {Store} store - The redux store.
+ * @param {boolean} enabled - The new state of the transcription.
+ * @private
+ * @returns {void}
+ */
+function _setRequestingTranscription({ getState }, enabled: boolean) {
+    const state = getState();
+    const { conference } = state['features/base/conference'];
+
+    conference.setLocalParticipantProperty(
+        P_NAME_REQUESTING_TRANSCRIPTION,
+        enabled);
 }
