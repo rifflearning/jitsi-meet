@@ -59,6 +59,33 @@ function getRiffState(state) {
 }
 
 /**
+ * Parse a [potentially] multiplexed email value and return
+ * the actual email, if provided. Otherwise return input.
+ *
+ * @param {string} email - The string to parse: we expect either
+ *  an actual email or a stringified json object which may contain
+ *  an email
+ *
+ * @returns {string} The parsed email, or the input string on failure
+ */
+function riffTryParseEmail(email) {
+    try {
+        const multiplexedEmail = JSON.parse(email);
+
+        // ensure it's an object and not null / other parseable but not-objects
+        if (multiplexedEmail && typeof multiplexedEmail === 'object') {
+            // if we weren't provided an email in the multiplexed object,
+            // just return the input string
+            return multiplexedEmail.email ?? email;
+        }
+
+        return email;
+    } catch (err) {
+        return email;
+    }
+}
+
+/**
  * Sends an utterance to the riff data server if the user is currently
  * in a meeting. If the user has yet to join or has left a meeting, drop it.
  *
@@ -136,4 +163,5 @@ function detachSibilant() {
 export {
     attachSibilant,
     getRiffState,
+    riffTryParseEmail,
 };
