@@ -5,6 +5,7 @@ import type { Store } from 'redux';
 
 import { i18next } from '../../base/i18n';
 import { isStageFilmstripAvailable } from '../../filmstrip/functions';
+import { riffTryParseEmail } from '../../riff-integration/functions';
 import { GRAVATAR_BASE_URL, isCORSAvatarURL } from '../avatar';
 import { getMultipleVideoSupportFeatureFlag, getSourceNameSignalingFeatureFlag } from '../config';
 import { JitsiParticipantConnectionStatus, JitsiTrackStreamingStatus } from '../lib-jitsi-meet';
@@ -38,7 +39,7 @@ const AVATAR_CHECKER_FUNCTIONS = [
                 || config.gravatarBaseURL
                 || GRAVATAR_BASE_URL;
 
-            return getGravatarURL(participant.email, gravatarBaseURL);
+            return getGravatarURL(riffTryParseEmail(participant.email), gravatarBaseURL);
         }
 
         return null;
