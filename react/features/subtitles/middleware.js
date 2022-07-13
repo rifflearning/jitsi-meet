@@ -50,15 +50,23 @@ const REMOVE_AFTER_MS = 3000;
  * @returns {Function}
  */
 MiddlewareRegistry.register(store => next => action => {
+    // `Riff` requires a hidden `Transcriber` participant in the meeting room always to collect
+    // utterance data. Hence we invite a `Transcriber` at the start of a conference.
+    // Refer to changes to `_conferenceJoined` in react/features/conference/middleware.js.
+    //
+    // Commented out `_requestingSubtitlesToggled` and `_requestingSubtitlesSet` calls below to
+    // avoid `Transcriber` invite or remove request calls to Jicofo & Jigasi during a meeting.
+    // This change will not affect existing functionality to `Start Subtitles` or `Stop Subtitles`
+    // as the Transcriber is now always present.
     switch (action.type) {
     case ENDPOINT_MESSAGE_RECEIVED:
         return _endpointMessageReceived(store, next, action);
 
     case TOGGLE_REQUESTING_SUBTITLES:
-        _requestingSubtitlesToggled(store);
+        // _requestingSubtitlesToggled(store);
         break;
     case SET_REQUESTING_SUBTITLES:
-        _requestingSubtitlesSet(store, action.enabled);
+        // _requestingSubtitlesSet(store, action.enabled);
         break;
     }
 
@@ -163,6 +171,10 @@ function _endpointMessageReceived({ dispatch, getState }, next, action) {
     return next(action);
 }
 
+// Riff change that _requestingSubtitlesToggled & _requestingSubtitlesSet are
+// not called, we want to keep the functions around to make patching updates
+// easier. Therefore disabling the lint error.
+/* eslint-disable no-unused-vars */
 /**
  * Toggle the local property 'requestingTranscription'. This will cause Jicofo
  * and Jigasi to decide whether the transcriber needs to be in the room.
@@ -198,6 +210,7 @@ function _requestingSubtitlesSet({ getState }, enabled: boolean) {
         P_NAME_REQUESTING_TRANSCRIPTION,
         enabled);
 }
+/* eslint-enable no-unused-vars */
 
 /**
  * Set a timeout on a TranscriptMessage object so it clears itself when it's not
