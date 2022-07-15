@@ -12,9 +12,7 @@
  *
  * ******************************************************************************/
 
-const RIFF_SET_ACCESS_TOKEN = 'RIFF_SET_ACCESS_TOKEN';
 const RIFF_SET_MEETING_CONTEXT = 'RIFF_SET_MEETING_CONTEXT';
-const RIFF_SET_MEETING_ID = 'RIFF_SET_MEETING_ID';
 const RIFF_SET_MEETING_TITLE = 'RIFF_SET_MEETING_TITLE';
 const RIFF_SET_PARTICIPANT_ID = 'RIFF_SET_PARTICIPANT_ID';
 
@@ -23,9 +21,7 @@ const RIFF_SET_PARTICIPANT_ID = 'RIFF_SET_PARTICIPANT_ID';
  * Module exports                                                               *
  * **************************************************************************** */
 export {
-    RIFF_SET_ACCESS_TOKEN,
     RIFF_SET_MEETING_CONTEXT,
-    RIFF_SET_MEETING_ID,
     RIFF_SET_MEETING_TITLE,
     RIFF_SET_PARTICIPANT_ID,
 };
