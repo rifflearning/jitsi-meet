@@ -28,29 +28,25 @@ jobs:
         id: build-package
         run: |
           make prod-package
-          echo ::set-output name=PKG_NAME::$(ls *-prod.tar.bz2)
+          echo "PKG_NAME=$(ls *-prod.tar.bz2)" >> $GITHUB_OUTPUT
+          # Until action/checkout supports getting the tags on the commit w/o having to get the whole repo this is commented out
+          # git tag -l --format='%(contents:lines=100)' ${GITHUB_REF#refs/*/} > ./RELEASE_BODY.txt
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GPR_PRIVATE_READ_TOKEN }}
           NODE_OPTIONS: '--max-old-space-size=5120'
           TERM: dumb
 
       - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: ncipollo/release-action@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          name: Release ${{ github.ref_name }}
+          tag: ${{ github.ref }}
+          # See commented out code above which would create this body file
+          # bodyFile: ./RELEASE_BODY.txt
+          generateReleaseNotes: true
           draft: false
           prerelease: false
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
+          artifacts: ./${{ steps.build-package.outputs.PKG_NAME }}
+          artifactContentType: application/x-tar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ steps.build-package.outputs.PKG_NAME }}
-          asset_name: ${{ steps.build-package.outputs.PKG_NAME }}
-          asset_content_type: application/x-tar
