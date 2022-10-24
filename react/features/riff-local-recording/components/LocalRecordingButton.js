@@ -11,9 +11,11 @@ import { recordingController } from '../controller/RecordingController';
 
 import LocalRecordingDialog from './LocalRecordingDialog';
 
+
 const LocalRecordingButton = ({
     toggleLocalRecordingDialog,
     showLabel,
+    contextMenu,
     isEngagedLocally
 }) => {
     const doToggleLocalRecordingDialog = () => toggleLocalRecordingDialog();
@@ -28,6 +30,7 @@ const LocalRecordingButton = ({
     return (
         <ToolboxItem
             accessibilityLabel = 'Local Recording'
+            contextMenu = { contextMenu }
             icon = { IconRec }
             label = { `${isEngagedLocally ? 'Stop' : 'Start'} Local Recording` }
             onClick = { isEngagedLocally ? doStopLocalRecording : doToggleLocalRecordingDialog }
@@ -36,6 +39,7 @@ const LocalRecordingButton = ({
 };
 
 LocalRecordingButton.propTypes = {
+    contextMenu: PropTypes.bool,
     isEngagedLocally: PropTypes.bool,
     showLabel: PropTypes.bool,
     toggleLocalRecordingDialog: PropTypes.func
